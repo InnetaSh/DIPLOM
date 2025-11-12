@@ -1,3 +1,7 @@
+using Globals.Abstractions;
+using Globals.EventBus;
+using WebApiGateway.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,6 +18,10 @@ builder.Services.AddHttpClient("UserApiService", client =>
     var port = builder.Configuration["UserApiServicePort"] ?? "8080";
     client.BaseAddress = new Uri($"{baseUrl}:{port}");
 });
+
+builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
+builder.Services.AddHostedService<GetwayRabbitListener>();
+
 
 var app = builder.Build();
 

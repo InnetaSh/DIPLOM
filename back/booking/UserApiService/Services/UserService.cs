@@ -6,5 +6,6 @@ namespace UserApiService.Services
 {
     public class UserService: ServiceBase<User, UserContext>, IUserService
     {
+
     }
 }

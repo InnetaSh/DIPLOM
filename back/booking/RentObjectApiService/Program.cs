@@ -1,7 +1,5 @@
 using Globals.Abstractions;
 using Globals.EventBus;
-using UserApiService.Services;
-using UserApiService.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,13 +9,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-
-builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
-builder.Services.AddHostedService<UserRabbitListener>();
 
 var app = builder.Build();
 

@@ -14,6 +14,7 @@ namespace UserApiService.Models
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
             builder.Entity<User>()
+                .ToTable("Users")
                 .HasDiscriminator<string>("UserType")
                 .HasValue<User>("User")
                 .HasValue<Client>("Client")

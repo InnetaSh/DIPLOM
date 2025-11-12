@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Metrics;
 using UserApiService.Models;
+using UserApiService.Services;
 using UserApiService.Services.Interfaces;
 
 namespace UserApiService.Controllers
@@ -12,12 +14,12 @@ namespace UserApiService.Controllers
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService masterService)
+        public UserController(IUserService userService)
         {
-            _userService = masterService;
+            _userService = userService;
         }
 
-        // GET: api/masters
+        // GET: api/users
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetAllMasters()
         {
@@ -25,7 +27,8 @@ namespace UserApiService.Controllers
             return Ok(items);
         }
 
-        // GET: api/masters/{id}
+
+        // GET: api/users/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetMasterById(int id)
         {
@@ -37,7 +40,7 @@ namespace UserApiService.Controllers
             return Ok(item);
         }
 
-        // POST: api/masters
+        // POST: api/users
         [HttpPost]
         public async Task<ActionResult<User>> CreateMaster([FromBody] User user)
         {

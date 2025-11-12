@@ -7,11 +7,11 @@ namespace UserApiService.Models
     {
         [Required]
         public string? Username { get; set; }
-        //[Required]
-        //public byte[] PasswordHash { get; set; } = Array.Empty<byte>();
+        [Required]
+        public byte[] PasswordHash { get; set; } = Array.Empty<byte>();
 
-        //[Required]
-        //public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
+        [Required]
+        public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
         public string Token { get; set; }
