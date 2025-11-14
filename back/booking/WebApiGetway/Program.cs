@@ -1,6 +1,8 @@
 using Globals.Abstractions;
 using Globals.EventBus;
 using WebApiGateway.Services;
+using WebApiGetway.Service;
+using WebApiGetway.Service.Interfase;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,7 @@ builder.Services.AddHttpClient("UserApiService", client =>
 });
 
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
+builder.Services.AddScoped<IGatewayService, GatewayService>();
 builder.Services.AddHostedService<GetwayRabbitListener>();
 
 

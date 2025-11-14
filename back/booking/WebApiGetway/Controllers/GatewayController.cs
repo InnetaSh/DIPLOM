@@ -1,91 +1,31 @@
-﻿using Globals.Abstractions;
-using Globals.EventBus;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Mvc;
-
-namespace WebApiGateway.Controllers;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApiGetway.Service.Interfase;
 
 [ApiController]
 [Route("[controller]")]
 public class GatewayController : ControllerBase
 {
-    private readonly IHttpClientFactory _clientFactory;
-    private readonly IRabbitMqService _mqService;
+    private readonly IGatewayService _gateway;
 
-    public GatewayController(IHttpClientFactory clientFactory, IRabbitMqService mqService)
+    public GatewayController(IGatewayService gateway)
     {
-        _clientFactory = clientFactory;
-        _mqService = mqService;
+        _gateway = gateway;
     }
 
     [HttpGet("weather")]
-    public async Task<IActionResult> GetWeatherForecast()
-    {
-        var client = _clientFactory.CreateClient("UserApiService");
-        var response = await client.GetAsync("/WeatherForecast");
+    public Task<IActionResult> GetWeather() =>
+    _gateway.ForwardRequestAsync<object>("WeatherService", "/WeatherForecast", HttpMethod.Get, null);
 
-        if (response.IsSuccessStatusCode)
-        {
-            _mqService.SendMessage(new RabbitMQMessageBase(nameof(GatewayController), nameof(GetWeatherForecast), "Get Weather Forecast"));
-            var result = await response.Content.ReadFromJsonAsync<object>();
-            return Ok(result);
-        }
-
-        return StatusCode((int)response.StatusCode);
-    }
-
-    //========================AUTH===================================
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequest request)
-    {
-        var client = _clientFactory.CreateClient("UserApiService");
+    public Task<IActionResult> Login([FromBody] object request) =>
+        _gateway.ForwardRequestAsync("UserApiService", "/api/auth/login", HttpMethod.Post, request);
 
-        var response = await client.PostAsJsonAsync("/api/auth/login", request);
+    [HttpPut("updateUser/{id}")]
+    public Task<IActionResult> UpdateUser([FromBody] object request, int id) =>
+        _gateway.ForwardRequestAsync("UserApiService", $"/api/auth/update/{id}", HttpMethod.Put, request);
 
-        if (response.IsSuccessStatusCode)
-        {
-            _mqService.SendMessage(
-                new RabbitMQMessageBase("AuthController", nameof(Login), "User logged in")
-            );
-
-            var result = await response.Content.ReadFromJsonAsync<object>();
-            return Ok(result);
-        }
-
-        return StatusCode((int)response.StatusCode);
-    }
-
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
-    {
-        var client = _clientFactory.CreateClient("UserApiService");
-
-        var response = await client.PostAsJsonAsync("/api/auth/register", request);
-
-        if (response.IsSuccessStatusCode)
-        {
-            _mqService.SendMessage(
-                new RabbitMQMessageBase("AuthController", nameof(Register), "User registered")
-            );
-
-            var result = await response.Content.ReadFromJsonAsync<object>();
-            return Ok(result);
-        }
-
-        var error = await response.Content.ReadAsStringAsync();
-        return StatusCode((int)response.StatusCode, error);
-    }
-
-
-    //=======================================================================
-
-
-    [HttpGet("sendMsg")]
-    public async Task<IActionResult> SendMsg()
-    {
-        _mqService.SendMessage(new RabbitMQMessageBase(nameof(GatewayController), nameof(SendMsg), "send test messages"));
-        return Ok("Msg send");
-    }
-
+    [HttpDelete("deleteUser/{id}")]
+    public Task<IActionResult> DeleteUser(int id) =>
+        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/auth/delete/{id}", HttpMethod.Delete, null);
 }
