@@ -65,8 +65,22 @@ namespace Globals.Sevices
 
         public virtual async Task<bool> UpdateEntityAsync(T entity)
         {
-            throw new NotImplementedException();
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            using (var db = (V)Activator.CreateInstance(typeof(V)))
+            {
+                var existingEntity = await db.Values.FindAsync(entity.id);
+                if (existingEntity == null)
+                    return false;
+
+                db.Entry(existingEntity).CurrentValues.SetValues(entity);
+                await db.SaveChangesAsync();
+
+                return true;
+            }
         }
+
 
         private IQueryable<T> Include(V db, params string[] includeProperties)
         {

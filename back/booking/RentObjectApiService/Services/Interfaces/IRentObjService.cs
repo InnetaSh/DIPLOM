@@ -6,7 +6,7 @@ namespace RentObjectApiService.Services.Interfaces
 {
     namespace RentObjectApiService.Services.Interfaces
     {
-        public interface IRentObjService<T> : IServiceBase<RentObj>
+        public interface IRentObjService : IServiceBase<RentObj>
         {
         }
     }

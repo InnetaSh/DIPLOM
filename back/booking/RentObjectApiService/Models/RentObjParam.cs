@@ -7,7 +7,7 @@ namespace RentObjectApiService.Models
 {
     public class RentObjParam : EntityBase
     {
-        public string Name { get; set; }
+        public string Title { get; set; }
 
         public string ValueJson { get; set; }
 

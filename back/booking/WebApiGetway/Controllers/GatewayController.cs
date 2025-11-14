@@ -1,6 +1,6 @@
 ﻿using Globals.Abstractions;
 using Globals.EventBus;
-using Globals.View;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiGateway.Controllers;

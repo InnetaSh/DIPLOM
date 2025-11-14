@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
+﻿
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics.Metrics;
 using UserApiService.Models;
 using UserApiService.Services;
 using UserApiService.Services.Interfaces;
+using UserApiService.View;
 
 namespace UserApiService.Controllers
 {
@@ -13,90 +15,157 @@ namespace UserApiService.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly ITokenService _tokenService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IPasswordHasher passwordHasher, ITokenService tokenService)
         {
             _userService = userService;
+            _passwordHasher = passwordHasher;
+            _tokenService = tokenService;
         }
 
         // GET: api/users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetAllMasters()
+        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
             var items = await _userService.GetEntitiesAsync();
-            return Ok(items);
+            if (items == null || !items.Any())
+                return NotFound(new { message = "No users found" });
+
+            var responseList = new List<UserResponse>();
+            foreach (var item in items) {
+                responseList.Add(new UserResponse
+                {
+                    id = item.id,
+                    Username = item.Username,
+                    Email = item.Email,
+                    PhoneNumber = item.PhoneNumber,
+                    RoleName = item.RoleName.ToString()
+                });
+            }
+
+            return Ok(responseList);
         }
 
 
         // GET: api/users/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetMasterById(int id)
+        public async Task<ActionResult<User>> GetUserById(GetByIdRequest request)
         {
-            var item = await _userService.GetEntityAsync(id);
+            var item = await _userService.GetEntityAsync(request.id);
 
             if (item == null)
-                return NotFound(new { message = "Master not found" });
+                return NotFound(new { message = "User not found" });
 
-            return Ok(item);
+            var response = new UserResponse
+            {
+                id = item.id,
+                Username = item.Username,
+                Email = item.Email,
+                PhoneNumber = item.PhoneNumber,
+                RoleName = item.RoleName.ToString()
+            };
+
+            return Ok(response);
         }
+        
 
         // POST: api/users
         [HttpPost]
-        public async Task<ActionResult<User>> CreateMaster([FromBody] User user)
+        public async Task<ActionResult<User>> CreateUser([FromBody] UserRequest request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var masterExists = await _userService.ExistsEntityAsync(user.id);
-            if (masterExists)
-                return NotFound(new { message = "Master alredy exist" });
+            var userExists = await _userService.ExistsEntityAsync(request.id);
+            if (userExists)
+                return NotFound(new { message = "User alredy exist" });
+
+            _passwordHasher.CreatePasswordHash(request.Password, out byte[] hash, out byte[] salt);
+            var token = _tokenService.GenerateJwtToken(request);
+
+            var user = new User
+            {
+                id = request.id,
+                Username = request.Username,
+                Email = request.Email,
+                PasswordHash = hash, 
+                PasswordSalt = salt,
+                RoleName = request.RoleName,
+                Token = token,
+                LastLogin = DateTime.UtcNow
+            };
 
             var result = await _userService.AddEntityAsync(user);
 
-            if(result)
-                return CreatedAtAction(nameof(GetMasterById), new { id = user.id }, user);
-            else 
-                return StatusCode(500, new { message = "Error creating master" });
+            if (!result)
+                return StatusCode(500, new { message = "Error creating user" });
+
+            var response = new UserResponse
+            {
+                id = user.id,
+                Username = user.Username,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                RoleName = user.RoleName.ToString()
+            };
+
+            return CreatedAtAction(nameof(GetUserById), new { id = user.id }, response);
 
         }
 
 
-        //// PUT: api/masters/{id}
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateMaster(int id, [FromBody] Master updatedMaster)
-        //{
-        //    if (id != updatedMaster.Id)
-        //        return BadRequest(new { message = "ID in URL does not match ID in body" });
+        // PUT: api/user/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateMaster(int id, [FromBody] UserRequest request)
+        {
+            if (id != request.id)
+                return BadRequest(new { message = "ID in URL does not match ID in body" });
 
-        //    var existingMaster = await _masterService.ExistsAsync(updatedMaster.Id);
-        //    if (existingMaster == null)
-        //        return NotFound(new { message = "Master not found" });
+            var userEntity = await _userService.GetEntityAsync(id);
+            if (userEntity == null)
+                return NotFound(new { message = "User not found" });
 
-        //    var success = await _masterService.UpdateAsync(id, updatedMaster);
-        //    if (!success)
-        //        return StatusCode(500, new { message = "Error updating portfolio item" });
+            userEntity.Username = request.Username ?? userEntity.Username;
+            userEntity.Email = request.Email ?? userEntity.Email;
+            userEntity.PhoneNumber = request.PhoneNumber ?? userEntity.PhoneNumber;
 
-        //    return NoContent();
-        //}
+            if (!string.IsNullOrEmpty(request.Password))
+            {
+                _passwordHasher.CreatePasswordHash(request.Password, out byte[] hash, out byte[] salt);
+                userEntity.PasswordHash = hash;
+                userEntity.PasswordSalt = salt;
+            }
+
+            userEntity.Token = _tokenService.GenerateJwtToken(userEntity);
+
+            var success = await _userService.UpdateEntityAsync(userEntity);
+            if (!success)
+                return StatusCode(500, new { message = "Error updating user" });
+
+            return NoContent();
+        }
 
 
 
 
 
-        //// DELETE: api/masters/{id}
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteMaster(int id)
-        //{
-        //    var existingMaster = await _masterService.ExistsAsync(id);
-        //    if (existingMaster == null)
-        //        return NotFound(new { message = "Master not found" });
+
+        // DELETE: api/user/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(DeleteRequest deleteRequest)
+        {
+            var existingMaster = await _userService.ExistsEntityAsync(deleteRequest.id);
+            if (existingMaster == null)
+                return NotFound(new { message = "User not found" });
 
 
-        //    var success = await _masterService.DeleteAsync(id);
-        //    if (!success)
-        //        return StatusCode(500, new { message = "Error deleting master" });
+            var success = await _userService.DelEntityAsync(deleteRequest.id);
+            if (!success)
+                return StatusCode(500, new { message = "Error deleting master" });
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
     }
 }

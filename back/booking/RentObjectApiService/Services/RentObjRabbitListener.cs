@@ -3,14 +3,14 @@ using Microsoft.Extensions.Logging;
 
 namespace UserApiService.Services
 {
-    public class UserRabbitListener: RabbitMqListenerBase
+    public class RentObjRabbitListener: RabbitMqListenerBase
     {
 
 
-        private readonly ILogger<UserRabbitListener> _logger;
+        private readonly ILogger<RentObjRabbitListener> _logger;
 
 
-        public UserRabbitListener(ILogger<UserRabbitListener> logger)
+        public RentObjRabbitListener(ILogger<RentObjRabbitListener> logger)
         {
             _logger = logger;
 

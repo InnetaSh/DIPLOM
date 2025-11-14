@@ -5,7 +5,7 @@ using RentObjectApiService.Services.Interfaces;
 
 namespace RentObjectApiService.Services
 {
-    public class CityService : TableServiceBase<City, RentObjectContext>, ICityService
+    public class ParamsCategoryService : TableServiceBase<ParamsCategory, RentObjectContext>, IParamsCategoryService
     {
 
     }
