@@ -16,7 +16,7 @@ namespace RentObjectApiService.Models
 
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
-            builder.Entity<CityRequest>().ToTable("Cities");
+            builder.Entity<City>().ToTable("Cities");
             builder.Entity<Country>().ToTable("Countries");
             builder.Entity<RentObj>().ToTable("RentObjects");
         }

@@ -14,7 +14,7 @@ namespace RentObjectApiService.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Route("api/[controller]")]
-    public class CityController : BaseController<City, CityResponse, CityDTO>
+    public class CityController : BaseController<City, CityResponse, CityRequest>
     {
         public CityController(ICityService cityService, IRabbitMqService mqService)
             : base(cityService, mqService)
@@ -22,7 +22,7 @@ namespace RentObjectApiService.Controllers
                 }
 
 
-        protected override City MapToModel(CityDTO request)
+        protected override City MapToModel(CityRequest request)
         {
             return new City
             {
@@ -46,9 +46,9 @@ namespace RentObjectApiService.Controllers
                 Title = model.Title,
                 CountryId = model.CountryId,
                 Country = model.Country,
-                RentObjs = model.RentObjs?.Select(ro => new RentObjResponse
+                RentObjs = model.RentObjs?.Select(ro => new RentObj
                 {
-                    Id = ro.id,
+                    id = ro.id,
                     Title = ro.Title
                 }).ToList()
             };
