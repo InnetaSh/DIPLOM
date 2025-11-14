@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentObjectApiService", "Ren
 		{6C007FC3-C804-4D7D-B034-DA8E607DE0DA} = {6C007FC3-C804-4D7D-B034-DA8E607DE0DA}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfferApiService", "OfferApiService\OfferApiService.csproj", "{6FDA3DAE-690E-40A7-977E-48A78D3EA002}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,10 @@ Global
 		{E32B0AA7-6177-41CC-BCD6-A3C727B0AFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E32B0AA7-6177-41CC-BCD6-A3C727B0AFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E32B0AA7-6177-41CC-BCD6-A3C727B0AFDE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FDA3DAE-690E-40A7-977E-48A78D3EA002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FDA3DAE-690E-40A7-977E-48A78D3EA002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FDA3DAE-690E-40A7-977E-48A78D3EA002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FDA3DAE-690E-40A7-977E-48A78D3EA002}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

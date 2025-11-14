@@ -43,7 +43,22 @@ namespace RentObjectApiService.Controllers
             return new RentObjResponse
             {
                 id = model.id,
-                Title = model.Title
+                Title = model.Title,
+                Description = model.Description,
+                CityId = model.CityId,
+                ParamCategories = model.ParamCategories?.Select(pc => new ParamsCategory
+                {
+                    id = pc.id,
+                    Title = pc.Title
+                }).ToList(),
+                Images = model.Images?.Select(img => new RentObjImage
+                {
+                    id = img.id,
+                    Url = img.Url,
+                    RentObjId = img.RentObjId
+                }).ToList()
+            ,
+
             };
         }
     }

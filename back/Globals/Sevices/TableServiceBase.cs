@@ -9,7 +9,7 @@ namespace Globals.Sevices
     {
         private String TableName => $"{typeof(T).Name}s";
 
-        public async Task<bool> AddEntityAsync(T entity)
+        public virtual async Task<bool> AddEntityAsync(T entity)
         {
             using (var db = (V)Activator.CreateInstance(typeof(V)))
             {
@@ -20,7 +20,7 @@ namespace Globals.Sevices
             }
         }
 
-        public async Task<bool> DelEntityAsync(int id)
+        public virtual async Task<bool> DelEntityAsync(int id)
         {
             using (var db = (V)Activator.CreateInstance(typeof(V)))
             {
@@ -34,7 +34,7 @@ namespace Globals.Sevices
             }
         }
 
-        public async Task<bool> ExistsEntityAsync(int id)
+        public virtual async Task<bool> ExistsEntityAsync(int id)
         {
             using (var db = (V)Activator.CreateInstance(typeof(V)))
             {
@@ -43,7 +43,7 @@ namespace Globals.Sevices
             }
         }
 
-        public async Task<List<T>> GetEntitiesAsync(params string[] includeProperties)
+        public virtual async Task<List<T>> GetEntitiesAsync(params string[] includeProperties)
         {
             using (var db = (V)Activator.CreateInstance(typeof(V)))
             {
@@ -52,7 +52,7 @@ namespace Globals.Sevices
             }
         }
 
-        public async Task<T> GetEntityAsync(int id, params string[] includeProperties)
+        public virtual async Task<T> GetEntityAsync(int id, params string[] includeProperties)
         {
             using (var db = (V)Activator.CreateInstance(typeof(V)))
             {
@@ -61,7 +61,7 @@ namespace Globals.Sevices
             }
         }
 
-        public async Task<bool> UpdateEntityAsync(T entity)
+        public virtual async Task<bool> UpdateEntityAsync(T entity)
         {
             using (var db = (V)Activator.CreateInstance(typeof(V)))
             {

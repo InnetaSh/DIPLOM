@@ -13,7 +13,6 @@ namespace RentObjectApiService.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    [Route("api/[controller]")]
     public class CityController : BaseController<City, CityResponse, CityRequest>
     {
         public CityController(ICityService cityService, IRabbitMqService mqService)
