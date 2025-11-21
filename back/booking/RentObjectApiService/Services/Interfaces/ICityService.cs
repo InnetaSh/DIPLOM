@@ -1,6 +1,7 @@
-﻿using RentObjectApiService.Models;
-using Globals.Abstractions;
+﻿using Globals.Abstractions;
 using Microsoft.AspNetCore.Identity.Data;
+using RentObjectApiService.Models;
+using RentObjectApiService.View;
 
 namespace RentObjectApiService.Services.Interfaces
 {

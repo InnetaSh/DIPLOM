@@ -8,6 +8,7 @@ namespace RentObjectApiService.Services.Interfaces
     {
         public interface IRentObjService : IServiceBase<RentObj>
         {
+            Task<List<RentObj>> GetByCityAsync(string cityName);
         }
     }
 }

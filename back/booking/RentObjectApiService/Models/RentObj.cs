@@ -11,6 +11,8 @@ namespace RentObjectApiService.Models
         public int CityId { get; set; }
         public City City { get; set; }
 
+        public string Address { get; set; }
+
         public List<ParamsCategory> ParamCategories { get; set; }
         public List<RentObjImage> Images { get; set; }
 

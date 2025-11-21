@@ -1,6 +1,8 @@
-﻿namespace UserApiService.View
+﻿using Globals.Controllers;
+
+namespace UserApiService.View
 {
-    public class RegisterResponse
+    public class RegisterResponse : IBaseResponse
     {
         public string Username { get; set; }
         public string Token { get; set; }

@@ -1,9 +1,11 @@
-﻿using Globals.Models;
+﻿using Globals.Controllers;
+using Globals.Models;
 
 namespace OfferApiService.View
 {
-    public class BookedDateRequest : EntityBase
+    public class BookedDateRequest : IBaseRequest
     {
+        public int id { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
 

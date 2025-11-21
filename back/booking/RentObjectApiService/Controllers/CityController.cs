@@ -29,11 +29,6 @@ namespace RentObjectApiService.Controllers
                 Title = request.Title,
                 CountryId = request.CountryId,
                 Country = request.Country,
-                RentObjs = request.RentObjs?.Select(ro => new RentObj
-                {
-                    id = ro.id,
-                    Title = ro.Title
-                }).ToList()
             };
         }
 
@@ -45,11 +40,6 @@ namespace RentObjectApiService.Controllers
                 Title = model.Title,
                 CountryId = model.CountryId,
                 Country = model.Country,
-                RentObjs = model.RentObjs?.Select(ro => new RentObj
-                {
-                    id = ro.id,
-                    Title = ro.Title
-                }).ToList()
             };
         }
     }

@@ -18,8 +18,8 @@ namespace Globals.Controllers
     [Route("api/[controller]")]
     public class BaseController<TModel, TResponse, TRequest> : ControllerBase
      where TModel : EntityBase, new()
-     where TResponse : class, new()
-     where TRequest : class, new()
+     where TResponse : IBaseResponse , new()
+     where TRequest : IBaseRequest, new()
     {
         protected readonly IServiceBase<TModel> _service;
         private readonly IRabbitMqService _mqService;
@@ -107,7 +107,6 @@ namespace Globals.Controllers
             return NoContent();
         }
 
-
         protected virtual void PublishMqEvent(string action, object data)
         {
             string json = JsonSerializer.Serialize(data);
@@ -125,5 +124,9 @@ namespace Globals.Controllers
         protected virtual TResponse MapToResponse(TModel model) => new TResponse();
         protected virtual int GetModelId(TModel model) => (int)model.GetType().GetProperty("id").GetValue(model);
     }
+
+    public interface IBaseRequest { }
+
+    public interface IBaseResponse { }
 
 }

@@ -21,6 +21,21 @@ builder.Services.AddHttpClient("UserApiService", client =>
     client.BaseAddress = new Uri($"{baseUrl}:{port}");
 });
 
+//builder.Services.AddHttpClient("OfferApiService", client =>
+//{
+//    var baseUrl = builder.Configuration["OfferApiServiceUrl"] ?? "http://offerapiservice";
+//    var port = builder.Configuration["OfferApiServicePort"] ?? "8080";
+//    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+//});
+
+
+builder.Services.AddHttpClient<IOfferServiceClient, OfferServiceClient>(client =>
+{
+    var baseUrl = "http://offerapiservice";
+    var port = "8080";
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+});
+
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 builder.Services.AddScoped<IGatewayService, GatewayService>();
 builder.Services.AddHostedService<GetwayRabbitListener>();

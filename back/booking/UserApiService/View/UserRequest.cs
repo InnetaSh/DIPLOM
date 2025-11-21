@@ -1,10 +1,17 @@
-﻿using Globals.Models;
-using UserApiService.Models;
+﻿using Globals.Controllers;
 
 namespace UserApiService.View
 {
-    public class UserRequest : User
+  
+    public class UserRequest : IBaseRequest
     {
-        public string Password { get; set; }
+        public int id { get; set; }
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string RoleName { get; set; } = string.Empty;
     }
+
+ 
 }

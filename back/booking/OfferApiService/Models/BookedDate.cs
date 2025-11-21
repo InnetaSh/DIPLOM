@@ -8,7 +8,7 @@ namespace OfferApiService.Models
         public DateTime End { get; set; }
 
         public int OfferId { get; set; }
-        public string Offer { get; set; }
+        public Offer Offer { get; set; }
 
     }
 }

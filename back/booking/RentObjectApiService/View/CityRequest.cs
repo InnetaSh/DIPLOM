@@ -11,7 +11,6 @@ namespace RentObjectApiService.View
         public int CountryId { get; set; }
         public string Country { get; set; }
 
-        public List<RentObj> RentObjs { get; set; }
     }
 
 

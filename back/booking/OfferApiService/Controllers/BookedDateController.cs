@@ -18,17 +18,19 @@ namespace OfferApiService.Controllers
         { 
         }
 
-        protected override BookedDate MapToModel(BookedDateRequest request)
+        protected BookedDate MapToModel(BookedDateRequest request)
         {
             return new BookedDate
             {
+                id = request.id,
                 Start = request.Start,
                 End = request.End,
                 OfferId = request.OfferId
             };
         }
 
-        protected override BookedDateResponse MapToResponse(BookedDate model)
+
+        protected BookedDateResponse MapToResponse(BookedDate model)
         {
             return new BookedDateResponse
             {
@@ -38,6 +40,7 @@ namespace OfferApiService.Controllers
                 OfferId = model.OfferId
             };
         }
+
     }
 
 }

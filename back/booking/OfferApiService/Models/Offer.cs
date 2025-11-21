@@ -1,4 +1,5 @@
 ﻿using Globals.Models;
+using OfferApiService.Models.Enum;
 
 namespace OfferApiService.Models
 {
@@ -7,27 +8,34 @@ namespace OfferApiService.Models
         public string Title { get; set; }
         public string Description { get; set; }
 
-
+        // Цены
         public decimal PricePerDay { get; set; }
         public decimal? PricePerWeek { get; set; }
         public decimal? PricePerMonth { get; set; }
 
-   
-        public decimal? DiscountPercent { get; set; }   
-        public decimal? DiscountAmount { get; set; }    
-
-  
+        // Депозит
         public decimal? Deposit { get; set; }
+        public PaymentType PaymentStatus { get; set; } //Возвращаемый / нет
+
+        // Налог (%)
+        public decimal? Tax { get; set; } // Процент налога от стоимости аренды
 
 
+        // Правила аренды
         public int MinRentDays { get; set; } = 1;
         public bool AllowPets { get; set; }
         public bool AllowSmoking { get; set; }
         public bool AllowChildren { get; set; }
 
+        // Владелец и объект
         public int OwnerId { get; set; }      
-        public int RentObjId { get; set; }    
+        public int RentObjId { get; set; }
 
+        // Время заезда / выезда (по умолчанию)
+        public TimeSpan CheckInTime { get; set; } = new TimeSpan(15, 0, 0);  // 15:00
+        public TimeSpan CheckOutTime { get; set; } = new TimeSpan(11, 0, 0); // 11:00
+
+        // Забронированные даты
         public List<BookedDate> BookedDates { get; set; } = new List<BookedDate>();
     }
 

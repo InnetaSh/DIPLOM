@@ -9,9 +9,9 @@ namespace UserApiService.Models
     public class Owner : User
     {
 
-
+        public new UserRole RoleName { get; set; } = UserRole.Owner;
         // Навигационное свойство для связки с подуслугами
-       
+
     }
 
     

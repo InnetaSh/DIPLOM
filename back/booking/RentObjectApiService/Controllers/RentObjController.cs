@@ -14,13 +14,39 @@ namespace RentObjectApiService.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    [Route("api/[controller]")]
     public class RentObjController : BaseController<RentObj, RentObjResponse, RentObjRequest>
     {
         public RentObjController(IRentObjService rentObjService, IRabbitMqService mqService)
     : base(rentObjService, mqService)
         {
         }
+
+        [HttpGet("by-city")]
+        public async Task<ActionResult<List<RentObjResponse>>> GetByCity([FromQuery] string city)
+        {
+            if (string.IsNullOrWhiteSpace(city))
+                return BadRequest("City name is required");
+
+            var rentObjs = await (_service as IRentObjService).GetByCityAsync(city);
+
+            var response = rentObjs.Select(model => new RentObjResponse
+            {
+                Id = model.id,
+                Title = model.Title,
+                Description = model.Description,
+                CityId = model.CityId,
+                Address = model.Address,
+                ParamCategories = model.ParamCategories?.Select(pc => new ParamsCategory
+                {
+                    id = pc.id,
+                    Title = pc.Title
+                }).ToList(),
+                Images = model.Images?.Select(img => img.Url).ToList() ?? new List<string>()
+            }).ToList();
+
+            return Ok(response);
+        }
+
 
 
         protected override RentObj MapToModel(RentObjRequest request)
@@ -29,7 +55,9 @@ namespace RentObjectApiService.Controllers
             {
                 id = request.id,
                 Title = request.Title,
+                Description = request.Description,
                 CityId = request.CityId,
+                Address = request.Address,
                 ParamCategories = request.ParamCategories?.Select(ro => new ParamsCategory
                 {
                     id = ro.id,
@@ -42,23 +70,18 @@ namespace RentObjectApiService.Controllers
         {
             return new RentObjResponse
             {
-                id = model.id,
+                Id = model.id,
                 Title = model.Title,
                 Description = model.Description,
                 CityId = model.CityId,
+                Address = model.Address,
                 ParamCategories = model.ParamCategories?.Select(pc => new ParamsCategory
                 {
                     id = pc.id,
                     Title = pc.Title
                 }).ToList(),
-                Images = model.Images?.Select(img => new RentObjImage
-                {
-                    id = img.id,
-                    Url = img.Url,
-                    RentObjId = img.RentObjId
-                }).ToList()
-            ,
-
+                Images = model.Images?.Select(img => img.Url).ToList()
+                 ?? new List<string>()
             };
         }
     }

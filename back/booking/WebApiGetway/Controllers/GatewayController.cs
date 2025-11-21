@@ -16,6 +16,12 @@ public class GatewayController : ControllerBase
     public Task<IActionResult> GetWeather() =>
     _gateway.ForwardRequestAsync<object>("WeatherService", "/WeatherForecast", HttpMethod.Get, null);
 
+    [HttpGet("getOffersMainSearch")]
+    public Task<IActionResult> GetOffersMainSearch([FromQuery] string city, [FromQuery] DateTime start, [FromQuery] DateTime end) =>
+    _gateway.ForwardRequestAsync<object>("OfferApiService"
+        , $"/api/offer/by-main?city={city}&start={start}&end={end}"
+        , HttpMethod.Get, null);
+
 
     [HttpPost("login")]
     public Task<IActionResult> Login([FromBody] object request) =>
