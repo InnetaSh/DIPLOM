@@ -1,6 +1,5 @@
-using Globals.Abstractions;
+﻿using Globals.Abstractions;
 using Globals.EventBus;
-using OfferApiService.Service;
 using OfferApiService.Service.Interface;
 using OfferApiService.Services;
 using OfferApiService.Services.Interfaces.RentObject;
@@ -16,7 +15,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IOfferService, OfferService>();
+
+
+//builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IBookedDateService, BookedDateService>();
 
 builder.Services.AddScoped<ICityService, CityService>();
@@ -31,14 +32,30 @@ builder.Services.AddScoped<IParamItemService, ParamItemService>();
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 builder.Services.AddHostedService<OfferRabbitListener>();
 
+
+
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    options.ListenAnyIP(8080); // теперь доступно на всех интерфейсах
+//});
+
+
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
+
 if (app.Environment.IsDevelopment())
 {
+    Console.WriteLine("Swagger enabled");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    Console.WriteLine("Swagger disabled");
+}
+
 
 app.UseAuthorization();
 

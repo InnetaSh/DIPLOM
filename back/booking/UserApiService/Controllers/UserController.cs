@@ -16,18 +16,17 @@ namespace UserApiService.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class UserController
-        : BaseController<User, UserResponse, UserRequest>
+        : EntityControllerBase<User, UserResponse, UserRequest>
     {
-
-
-        private IUserService _userService;
         public UserController(IUserService userService, IRabbitMqService mqService)
             : base(userService, mqService)
         {
-            _userService = userService;
 
         }
-        protected User MapToModel(UserRequest request)
+
+
+
+        protected override User MapToModel(UserRequest request)
         {
             return new User
             {
@@ -38,7 +37,7 @@ namespace UserApiService.Controllers
             };
         }
 
-        protected UserResponse MapToResponse(User model)
+        protected override UserResponse MapToResponse(User model)
         {
             return new UserResponse
             {

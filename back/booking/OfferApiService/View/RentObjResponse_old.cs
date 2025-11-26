@@ -4,7 +4,7 @@ using Globals.Models;
 
 namespace OfferApiService.View
 {
-    public class RentObjResponse : IBaseResponse
+    public class RentObjResponse_old : IBaseResponse
     {
         public int id { get; set; }
         public string Title { get; set; }

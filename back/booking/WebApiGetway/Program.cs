@@ -1,6 +1,7 @@
 using Globals.Abstractions;
 using Globals.EventBus;
 using WebApiGateway.Services;
+using WebApiGetway.Controllers;
 using WebApiGetway.Service;
 using WebApiGetway.Service.Interfase;
 
@@ -15,18 +16,24 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpClient("UserApiService", client =>
 {
-    //client.BaseAddress = new Uri(builder.Configuration["UserApiServiceUrl"] ?? "http://userapiservice");
     var baseUrl = builder.Configuration["UserApiServiceUrl"] ?? "http://userapiservice";
     var port = builder.Configuration["UserApiServicePort"] ?? "8080";
     client.BaseAddress = new Uri($"{baseUrl}:{port}");
 });
 
-//builder.Services.AddHttpClient("OfferApiService", client =>
+//builder.Services.AddHttpClient<IUserServiceClient, UserServiceClient>(client =>
 //{
-//    var baseUrl = builder.Configuration["OfferApiServiceUrl"] ?? "http://offerapiservice";
-//    var port = builder.Configuration["OfferApiServicePort"] ?? "8080";
+//    var baseUrl = "http://userapiservice";
+//    var port = "8080";
 //    client.BaseAddress = new Uri($"{baseUrl}:{port}");
 //});
+
+builder.Services.AddHttpClient("OfferApiService", client =>
+{
+    var baseUrl = builder.Configuration["OfferApiServiceUrl"] ?? "http://offerapiservice";
+    var port = builder.Configuration["OfferApiServicePort"] ?? "8080";
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+});
 
 
 builder.Services.AddHttpClient<IOfferServiceClient, OfferServiceClient>(client =>
@@ -37,8 +44,10 @@ builder.Services.AddHttpClient<IOfferServiceClient, OfferServiceClient>(client =
 });
 
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
-builder.Services.AddScoped<IGatewayService, GatewayService>();
 builder.Services.AddHostedService<GetwayRabbitListener>();
+
+builder.Services.AddScoped<IGatewayService, GatewayService>();
+builder.Services.AddScoped<IServiceBase<TestModel>, TestService>();
 
 
 var app = builder.Build();

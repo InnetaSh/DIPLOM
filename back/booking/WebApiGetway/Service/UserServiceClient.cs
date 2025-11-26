@@ -11,9 +11,11 @@ namespace WebApiGetway.Service
             _http = http;
         }
 
-        public async Task<HttpResponseMessage> Login(object request)
+        public async Task<HttpResponseMessage> Register(string request)
         {
-            var res = await _http.GetAsync($"/api/rentobj/by-city?city={request}");
+            //var json = System.Text.Json.JsonSerializer.Serialize(request);
+            var content = new StringContent(request, System.Text.Encoding.UTF8, "application/json");
+            var res = await _http.PostAsync($"/api/userapiservice/register", content);
             return res;
         }
     }

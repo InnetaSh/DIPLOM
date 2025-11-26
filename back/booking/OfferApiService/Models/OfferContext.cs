@@ -20,7 +20,6 @@ namespace OfferApiService.Models
 
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
-           
             builder.Entity<Offer>().ToTable("Offers");
             builder.Entity<BookedDate>().ToTable("BookedDates");
             builder.Entity<City>().ToTable("Cities");

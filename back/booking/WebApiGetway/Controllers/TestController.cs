@@ -1,22 +1,20 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
 using Globals.Models;
+using Globals.Sevices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApiGetway.Controllers
 {
-    public class TestController : BaseController<TestModel, TestResponse, TestRequest>
+    public class TestController : EntityControllerBase<TestModel, TestResponse, TestRequest>
     {
         public TestController(IServiceBase<TestModel> service, IRabbitMqService mqService)
             : base(service, mqService)
         {
         }
 
-        [Route("create")]
-        public override Task<ActionResult<TestResponse>> Create([FromBody] TestRequest request)
-        {
-             return base.Create(request);
-        }
+        [HttpPost("create-test")]
+        public override Task<ActionResult<TestResponse>> Create([FromBody] TestRequest request) => base.Create(request);
 
         protected override TestModel MapToModel(TestRequest request)
         {
@@ -39,16 +37,37 @@ namespace WebApiGetway.Controllers
         public string Name { get; set; }
     }
 
-    public class CreateRequest: IBaseRequest
+    public class CreateRequest : IBaseRequest
     { }
 
-    public class TestRequest: IBaseRequest
+    public class TestRequest : IBaseRequest
     {
         public string Data { get; set; }
     }
 
-    public class TestResponse: IBaseResponse
+    public class TestResponse : IBaseResponse
     {
         public string Data { get; set; }
+    }
+
+    public class TestContext : ContextBase<TestModel>
+    {
+
+    }
+    public class TestService : ServiceBase<TestModel, TestContext>
+    {
+    }
+
+    public class SubTestService : TableServiceBase<SubTest, TestContext>, ITableTestService
+    {
+    }
+
+    public interface ITableTestService : IServiceBase<SubTest>
+    {
+    }
+
+    public class SubTest : EntityBase
+    {
+        public string Name { get; set; }
     }
 }

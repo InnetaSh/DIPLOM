@@ -9,14 +9,14 @@ using OfferApiService.View.RentObject;
 namespace OfferApiService.Controllers.RentObject
 {
 
-    [ApiController]
-    [Route("api/[controller]")]
-    public class CityController : BaseController<City, CityResponse, CityRequest>
+    
+    public class CityController : EntityControllerBase<City, CityResponse, CityRequest>
     {
         public CityController(ICityService cityService, IRabbitMqService mqService)
             : base(cityService, mqService)
                 {
                 }
+
 
 
         protected override City MapToModel(CityRequest request)
@@ -35,8 +35,7 @@ namespace OfferApiService.Controllers.RentObject
             {
                 id = model.id,
                 Title = model.Title,
-                CountryId = model.CountryId,
-                Country = model.Country,
+                CountryId = model.CountryId
             };
         }
     }

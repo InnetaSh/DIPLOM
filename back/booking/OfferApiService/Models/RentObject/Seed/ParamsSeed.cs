@@ -8,6 +8,50 @@ namespace OfferApiService.Data.Seeds
     {
         public static void Seed(ModelBuilder modelBuilder)
         {
+
+            // Сиды стран
+            modelBuilder.Entity<Country>().HasData(
+                new Country { id = 1, Title = "United States" },
+                new Country { id = 2, Title = "Germany" },
+                new Country { id = 3, Title = "France" },
+                new Country { id = 4, Title = "United Kingdom" },
+                new Country { id = 5, Title = "Spain" },
+                new Country { id = 6, Title = "Poland" }   
+            );
+
+            // Сиды городов
+            modelBuilder.Entity<City>().HasData(
+                // USA
+                new City { id = 1, Title = "New York", CountryId = 1 },
+                new City { id = 2, Title = "Los Angeles", CountryId = 1 },
+                new City { id = 3, Title = "Chicago", CountryId = 1 },
+
+                // Germany
+                new City { id = 4, Title = "Berlin", CountryId = 2 },
+                new City { id = 5, Title = "Munich", CountryId = 2 },
+                new City { id = 6, Title = "Hamburg", CountryId = 2 },
+
+                // France
+                new City { id = 7, Title = "Paris", CountryId = 3 },
+                new City { id = 8, Title = "Lyon", CountryId = 3 },
+                new City { id = 9, Title = "Marseille", CountryId = 3 },
+
+                // United Kingdom
+                new City { id = 10, Title = "London", CountryId = 4 },
+                new City { id = 11, Title = "Manchester", CountryId = 4 },
+                new City { id = 12, Title = "Birmingham", CountryId = 4 },
+
+                // Spain
+                new City { id = 13, Title = "Madrid", CountryId = 5 },
+                new City { id = 14, Title = "Barcelona", CountryId = 5 },
+                new City { id = 15, Title = "Valencia", CountryId = 5 },
+
+                // Poland 🇵🇱
+                new City { id = 16, Title = "Warsaw", CountryId = 6 },
+                new City { id = 17, Title = "Kraków", CountryId = 6 },
+                new City { id = 18, Title = "Poznań", CountryId = 6 }
+            );
+
             // Сиды категорий
             modelBuilder.Entity<ParamsCategory>().HasData(
                 new ParamsCategory { id = 1, Title = "General" },

@@ -11,7 +11,7 @@ services:
       - UserApiServiceUrl=http://userapiservice
     depends_on:
       - userapiservice
-      - rentobjectapiservice
+      # - rentobjectapiservice
       - offerapiservice
       - orderapiservice
       - rabbitmq

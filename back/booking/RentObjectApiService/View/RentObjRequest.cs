@@ -1,9 +1,10 @@
-﻿using Globals.Models;
+﻿using Globals.Controllers;
+using Globals.Models;
 using RentObjectApiService.Models;
 
 namespace RentObjectApiService.View
 {
-    public class RentObjRequest : EntityBase
+    public class RentObjRequest : EntityBase, IBaseRequest
     {                 
         public string Title { get; set; }             
         public int CityId { get; set; }              

@@ -1,6 +1,8 @@
-﻿namespace RentObjectApiService.View
+﻿using Globals.Controllers;
+
+namespace RentObjectApiService.View
 {
-    public class ParamsCategoryRequest
+    public class ParamsCategoryRequest: IBaseRequest
     {
         public int id { get; set; }
         public string Title { get; set; }

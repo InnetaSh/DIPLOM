@@ -11,7 +11,7 @@ namespace OfferApiService.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class BookedDateController
-        : BaseController<BookedDate, BookedDateResponse, BookedDateRequest>
+        : EntityControllerBase<BookedDate, BookedDateResponse, BookedDateRequest>
     {
         public BookedDateController(IBookedDateService bookedDateService, IRabbitMqService mqService)
             : base(bookedDateService, mqService) 

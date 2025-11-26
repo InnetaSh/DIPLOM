@@ -1,72 +1,132 @@
-﻿//using Globals.Abstractions;
-//using Globals.EventBus;
-//using Microsoft.AspNetCore.Mvc;
-//using System;
-//using System.Collections.Generic;
-//using Microsoft.Extensions.DependencyInjection;
-//using System.Net.Http;
-//using System.Linq;
-//using System.Net.Http.Json;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using Globals.Abstractions;
+using Globals.EventBus;
+using Globals.Models;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
-//namespace Globals.Controllers
-//{
-//    public class EntityControllerBase : ControllerBase
-//    {
-//        private readonly IHttpClientFactory _clientFactory;
-//        private readonly IRabbitMqService _mqService;
+namespace Globals.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class EntityControllerBase<TModel, TResponse, TRequest> : ControllerBase
+     where TModel : EntityBase, new()
+     where TResponse : IBaseResponse , new()
+     where TRequest : IBaseRequest, new()
+    {
+        protected readonly IServiceBase<TModel> _service;
+        private readonly IRabbitMqService _mqService;
 
-//        public EntityControllerBase(IHttpClientFactory clientFactory, IRabbitMqService mqService)
-//        {
-//            _clientFactory = clientFactory;
-//            _mqService = mqService;
-//        }
+        public EntityControllerBase(IServiceBase<TModel> service, IRabbitMqService mqService)
+        {
+            _service = service;
+            _mqService = mqService;
+        }
 
-//        public virtual async Task<IActionResult> Get<T>(string serviceName, string route, T msg) where T : RabbitMQMessageBase
-//        {
-//            var client = _clientFactory.CreateClient(serviceName);
-//            var response = await client.GetAsync(route);
+        [HttpGet("get-all")]
+        public virtual async Task<ActionResult<IEnumerable<TResponse>>> GetAll()
+        {
+            var items = await _service.GetEntitiesAsync();
+            if (items == null || !items.Any())
+                return NotFound(new { message = "No items found" });
 
-//            if (response.IsSuccessStatusCode)
-//            {
-//                _mqService.SendMessage(msg);
-//                var result = await response.Content.ReadFromJsonAsync<object>();
-//                return Ok(result);
-//            }
+            var responseList = items.Select(item => MapToResponse(item)).ToList();
+            return Ok(responseList);
+        }
 
-//            return StatusCode((int)response.StatusCode);
-//        }
+        [HttpGet("get/{id}")]
+        public virtual async Task<ActionResult<TResponse>> GetById(int id)
+        {
+            var item = await _service.GetEntityAsync(id);
+            if (item == null)
+                return NotFound(new { message = "Item not found" });
 
-//        public virtual async Task<IActionResult> Post<T, V>(string serviceName, string route, T request, V msg) where T: RequestBase where V : RabbitMQMessageBase
-//        {
-//            var client = _clientFactory.CreateClient(serviceName);
-//            var response = await client.PostAsJsonAsync(route, request);
+            return Ok(MapToResponse(item));
+        }
 
-//            if (response.IsSuccessStatusCode)
-//            {
-//                _mqService.SendMessage(msg);
-//                var result = await response.Content.ReadFromJsonAsync<object>();
-//                return Ok(result);
-//            }
+        [HttpPost("create")]
+        public virtual async Task<ActionResult<TResponse>> Create([FromBody] TRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-//            return StatusCode((int)response.StatusCode);
-//        }
+            var model = MapToModel(request);
+            var result = await _service.AddEntityAsync(model);
 
-//        //public virtual async Task<IActionResult> Del<T, V>(string serviceName, string route, T request, V msg) where T : RequestBase where V : RabbitMQMessageBase
-//        //{
-//        //    var client = _clientFactory.CreateClient(serviceName);
-//        //    //var response = await client.PutAsJsonAsync(route, request);
-//        //    var response = await client.DeleteFromJsonAsync(route, request);
+            if (!result)
+                return StatusCode(500, new { message = "Error creating item" });
 
-//        //    if (response.IsSuccessStatusCode)
-//        //    {
-//        //        _mqService.SendMessage(msg);
-//        //        var result = await response.Content.ReadFromJsonAsync<object>();
-//        //        return Ok(result);
-//        //    }
+            PublishMqEvent("Created", model);
 
-//        //    return StatusCode((int)response.StatusCode);
-//        //}
-//    }
-//}
+            return CreatedAtAction(nameof(GetById), new { id = model.id }, MapToResponse(model));
+        }
+
+        [HttpPut("update/{id}")]
+        public virtual async Task<IActionResult> Update(int id, [FromBody] TRequest request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var model = MapToModel(request);
+            if (GetModelId(model) != id)
+                return BadRequest(new { message = "ID mismatch" });
+
+            var exists = await _service.ExistsEntityAsync(id);
+            if (!exists)
+                return NotFound(new { message = "Item not found" });
+
+            var success = await _service.UpdateEntityAsync(model);
+            if (!success)
+                return StatusCode(500, new { message = "Error updating item" });
+
+            PublishMqEvent("Updated", model);
+
+            return NoContent();
+        }
+
+        [HttpDelete("del/{id}")]
+        public virtual async Task<IActionResult> Delete(int id)
+        {
+            var exists = await _service.ExistsEntityAsync(id);
+            if (!exists)
+                return NotFound(new { message = "Item not found" });
+
+            var success = await _service.DelEntityAsync(id);
+            if (!success)
+                return StatusCode(500, new { message = "Error deleting item" });
+
+            PublishMqEvent("Deleted", new { id });
+
+            return NoContent();
+        }
+
+        protected virtual void PublishMqEvent(string action, object data)
+        {
+            string json = JsonSerializer.Serialize(data);
+
+            var message = new RabbitMQMessageBase(
+                sender: GetType().Name,
+                eventType: action,
+                data: json
+            );
+
+            _mqService.SendMessage(message);
+        }
+
+        protected virtual TModel MapToModel(TRequest request) => new TModel();
+        protected virtual TResponse MapToResponse(TModel model) => new TResponse();
+        protected virtual int GetModelId(TModel model) => (int)model.GetType().GetProperty("id").GetValue(model);
+    }
+
+    public interface IBaseRequest { }
+
+    public interface IBaseResponse { }
+
+}

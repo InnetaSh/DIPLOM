@@ -2,6 +2,6 @@
 {
     public interface IUserServiceClient
     {
-        Task<HttpResponseMessage> Login(object request);
+        Task<HttpResponseMessage> Register(string request);
     }
 }

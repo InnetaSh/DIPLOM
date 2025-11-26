@@ -12,7 +12,7 @@ namespace OfferApiService.Controllers
     [ApiController]
     [Route("api/[controller]")]
     public class OfferController
-        : BaseController<Offer, OfferResponse, OfferRequest>
+        : EntityControllerBase<Offer, OfferResponse, OfferRequest>
     {
         private IOfferService _offerService;
         public OfferController(IOfferService offerService, IRabbitMqService mqService)
@@ -23,14 +23,14 @@ namespace OfferApiService.Controllers
 
 
         [HttpGet("by-mainparams")]
-        public async Task<ActionResult<List<RentObjResponse>>> GetMainSearch([FromQuery] string city, DateTime start, DateTime end, int bedroomsCount)
+        public async Task<ActionResult<List<RentObjResponse_old>>> GetMainSearch([FromQuery] string city, DateTime start, DateTime end, int bedroomsCount)
         {
             if (string.IsNullOrWhiteSpace(city))
                 return BadRequest("City name is required");
 
             var rentObjs = await _offerService.GetMainAvailableOffers(city, start, end, bedroomsCount);
 
-            var response = new List<RentObjResponse>();
+            var response = new List<RentObjResponse_old>();
 
             return Ok(response);
         }

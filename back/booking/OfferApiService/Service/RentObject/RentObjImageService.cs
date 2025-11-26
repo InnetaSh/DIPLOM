@@ -1,4 +1,5 @@
 ﻿using Globals.Sevices;
+using OfferApiService.Models;
 using OfferApiService.Models.RentObject;
 
 
@@ -6,7 +7,7 @@ using OfferApiService.Models.RentObject;
 
 namespace OfferApiService.Services.Interfaces.RentObject
 {
-    public class RentObjImageService : TableServiceBase<RentObjImage, RentObjectContext>, IRentObjImageService
+    public class RentObjImageService : TableServiceBase<RentObjImage, OfferContext>, IRentObjImageService
     { 
 
     }

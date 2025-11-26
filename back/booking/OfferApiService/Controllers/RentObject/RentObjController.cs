@@ -9,9 +9,7 @@ using OfferApiService.View.RentObject;
 namespace OfferApiService.Controllers.RentObject
 {
 
-    [ApiController]
-    [Route("api/[controller]")]
-    public class RentObjController : BaseController<RentObj, RentObjResponse, RentObjRequest>
+    public class RentObjController : EntityControllerBase<RentObj, RentObjResponse, RentObjRequest>
     {
         public RentObjController(IRentObjService rentObjService, IRabbitMqService mqService)
     : base(rentObjService, mqService)
