@@ -11,13 +11,18 @@ namespace Globals.Sevices
 
         public virtual async Task<bool> AddEntityAsync(T entity)
         {
-            using (var db = (V)Activator.CreateInstance(typeof(V)))
+            try
             {
-                var dbSet = GetDbSet(db);
-                await dbSet.AddAsync(entity);
-                await db.SaveChangesAsync();
-                return true;
+                using (var db = (V)Activator.CreateInstance(typeof(V)))
+                {
+                    var dbSet = GetDbSet(db);
+                    await dbSet.AddAsync(entity);
+                    await db.SaveChangesAsync();
+                    return true;
+                }
             }
+            catch (Exception ex) { }
+            return false;
         }
 
         public virtual async Task<bool> DelEntityAsync(int id)

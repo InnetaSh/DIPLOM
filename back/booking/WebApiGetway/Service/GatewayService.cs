@@ -62,5 +62,45 @@ namespace WebApiGetway.Service
 
             return new StatusCodeResult((int)response.StatusCode);
         }
+
+        public async Task<IActionResult> ForwardFileAsync(
+             string serviceName,
+             string route,
+             HttpMethod method,
+             IFormFile file)
+        {
+            var client = _clientFactory.CreateClient(serviceName);
+
+            using var content = new MultipartFormDataContent();
+
+            var streamContent = new StreamContent(file.OpenReadStream());
+            content.Add(streamContent, "file", file.FileName);
+
+            HttpResponseMessage response = method.Method switch
+            {
+                "POST" => await client.PostAsync(route, content),
+                "PUT" => await client.PutAsync(route, content),
+                _ => throw new ArgumentException("Only POST/PUT allowed for file upload")
+            };
+
+            string raw = await response.Content.ReadAsStringAsync();
+            object result;
+
+            try
+            {
+                result = JsonSerializer.Deserialize<object>(raw);
+            }
+            catch
+            {
+                result = new { response = raw };
+            }
+
+            return new ObjectResult(result)
+            {
+                StatusCode = (int)response.StatusCode
+            };
+        }
+
+
     }
 }

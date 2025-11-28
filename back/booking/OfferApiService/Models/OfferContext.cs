@@ -15,21 +15,24 @@ namespace OfferApiService.Models
 
         public DbSet<ParamsCategory> ParamsCategories { get; set; }
         public DbSet<ParamItem> ParamItems { get; set; }
-        public DbSet<RentObj> RentObjects { get; set; }
+
+        public DbSet<RentObjImage> RentObjImages { get; set; }
+        public DbSet<RentObject.RentObject> RentObjects { get; set; }
         public DbSet<RentObjParamValue> RentObjParamValues { get; set; }
 
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
-            builder.Entity<Offer>().ToTable("Offers");
-            builder.Entity<BookedDate>().ToTable("BookedDates");
-            builder.Entity<City>().ToTable("Cities");
-            builder.Entity<Country>().ToTable("Countries");
-            builder.Entity<RentObj>().ToTable("RentObjects");
-            builder.Entity<ParamsCategory>().ToTable("ParamsCategories");
-            builder.Entity<ParamItem>().ToTable("ParamItems");
-            builder.Entity<RentObjParamValue>().ToTable("RentObjParamValues");
+            builder.Entity<Offer>().ToTable("offers");
+            builder.Entity<BookedDate>().ToTable("bookeddates");
+            builder.Entity<City>().ToTable("cities");
+            builder.Entity<Country>().ToTable("countries");
+            builder.Entity<RentObject.RentObject>().ToTable("rentobjects");
+            builder.Entity<ParamsCategory>().ToTable("paramscategories");
+            builder.Entity<ParamItem>().ToTable("paramitems");
+            builder.Entity<RentObjParamValue>().ToTable("rentobjparamvalues");
+            builder.Entity<RentObjImage>().ToTable("rentobjimages");
 
-            
+
             ParamsSeed.Seed(builder);
 
             
@@ -45,7 +48,7 @@ namespace OfferApiService.Models
                 .HasForeignKey(v => v.ParamItemId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Entity<RentObj>()
+            builder.Entity<RentObject.RentObject>()
                 .HasMany(r => r.ParamValues)
                 .WithOne(v => v.RentObj)
                 .HasForeignKey(v => v.RentObjId)

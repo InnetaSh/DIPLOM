@@ -13,7 +13,7 @@ namespace OfferApiService.Models.Dto
         public decimal? PricePerWeek { get; set; }
         public decimal? PricePerMonth { get; set; }
 
-        public decimal? Deposit { get; set; }
+        public decimal? DepositPersent { get; set; }
         public PaymentType PaymentStatus { get; set; }
         public decimal? Tax { get; set; }
 

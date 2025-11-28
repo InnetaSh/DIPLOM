@@ -5,7 +5,7 @@ namespace OfferApiService.Models.RentObject
     public class RentObjParamValue : EntityBase
     {
         public int RentObjId { get; set; }
-        public RentObj RentObj { get; set; }
+        public RentObject RentObj { get; set; }
 
         public int ParamItemId { get; set; }
         public ParamItem ParamItem { get; set; }

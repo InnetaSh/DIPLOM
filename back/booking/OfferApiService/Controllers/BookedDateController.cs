@@ -18,7 +18,7 @@ namespace OfferApiService.Controllers
         { 
         }
 
-        protected BookedDate MapToModel(BookedDateRequest request)
+        protected override BookedDate MapToModel(BookedDateRequest request)
         {
             return new BookedDate
             {
@@ -30,7 +30,7 @@ namespace OfferApiService.Controllers
         }
 
 
-        protected BookedDateResponse MapToResponse(BookedDate model)
+        protected override BookedDateResponse MapToResponse(BookedDate model)
         {
             return new BookedDateResponse
             {

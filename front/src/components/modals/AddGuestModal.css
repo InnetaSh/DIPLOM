@@ -1,0 +1,32 @@
+.guest-dropdown {
+  background: var(--color-secondary);
+  border: 2px solid var(--color-form-border);
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 240px;
+  position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+}
+
+.guest-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.guest-controls button {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  background-color: var(--color-secondary-light);
+  cursor: pointer;
+}
+
+.guest-controls span {
+  margin: 0 8px;
+}

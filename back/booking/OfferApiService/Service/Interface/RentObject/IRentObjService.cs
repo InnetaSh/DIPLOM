@@ -4,8 +4,8 @@ using OfferApiService.Models.RentObject;
 
 namespace OfferApiService.Services.Interfaces.RentObject
 {
-        public interface IRentObjService : IServiceBase<RentObj>
+        public interface IRentObjService : IServiceBase<Models.RentObject.RentObject>
         {
-            Task<List<RentObj>> GetByCityAsync(string cityName);
+            Task<List<Models.RentObject.RentObject>> GetByCityAsync(string cityName);
         }
 }

@@ -24,6 +24,16 @@ public class GatewayController : ControllerBase
         , HttpMethod.Get, null);
 
 
+
+    [HttpGet("user/get-all")]
+    public Task<IActionResult> GetAllUser() =>
+      _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/user/get-all", HttpMethod.Get, null);
+
+    [HttpGet("user/get/{id}")]
+    public Task<IActionResult> GetByIdUser(int id) =>
+     _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/user/get/{id}", HttpMethod.Get, null);
+
+
     [HttpPost("login")]
     public Task<IActionResult> Login([FromBody] object request) =>
         _gateway.ForwardRequestAsync("UserApiService", "/api/auth/login", HttpMethod.Post, request);
@@ -73,7 +83,7 @@ public class GatewayController : ControllerBase
 
     [HttpDelete("country/del/{id}")]
     public Task<IActionResult> DeleteCountry(int id) =>
-        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/country/del/{id}", HttpMethod.Delete, null);
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/country/del/{id}", HttpMethod.Delete, null);
 
 
 
@@ -88,7 +98,7 @@ public class GatewayController : ControllerBase
 
     [HttpGet("city/get/{id}")]
     public Task<IActionResult> GetByIdCity(int id) =>
-    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/apicity/get/{id}", HttpMethod.Get, null);
+    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/city/get/{id}", HttpMethod.Get, null);
 
 
     [HttpPost("city/create")]
@@ -102,35 +112,35 @@ public class GatewayController : ControllerBase
 
     [HttpDelete("city/del/{id}")]
     public Task<IActionResult> DeleteCity(int id) =>
-        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/city/del/{id}", HttpMethod.Delete, null);
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/city/del/{id}", HttpMethod.Delete, null);
 
 
 
 
-    // ---param---
+    // ---param item---
 
-    [HttpGet("param/get-all")]
+    [HttpGet("paramitem/get-all")]
     public Task<IActionResult> GetAllParam() =>
-      _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/param/get-all", HttpMethod.Get, null);
+      _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/paramitem/get-all", HttpMethod.Get, null);
 
 
-    [HttpGet("param/get/{id}")]
+    [HttpGet("paramitem/get/{id}")]
     public Task<IActionResult> GetByIdlParam(int id) =>
-    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/param/get/{id}", HttpMethod.Get, null);
+    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/paramitem/get/{id}", HttpMethod.Get, null);
 
 
-    [HttpPost("param/create")]
+    [HttpPost("paramitem/create")]
     public Task<IActionResult> CreatelParam([FromBody] object request) =>
-      _gateway.ForwardRequestAsync("OfferApiService", $"/api/param/create", HttpMethod.Post, request);
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/paramitem/create", HttpMethod.Post, request);
 
-    [HttpPut("param/update/{id}")]
+    [HttpPut("paramitem/update/{id}")]
     public Task<IActionResult> UpdatelParam(int id, [FromBody] object request) =>
-      _gateway.ForwardRequestAsync("OfferApiService", $"/api/param/update/{id}", HttpMethod.Put, request);
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/paramitem/update/{id}", HttpMethod.Put, request);
 
 
-    [HttpDelete("param/del/{id}")]
+    [HttpDelete("paramitem/del/{id}")]
     public Task<IActionResult> DeletelParam(int id) =>
-        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/param/del/{id}", HttpMethod.Delete, null);
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/paramitem/del/{id}", HttpMethod.Delete, null);
 
 
 
@@ -157,7 +167,7 @@ public class GatewayController : ControllerBase
 
     [HttpDelete("params-category/del/{id}")]
     public Task<IActionResult> DeleteParamCategory(int id) =>
-        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/paramscategory/del/{id}", HttpMethod.Delete, null);
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/paramscategory/del/{id}", HttpMethod.Delete, null);
 
 
 
@@ -184,34 +194,41 @@ public class GatewayController : ControllerBase
 
     [HttpDelete("rentobjparam-value/del/{id}")]
     public Task<IActionResult> DeleteRentObjParamValue(int id) =>
-        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/rentobjparamvalue/del/{id}", HttpMethod.Delete, null);
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/rentobjparamvalue/del/{id}", HttpMethod.Delete, null);
 
 
 
     // ---RentObjImage---
 
-    [HttpGet("rentobj-image/get-all")]
-    public Task<IActionResult> GetAllRentObjImage() =>
-      _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/rentobjimage/get-all", HttpMethod.Get, null);
+    [HttpPut("rentobj-image/update/{imageId}")]
+    [Consumes("multipart/form-data")]
+    public Task<IActionResult> UpdateRentObjImage(int imageId, IFormFile file)
+    {
+        return _gateway.ForwardFileAsync(
+            "OfferApiService",
+            $"/api/rentobjimage/update-file/{imageId}",
+            HttpMethod.Put,
+            file
+        );
+    }
 
 
-    [HttpGet("rentobj-image/get/{id}")]
-    public Task<IActionResult> GetByIdRentObjImage(int id) =>
-    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/rentobjimage/get/{id}", HttpMethod.Get, null);
-
-
-    [HttpPost("rentobj-image/create")]
-    public Task<IActionResult> CreateRentObjImage([FromBody] object request) =>
-      _gateway.ForwardRequestAsync("OfferApiService", $"/api/rentobjimage/create", HttpMethod.Post, request);
-
-    [HttpPut("rentobj-image/update/{id}")]
-    public Task<IActionResult> UpdateRentObjImage(int id, [FromBody] object request) =>
-      _gateway.ForwardRequestAsync("OfferApiService", $"/api/rentobjimage/update/{id}", HttpMethod.Put, request);
+    [HttpPost("rentobj-image/upload/{rentObjId}")]
+    [Consumes("multipart/form-data")]
+    public Task<IActionResult> UploadRentObjImage(int rentObjId, IFormFile file)
+    {
+        return _gateway.ForwardFileAsync(
+            "OfferApiService",
+            $"/api/rentobjimage/upload/{rentObjId}",
+            HttpMethod.Post,
+            file
+        );
+    }
 
 
     [HttpDelete("rentobj-image/del/{id}")]
-    public Task<IActionResult> DeleteRentObjImage(int id) =>
-        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/rentobjimage/del/{id}", HttpMethod.Delete, null);
+    public Task<IActionResult> DeleteRentObjImage(int imageId) =>
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/rentobjimage/delete/{imageId}", HttpMethod.Delete, null);
 
 
 
@@ -238,6 +255,138 @@ public class GatewayController : ControllerBase
 
     [HttpDelete("rentobj/del/{id}")]
     public Task<IActionResult> DeleteRentObj(int id) =>
-        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/rentobj/del/{id}", HttpMethod.Delete, null);
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/rentobj/del/{id}", HttpMethod.Delete, null);
+
+
+
+
+
+    // ---BookedDate---
+
+    [HttpGet("bookeddate/get-all")]
+    public Task<IActionResult> GetAllBookedDate() =>
+      _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/bookeddate/get-all", HttpMethod.Get, null);
+
+
+    [HttpGet("bookeddate/get/{id}")]
+    public Task<IActionResult> GetByIdBookedDate(int id) =>
+    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/bookeddate/get/{id}", HttpMethod.Get, null);
+
+
+    [HttpPost("bookeddate/create")]
+    public Task<IActionResult> CreateBookedDate([FromBody] object request) =>
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/bookeddate/create", HttpMethod.Post, request);
+
+    [HttpPut("bookeddate/update/{id}")]
+    public Task<IActionResult> UpdateBookedDate(int id, [FromBody] object request) =>
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/bookeddate/update/{id}", HttpMethod.Put, request);
+
+
+    [HttpDelete("bookeddate/del/{id}")]
+    public Task<IActionResult> DeleteBookedDate(int id) =>
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/bookeddate/del/{id}", HttpMethod.Delete, null);
+
+
+
+    // ---Review---
+
+    [HttpGet("review/get-all")]
+    public Task<IActionResult> GetAllReview() =>
+      _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/review/get-all", HttpMethod.Get, null);
+
+
+    [HttpGet("review/get/{id}")]
+    public Task<IActionResult> GetByIdReview(int id) =>
+    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/review/get/{id}", HttpMethod.Get, null);
+
+
+    [HttpPost("review/create")]
+    public Task<IActionResult> CreateReview([FromBody] object request) =>
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/review/create", HttpMethod.Post, request);
+
+    [HttpPut("review/update/{id}")]
+    public Task<IActionResult> UpdateReview(int id, [FromBody] object request) =>
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/review/update/{id}", HttpMethod.Put, request);
+
+
+    [HttpDelete("review/del/{id}")]
+    public Task<IActionResult> DeleteReview(int id) =>
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/review/del/{id}", HttpMethod.Delete, null);
+
+
+
+    // ---Offer---
+
+    [HttpGet("offer/get-all")]
+    public Task<IActionResult> GetAllOffer() =>
+      _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/offer/get-all", HttpMethod.Get, null);
+
+
+    [HttpGet("offer/get/{id}")]
+    public Task<IActionResult> GetByIdOffer(int id) =>
+    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/offer/get/{id}", HttpMethod.Get, null);
+
+
+    [HttpPost("offer/create")]
+    public Task<IActionResult> CreateOffer([FromBody] object request) =>
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/offer/create", HttpMethod.Post, request);
+
+    [HttpPut("offer/update/{id}")]
+    public Task<IActionResult> UpdateOffer(int id, [FromBody] object request) =>
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/offer/update/{id}", HttpMethod.Put, request);
+
+
+    [HttpDelete("offer/del/{id}")]
+    public Task<IActionResult> DeleteOffer(int id) =>
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/offer/del/{id}", HttpMethod.Delete, null);
+
+
+    [HttpGet("offer/by-mainparams")]
+    public Task<IActionResult> GetMainSearch()
+    {
+        var queryString = Request.QueryString.Value ?? string.Empty;
+
+        return _gateway.ForwardRequestAsync<object>(
+            "OfferApiService",
+            $"/api/offer/by-mainparams{queryString}",
+            HttpMethod.Get,
+            null 
+        );
+    }
+
+
+
+
+    // =======================================================================
+    //                              ORDER API SERVICE
+    //========================================================================
+
+
+
+    [HttpGet("order/get-all")]
+    public Task<IActionResult> GetAllOrder() =>
+      _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/order/get-all", HttpMethod.Get, null);
+
+
+    [HttpGet("order/get/{id}")]
+    public Task<IActionResult> GetByIdOrder(int id) =>
+    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/order/get/{id}", HttpMethod.Get, null);
+
+
+    [HttpPost("order/create")]
+    public Task<IActionResult> CreateOrder([FromBody] object request) =>
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/order/create", HttpMethod.Post, request);
+
+    [HttpPut("order/update/{id}")]
+    public Task<IActionResult> UpdateOrder(int id, [FromBody] object request) =>
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/order/update/{id}", HttpMethod.Put, request);
+
+
+    [HttpDelete("order/del/{id}")]
+    public Task<IActionResult> DeleteOrder(int id) =>
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/order/del/{id}", HttpMethod.Delete, null);
+
+
+
 }
 

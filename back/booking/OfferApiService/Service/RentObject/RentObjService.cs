@@ -6,9 +6,9 @@ using OfferApiService.Models.RentObject;
 
 namespace OfferApiService.Services.Interfaces.RentObject
 {
-    public class RentObjService : TableServiceBase<RentObj, OfferContext>, IRentObjService
+    public class RentObjService : TableServiceBase<Models.RentObject.RentObject, OfferContext>, IRentObjService
     {
-        public async Task<List<RentObj>> GetByCityAsync(string cityName)
+        public async Task<List<Models.RentObject.RentObject>> GetByCityAsync(string cityName)
         {
             using var db = new OfferContext();
 

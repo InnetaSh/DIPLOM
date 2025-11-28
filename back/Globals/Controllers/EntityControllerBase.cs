@@ -109,15 +109,15 @@ namespace Globals.Controllers
 
         protected virtual void PublishMqEvent(string action, object data)
         {
-            string json = JsonSerializer.Serialize(data);
+            //string json = JsonSerializer.Serialize(data);
 
-            var message = new RabbitMQMessageBase(
-                sender: GetType().Name,
-                eventType: action,
-                data: json
-            );
+            //var message = new RabbitMQMessageBase(
+            //    sender: GetType().Name,
+            //    eventType: action,
+            //    data: json
+            //);
 
-            _mqService.SendMessage(message);
+            //_mqService.SendMessage(message);
         }
 
         protected virtual TModel MapToModel(TRequest request) => new TModel();

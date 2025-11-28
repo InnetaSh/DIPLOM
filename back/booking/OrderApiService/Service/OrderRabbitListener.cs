@@ -1,16 +1,16 @@
 ﻿using Globals.EventBus;
 using Microsoft.Extensions.Logging;
 
-namespace UserApiService.Services
+namespace OrderApiService.Services
 {
-    public class OfferRabbitListener: RabbitMqListenerBase
+    public class OrderRabbitListener: RabbitMqListenerBase
     {
 
 
-        private readonly ILogger<OfferRabbitListener> _logger;
+        private readonly ILogger<OrderRabbitListener> _logger;
 
 
-        public OfferRabbitListener(ILogger<OfferRabbitListener> logger)
+        public OrderRabbitListener(ILogger<OrderRabbitListener> logger)
         {
             _logger = logger;
 

@@ -1,0 +1,145 @@
+
+/* Светлая тема по умолчанию */
+:root {
+  --color-bg: #0071c2; 
+  --color-primary: #0071c2;      
+  --color-primary-dark: #005b9a;
+  --color-on-primary: #ffffff;
+
+  --color-secondary: #f0f0f0;
+  --color-secondary-light: #e0e0e0;; 
+  --color-secondary-light-rgb: 100, 150, 200; 
+
+  --color-text: #333333;
+  --color-form-border: #db7500;
+}
+
+/* Тёмная тема */
+[data-theme="dark"] {
+  --color-bg: #0071c2; 
+  --color-primary: #1e90ff;
+  --color-primary-dark: #0f5fae;
+  --color-on-primary: #ffffff;
+
+  --color-secondary: #2b2b2b;
+  --color-secondary-light: #3c3c3c;
+    --color-secondary-light-rgb: 100, 150, 200; 
+  --color-text: #e0e0e0;
+    --color-form-border: #db7500;
+}
+
+
+/*=================================================
+              Global Styles
+===================================================*/
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+body {
+  background-color: var(--color-dark);
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+}
+
+.non-display {
+  display: none !important;
+}
+
+/*=================================================
+              Buttons 
+===================================================*/
+
+/* Primary Button */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-dark);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* Secondary Button */
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 3px solid var(--color-secondary);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-primary-light);
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+/* Text Button */
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-text:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.btn-text:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Icon Button */
+.btn-icon {
+  background-color: rgba(var(--color-secondary-light-rgb), 0.05);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+   padding:  2rem;
+   font-size: 1.5em;
+}
+
+.btn-icon:hover:not(:disabled) {
+  background-color: rgba(var(--color-secondary-light-rgb), 0.7);
+}
+
+.btn-icon:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+
+
+
+

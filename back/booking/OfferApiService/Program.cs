@@ -4,7 +4,6 @@ using OfferApiService.Service.Interface;
 using OfferApiService.Services;
 using OfferApiService.Services.Interfaces.RentObject;
 using OfferApiService.Services.RentObject;
-using UserApiService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +16,9 @@ builder.Services.AddSwaggerGen();
 
 
 
-//builder.Services.AddScoped<IOfferService, OfferService>();
+builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IBookedDateService, BookedDateService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ICountryService, CountryService>();

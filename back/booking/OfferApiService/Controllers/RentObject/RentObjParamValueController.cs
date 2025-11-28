@@ -16,7 +16,7 @@ namespace OfferApiService.Controllers.RentObject
         }
 
 
-        protected RentObjParamValue MapToModel(RentObjParamValueRequest request)
+        protected override RentObjParamValue MapToModel(RentObjParamValueRequest request)
         {
             return new RentObjParamValue
             {
@@ -29,7 +29,7 @@ namespace OfferApiService.Controllers.RentObject
             };
         }
 
-        protected RentObjParamValueResponse MapToResponse(RentObjParamValue model)
+        protected override RentObjParamValueResponse MapToResponse(RentObjParamValue model)
         {
             return new RentObjParamValueResponse
             {

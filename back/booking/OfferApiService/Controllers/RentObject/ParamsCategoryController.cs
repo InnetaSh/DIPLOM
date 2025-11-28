@@ -15,7 +15,7 @@ namespace OfferApiService.Controllers.RentObject
         }
 
 
-        protected ParamsCategory MapToModel(ParamsCategoryRequest request)
+        protected override ParamsCategory MapToModel(ParamsCategoryRequest request)
         {
             return new ParamsCategory
             {
@@ -31,7 +31,7 @@ namespace OfferApiService.Controllers.RentObject
             };
         }
 
-        protected ParamsCategoryResponse MapToResponse(ParamsCategory model)
+        protected override ParamsCategoryResponse MapToResponse(ParamsCategory model)
         {
             return new ParamsCategoryResponse
             {

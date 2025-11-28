@@ -5,6 +5,13 @@ namespace OfferApiService.Models
 {
     public class Offer : EntityBase
     {
+
+        public Offer()
+        {
+            CheckInTime = new TimeSpan(15, 0, 0);  
+            CheckOutTime = new TimeSpan(11, 0, 0); 
+        }
+
         public string Title { get; set; }
         public string Description { get; set; }
 
@@ -14,7 +21,7 @@ namespace OfferApiService.Models
         public decimal? PricePerMonth { get; set; }
 
         // Депозит
-        public decimal? Deposit { get; set; }
+        public decimal? DepositPersent { get; set; }
         public PaymentType PaymentStatus { get; set; } //Возвращаемый / нет
 
         // Налог (%)
@@ -32,11 +39,25 @@ namespace OfferApiService.Models
         public int RentObjId { get; set; }
 
         // Время заезда / выезда (по умолчанию)
-        public TimeSpan CheckInTime { get; set; } = new TimeSpan(15, 0, 0);  // 15:00
-        public TimeSpan CheckOutTime { get; set; } = new TimeSpan(11, 0, 0); // 11:00
+        public TimeSpan? CheckInTime { get; set; }
+        public TimeSpan? CheckOutTime { get; set; } 
 
         // Забронированные даты
         public List<BookedDate> BookedDates { get; set; } = new List<BookedDate>();
+
+        public List<Review> Reviews { get; set; } = new List<Review>();
+
+        // Средний рейтинг
+        public double Rating
+        {
+            get
+            {
+                if (Reviews == null || Reviews.Count == 0)
+                    return 0;
+
+                return Reviews.Average(r => r.Rating);
+            }
+        }
     }
 
     

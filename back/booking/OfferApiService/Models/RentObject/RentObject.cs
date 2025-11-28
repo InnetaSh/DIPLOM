@@ -4,7 +4,7 @@ using OfferApiService.Models.RentObject.Enums;
 
 namespace OfferApiService.Models.RentObject
 {
-    public class RentObj : EntityBase
+    public class RentObject : EntityBase
     {
         public string Title { get; set; }
 

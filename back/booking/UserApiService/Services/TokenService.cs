@@ -32,11 +32,12 @@ namespace UserApiService.Services
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.Username),
-
+                new Claim(JwtRegisteredClaimNames.Sub, user.id.ToString()),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("name", user.Username),
+                
                 new Claim(ClaimTypes.Role, user.RoleName.ToString()),
-                  new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 

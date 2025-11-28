@@ -22,4 +22,10 @@
     <ProjectReference Include="..\..\Globals\Globals.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\images\rentobj\1\" />
+    <Folder Include="wwwroot\images\rentobj\2\" />
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,7 @@
 ﻿using Globals.EventBus;
 using Microsoft.Extensions.Logging;
 
-namespace UserApiService.Services
+namespace OfferApiService.Services
 {
     public class OfferRabbitListener : RabbitMqListenerBase
     {

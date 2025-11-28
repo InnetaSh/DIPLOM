@@ -1,95 +1,87 @@
-﻿//using Globals.Abstractions;
-//using Globals.Controllers;
-//using Microsoft.AspNetCore.Mvc;
-//using OrderApiService.Models;
-//using OrderApiService.Service.Interface;
-//using OrderApiService.View;
+﻿using Globals.Abstractions;
+using Globals.Controllers;
+using Microsoft.AspNetCore.Mvc;
+using OrderApiService.Models;
+using OrderApiService.Service.Interface;
+using OrderApiService.Services;
+using OrderApiService.View;
 
-//namespace OrderApiService.Controllers
-//{
-//    [ApiController]
-//    [Route("api/[controller]")]
-//    public class OrderController
-//        : BaseController<Order, OrderResponse, OrderRequest>
-//    {
-//        public OrderController(IOrderService offerService, IRabbitMqService mqService)
-//            : base(offerService, mqService)
-//        {
-//        }
+namespace OrderApiService.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class OrderController
+        : EntityControllerBase<Order, OrderResponse, OrderRequest>
+    {
+        public OrderController(IOrderService orderService, IRabbitMqService mqService)
+            : base(orderService, mqService)
+        {
+        }
 
-//        protected override Order MapToModel(OrderRequest request)
-//        {
+        protected override Order MapToModel(OrderRequest request)
+        {
 
-//            // забираем Offer, чтобы сделать snapshot цен
-//            var offer = _offerService.GetById(request.OfferId);
+            // забираем Offer, чтобы сделать snapshot цен
+            //var offer = orderService.GetById(request.OfferId);
 
 
-//            return new Order
-//            {
-//                Title = request.Title,
-//                Description = request.Description,
+            return new Order
+            {
+              
+                   OfferId = request.OfferId,
+                   ClientId = request.ClientId,
 
-//                // Цены
-//                PricePerDay = request.PricePerDay,
-//                PricePerWeek = request.PricePerWeek,
-//                PricePerMonth = request.PricePerMonth,
+                   TotalPersons = request.TotalPersons,
 
-//                // Депозит / налоги
-//                Deposit = request.Deposit,
-//                PaymentStatus = request.PaymentStatus,
-//                Tax = request.Tax,
+                   StartDate = request.StartDate,
+                   EndDate = request.EndDate,
 
-//                // Правила
-//                MinRentDays = request.MinRentDays,
-//                AllowPets = request.AllowPets,
-//                AllowSmoking = request.AllowSmoking,
-//                AllowChildren = request.AllowChildren,
+                   CheckInTime = request.CheckInTime,
+                   CheckOutTime = request.CheckOutTime,
 
-//                // Если пользователь не передал — оставить дефолты из модели Offer
-//                CheckInTime = request.CheckInTime ?? new TimeSpan(15, 0, 0),
-//                CheckOutTime = request.CheckOutTime ?? new TimeSpan(11, 0, 0),
+                   ClientNote = request.ClientNote,
+                   PaymentMethod = request.PaymentMethod,
 
-//                // Связи
-//                OwnerId = request.OwnerId,
-//                RentObjId = request.RentObjId
-//            };
-//        }
+                   CreatedAt = DateTime.UtcNow,
 
-//        protected override OfferResponse MapToResponse(Offer model)
-//        {
-//            return new OfferResponse
-//            {
-//                id = model.id,
-//                Title = model.Title,
-//                Description = model.Description,
+               };
+        }
 
-//                // Цены
-//                PricePerDay = model.PricePerDay,
-//                PricePerWeek = model.PricePerWeek,
-//                PricePerMonth = model.PricePerMonth,
+        protected override OrderResponse MapToResponse(Order model)
+        {
+            return new OrderResponse
+            {
+                id = model.id,
+                OfferId = model.OfferId,
+                ClientId = model.ClientId,
 
-//                // Депозит / налог
-//                Deposit = model.Deposit,
-//                PaymentStatus = model.PaymentStatus,
-//                Tax = model.Tax,
+                TotalPersons = model.TotalPersons,
 
-//                // Правила
-//                MinRentDays = model.MinRentDays,
-//                AllowPets = model.AllowPets,
-//                AllowSmoking = model.AllowSmoking,
-//                AllowChildren = model.AllowChildren,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
 
-//                // Время заезда/выезда
-//                CheckInTime = model.CheckInTime,
-//                CheckOutTime = model.CheckOutTime,
+                // Финансы
+                BasePrice = model.BasePrice,
+                DiscountPercent = model.DiscountPercent,
+                DiscountAmount = model.DiscountAmount,
+                DepositAmount = model.DepositAmount,
+                TaxAmount = model.TaxAmount,
+                TotalPrice = model.TotalPrice,
 
-//                // Связи
-//                OwnerId = model.OwnerId,
-//                RentObjId = model.RentObjId,
+                // Оплата
+                PaymentMethod = model.PaymentMethod,
+                IsPaid = model.IsPaid,
+                PaidAt = model.PaidAt,
 
-//                // Забронированные даты
-//                BookedDates = model.BookedDates
-//            };
-//        }
-//    }
-//}
+                // Время
+                CheckInTime = model.CheckInTime,
+                CheckOutTime = model.CheckOutTime,
+
+                // Другое
+                ClientNote = model.ClientNote,
+                Status = model.Status,
+                CreatedAt = model.CreatedAt
+            };
+        }
+    }
+}

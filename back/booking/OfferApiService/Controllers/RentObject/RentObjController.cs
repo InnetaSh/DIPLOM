@@ -9,7 +9,7 @@ using OfferApiService.View.RentObject;
 namespace OfferApiService.Controllers.RentObject
 {
 
-    public class RentObjController : EntityControllerBase<RentObj, RentObjResponse, RentObjRequest>
+    public class RentObjController : EntityControllerBase<Models.RentObject.RentObject, RentObjResponse, RentObjRequest>
     {
         public RentObjController(IRentObjService rentObjService, IRabbitMqService mqService)
     : base(rentObjService, mqService)
@@ -47,9 +47,9 @@ namespace OfferApiService.Controllers.RentObject
 
 
 
-        protected RentObj MapToModel(RentObjRequest request)
+        protected override Models.RentObject.RentObject MapToModel(RentObjRequest request)
         {
-            return new RentObj
+            return new Models.RentObject.RentObject
             {
                 id = request.id,
                 Title = request.Title,
@@ -76,7 +76,7 @@ namespace OfferApiService.Controllers.RentObject
                     ParamItemId = p.id,
                     ValueBool = p.ValueType == ParamValueType.Boolean ? p.ValueBool : null,
                     ValueInt = p.ValueType == ParamValueType.Integer ? p.ValueInt : null,
-                    ValueString = p.ValueType == ParamValueType.String ? p.ValueString : null
+                    ValueString = p.ValueType == ParamValueType.String ? p.ValueString : String.Empty
                 }).ToList() ?? new List<RentObjParamValue>(),
 
 
@@ -85,7 +85,7 @@ namespace OfferApiService.Controllers.RentObject
         }
 
 
-        protected RentObjResponse MapToResponse(RentObj model)
+        protected override RentObjResponse MapToResponse(Models.RentObject.RentObject model)
         {
             return new RentObjResponse
             {

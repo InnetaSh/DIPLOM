@@ -17,7 +17,7 @@ namespace OfferApiService.Controllers.RentObject
         }
 
 
-        protected ParamItem MapToModel(ParamItemRequest request)
+        protected override ParamItem MapToModel(ParamItemRequest request)
         {
             return new ParamItem
             {
@@ -28,7 +28,7 @@ namespace OfferApiService.Controllers.RentObject
             };
         }
 
-        protected ParamItemResponse MapToResponse(ParamItem model)
+        protected override ParamItemResponse MapToResponse(ParamItem model)
         {
             return new ParamItemResponse
             {

@@ -16,7 +16,7 @@ namespace OrderApiService.Models
         public DateTime EndDate { get; set; }
 
         // Снимок цены в момент брони 
-        public decimal OfferPricePerDay { get; set; } //все цены копируются в заказ и больше не зависят от объявления
+       // public decimal OfferPricePerDay { get; set; } //все цены копируются в заказ и больше не зависят от объявления
 
         // Финансы
         public decimal BasePrice { get; set; }        // Без скидок и налогов
@@ -27,7 +27,7 @@ namespace OrderApiService.Models
         public decimal TotalPrice { get; set; }       // Итоговая стоимость
 
         // Оплата
-        public string? PaymentMethod { get; set; }
+        public PaymentMethod? PaymentMethod { get; set; }
         public bool IsPaid { get; set; }
         public DateTime? PaidAt { get; set; }
 

@@ -1,0 +1,17 @@
+.logo {
+  width: 18em;
+  height: auto;
+}
+.photo {
+  border-radius: 8px;
+  width: 100%;
+  object-fit: cover;
+}
+.icon {
+  width: 24px;
+  height: 24px;
+}
+.default {
+  width: auto;
+  height: auto;
+}

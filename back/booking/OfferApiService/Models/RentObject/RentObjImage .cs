@@ -6,6 +6,6 @@ namespace OfferApiService.Models.RentObject
     {
         public string Url { get; set; }
         public int RentObjId { get; set; }
-        public RentObj RentObj { get; set; }
+        public RentObject RentObj { get; set; }
     }
 }
