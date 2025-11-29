@@ -1,0 +1,17 @@
+.filterOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 15px;
+  cursor: pointer;
+}
+
+.optionText {
+  flex-grow: 1;
+}
+
+.optionCheckbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}

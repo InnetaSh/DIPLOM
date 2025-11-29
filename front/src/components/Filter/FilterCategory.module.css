@@ -1,0 +1,16 @@
+.category {
+  margin-bottom: 24px;
+}
+
+.category h4, /* если используешь обычный h4 */
+.category .Text {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

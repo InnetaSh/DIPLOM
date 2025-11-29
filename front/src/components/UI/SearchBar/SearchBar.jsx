@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import CitySelector from "./CitySelector.jsx";
-
 import styles from "./SearchBar.module.css";
 import { PrimaryButton } from "../Button/PrimaryButton.jsx";
 import AddGuestModal from "../../modals/AddGuestModal.jsx";
@@ -12,32 +11,25 @@ export default function SearchBar({ onSearch }) {
   const [guests, setGuests] = useState({ adults: 1, children: 0, rooms: 1 });
   const [isGuestOpen, setIsGuestOpen] = useState(false);
 
-const handleSearch = async () => {
-  if (!location) {
-    alert("Пожалуйста, выберите город");
-    return;
-  }
-  if (!dateRange.start || !dateRange.end) {
-    alert("Пожалуйста, выберите даты");
-    return;
-  }
+  const handleSearch = async () => {
+    if (!location) return alert("Пожалуйста, выберите город");
+    if (!dateRange.start || !dateRange.end) return alert("Пожалуйста, выберите даты");
 
-  try {
-    const response = await offerApi.searchMain({
-      city: location,
-      startDate: dateRange.start,
-      endDate: dateRange.end,
-      bedroomsCount: guests.adults + guests.children,
-      userDiscountPercent: 0, 
-    });
+    try {
+      const response = await offerApi.searchMain({
+        city: location,
+        startDate: dateRange.start,
+        endDate: dateRange.end,
+        bedroomsCount: guests.adults + guests.children,
+        userDiscountPercent: 0,
+      });
 
-    console.log("Результат поиска предложений:", response.data); 
-
-    if (onSearch) onSearch(response.data);
-  } catch (error) {
-    console.error("Ошибка поиска предложений:", error);
-  }
-};
+      if (onSearch) onSearch(response.data, location);
+      console.log("Результаты поиска:", response.data);
+    } catch (error) {
+      console.error("Ошибка поиска предложений:", error);
+    }
+  };
 
   return (
     <div className={styles.searchBar}>
@@ -50,18 +42,14 @@ const handleSearch = async () => {
           className={styles.input_item}
           type="date"
           value={dateRange.start}
-          onChange={(e) =>
-            setDateRange((prev) => ({ ...prev, start: e.target.value }))
-          }
+          onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
         />
         <span>—</span>
         <input
           className={styles.input_item}
           type="date"
           value={dateRange.end}
-          onChange={(e) =>
-            setDateRange((prev) => ({ ...prev, end: e.target.value }))
-          }
+          onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
         />
       </div>
 

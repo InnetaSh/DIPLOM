@@ -11,6 +11,9 @@
   --color-secondary-light-rgb: 100, 150, 200; 
 
   --color-text: #333333;
+
+  --color-border: #4a4949;
+   --color-border-rgb: 128, 128, 128;
   --color-form-border: #db7500;
 }
 
@@ -23,9 +26,12 @@
 
   --color-secondary: #2b2b2b;
   --color-secondary-light: #3c3c3c;
-    --color-secondary-light-rgb: 100, 150, 200; 
+  --color-secondary-light-rgb: 100, 150, 200; 
   --color-text: #e0e0e0;
-    --color-form-border: #db7500;
+
+  --color-border: #4a4949;
+    --color-border-rgb: 128, 128, 128;
+  --color-form-border: #db7500;
 }
 
 
@@ -136,6 +142,35 @@ body {
 .btn-icon:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+
+/*=================================================
+              Main Layout
+===================================================*/
+.search-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-page__content {
+  padding: 20px;
+  background-color: var(--color-secondary);
+  min-height: calc(100vh - 60px); 
+}
+
+.search-page__layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.search-page__filters {
+}
+
+.search-page__list {
+
 }
 
 

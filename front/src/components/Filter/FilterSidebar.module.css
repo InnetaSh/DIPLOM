@@ -1,0 +1,17 @@
+.sidebar {
+ 
+  border-radius: 2px;
+  padding: 16px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  position: sticky;
+  top: 16px;
+ border: 1px solid rgba(var(--color-border-rgb), 0.5);
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    position: relative;
+    max-height: none;
+  }
+}

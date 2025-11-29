@@ -1,0 +1,74 @@
+.title {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.bolt_text {
+  font-weight: 700;
+}
+
+.link {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+
+.color {
+  color: var(--color-text, inherit);
+}
+
+
+.color_bold {
+  color: var(--color-text, inherit);
+  font-weight: bold;
+}
+
+.small {
+  font-size: 12px;
+}
+
+/* обычный */
+.default {
+  font-size: 16px;
+}
+
+
+/*=============breadcrumbs  links=================*/
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.link {
+  color: #0077ff;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.disabled {
+  color: #8a8a8a; /* серый цвет */
+  font-weight: 500;
+}
+
+.icon {
+  font-size: 16px;
+  color: #999;
+}
+
+
