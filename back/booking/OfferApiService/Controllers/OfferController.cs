@@ -1,8 +1,10 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using OfferApiService.Models;
 using OfferApiService.Models.Dto;
+using OfferApiService.Models.RentObject.Enums;
 using OfferApiService.Models.View;
 using OfferApiService.Service.Interface;
 using OfferApiService.View;
@@ -16,20 +18,25 @@ namespace OfferApiService.Controllers
         : EntityControllerBase<Offer, OfferResponse, OfferRequest>
     {
         private IOfferService _offerService;
-        public OfferController(IOfferService offerService, IRabbitMqService mqService)
+        private readonly string _baseUrl;
+
+        public OfferController(IOfferService offerService, IRabbitMqService mqService, IConfiguration configuration)
             : base(offerService, mqService)
         {
             _offerService = offerService;
+            _baseUrl = configuration["AppSettings:BaseUrl"];
         }
 
 
         [HttpGet("by-mainparams")]
         public async Task<ActionResult<List<OfferResponse>>> GetMainSearch(
-    [FromQuery] OfferMainSearchRequest request,
-    [FromQuery] decimal UserDiscountPercent)
+            [FromQuery] OfferMainSearchRequest request,
+            [FromQuery] decimal UserDiscountPercent)
         {
             if (string.IsNullOrWhiteSpace(request.City))
                 return BadRequest("City name is required");
+
+          
 
             // Преобразуем даты в UTC
             var startDateUtc = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc);
@@ -117,6 +124,7 @@ namespace OfferApiService.Controllers
 
         protected override OfferResponse MapToResponse(Offer model)
         {
+           
             return new OfferResponse
             {
                 id = model.id,
@@ -135,9 +143,46 @@ namespace OfferApiService.Controllers
                 CheckInTime = model.CheckInTime,
                 CheckOutTime = model.CheckOutTime,
                 OwnerId = model.OwnerId,
-                RentObjId = model.RentObjId,
-                BookedDates = model.BookedDates?.Select(bd => new BookedDateResponse
+                RentObj = model.RentObj == null ? null : new RentObjResponse
                 {
+                    id = model.RentObj.id,
+                    Title = model.RentObj.Title,
+                    Description = model.RentObj.Description,
+                    CityId = model.RentObj.CityId,
+                    CityTitle = model.RentObj.City?.Title,
+                    Address = model.RentObj.Address,
+
+                    RoomCount = model.RentObj.RoomCount,
+                    BathroomCount = model.RentObj.BathroomCount,
+                    Area = model.RentObj.Area,
+                    Floor = model.RentObj.Floor,
+                    TotalFloors = model.RentObj.TotalFloors,
+                    RentObjType = model.RentObj.RentObjType,
+
+                    Latitude = model.RentObj.Latitude,
+                    Longitude = model.RentObj.Longitude,
+
+                    BedroomsCount = model.RentObj.BedroomsCount,
+                    BedsCount = model.RentObj.BedsCount,
+                    HasBabyCrib = model.RentObj.HasBabyCrib,
+
+                    ParamItems = model.RentObj.ParamValues?.Select(p => new ParamItemResponse
+                    {
+                        id = p.ParamItemId,
+                        Title = p.ParamItem?.Title,
+                        ValueType = p.ParamItem?.ValueType ?? ParamValueType.Boolean
+                    }).ToList() ?? new List<ParamItemResponse>(),
+
+                    Images = model.RentObj.Images
+                        ?.Select(i => $"{_baseUrl}/images/rentobj/{model.RentObj.id}/{Path.GetFileName(i.Url)}")
+                        .ToList() ?? new List<string>(),
+
+
+
+                },
+                    
+                BookedDates = model.BookedDates?.Select(bd => new BookedDateResponse
+                    {
                     id = bd.id,
                     Start = bd.Start,
                     End = bd.End,

@@ -5,9 +5,9 @@ import React, { useState } from 'react';
 
 
 // Публичные страницы
-import HomePage from './pages/public/HomePage';
-// import SearchPage from './pages/public/SearchResultPage';
-// import HotelPage from './pages/public/HotelPage';
+import {HomePage} from './pages/public/HomePage';
+import {SearchPage} from './pages/public/SearchPage';
+import {HotelPage} from './pages/public/HotelPage';
 // import LoginPage from './pages/public/LoginPage';
 // import RegisterPage from './pages/public/RegisterPage';
 
@@ -28,9 +28,9 @@ function App() {
       <Routes>
             {/* Публичные маршруты */}
             <Route path="/" element={<HomePage />} />
-            {/* <Route path="/search" element={<SearchPage />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="/hotel/:id" element={<HotelPage />} />
-            <Route path="/login" element={<LoginPage />} />
+            {/* <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/about" element={<AboutPage />} /> */}
 

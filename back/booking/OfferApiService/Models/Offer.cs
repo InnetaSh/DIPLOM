@@ -35,8 +35,9 @@ namespace OfferApiService.Models
         public bool AllowChildren { get; set; }
 
         // Владелец и объект
-        public int OwnerId { get; set; }      
+        public int OwnerId { get; set; }
         public int RentObjId { get; set; }
+        public RentObject.RentObject RentObj { get; set; }
 
         // Время заезда / выезда (по умолчанию)
         public TimeSpan? CheckInTime { get; set; }

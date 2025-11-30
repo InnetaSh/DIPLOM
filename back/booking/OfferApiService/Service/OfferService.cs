@@ -52,22 +52,37 @@ namespace OfferApiService.Services
             var fitOffers = new List<Offer>();
             try
             {
-                using (var db = new OfferContext())
-                {
-                    var rentObjsIDs = db.RentObjects
-                        .Include(ro => ro.City)
-                        .Where(ro => ro.City.Title == request.City)
-                        .Where(ro => ro.BedroomsCount >= request.BedroomsCount)
-                        .Select(ro => ro.id)
-                        .ToList();
+                //using (var db = new OfferContext())
+                //{
+                //    var rentObjsIDs = db.RentObjects
+                //        .Include(ro => ro.City)
+                //        .Where(ro => ro.City.Title == request.City)
+                //        .Where(ro => ro.BedroomsCount >= request.BedroomsCount)
+                //        .Select(ro => ro.id)
+                //        .ToList();
 
-                    var offers = db.Offers.ToList();
+                //    var offers = db.Offers.ToList();
 
-                    fitOffers = offers
-                        .Where(x => !x.BookedDates.Any(d => d.Start < request.EndDate && d.End > request.StartDate)
-                                    && rentObjsIDs.Contains(x.RentObjId))
-                        .ToList();
-                }
+                //    fitOffers = offers
+                //        .Where(x => !x.BookedDates.Any(d => d.Start < request.EndDate && d.End > request.StartDate)
+                //                    && rentObjsIDs.Contains(x.RentObjId))
+                //        .ToList();
+                //}
+                using var db = new OfferContext();
+
+                 fitOffers = await db.Offers
+                    .Include(o => o.BookedDates)
+                    .Include(o => o.RentObj)          
+                        .ThenInclude(ro => ro.City)
+                    .Include(o => o.RentObj)       
+                         .ThenInclude(ro => ro.Images)
+                    .Where(o => o.RentObj.City.Title == request.City)
+                    .Where(o => o.RentObj.BedroomsCount >= request.BedroomsCount)
+                    .Where(o =>
+                        !o.BookedDates.Any(d =>
+                            d.Start < request.EndDate &&
+                            d.End > request.StartDate))
+                    .ToListAsync();
             }
             catch (Exception ex)
             {

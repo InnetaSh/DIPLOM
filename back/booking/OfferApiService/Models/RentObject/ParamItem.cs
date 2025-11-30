@@ -4,7 +4,7 @@ namespace OfferApiService.Models.RentObject
 {
     public class ParamItem : EntityBase
     {
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         public int CategoryId { get; set; }
         public ParamsCategory Category { get; set; }

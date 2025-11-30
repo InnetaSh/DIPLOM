@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import styles from "./HotelCard.module.css";
 import { Text } from "../UI/Text/Text.jsx";
 import { LinkTextItem } from "../UI/Text/Link.jsx";
@@ -5,6 +7,7 @@ import { PrimaryButton } from "../UI/Button/PrimaryButton.jsx";
 import {Image} from "../UI/Image/Image.jsx";
 
 export const HotelCard = ({
+    id,
     title,
     image,
     city,
@@ -17,10 +20,22 @@ export const HotelCard = ({
     onClick,
     onCheckAvailability,
 }) => {
+     const navigate = useNavigate();
+
+      const handleClick = () => {
+        navigate(`/hotel/${id}`);
+    };
+
     return (
-        <div className={styles.card} onClick={onClick} role="button" tabIndex={0} onKeyPress={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') onClick && onClick(e);
-        }}>
+         <div 
+            className={styles.card} 
+            onClick={handleClick} 
+            role="button" 
+            tabIndex={0} 
+            onKeyPress={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') handleClick();
+            }}
+        >
 
             <div className={styles.card__imageWrapper}>
                 <Image src={image} alt={title} type="card" />

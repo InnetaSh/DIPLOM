@@ -11,9 +11,11 @@ namespace OfferApiService.Controllers.RentObject
 
     public class RentObjController : EntityControllerBase<Models.RentObject.RentObject, RentObjResponse, RentObjRequest>
     {
-        public RentObjController(IRentObjService rentObjService, IRabbitMqService mqService)
-    : base(rentObjService, mqService)
+        private readonly string _baseUrl;
+        public RentObjController(IRentObjService rentObjService, IRabbitMqService mqService, IConfiguration configuration)
+            : base(rentObjService, mqService)
         {
+            _baseUrl = configuration["AppSettings:BaseUrl"];
         }
 
         [HttpGet("by-city")]
@@ -24,23 +26,7 @@ namespace OfferApiService.Controllers.RentObject
 
             var rentObjs = await (_service as IRentObjService).GetByCityAsync(city);
 
-            var response = rentObjs.Select(model => new RentObjResponse
-            {
-                id = model.id,
-                Title = model.Title,
-                Description = model.Description,
-                CityId = model.CityId,
-                Address = model.Address,
-                ParamItems = model.ParamValues?.Select(pv => new ParamItemResponse
-                {
-                    id = pv.ParamItemId,
-                    Title = pv.ParamItem?.Title,
-                    ValueType = pv.ParamItem?.ValueType ?? ParamValueType.Boolean
-                }).ToList(),
-
-
-                Images = model.Images?.Select(img => img.Url).ToList() ?? new List<string>()
-            }).ToList();
+            var response = rentObjs.Select(model => MapToResponse(model)).ToList();
 
             return Ok(response);
         }
@@ -117,7 +103,9 @@ namespace OfferApiService.Controllers.RentObject
                     ValueType = p.ParamItem?.ValueType ?? ParamValueType.Boolean
                 }).ToList() ?? new List<ParamItemResponse>(),
 
-                Images = model.Images?.Select(i => i.Url).ToList() ?? new List<string>()
+                Images = model.Images
+                        ?.Select(i => $"{_baseUrl}/images/rentobj/{model.id}/{Path.GetFileName(i.Url)}")
+                        .ToList() ?? new List<string>(),
             };
         }
 

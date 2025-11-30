@@ -3,10 +3,11 @@ import CitySelector from "./CitySelector.jsx";
 import styles from "./SearchBar.module.css";
 import { PrimaryButton } from "../Button/PrimaryButton.jsx";
 import AddGuestModal from "../../modals/AddGuestModal.jsx";
-import { offerApi } from "../../../api/offer.js"; 
+import { offerApi } from "../../../api/offer.js";
 
 export default function SearchBar({ onSearch }) {
-  const [location, setLocation] = useState(""); 
+  const [location, setLocation] = useState("");
+  const [hotels, setHotels] = useState([]);
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [guests, setGuests] = useState({ adults: 1, children: 0, rooms: 1 });
   const [isGuestOpen, setIsGuestOpen] = useState(false);
@@ -24,8 +25,11 @@ export default function SearchBar({ onSearch }) {
         userDiscountPercent: 0,
       });
 
-      if (onSearch) onSearch(response.data, location);
-      console.log("Результаты поиска:", response.data);
+      if (onSearch) {
+        setHotels(response.data);
+        onSearch(hotels, location)
+      };
+      console.log("Результаты поиска:", hotels);
     } catch (error) {
       console.error("Ошибка поиска предложений:", error);
     }

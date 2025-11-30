@@ -56,7 +56,7 @@ else
     Console.WriteLine("Swagger disabled");
 }
 
-
+app.UseStaticFiles();
 app.UseAuthorization();
 
 app.MapControllers();

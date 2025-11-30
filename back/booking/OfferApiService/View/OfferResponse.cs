@@ -1,6 +1,7 @@
 ﻿using Globals.Controllers;
 using OfferApiService.Models.Enum;
 using OfferApiService.View;
+using OfferApiService.View.RentObject;
 
 namespace OfferApiService.Models.View
 {
@@ -40,8 +41,8 @@ namespace OfferApiService.Models.View
 
         public int OwnerId { get; set; }
         public int RentObjId { get; set; }
+        public RentObjResponse? RentObj { get; set; }
 
- 
         public IEnumerable<BookedDateResponse> BookedDates { get; set; } = new List<BookedDateResponse>();
 
         public IEnumerable<ReviewResponse> Reviews { get; set; } = new List<ReviewResponse>();

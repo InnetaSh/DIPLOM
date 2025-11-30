@@ -8,7 +8,7 @@ import { ApiContext } from "../../contexts/ApiContext.jsx";
 
 import "../../styles/globals.css";
 
-export const HomePage = () => {
+export const SearchPage = () => {
   const { paramsCategoryApi, offerApi } = useContext(ApiContext); 
   const [hotels, setHotels] = useState([]);
   const [city, setCity] = useState("");
@@ -76,4 +76,5 @@ useEffect(() => {
     </div>
   );
 };
+
 

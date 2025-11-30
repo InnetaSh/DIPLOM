@@ -10,7 +10,7 @@ namespace OfferApiService.View.RentObject
         public string Title { get; set; }
         public string Description { get; set; }
         public int CityId { get; set; }
-        public string CityTitle { get; set; }    
+        public string? CityTitle { get; set; }    
         public string Address { get; set; }
 
 

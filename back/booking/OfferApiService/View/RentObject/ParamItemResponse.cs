@@ -9,7 +9,7 @@ namespace OfferApiService.View.RentObject
     public class ParamItemResponse : IBaseResponse
     {
         public int id { get; set; }
-        public string Title { get; set; }
+        public string? Title { get; set; }
 
         public ParamValueType ValueType { get; set; } = ParamValueType.Boolean;
     }

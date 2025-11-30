@@ -12,14 +12,15 @@ export const HotelCardList = ({
       {hotels.map((hotel) => (
         <HotelCard
           key={hotel.id}
+          id={hotel.id}
           title={hotel.title}
-          image={hotel.image}
+          image={hotel.rentObj?.images?.length > 0 ? hotel.rentObj.images[0] : 'default-image.jpg'}
           city={hotel.city}
           country={hotel.country}
           distance={hotel.distance}
           rating={hotel.rating}
           reviews={hotel.reviews}
-          price={hotel.price}
+          price={hotel.totalPrice}
           badges={hotel.badges || []}
           onClick={() => onCardClick && onCardClick(hotel.id)}
           onCheckAvailability={() =>

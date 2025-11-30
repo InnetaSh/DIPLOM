@@ -59,7 +59,7 @@ namespace OfferApiService.Controllers.RentObject
     
 
 
-        protected RentObjImage MapToModel(RentObjImageRequest request)
+        protected override RentObjImage MapToModel(RentObjImageRequest request)
         {
             return new RentObjImage
             {
@@ -69,7 +69,7 @@ namespace OfferApiService.Controllers.RentObject
             };
         }
 
-        protected RentObjImageResponse MapToResponse(RentObjImage model)
+        protected override RentObjImageResponse MapToResponse(RentObjImage model)
         {
             return new RentObjImageResponse
             {
