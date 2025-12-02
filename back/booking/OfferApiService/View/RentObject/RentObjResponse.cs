@@ -31,7 +31,7 @@ namespace OfferApiService.View.RentObject
 
 
         public List<ParamItemResponse>? ParamItems { get; set; } = new();
-
+        public string? MainImageUrl { get; set; }
         public List<string>? Images { get; set; } = new();
     }
 }

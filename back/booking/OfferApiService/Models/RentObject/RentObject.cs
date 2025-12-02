@@ -42,6 +42,9 @@ namespace OfferApiService.Models.RentObject
 
  
         public List<RentObjParamValue> ParamValues { get; set; } = new();  // Параметры квартиры (список всех параметров квартиры, выбранных из справочника ParamItem)
+
+        public string? MainImageUrl { get; set; }
+
         public List<RentObjImage> Images { get; set; } // Изображения объекта
     }
 }

@@ -15,6 +15,8 @@ namespace OfferApiService.Models.View
         public decimal? PricePerWeek { get; set; }
         public decimal? PricePerMonth { get; set; }
 
+        public string? MainImageUrl { get; set; }
+
         public decimal? OrderPrice { get; set; } // цена для текущего заказа (по количеству дней расчет)
 
         public decimal? DiscountPercent { get; set; } // процент скидки для текущего заказа

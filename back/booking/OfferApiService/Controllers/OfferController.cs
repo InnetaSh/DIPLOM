@@ -83,6 +83,10 @@ namespace OfferApiService.Controllers
                 dto.DiscountAmount = orderPrice * UserDiscountPercent / 100;
                 dto.TotalPrice = orderPrice - dto.DiscountAmount;
 
+                dto.MainImageUrl = offer.RentObj?.MainImageUrl != null
+                    ? $"{_baseUrl}/images/rentobj/{offer.RentObj.id}/{Path.GetFileName(offer.RentObj.MainImageUrl)}"
+                    : null;
+
                 // Используем фиксированный депозит (например 10%) или передаваемый через сервис
                 //decimal depositPercent = 10;
                 //dto.DepositAmount = dto.TotalPrice * depositPercent / 100;
