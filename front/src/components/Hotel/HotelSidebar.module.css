@@ -1,0 +1,103 @@
+.sidebar {
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 16px;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    background: #fff;
+    height: fit-content;
+    position: sticky;
+    top: 90px; /* прилипаем как у Booking */
+}
+
+/* ---------- Рейтинг ---------- */
+
+.ratingBlock {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.score {
+    background: #003b95;
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    min-width: 48px;
+    text-align: center;
+}
+
+.label {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.reviewCount {
+    font-size: 13px;
+    color: #555;
+}
+
+/* ---------- Highlights ---------- */
+
+.highlights h4 {
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+.highlights ul {
+    padding-left: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.highlights li {
+    font-size: 14px;
+    color: #333;
+}
+
+/* ---------- Random Review ---------- */
+
+.reviewBox {
+    padding: 12px;
+    background: #f6f8ff;
+    border-radius: 8px;
+}
+
+.reviewBox h4 {
+    margin-bottom: 8px;
+}
+
+.reviewText {
+    font-size: 14px;
+    font-style: italic;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.reviewAuthor {
+    font-size: 13px;
+    color: #777;
+    text-align: right;
+}
+
+/* ---------- Map ---------- */
+
+.mapBlock h4 {
+    margin-bottom: 8px;
+}
+
+.mapPlaceholder {
+    height: 200px;
+    background: #d9e3f7;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #003b95;
+    font-weight: 500;
+}

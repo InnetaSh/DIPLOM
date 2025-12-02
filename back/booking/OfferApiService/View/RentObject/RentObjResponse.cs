@@ -30,8 +30,8 @@ namespace OfferApiService.View.RentObject
         public bool HasBabyCrib { get; set; }
 
 
-        public List<ParamItemResponse> ParamItems { get; set; } = new();
+        public List<ParamItemResponse>? ParamItems { get; set; } = new();
 
-        public List<string> Images { get; set; } = new();
+        public List<string>? Images { get; set; } = new();
     }
 }

@@ -29,7 +29,7 @@ namespace OfferApiService.Models.RentObject
         public RentObjType RentObjType { get; set; }   //Тип жилья
 
 
-        /// <summary>Координаты для карты</summary>
+        /// Координаты для карты
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
@@ -40,9 +40,7 @@ namespace OfferApiService.Models.RentObject
         public bool HasBabyCrib { get; set; }         // Детская кроватка
 
 
-        // === Категории параметров (удобства и пр.) ===
-        //public List<ParamsCategory> ParamCategories { get; set; }
-
+ 
         public List<RentObjParamValue> ParamValues { get; set; } = new();  // Параметры квартиры (список всех параметров квартиры, выбранных из справочника ParamItem)
         public List<RentObjImage> Images { get; set; } // Изображения объекта
     }

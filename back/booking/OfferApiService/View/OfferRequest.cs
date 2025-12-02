@@ -21,6 +21,10 @@ namespace OfferApiService.Models.Dto
         public bool AllowPets { get; set; }
         public bool AllowSmoking { get; set; }
         public bool AllowChildren { get; set; }
+        public bool AllowParties { get; set; }
+
+
+        public int MaxGuests { get; set; }
 
         public TimeSpan? CheckInTime { get; set; }
         public TimeSpan? CheckOutTime { get; set; }

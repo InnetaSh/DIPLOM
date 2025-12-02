@@ -35,6 +35,10 @@ namespace OfferApiService.Models.View
         public bool AllowPets { get; set; }
         public bool AllowSmoking { get; set; }
         public bool AllowChildren { get; set; }
+        public bool AllowParties { get; set; }
+
+
+        public int MaxGuests { get; set; }
 
         public TimeSpan? CheckInTime { get; set; }
         public TimeSpan? CheckOutTime { get; set; }
@@ -48,6 +52,10 @@ namespace OfferApiService.Models.View
         public IEnumerable<ReviewResponse> Reviews { get; set; } = new List<ReviewResponse>();
 
         public double Rating { get; set; }
+
+        public bool? IsRecommended { get; set; }
+        public bool? IsTopLocation { get; set; }
+        public bool? IsTopCleanliness { get; set; }
 
     }
 }

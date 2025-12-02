@@ -1,0 +1,54 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 12px 0;
+}
+
+.reviewContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.reviewCard {
+    background: #fff;
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.userIcon {
+    width: 40px;
+    height: 40px;
+    background: #eaf1ff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.userIcon svg {
+    width: 22px;
+    height: 22px;
+    fill: #1a73e8;
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.textBlock {
+    line-height: 1.45;
+}

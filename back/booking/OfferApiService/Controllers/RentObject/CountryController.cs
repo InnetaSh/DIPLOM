@@ -21,6 +21,8 @@ namespace OfferApiService.Controllers.RentObject
             {
                 id = request.id,
                 Title = request.Title,
+                Latitude = request.Latitude,
+                Longitude = request.Longitude,
                 Cities = request.Cities?.Select(c => new City
                 {
                     id = c.id,
@@ -36,6 +38,8 @@ namespace OfferApiService.Controllers.RentObject
             {
                 id = model.id,
                 Title = model.Title,
+                Latitude = model.Latitude,
+                Longitude = model.Longitude,
                 Cities = model.Cities?.Select(c => new CityResponse
                 {
                     id = c.id,

@@ -56,10 +56,6 @@ public class GatewayController : ControllerBase
     //                              OFFER API SERVICE
     //==================================================================
 
-    //[HttpGet("country/get-all")]
-    //public Task<IActionResult> GetAllOffers() =>
-    //   _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/country/get-all", HttpMethod.Get, null);
-
     // ---country---
 
     [HttpGet("country/get-all")]
@@ -385,6 +381,50 @@ public class GatewayController : ControllerBase
     [HttpDelete("order/del/{id}")]
     public Task<IActionResult> DeleteOrder(int id) =>
         _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/order/del/{id}", HttpMethod.Delete, null);
+
+
+
+
+
+    //==================================================================
+    //                              REVIEW API SERVICE
+    //==================================================================
+
+    // ---review---
+
+    [HttpGet("review/get-all")]
+    public Task<IActionResult> GetAllRewiew() =>
+       _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/review/get-all", HttpMethod.Get, null);
+
+
+    [HttpGet("review/get/{id}")]
+    public Task<IActionResult> GetByIdlRewiew(int id) =>
+    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/review/get/{id}", HttpMethod.Get, null);
+
+
+    [HttpGet("review/get-by-offerId/{id}")]
+    public Task<IActionResult> GetByOfferIdlRewiew(int id) =>
+    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/review/get-by-offerId/{id}", HttpMethod.Get, null);
+
+
+    [HttpGet("review/get-by-userId/{id}")]
+    public Task<IActionResult> GetByUserIdlRewiew(int id) =>
+    _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/review/get-by-userId/{id}", HttpMethod.Get, null);
+
+
+    [HttpPost("review/create")]
+    public Task<IActionResult> CreatelRewiew([FromBody] object request) =>
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/review/create", HttpMethod.Post, request);
+
+    [HttpPut("review/update/{id}")]
+    public Task<IActionResult> UpdatlRewiew(int id, [FromBody] object request) =>
+      _gateway.ForwardRequestAsync("OfferApiService", $"/api/review/update/{id}", HttpMethod.Put, request);
+
+
+    [HttpDelete("review/del/{id}")]
+    public Task<IActionResult> DeletelRewiew(int id) =>
+        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/review/del/{id}", HttpMethod.Delete, null);
+
 
 
 

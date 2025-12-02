@@ -1,0 +1,70 @@
+.row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    border-bottom: 1px solid #d6d6d6;
+    padding: 20px 0;
+    gap: 20px;
+}
+
+.colType,
+.colGuests,
+.colPrice,
+.colConditions,
+.colSelect {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.recommended {
+    background: #d8f2d0;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: #136a09;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.roomLine {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.featuresBlock {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.featureTag {
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.checkItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkIcon {
+    color: #008009;
+    font-size: 14px;
+}
+
+.greenCheck {
+    color: #008009;
+}
+
+.select {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}

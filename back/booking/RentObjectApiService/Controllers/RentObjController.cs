@@ -14,7 +14,7 @@ namespace RentObjectApiService.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class RentObjController : BaseController<RentObj, RentObjResponse, RentObjRequest>
+    public class RentObjController : EntityControllerBase<RentObj, RentObjResponse, RentObjRequest>
     {
         public RentObjController(IRentObjService rentObjService, IRabbitMqService mqService)
     : base(rentObjService, mqService)

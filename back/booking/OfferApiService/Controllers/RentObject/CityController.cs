@@ -23,10 +23,22 @@ namespace OfferApiService.Controllers.RentObject
         {
             return new City
             {
-                id = request.id,
-                Title = request.Title,
-                CountryId = request.CountryId
-            };
+               
+                   id = request.id,
+                   Title = request.Title,
+                   CountryId = request.CountryId,
+                   Latitude = request.Latitude,
+                   Longitude = request.Longitude,
+                   Attractions = request.Attractions?.Select(a => new Attraction
+                   {
+                       id = a.id,
+                       Name = a.Name,
+                       Description = a.Description,
+                       Latitude = a.Latitude,
+                       Longitude = a.Longitude
+                   }).ToList()
+               };
+        
         }
 
         protected override CityResponse MapToResponse(City model)
@@ -35,7 +47,17 @@ namespace OfferApiService.Controllers.RentObject
             {
                 id = model.id,
                 Title = model.Title,
-                CountryId = model.CountryId
+                CountryId = model.CountryId,
+                Latitude = model.Latitude,
+                Longitude = model.Longitude,
+                Attractions = model.Attractions?.Select(a => new AttractionResponse
+                  {
+                      id = a.id,
+                      Name = a.Name,
+                      Description = a.Description,
+                      Latitude = a.Latitude,
+                      Longitude = a.Longitude
+                  }).ToList()
             };
         }
     }

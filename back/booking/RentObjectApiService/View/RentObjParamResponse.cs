@@ -4,7 +4,7 @@ using RentObjectApiService.Models.Enums;
 
 namespace RentObjectApiService.View
 {
-    public class RentObjParamResponse : EntityBase, IBaseResponse
+    public class RentObjParamResponse :  IBaseResponse
     {
         public string Title { get; set; }
         public ParamType Type { get; set; }

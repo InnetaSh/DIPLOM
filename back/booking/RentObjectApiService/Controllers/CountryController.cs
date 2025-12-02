@@ -14,7 +14,7 @@ namespace RentObjectApiService.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Route("api/[controller]")]
-    public class CountryController : BaseController<Country, CountryResponse, CountryRequest>
+    public class CountryController : EntityControllerBase<Country, CountryResponse, CountryRequest>
     {
         public CountryController(ICountryService countryService, IRabbitMqService mqService)
     : base(countryService, mqService)

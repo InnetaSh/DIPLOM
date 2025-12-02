@@ -18,7 +18,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IBookedDateService, BookedDateService>();
-builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ICountryService, CountryService>();

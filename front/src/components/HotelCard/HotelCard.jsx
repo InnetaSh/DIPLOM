@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import styles from "./HotelCard.module.css";
 import { Text } from "../UI/Text/Text.jsx";
-import { LinkTextItem } from "../UI/Text/Link.jsx";
+import { Link } from "../UI/Text/Link.jsx";
 import { PrimaryButton } from "../UI/Button/PrimaryButton.jsx";
 import {Image} from "../UI/Image/Image.jsx";
 
@@ -47,7 +47,7 @@ export const HotelCard = ({
                 <div className={styles.card__header}>
                     <Text text={title} type="title" />
                     <div className={styles.card__location}>
-                        <LinkTextItem text={city} to={`/country/${country}/${city}`} />
+                        <Link text={city} to={`/country/${country}/${city}`} type ="link"/>
                         <span> • {distance} км от центра</span>
                     </div>
                 </div>

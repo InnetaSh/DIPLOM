@@ -11,5 +11,10 @@ namespace OfferApiService.View.RentObject
 
         public int CountryId { get; set; }
 
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+
+        public List<AttractionRequest> Attractions { get; set; }
+
     }
 }

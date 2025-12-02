@@ -1,0 +1,46 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 0;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.label {
+    min-width: 120px;
+    font-size: 14px;
+    color: #333;
+}
+
+.progressWrapper {
+    flex: 1;
+    height: 8px;
+    background: #e6e6e6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.progress {
+    height: 100%;
+    background: #1a73e8;
+    border-radius: 8px;
+    transition: width 0.3s ease-in-out;
+}
+
+.value {
+    width: 40px;
+    text-align: right;
+    font-weight: 600;
+    color: #333;
+}

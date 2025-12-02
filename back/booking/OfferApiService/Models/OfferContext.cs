@@ -1,6 +1,6 @@
 ﻿using Globals.Models;
 using Microsoft.EntityFrameworkCore;
-using OfferApiService.Data.Seeds;
+using OfferApiService.Data.Seed;
 using OfferApiService.Models.RentObject;
 
 namespace OfferApiService.Models

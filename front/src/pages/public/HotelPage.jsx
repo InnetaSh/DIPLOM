@@ -3,50 +3,70 @@ import { Header } from "../../components/Header.jsx";
 import { useParams } from "react-router-dom";
 import styles from "./HotelPage.module.css";
 import { ApiContext } from "../../contexts/ApiContext.jsx";
-
-
+import { HotelSectionNav } from "../../components/Hotel/HotelSectionNav.jsx";
+import { Breadcrumbs } from "../../components/UI/Text/BreadcrumbsLinks.jsx";
+import { HotelHeader } from "../../components/Hotel/HotelHeader.jsx";
+import { HotelSidebar } from "../../components/Hotel/HotelSidebar.jsx";
+import {HotelParamsList} from "../../components/Hotel/HotelParamsList.jsx";
+import {BookingCard} from "../../components/Hotel/BookingCard.jsx"
 
 export const HotelPage = () => {
-    const { id } = useParams(); 
-      const { paramsCategoryApi, offerApi } = useContext(ApiContext); 
-   const [filtersData, setFiltersData] = useState([]); 
+    const sections = [
+        { id: "overview", label: "Обзор" },
+        { id: "prices", label: "Информация о стоимости" },
+        { id: "services", label: "Удобства и услуги" },
+        { id: "conditions", label: "Условия размещения" },
+        { id: "important", label: "Важно знать" },
+        { id: "reviews", label: "Отзывы" },
+    ];
 
-     useEffect(() => {
-    paramsCategoryApi.getAll()
-        .then((res) => {
-            setFiltersData(res.data);
-            console.log("Filters loaded:", res.data);
-        })
-        .catch((err) => console.error("Error loading filters:", err));
-}, [paramsCategoryApi]);
+    const { id } = useParams();
+    const { paramsCategoryApi, offerApi } = useContext(ApiContext);
 
+    const [hotel, setHotel] = useState({});
 
-  const handleSearchResults = (foundHotels, onSearchCity) => {
-    console.log("Search results received in HomePage:", foundHotels, onSearchCity);
-  
-  };
+    useEffect(() => {
+        offerApi.getById(id)
+            .then((res) => {
+                setHotel(res.data);
+                console.log("Hotel loaded:", res.data);
+            })
+            .catch((err) => console.error("Error loading hotel:", err));
+    }, [id, offerApi]);
 
+    const handleSearchResults = (foundHotels, onSearchCity) => {
+        console.log("Search results received:", foundHotels, onSearchCity);
+    };
 
     return (
         <div className="search-page">
             <Header onSearchResults={handleSearchResults} />
 
-            <div className={styles.hotelPage}>
-                <h1>Страница отеля</h1>
-                <p>Отель ID: {id}</p>
+            <main className="hotel-page__content">
+                <Breadcrumbs last_path={`Отель: ${hotel?.title || ""}`} />
+                <HotelSectionNav sections={sections} />
 
-                <div className={styles.hotelDetails}>
-                    <p>Здесь можно вывести все данные отеля для теста.</p>
-                    <ul>
-                        <li>Название: Примерный отель {id}</li>
-                        <li>Город: Тестовый город</li>
-                        <li>Страна: Тестовая страна</li>
-                        <li>Цена за ночь: 5000₽</li>
-                        <li>Рейтинг: 4.5</li>
-                        <li>Отзывы: 23</li>
-                    </ul>
+                <HotelHeader hotel={hotel} />
+
+                <div className="hotel-page__layout">
+                    <section className="hotel-page__photo">
+                        <h1>Страница отеля</h1>
+                        <p>Отель ID: {id}</p>
+                    </section>
+
+                    <aside className="hotel-page__info">
+                        <HotelSidebar
+                            hotel={hotel}
+                            reviews={hotel?.rentobj?.reviews || []}
+                        />
+                    </aside>
                 </div>
-            </div>
+
+                <HotelParamsList
+                    params={hotel?.rentobj?.rentobjparamvalue || []}
+                />
+
+            </main>
         </div>
     );
 };

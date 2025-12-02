@@ -34,6 +34,18 @@ namespace OfferApiService.Models
         public bool AllowSmoking { get; set; }
         public bool AllowChildren { get; set; }
 
+        public bool AllowParties { get; set; }
+
+
+        public int MaxGuests { get; set; }
+
+        //public bool? IsRecommended { get; set; }            // Booking recommends
+        //public bool? IsTopLocation { get; set; }            // High location rating
+        //public bool? IsTopCleanliness { get; set; }         // High cleanliness score
+
+        public decimal? CleaningFee { get; set; }
+        public decimal? AdditionalGuestFee { get; set; }
+
         // Владелец и объект
         public int OwnerId { get; set; }
         public int RentObjId { get; set; }
@@ -46,19 +58,7 @@ namespace OfferApiService.Models
         // Забронированные даты
         public List<BookedDate> BookedDates { get; set; } = new List<BookedDate>();
 
-        public List<Review> Reviews { get; set; } = new List<Review>();
-
-        // Средний рейтинг
-        public double Rating
-        {
-            get
-            {
-                if (Reviews == null || Reviews.Count == 0)
-                    return 0;
-
-                return Reviews.Average(r => r.Rating);
-            }
-        }
+        
     }
 
     

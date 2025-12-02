@@ -49,6 +49,7 @@ namespace OfferApiService.Controllers
 
             foreach (var offer in offers)
             {
+
                 var dto = MapToResponse(offer);
 
                 // Количество дней аренды
@@ -114,6 +115,8 @@ namespace OfferApiService.Controllers
                 AllowPets = request.AllowPets,
                 AllowSmoking = request.AllowSmoking,
                 AllowChildren = request.AllowChildren,
+                AllowParties = request.AllowParties,
+                MaxGuests = request.MaxGuests,
                 CheckInTime = request.CheckInTime ?? new TimeSpan(15, 0, 0),
                 CheckOutTime = request.CheckOutTime ?? new TimeSpan(11, 0, 0),
                 OwnerId = request.OwnerId,
@@ -125,6 +128,7 @@ namespace OfferApiService.Controllers
         protected override OfferResponse MapToResponse(Offer model)
         {
            
+
             return new OfferResponse
             {
                 id = model.id,
@@ -140,6 +144,8 @@ namespace OfferApiService.Controllers
                 AllowPets = model.AllowPets,
                 AllowSmoking = model.AllowSmoking,
                 AllowChildren = model.AllowChildren,
+                AllowParties = model.AllowParties,
+                MaxGuests = model.MaxGuests,
                 CheckInTime = model.CheckInTime,
                 CheckOutTime = model.CheckOutTime,
                 OwnerId = model.OwnerId,
@@ -187,26 +193,7 @@ namespace OfferApiService.Controllers
                     Start = bd.Start,
                     End = bd.End,
                     OfferId = bd.OfferId
-                }).ToList() ?? new List<BookedDateResponse>(),
-                Reviews = model.Reviews?.Select(r => new ReviewResponse
-                {
-                    id = r.id,
-                    Rating = r.Rating,
-                    Comment = r.Comment,
-                    OfferId = r.OfferId,
-                    UserId = r.UserId,
-                    Response = r.Response,
-                    CreatedAt = r.CreatedAt,
-                    IsApproved = r.IsApproved,
-                    IsAnonymous = r.IsAnonymous,
-                    Photos = r.Photos ?? new List<string>(),
-                    Cleanliness = r.Cleanliness,
-                    Comfort = r.Comfort,
-                    Location = r.Location,
-                    Service = r.Service,
-                    ValueForMoney = r.ValueForMoney
-                }).ToList() ?? new List<ReviewResponse>(),
-                Rating = model.Rating
+                }).ToList() ?? new List<BookedDateResponse>()
             };
         }
 

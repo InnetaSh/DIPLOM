@@ -14,7 +14,7 @@ namespace RentObjectApiService.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Route("api/[controller]")]
-    public class ParamsCategoryController : BaseController<ParamsCategory, ParamsCategoryResponse, ParamsCategoryRequest>
+    public class ParamsCategoryController : EntityControllerBase<ParamsCategory, ParamsCategoryResponse, ParamsCategoryRequest>
     {
         public ParamsCategoryController(IParamsCategoryService paramsCategoryService, IRabbitMqService mqService)
     : base(paramsCategoryService, mqService)

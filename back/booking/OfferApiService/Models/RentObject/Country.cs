@@ -7,6 +7,9 @@ namespace OfferApiService.Models.RentObject
         
         public string Title { get; set; }
 
-        public List<City> Cities { get; set; }
+        public ICollection<City> Cities { get; set; } = new List<City>();
+
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
     }
 }

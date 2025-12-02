@@ -6,6 +6,7 @@
         Integer = 2,
         String = 3,
         Double = 4,
-        DateTime = 5
+        DateTime = 5,
+        Int = 6
     }
 }

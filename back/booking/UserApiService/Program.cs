@@ -3,6 +3,13 @@ using Globals.EventBus;
 using UserApiService.Services;
 using UserApiService.Services.Interfaces;
 
+//var hasher = new PasswordHasher();
+//hasher.CreatePasswordHash("SuperAdmin123!", out var hash, out var salt);
+
+//Console.WriteLine(Convert.ToBase64String(salt));
+//Console.WriteLine(Convert.ToBase64String(hash));
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

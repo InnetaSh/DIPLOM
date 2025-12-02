@@ -1,0 +1,48 @@
+.gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ---------- 1 РЯД ---------- */
+
+.row1 {
+    display: grid;
+    grid-template-columns: 2fr 1fr; 
+    gap: 12px;
+}
+
+.big {
+    width: 100%;
+    height: 380px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.smallColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.small {
+    width: 100%;
+    height: calc((380px - 12px) / 2); 
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* ---------- 2 РЯД (5 фото) ---------- */
+
+.row2 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+.gridImg {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+}

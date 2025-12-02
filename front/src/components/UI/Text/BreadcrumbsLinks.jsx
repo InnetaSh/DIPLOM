@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 import styles from "./Text.module.css";
 
-export const Breadcrumbs = () => {
+export const Breadcrumbs = ({ last_path = "Результаты поиска" }) => {
   const location = useLocation();
 
   const parts = location.pathname.split("/").filter(Boolean);
@@ -20,7 +20,7 @@ export const Breadcrumbs = () => {
   ];
 
   if (parts.length >= 1) {
-    items.push({ label: "Результаты поиска", to: null });
+    items.push({ label: last_path, to: null });
   }
 
   return (

@@ -1,6 +1,7 @@
 ﻿using Globals.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
+using UserApiService.Data.Seed;
 
 namespace UserApiService.Models
 {
@@ -13,6 +14,9 @@ namespace UserApiService.Models
 
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
+
+            AdminSeed.Seed(builder);
+
             builder.Entity<User>()
                 .ToTable("Users")
                 .HasDiscriminator<string>("UserType")

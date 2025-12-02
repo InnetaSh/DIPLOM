@@ -1,0 +1,23 @@
+.sidebarContainer {
+  display: flex;
+  gap: 16px;
+}
+
+.mapWrapper {
+  flex: 2;
+}
+
+.nearbyList {
+  flex: 1;
+  max-height: 400px;
+  overflow-y: auto;
+  background: #f9f9f9;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.nearbyItem {
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #ddd;
+}

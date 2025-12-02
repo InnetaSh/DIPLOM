@@ -71,6 +71,20 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+ 
+  reviewapiservice:
+    build:
+      context: ./ReviewApiService
+      dockerfile: Dockerfile
+    ports:
+      - "5005:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Connection string for Postgres service (adjust values in code if needed)
+      #- ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=userdb;Username=postgres;Password=postgrespw
+    depends_on:
+      - postgres
+      - rabbitmq
 
   postgres:
     image: postgres:15
