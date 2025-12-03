@@ -6,6 +6,6 @@ namespace OfferApiService.Services.Interfaces.RentObject
 {
         public interface IRentObjService : IServiceBase<Models.RentObject.RentObject>
         {
-            Task<List<Models.RentObject.RentObject>> GetByCityAsync(string cityName);
+           
         }
 }

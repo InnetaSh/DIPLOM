@@ -3,17 +3,17 @@ import styles from "./SearchBar.module.css";
 import { ApiContext } from "../../../contexts/ApiContext.jsx";
 
 const CitySelector = ({ value, onChange }) => {
-  const { cityApi } = useContext(ApiContext); 
+  const { locationApi } = useContext(ApiContext); 
   const [cities, setCities] = useState([]);
   const [search, setSearch] = useState(value || ""); // используем value
   const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
-    cityApi.getAll().then((res) => {
+    locationApi.getAllCities().then((res) => {
       setCities(res.data); 
       console.log("Add: cities loaded", res.data);
     });
-  }, [cityApi]);
+  }, [locationApi]);
 
   // синхронизируем search с внешним value
   useEffect(() => {

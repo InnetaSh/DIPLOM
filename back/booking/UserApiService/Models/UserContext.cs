@@ -11,6 +11,7 @@ namespace UserApiService.Models
         public DbSet<Owner> Owners { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Admin> Admins { get; set; }
+        public DbSet<SuperAdmin> SuperAdmins { get; set; }
 
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
@@ -23,7 +24,8 @@ namespace UserApiService.Models
                 .HasValue<User>("User")
                 .HasValue<Client>("Client")
                 .HasValue<Owner>("Owner")
-                .HasValue<Admin>("Admin");
+                .HasValue<Admin>("Admin")
+                .HasValue<SuperAdmin>("SuperAdmin");
         }
     }
 }

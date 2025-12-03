@@ -1,9 +1,15 @@
-﻿[ApiController]
-[Route("review")]
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApiGetway.Service.Interfase;
+
+[ApiController]
+[Route("[controller]")]
 public class ReviewController : ControllerBase
 {
     private readonly IGatewayService _gateway;
-    public ReviewController(IGatewayService gateway) => _gateway = gateway;
+    public ReviewController(IGatewayService gateway)
+    {
+        _gateway = gateway;
+    }
 
     [HttpGet("get-all")]
     public Task<IActionResult> GetAll() =>

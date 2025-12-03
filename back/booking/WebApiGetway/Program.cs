@@ -46,18 +46,40 @@ builder.Services.AddHttpClient("OfferApiService", client =>
 });
 
 
-builder.Services.AddHttpClient<IOfferServiceClient, OfferServiceClient>(client =>
+builder.Services.AddHttpClient("LocationApiService", client =>
 {
-    var baseUrl = "http://offerapiservice";
-    var port = "8080";
+    var baseUrl = builder.Configuration["LocationApiServiceUrl"] ?? "http://locationapiservice";
+    var port = builder.Configuration["LocationApiServicePort"] ?? "8080";
     client.BaseAddress = new Uri($"{baseUrl}:{port}");
 });
+
+
+builder.Services.AddHttpClient("OrderApiService", client =>
+{
+    var baseUrl = builder.Configuration["OrderApiServiceUrl"] ?? "http://orderapiservice";
+    var port = builder.Configuration["OrderApiServicePort"] ?? "8080";
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+});
+
+builder.Services.AddHttpClient("ReviewApiService", client =>
+{
+    var baseUrl = builder.Configuration["ReviewApiServiceUrl"] ?? "http://reviewapiservice";
+    var port = builder.Configuration["ReviewApiServicePort"] ?? "8080";
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+});
+
+//builder.Services.AddHttpClient<IOfferServiceClient, OfferServiceClient>(client =>
+//{
+//    var baseUrl = "http://offerapiservice";
+//    var port = "8080";
+//    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+//});
 
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 builder.Services.AddHostedService<GetwayRabbitListener>();
 
 builder.Services.AddScoped<IGatewayService, GatewayService>();
-builder.Services.AddScoped<IServiceBase<TestModel>, TestService>();
+
 
 
 var app = builder.Build();

@@ -5,7 +5,7 @@ using WebApiGetway.View;
 namespace WebApiGetway.Controllers
 {
     [ApiController]
-    [Route("bff")]
+    [Route("[controller]")]
     public class BffController : ControllerBase
     {
         private readonly IGatewayService _gateway;
@@ -19,16 +19,16 @@ namespace WebApiGetway.Controllers
         [HttpGet("offer-review-card/{id}")]
         public async Task<IActionResult> GetOfferReviewCard(int id)
         {
-           
+
             var reviewsTask = _gateway.ForwardRequestAsync<List<ReviewDto>>(
                 "OfferApiService", $"/api/review/get-by-offerId/{id}", HttpMethod.Get, null);
 
-            await Task.WhenAll( reviewsTask);
+            await Task.WhenAll(reviewsTask);
 
-    
+
             var reviews = (reviewsTask.Result as OkObjectResult)?.Value as List<ReviewDto>;
 
-   
+
             if (reviews.Count == 0) return NotFound("Reviews not found");
 
             var reviewWithUsers = new List<ReviewWithUserDto>();

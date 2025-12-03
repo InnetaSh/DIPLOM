@@ -4,6 +4,7 @@ import { offerApi } from "../api/offer";
 import { orderApi } from "../api/order";
 import { countryApi } from "../api/country";
 import { cityApi } from "../api/city";
+import { locationApi } from "../api/location";
 import { paramItemApi } from "../api/paramItem";
 import { paramsCategoryApi } from "../api/paramsCategory";
 import { rentObjParamValueApi } from "../api/rentObjParamValue";
@@ -19,6 +20,7 @@ export const ApiProvider = ({ children }) => {
         orderApi,
         countryApi,
         cityApi,
+        locationApi,
         paramItemApi,
         paramsCategoryApi,
         rentObjParamValueApi

@@ -1,9 +1,15 @@
-﻿[ApiController]
-[Route("order")]
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApiGetway.Service.Interfase;
+
+[ApiController]
+[Route("[controller]")]
 public class OrderController : ControllerBase
 {
     private readonly IGatewayService _gateway;
-    public OrderController(IGatewayService gateway) => _gateway = gateway;
+    public OrderController(IGatewayService gateway)
+    {
+        _gateway = gateway;
+    }
 
     [HttpGet("get-all")]
     public Task<IActionResult> GetAll() =>

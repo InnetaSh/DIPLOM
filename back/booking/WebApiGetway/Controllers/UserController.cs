@@ -2,7 +2,7 @@
 using WebApiGetway.Service.Interfase;
 
 [ApiController]
-[Route("user")]
+[Route("[controller]")]
 public class UserController : ControllerBase
 {
     private readonly IGatewayService _gateway;
@@ -14,11 +14,11 @@ public class UserController : ControllerBase
 
     [HttpGet("get-all")]
     public Task<IActionResult> GetAll() =>
-        _gateway.ForwardRequestAsync<object>("OfferApiService", "/api/user/get-all", HttpMethod.Get, null);
+        _gateway.ForwardRequestAsync<object>("UserApiService", "/api/user/get-all", HttpMethod.Get, null);
 
     [HttpGet("get/{id}")]
     public Task<IActionResult> GetById(int id) =>
-        _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/user/get/{id}", HttpMethod.Get, null);
+        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/user/get/{id}", HttpMethod.Get, null);
 
     [HttpPost("login")]
     public Task<IActionResult> Login([FromBody] object request) =>

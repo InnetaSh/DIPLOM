@@ -8,16 +8,16 @@
         public string Description { get; set; }
 
         public decimal PricePerDay { get; set; }
+        public decimal TotalPrice { get; set; }
 
         public double Rating { get; set; }
 
-        // минимум данных о месте
-        public string? City { get; set; }
-        public string? Country { get; set; }
+   
+        public int DistrictId { get; set; }
 
         // одна главная картинка
         public string? MainImageUrl { get; set; }
     }
 }
 
-}
+

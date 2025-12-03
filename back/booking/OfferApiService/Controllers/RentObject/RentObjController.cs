@@ -18,20 +18,7 @@ namespace OfferApiService.Controllers.RentObject
             _baseUrl = configuration["AppSettings:BaseUrl"];
         }
 
-        [HttpGet("by-city")]
-        public async Task<ActionResult<List<RentObjResponse>>> GetByCity([FromQuery] string city)
-        {
-            if (string.IsNullOrWhiteSpace(city))
-                return BadRequest("City name is required");
-
-            var rentObjs = await (_service as IRentObjService).GetByCityAsync(city);
-
-            var response = rentObjs.Select(model => MapToResponse(model)).ToList();
-
-            return Ok(response);
-        }
-
-
+ 
 
         protected override Models.RentObject.RentObject MapToModel(RentObjRequest request)
         {
@@ -40,7 +27,7 @@ namespace OfferApiService.Controllers.RentObject
                 id = request.id,
                 Title = request.Title,
                 Description = request.Description,
-                CityId = request.CityId,
+                DistrictId = request.DistrictId,
                 Address = request.Address,
 
                 RoomCount = request.RoomCount,
@@ -78,8 +65,7 @@ namespace OfferApiService.Controllers.RentObject
                 id = model.id,
                 Title = model.Title,
                 Description = model.Description,
-                CityId = model.CityId,
-                CityTitle = model.City?.Title,
+                DistrictId = model.DistrictId,
                 Address = model.Address,
 
                 RoomCount = model.RoomCount,

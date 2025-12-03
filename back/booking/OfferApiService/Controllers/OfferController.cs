@@ -33,8 +33,7 @@ namespace OfferApiService.Controllers
             [FromQuery] OfferMainSearchRequest request,
             [FromQuery] decimal UserDiscountPercent)
         {
-            if (string.IsNullOrWhiteSpace(request.City))
-                return BadRequest("City name is required");
+            
 
           
 
@@ -158,8 +157,7 @@ namespace OfferApiService.Controllers
                     id = model.RentObj.id,
                     Title = model.RentObj.Title,
                     Description = model.RentObj.Description,
-                    CityId = model.RentObj.CityId,
-                    CityTitle = model.RentObj.City?.Title,
+                    DistrictId = model.RentObj.DistrictId,
                     Address = model.RentObj.Address,
 
                     RoomCount = model.RentObj.RoomCount,

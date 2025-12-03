@@ -13,16 +13,13 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Globals", "..\Globals\Globals.csproj", "{6C007FC3-C804-4D7D-B034-DA8E607DE0DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RentObjectApiService", "RentObjectApiService\RentObjectApiService.csproj", "{E32B0AA7-6177-41CC-BCD6-A3C727B0AFDE}"
-	ProjectSection(ProjectDependencies) = postProject
-		{6C007FC3-C804-4D7D-B034-DA8E607DE0DA} = {6C007FC3-C804-4D7D-B034-DA8E607DE0DA}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfferApiService", "OfferApiService\OfferApiService.csproj", "{6FDA3DAE-690E-40A7-977E-48A78D3EA002}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderApiService", "OrderApiService\OrderApiService.csproj", "{C1525F0C-DE32-4CC8-96C1-C57F409B4E16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewApiService", "CommentService\ReviewApiService.csproj", "{9899E7E9-9EF4-4758-BE41-7C4F8748C248}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationApiService", "LocationApiService\LocationApiService.csproj", "{EC1DF29A-7074-4903-83CD-976898D2EEAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewApiService", "ReviewApiService\ReviewApiService.csproj", "{083404B7-BA69-4CD3-939E-0FF850864102}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,10 +47,6 @@ Global
 		{6C007FC3-C804-4D7D-B034-DA8E607DE0DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C007FC3-C804-4D7D-B034-DA8E607DE0DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C007FC3-C804-4D7D-B034-DA8E607DE0DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E32B0AA7-6177-41CC-BCD6-A3C727B0AFDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E32B0AA7-6177-41CC-BCD6-A3C727B0AFDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E32B0AA7-6177-41CC-BCD6-A3C727B0AFDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E32B0AA7-6177-41CC-BCD6-A3C727B0AFDE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6FDA3DAE-690E-40A7-977E-48A78D3EA002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6FDA3DAE-690E-40A7-977E-48A78D3EA002}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FDA3DAE-690E-40A7-977E-48A78D3EA002}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -62,10 +55,14 @@ Global
 		{C1525F0C-DE32-4CC8-96C1-C57F409B4E16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1525F0C-DE32-4CC8-96C1-C57F409B4E16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1525F0C-DE32-4CC8-96C1-C57F409B4E16}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9899E7E9-9EF4-4758-BE41-7C4F8748C248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9899E7E9-9EF4-4758-BE41-7C4F8748C248}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9899E7E9-9EF4-4758-BE41-7C4F8748C248}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9899E7E9-9EF4-4758-BE41-7C4F8748C248}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC1DF29A-7074-4903-83CD-976898D2EEAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC1DF29A-7074-4903-83CD-976898D2EEAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC1DF29A-7074-4903-83CD-976898D2EEAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC1DF29A-7074-4903-83CD-976898D2EEAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{083404B7-BA69-4CD3-939E-0FF850864102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{083404B7-BA69-4CD3-939E-0FF850864102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{083404B7-BA69-4CD3-939E-0FF850864102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{083404B7-BA69-4CD3-939E-0FF850864102}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

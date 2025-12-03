@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace CommentService.Controllers
+namespace LocationApiService.Controllers
 {
     [ApiController]
     [Route("[controller]")]

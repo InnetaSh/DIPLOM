@@ -1,4 +1,4 @@
-namespace CommentService
+namespace LocationApiService
 {
     public class WeatherForecast
     {

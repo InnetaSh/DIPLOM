@@ -44,8 +44,6 @@ namespace OfferApiService.Services
 
         public async Task<List<Offer>> GetMainAvailableOffers([FromQuery] OfferMainSearchRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.City))
-                throw new ArgumentException("City is required", nameof(request.City));
             if (request.StartDate >= request.EndDate)
                 throw new ArgumentException("Invalid date range");
 
@@ -72,11 +70,9 @@ namespace OfferApiService.Services
 
                  fitOffers = await db.Offers
                     .Include(o => o.BookedDates)
-                    .Include(o => o.RentObj)          
-                        .ThenInclude(ro => ro.City)
                     .Include(o => o.RentObj)       
                          .ThenInclude(ro => ro.Images)
-                    .Where(o => o.RentObj.City.Title == request.City)
+                    .Where(o => o.RentObj.DistrictId == request.DistrictId)
                     .Where(o => o.RentObj.BedroomsCount >= request.BedroomsCount)
                     .Where(o =>
                         !o.BookedDates.Any(d =>

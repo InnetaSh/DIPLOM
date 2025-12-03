@@ -2,7 +2,7 @@
 {
     public class OfferMainSearchRequest
     {
-        public string City { get; set; } = string.Empty;
+        public int DistrictId { get; set; }
 
         private DateTime _startDate;
         public DateTime StartDate

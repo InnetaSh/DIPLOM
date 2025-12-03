@@ -15,6 +15,8 @@ namespace UserApiService.Models
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
         public string Token { get; set; }
+
+        public int CountryId { get; set; }
         [Required]
         public  UserRole RoleName { get; set; }
 
