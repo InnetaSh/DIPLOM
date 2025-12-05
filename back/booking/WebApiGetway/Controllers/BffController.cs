@@ -15,7 +15,9 @@ namespace WebApiGetway.Controllers
             _gateway = gateway;
         }
 
-        // Карточка оффера (как Booking)
+
+
+        // Карточка отзывы + автор
         [HttpGet("offer-review-card/{id}")]
         public async Task<IActionResult> GetOfferReviewCard(int id)
         {

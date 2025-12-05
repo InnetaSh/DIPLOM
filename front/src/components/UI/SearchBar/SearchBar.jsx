@@ -7,38 +7,54 @@ import { offerApi } from "../../../api/offer.js";
 
 export default function SearchBar({ onSearch }) {
   const [location, setLocation] = useState("");
+  const [locationId, setLocationId] = useState(null);
   const [hotels, setHotels] = useState([]);
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [guests, setGuests] = useState({ adults: 1, children: 0, rooms: 1 });
   const [isGuestOpen, setIsGuestOpen] = useState(false);
 
-  const handleSearch = async () => {
-    if (!location) return alert("Пожалуйста, выберите город");
-    if (!dateRange.start || !dateRange.end) return alert("Пожалуйста, выберите даты");
+ const handleSearch = async () => {
+  if (!locationId) return alert("Пожалуйста, выберите город");
+  if (!dateRange.start || !dateRange.end) return alert("Пожалуйста, выберите даты");
+console.log("Initiating search with parameters:", {
+    locationId,
+    dateRange,
+    guests,
+  });
+  try {
+    const response = await offerApi.searchMain({
+      cityId: locationId,  
+      startDate: dateRange.start,
+      endDate: dateRange.end,
+      bedroomsCount: guests.adults + guests.children,
+      userDiscountPercent: 0,
+    });
 
-    try {
-      const response = await offerApi.searchMain({
-        city: location,
-        startDate: dateRange.start,
-        endDate: dateRange.end,
-        bedroomsCount: guests.adults + guests.children,
-        userDiscountPercent: 0,
-      });
+    const foundHotels = response.data;
 
-      if (onSearch) {
-        setHotels(response.data);
-        onSearch(hotels, location)
-      };
-      console.log("Результаты поиска:", hotels);
-    } catch (error) {
-      console.error("Ошибка поиска предложений:", error);
+    setHotels(foundHotels);
+
+    if (onSearch) {
+      onSearch(foundHotels, location); 
     }
-  };
+
+    console.log("Результаты поиска:", foundHotels);
+  } catch (error) {
+    console.error("Ошибка поиска предложений:", error);
+  }
+};
+
+ const setLocationInfo = (cityName, cityId) => {
+  setLocation(cityName);
+  setLocationId(cityId);
+  console.log("City ID set to:", cityId);
+  console.log("Selected city:", cityName, "with ID:", locationId);
+};
 
   return (
     <div className={styles.searchBar}>
       <div className={`${styles.inputGroup} ${styles.input_wrapper}`}>
-        <CitySelector value={location} onChange={setLocation} />
+        <CitySelector value={location} onChange={setLocationInfo} />
       </div>
 
       <div className={`${styles.inputGroup} ${styles.input_wrapper}`}>

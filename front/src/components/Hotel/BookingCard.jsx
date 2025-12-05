@@ -6,28 +6,32 @@ import { PrimaryButton } from "../UI/Button/PrimaryButton.jsx";
 import { FaBed, FaCouch, FaDoorOpen } from "react-icons/fa";
 import { MdOutlineBedroomParent } from "react-icons/md";
 
-export const BookingCard = ({ hotel, onCheckAvailability }) => {
+export const BookingCard = ({ hotel,offer, onCheckAvailability }) => {
     const navigate = useNavigate();
 
     if (!hotel) return null;
 
     const {
         type,
-        bedroom,
+        bedroomsCount,
         livingroom,
         freeCancelUntil,
         payLater,
-        totalprice,
-        tax,
         stars,
         title,
     } = hotel;
 
+const { 
+    paymentStatus,
+    totalPrice,
+    tax,
+ } = offer || {};
+const taxAmount = tax !== undefined ? (tax * totalPrice) / 100 : 0;
     return (
-        <div className={styles.card}>
-            <div className={styles.card__content}>
+        <div className={styles.bookingCard}>
+            <div className={styles.bookingCard__content}>
 
-                <div className={styles.card__info}>
+                <div className={styles.bookingCard__info}>
 
                     <div className={styles.card__title}>
                         {stars && <Text text={`${stars}★`} type="middle" />}
@@ -39,25 +43,25 @@ export const BookingCard = ({ hotel, onCheckAvailability }) => {
                     </div>
 
                     <div className={styles.card__icons}>
-                        {bedroom && (
+                        {bedroomsCount && (
                             <div className={styles.iconItem}>
                                 <MdOutlineBedroomParent className={styles.icon} />
-                                <Text text={`Спальня: ${bedroom}`} type="small" />
+                                <Text text={`Спальня: ${bedroomsCount}`} type="small" />
                             </div>
                         )}
 
                         {livingroom && (
                             <div className={styles.iconItem}>
                                 <FaCouch className={styles.icon} />
-                                <Text text={`Гостиная: ${livingroom}`} type="small" />
+                                <Text text={`Гостиная: ${bedroomsCount}`} type="small" />
                             </div>
                         )}
                     </div>
 
-                    {freeCancelUntil && (
+                    {paymentStatus == 0 && (
                         <div className={styles.card__condition}>
                             <Text text="Бесплатная отмена" type="colorBold" />
-                            <Text text={`до ${freeCancelUntil}`} type="small" />
+                            <Text text={`до 00:00`} type="small" />
                         </div>
                     )}
 
@@ -74,20 +78,20 @@ export const BookingCard = ({ hotel, onCheckAvailability }) => {
                     <div className={styles.card__priceBlock}>
                         
                         <Text
-                            text={`₽ ${totalprice ? totalprice.toLocaleString() : "—"}`}
+                            text={`₽ ${totalPrice ? totalPrice.toLocaleString() : "—"}`}
                             type="bold"
                         />
 
                         {tax !== undefined && (
                             <Text
-                                text={`+ налоги и сборы (${tax} ₽)`}
+                                text={`+ налоги и сборы (${taxAmount} ₽)`}
                                 type="small"
                             />
                         )} 
                         
                         <PrimaryButton
                             onClick={onCheckAvailability}
-                            disabled={!totalprice}
+                            disabled={!totalPrice}
                         >
                             Забронировать
                         </PrimaryButton>

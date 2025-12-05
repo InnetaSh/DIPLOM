@@ -1,21 +1,21 @@
 import http from "./http";
 
 export const offerApi = {
-  getAll: () => http.get("/offer/get-all"),
-  getById: (id) => http.get(`/offer/get/${id}`),
-  create: (data) => http.post("/offer/create", data),
-  update: (id, data) => http.put(`/offer/update/${id}`, data),
-  delete: (id) => http.delete(`/offer/del/${id}`),
+  getAll: () => http.get("/Offer/get-all"),
+  getById: (id) => http.get(`/Offer/get/${id}`),
+  create: (data) => http.post("/Offer/create", data),
+  update: (id, data) => http.put(`/Offer/update/${id}`, data),
+  delete: (id) => http.delete(`/Offer/del/${id}`),
 
 
-  searchMain: ({ city, startDate, endDate, bedroomsCount, userDiscountPercent }) => {
+  searchMain: ({ cityId, startDate, endDate, bedroomsCount, userDiscountPercent }) => {
     const params = new URLSearchParams({
-      city,
+      cityId,
       startDate, 
       endDate,
       bedroomsCount: bedroomsCount.toString(),
       userDiscountPercent: userDiscountPercent.toString(),
     });
-    return http.get(`/offer/by-mainparams?${params.toString()}`);
+    return http.get(`/Offer/by-mainparams?${params.toString()}`);
   },
 };

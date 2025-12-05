@@ -87,11 +87,11 @@ body {
 
 /* Secondary Button */
 .btn-secondary {
-  background-color: transparent;
+  background-color: var(--color-secondary-light);
   color: var(--color-primary);
   border: 3px solid var(--color-secondary);
   border-radius: 6px;
-  padding: 0.5rem 1rem;
+  padding: 0.9rem 1.5em;
   font-weight: 500;
   cursor: pointer;
 }
@@ -210,6 +210,14 @@ body {
 
 .search-page__list {
 
+}
+
+/*=================================================
+              Hotel Page
+===================================================*/
+.hotel-page__layout {
+ display: flex;
+  gap: 24px;
 }
 
 

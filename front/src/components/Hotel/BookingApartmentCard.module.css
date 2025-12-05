@@ -1,0 +1,114 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr 1fr 1.5fr;
+    padding: 16px;
+    border: 1px solid #d4d4d4;
+    margin-top: 20px;
+    border-radius: 6px;
+    background: white;
+   
+}
+.colType {
+    display: flex;
+    flex-direction: column;
+      border-left: 1px solid var(--color-border);
+}
+.colType:first-child {
+    border-left: none;
+}
+
+.headerRow{
+    height: 40px;
+    background: var(--color-bg);
+    color: white;
+    padding: 12px 16px;
+    font-weight: bold;
+    font-size: 14px;
+    border-bottom: 1px solid #1f4d8d;
+    border-left: 1px solid var(--color-border);
+}
+
+/* ================= Колонка 1: Тип и детали ================= */
+.title {
+    font-size: 18px;
+    color: #005cbf;
+    margin-bottom: 6px;
+}
+
+.recommend {
+    background: #d6f5d6;
+    padding: 6px 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    color: #136b13;
+    font-size: 14px;
+}
+
+.badges span {
+    display: inline-block;
+    background: #eee;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin: 4px 4px 4px 0;
+    font-size: 13px;
+}
+
+.params {
+    margin: 10px 0 0;
+    padding-left: 16px;
+    font-size: 14px;
+}
+
+/* ================= Колонка 2: Гости ================= */
+
+.guestsIcons {
+    font-size: 22px;
+}
+
+/* ================= Колонка 3: Цена ================= */
+
+.price {
+    font-size: 20px;
+    font-weight: bold;
+}
+.tax {
+    font-size: 13px;
+    color: #555;
+}
+
+/* ================= Колонка 4: Условия ================= */
+
+.greenText {
+    color: #0ab300;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.smallText {
+    color: #555;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+/* ================= Колонка 5: Select ================= */
+
+select {
+    padding: 6px;
+    font-size: 14px;
+}
+
+/* ================= Колонка 6: Booking button ================= */
+
+.bookBtn {
+    background: #0071c2;
+    color: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 15px;
+    cursor: pointer;
+    width: 100%;
+}
+.bookBtn:hover {
+    background: #005ea6;
+}

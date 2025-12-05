@@ -7,8 +7,12 @@ export const HotelParamsList = ({ params }) => {
 
     return (
         <div className={styles.list}>
-            {params.map((key) => (
-                <HotelParamsItem key={key} param={hotelParamsIcons[key]} />
+            {params.map((param) => (
+                <HotelParamsItem 
+                key={param.paramItemTitle} 
+                title = {param.paramItemTitle}
+                //param={hotelParamsIcons[key]} 
+                />
             ))}
         </div>
     );

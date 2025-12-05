@@ -4,11 +4,11 @@
     gap: 12px;
 }
 
-/* ---------- 1 РЯД ---------- */
+/* ---------- ВЕРХНИЙ РЯД (динамический) ---------- */
 
-.row1 {
+.row1Dynamic {
     display: grid;
-    grid-template-columns: 2fr 1fr; 
+    grid-template-columns: 2fr 1fr;  
     gap: 12px;
 }
 
@@ -27,16 +27,21 @@
 
 .small {
     width: 100%;
-    height: calc((380px - 12px) / 2); 
+    height: calc((380px - 12px) / 2);
     object-fit: cover;
     border-radius: 8px;
 }
 
-/* ---------- 2 РЯД (5 фото) ---------- */
+/* Если маленькой колонки нет, большая картинка занимает весь ряд */
+.row1Dynamic:has(> :last-child:not(.smallColumn)) {
+    grid-template-columns: 1fr !important;
+}
 
-.row2 {
+/* ---------- НИЖНИЙ РЯД (динамический сет) ---------- */
+
+.row2Dynamic {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 12px;
 }
 

@@ -7,6 +7,7 @@ using OfferApiService.Models.Dto;
 using OfferApiService.Models.RentObject.Enums;
 using OfferApiService.Models.View;
 using OfferApiService.Service.Interface;
+using OfferApiService.Services.Interfaces.RentObject;
 using OfferApiService.View;
 using OfferApiService.View.RentObject;
 
@@ -19,12 +20,14 @@ namespace OfferApiService.Controllers
     {
         private IOfferService _offerService;
         private readonly string _baseUrl;
+        private readonly IRentObjParamValueService _paramValueService;
 
-        public OfferController(IOfferService offerService, IRabbitMqService mqService, IConfiguration configuration)
+        public OfferController(IOfferService offerService, IRabbitMqService mqService, IConfiguration configuration, IRentObjParamValueService paramValueService)
             : base(offerService, mqService)
         {
             _offerService = offerService;
             _baseUrl = configuration["AppSettings:BaseUrl"];
+            _paramValueService = paramValueService;
         }
 
 
@@ -35,9 +38,6 @@ namespace OfferApiService.Controllers
         {
             
 
-          
-
-            // Преобразуем даты в UTC
             var startDateUtc = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc);
             var endDateUtc = DateTime.SpecifyKind(request.EndDate, DateTimeKind.Utc);
 
@@ -82,13 +82,11 @@ namespace OfferApiService.Controllers
                 dto.DiscountAmount = orderPrice * UserDiscountPercent / 100;
                 dto.TotalPrice = orderPrice - dto.DiscountAmount;
 
-                dto.MainImageUrl = offer.RentObj?.MainImageUrl != null
-                    ? $"{_baseUrl}/images/rentobj/{offer.RentObj.id}/{Path.GetFileName(offer.RentObj.MainImageUrl)}"
-                    : null;
+         
 
                 // Используем фиксированный депозит (например 10%) или передаваемый через сервис
-                //decimal depositPercent = 10;
-                //dto.DepositAmount = dto.TotalPrice * depositPercent / 100;
+                decimal depositPercent = 10;
+                dto.DepositAmount = dto.TotalPrice * depositPercent / 100;
 
                 // Если Tax есть в DTO/Offer
                 dto.TaxAmount = (dto.TotalPrice * (dto.Tax ?? 0)) / 100;
@@ -130,73 +128,77 @@ namespace OfferApiService.Controllers
 
         protected override OfferResponse MapToResponse(Offer model)
         {
-           
-
-            return new OfferResponse
-            {
-                id = model.id,
-                Title = model.Title,
-                Description = model.Description,
-                PricePerDay = model.PricePerDay,
-                PricePerWeek = model.PricePerWeek,
-                PricePerMonth = model.PricePerMonth,
-                DepositPersent = model.DepositPersent,
-                PaymentStatus = model.PaymentStatus,
-                Tax = model.Tax,
-                MinRentDays = model.MinRentDays,
-                AllowPets = model.AllowPets,
-                AllowSmoking = model.AllowSmoking,
-                AllowChildren = model.AllowChildren,
-                AllowParties = model.AllowParties,
-                MaxGuests = model.MaxGuests,
-                CheckInTime = model.CheckInTime,
-                CheckOutTime = model.CheckOutTime,
-                OwnerId = model.OwnerId,
-                RentObj = model.RentObj == null ? null : new RentObjResponse
-                {
-                    id = model.RentObj.id,
-                    Title = model.RentObj.Title,
-                    Description = model.RentObj.Description,
-                    DistrictId = model.RentObj.DistrictId,
-                    Address = model.RentObj.Address,
-
-                    RoomCount = model.RentObj.RoomCount,
-                    BathroomCount = model.RentObj.BathroomCount,
-                    Area = model.RentObj.Area,
-                    Floor = model.RentObj.Floor,
-                    TotalFloors = model.RentObj.TotalFloors,
-                    RentObjType = model.RentObj.RentObjType,
-
-                    Latitude = model.RentObj.Latitude,
-                    Longitude = model.RentObj.Longitude,
-
-                    BedroomsCount = model.RentObj.BedroomsCount,
-                    BedsCount = model.RentObj.BedsCount,
-                    HasBabyCrib = model.RentObj.HasBabyCrib,
-
-                    ParamItems = model.RentObj.ParamValues?.Select(p => new ParamItemResponse
-                    {
-                        id = p.ParamItemId,
-                        Title = p.ParamItem?.Title,
-                        ValueType = p.ParamItem?.ValueType ?? ParamValueType.Boolean
-                    }).ToList() ?? new List<ParamItemResponse>(),
-
-                    Images = model.RentObj.Images
-                        ?.Select(i => $"{_baseUrl}/images/rentobj/{model.RentObj.id}/{Path.GetFileName(i.Url)}")
-                        .ToList() ?? new List<string>(),
+           return OfferResponse.MapToResponse(model, _paramValueService, _baseUrl);
 
 
+            //id = model.id,
+            //Title = model.Title,
+            //Description = model.Description,
+            //PricePerDay = model.PricePerDay,
+            //PricePerWeek = model.PricePerWeek,
+            //PricePerMonth = model.PricePerMonth,
+            //DepositPersent = model.DepositPersent,
+            //PaymentStatus = model.PaymentStatus,
+            //Tax = model.Tax,
+            //MinRentDays = model.MinRentDays,
+            //AllowPets = model.AllowPets,
+            //AllowSmoking = model.AllowSmoking,
+            //AllowChildren = model.AllowChildren,
+            //AllowParties = model.AllowParties,
+            //MaxGuests = model.MaxGuests,
+            //CheckInTime = model.CheckInTime,
+            //CheckOutTime = model.CheckOutTime,
+            //OwnerId = model.OwnerId,
+            //RentObj = RentObjResponse.MapToResponse(model.RentObj),
 
-                },
-                    
-                BookedDates = model.BookedDates?.Select(bd => new BookedDateResponse
-                    {
-                    id = bd.id,
-                    Start = bd.Start,
-                    End = bd.End,
-                    OfferId = bd.OfferId
-                }).ToList() ?? new List<BookedDateResponse>()
-            };
+
+            //model.RentObj == null ? null : new RentObjResponse
+            //{
+            //    id = model.RentObj.id,
+            //    Title = model.RentObj.Title,
+            //    Description = model.RentObj.Description,
+            //    CountryId = model.RentObj.CountryId,
+            //    RegionId = model.RentObj.RegionId,
+            //    CityId = model.RentObj.CityId,
+            //    DistrictId = model.RentObj.DistrictId,
+            //    Address = model.RentObj.Address,
+
+            //    RoomCount = model.RentObj.RoomCount,
+            //    BathroomCount = model.RentObj.BathroomCount,
+            //    Area = model.RentObj.Area,
+            //    Floor = model.RentObj.Floor,
+            //    TotalFloors = model.RentObj.TotalFloors,
+            //    RentObjType = model.RentObj.RentObjType,
+
+            //    Latitude = model.RentObj.Latitude,
+            //    Longitude = model.RentObj.Longitude,
+
+            //    BedroomsCount = model.RentObj.BedroomsCount,
+            //    BedsCount = model.RentObj.BedsCount,
+            //    HasBabyCrib = model.RentObj.HasBabyCrib,
+
+            //    ParamValues = model.RentObj.ParamValues?.Select(p => new RentObjParamValueResponse
+            //    {
+            //        id = p.ParamItemId,
+            //        //Title = p.ParamItem?.Title,
+            //        ValueBool = p.ValueBool,
+            //        ValueInt = p.ValueInt,
+            //        ValueString = p.ValueString,
+            //    }).ToList() ?? new List<RentObjParamValueResponse>(),
+
+            //    Images = model.RentObj.Images
+            //        ?.Select(i => $"{_baseUrl}/images/rentobj/{model.RentObj.id}/{Path.GetFileName(i.Url)}")
+            //        .ToList() ?? new List<string>()
+            //},
+
+            //BookedDates = model.BookedDates?.Select(bd => new BookedDateResponse
+            //    {
+            //        id = bd.id,
+            //        Start = bd.Start,
+            //        End = bd.End,
+            //        OfferId = bd.OfferId
+            //    }).ToList() ?? new List<BookedDateResponse>()
+            //};
         }
 
     }

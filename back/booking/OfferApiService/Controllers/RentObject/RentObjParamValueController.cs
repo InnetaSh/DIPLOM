@@ -2,6 +2,7 @@
 using Globals.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using OfferApiService.Models.RentObject;
+using OfferApiService.Service.Interface;
 using OfferApiService.Services.Interfaces.RentObject;
 using OfferApiService.View.RentObject;
 
@@ -10,9 +11,11 @@ namespace OfferApiService.Controllers.RentObject
 
     public class RentObjParamValueController : EntityControllerBase<RentObjParamValue, RentObjParamValueResponse, RentObjParamValueRequest>
     {
+        private IRentObjParamValueService _service;
         public RentObjParamValueController(IRentObjParamValueService rentObjParamValueService, IRabbitMqService mqService)
     : base(rentObjParamValueService, mqService)
         {
+            _service = rentObjParamValueService;
         }
 
 
@@ -31,16 +34,20 @@ namespace OfferApiService.Controllers.RentObject
 
         protected override RentObjParamValueResponse MapToResponse(RentObjParamValue model)
         {
-            return new RentObjParamValueResponse
-            {
-                id = model.id,
-                RentObjId = model.RentObjId,
-                ParamItemId = model.ParamItemId,
-                ParamItemTitle = model.ParamItem?.Title,
-                ValueBool = model.ValueBool,
-                ValueInt = model.ValueInt,
-                ValueString = model.ValueString
-            };
+
+            return RentObjParamValueResponse.MapToResponse(model, _service);
+
+            //string title = _service.GetTitleParamItem(model.ParamItemId).Result;
+            //return new RentObjParamValueResponse
+            //{
+            //    id = model.id,
+            //    RentObjId = model.RentObjId,
+            //    ParamItemId = model.ParamItemId,
+            //    ParamItemTitle = title,
+            //    ValueBool = model.ValueBool,
+            //    ValueInt = model.ValueInt,
+            //    ValueString = model.ValueString
+            //};
         }
 
     }

@@ -11,8 +11,18 @@ namespace OfferApiService.View.RentObject
         public string Title { get; set; }
         public string Description { get; set; }
 
-        public int DistrictId { get; set; }         
+        public int CountryId { get; set; }
+
+        public int RegionId { get; set; }
+        public int CityId { get; set; }
+        public int DistrictId { get; set; }
         public string Address { get; set; }
+
+
+
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+
 
 
         public int RoomCount { get; set; }
@@ -22,18 +32,14 @@ namespace OfferApiService.View.RentObject
         public int TotalFloors { get; set; }
         public RentObjType RentObjType { get; set; }
 
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-
-
+       
         public int BedroomsCount { get; set; }
         public int BedsCount { get; set; }
         public bool HasBabyCrib { get; set; }
 
 
-        public List<ParamItemRequest> ParamItems { get; set; } = new();
+        public List<RentObjParamValueRequest> ParamValues { get; set; } = new();
 
-        public string? MainImageUrl { get; set; }
         public List<string> Images { get; set; } = new();
     }
 }

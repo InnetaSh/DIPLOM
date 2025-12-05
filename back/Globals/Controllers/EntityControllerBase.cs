@@ -91,6 +91,39 @@ namespace Globals.Controllers
             return NoContent();
         }
 
+        //[HttpPut("update/{id}")]
+        //public virtual async Task<IActionResult> Update(int id, [FromBody] TRequest request)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ModelState);
+
+        //    var exists = await _service.ExistsEntityAsync(id);
+        //    if (!exists)
+        //        return NotFound(new { message = "Item not found" });
+
+        //    var entityFromDb = await _service.GetEntityAsync(id);
+        //    if (entityFromDb == null)
+        //        return NotFound(new { message = "Item not found in DB" });
+
+        //    var updatedData = MapToModel(request);
+
+     
+        //    foreach (var prop in typeof(TModel).GetProperties())
+        //    {
+        //        var value = prop.GetValue(updatedData);
+        //        prop.SetValue(entityFromDb, value);
+        //    }
+
+        //    var success = await _service.UpdateEntityAsync(entityFromDb);
+        //    if (!success)
+        //        return StatusCode(500, new { message = "Error updating item" });
+
+        //    PublishMqEvent("Updated", entityFromDb);
+
+        //    return NoContent();
+        //}
+
+
         [HttpDelete("del/{id}")]
         public virtual async Task<IActionResult> Delete(int id)
         {

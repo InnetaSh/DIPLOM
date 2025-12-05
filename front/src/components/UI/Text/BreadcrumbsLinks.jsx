@@ -1,27 +1,34 @@
 import { Link, useLocation } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 import styles from "./Text.module.css";
+import { useState } from "react";
 
-export const Breadcrumbs = ({ last_path = "Результаты поиска" }) => {
-  const location = useLocation();
+export const Breadcrumbs = ({ 
+  last_path = "Результаты поиска", 
+  country = "", 
+  region = "", 
+  city = "", 
+  district = "" 
+}) => {
 
-  const parts = location.pathname.split("/").filter(Boolean);
+  
+  const parts = [
+    country && { label: country, to: `/country/${encodeURIComponent(country)}` },
+    region && { label: region, to: `/region/${encodeURIComponent(region)}` },
+    city && { label: city, to: `/city/${encodeURIComponent(city)}` },
+    district && { label: district, to: `/district/${encodeURIComponent(district)}` }
+  ].filter(Boolean); 
+
 
   const items = [
     { label: "Главная", to: "/" },
-
-    ...parts.map((part, index) => {
-      const path = "/" + parts.slice(0, index + 1).join("/");
-      return {
-        label: decodeURIComponent(part),
-        to: path,
-      };
-    }),
+    ...parts
   ];
 
-  if (parts.length >= 1) {
+  if (parts.length > 0) {
     items.push({ label: last_path, to: null });
   }
+
 
   return (
     <div className={styles.breadcrumbs}>

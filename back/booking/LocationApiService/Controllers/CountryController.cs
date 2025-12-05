@@ -14,7 +14,7 @@ namespace LocationApiService.Controllers
         {
         }
 
-        [HttpGet("get-by-district/{id}")]
+        [HttpGet("get-countries-by-district/{id}")]
         public async Task<ActionResult<CountryResponse>> GetByDistrictId(int id)
         {
             var countries = await _service.GetEntitiesAsync();
@@ -42,7 +42,7 @@ namespace LocationApiService.Controllers
         }
 
 
-        [HttpGet("get-by-city/{id}")]
+        [HttpGet("get-countries-by-city/{id}")]
         public async Task<ActionResult<CountryResponse>> GetByCityId(int id)
         {
             var countries = await _service.GetEntitiesAsync();
@@ -58,7 +58,7 @@ namespace LocationApiService.Controllers
         }
 
 
-        [HttpGet("get-cities/{countryId}")]
+        [HttpGet("get-cities-from-country/{countryId}")]
         public async Task<ActionResult<IEnumerable<CityResponse>>> GetCitiesByCountryId(int countryId)
         {
             var countries = await _service.GetEntitiesAsync();
@@ -123,37 +123,108 @@ namespace LocationApiService.Controllers
         }
 
 
-        [HttpGet("get-all-cities-with-country")]
-        public async Task<ActionResult<IEnumerable<CityResponse>>> GetAllCitiesWithCountry()
+
+        [HttpPost("get-location-titles")]
+        public async Task<ActionResult<LocationTitleResponse>> GetLocationTitles(
+            [FromBody] LocationTitleRequest request)
         {
             var countries = await _service.GetEntitiesAsync();
 
-            var cities = countries
-                .SelectMany(country => country.Regions, (country, region) => new { country, region })
-                .SelectMany(cr => cr.region.Cities, (cr, city) => new
-                {
-                    city,
-                    region = cr.region,
-                    country = cr.country
-                })
-                .Select(x => new CityResponse
-                {
-                    id = x.city.id,
-                    Title = x.city.Title,
-                    RegionId = x.region.id,
-                    //RegionTitle = x.region.Title,       // добавляем название региона
-                   // CountryId = x.country.id,
-                   // CountryTitle = x.country.Title,     // добавляем название страны
-                    Latitude = x.city.Latitude,
-                    Longitude = x.city.Longitude
-                })
-                .ToList();
+           
+            var country = countries.FirstOrDefault(c =>
+                c.id == request.CountryId
+                || c.Regions.Any(r =>
+                    r.id == request.RegionId
+                    || r.Cities.Any(ci =>
+                        ci.id == request.CityId
+                        || ci.Districts.Any(d => d.id == request.DistrictId)
+                    )
+                )
+            );
 
-            if (!cities.Any())
-                return NotFound(new { message = "No cities found" });
+            if (country == null)
+                return NotFound(new { message = "Location not found in any country" });
 
-            return Ok(cities);
+            var region = country.Regions.FirstOrDefault(r => r.id == request.RegionId);
+
+            var city = region?.Cities.FirstOrDefault(c => c.id == request.CityId)
+                       ?? country.Regions.SelectMany(r => r.Cities)
+                                         .FirstOrDefault(c => c.id == request.CityId);
+
+            var district = city?.Districts.FirstOrDefault(d => d.id == request.DistrictId)
+                           ?? country.Regions.SelectMany(r => r.Cities)
+                                             .SelectMany(c => c.Districts)
+                                             .FirstOrDefault(d => d.id == request.DistrictId);
+
+   
+            return Ok(new LocationTitleResponse
+            {
+                CountryTitle = country.Title,
+                RegionTitle = region?.Title,
+                CityTitle = city?.Title,
+                DistrictTitle = district?.Title
+            });
         }
+
+
+
+        [HttpGet("get-country-title/{countryId}")]
+        public async Task<ActionResult<string>> GetCountryTitle(int countryId)
+        {
+            var countries = await _service.GetEntitiesAsync();
+            var country = countries.FirstOrDefault(c => c.id == countryId);
+
+            if (country == null)
+                return NotFound(new { message = "Country not found" });
+
+            return Ok(country.Title);
+        }
+
+        [HttpGet("get-region-title/{regionId}")]
+        public async Task<ActionResult<string>> GetRegionTitle(int regionId)
+        {
+            var countries = await _service.GetEntitiesAsync();
+            var region = countries
+                .SelectMany(c => c.Regions)
+                .FirstOrDefault(r => r.id == regionId);
+
+            if (region == null)
+                return NotFound(new { message = "Region not found" });
+
+            return Ok(region.Title);
+        }
+
+        [HttpGet("get-city-title/{cityId}")]
+        public async Task<ActionResult<string>> GetCityTitle(int cityId)
+        {
+            var countries = await _service.GetEntitiesAsync();
+            var city = countries
+                .SelectMany(c => c.Regions)
+                .SelectMany(r => r.Cities)
+                .FirstOrDefault(c => c.id == cityId);
+
+            if (city == null)
+                return NotFound(new { message = "City not found" });
+
+            return Ok(city.Title);
+        }
+
+        [HttpGet("get-district-title/{districtId}")]
+        public async Task<ActionResult<string>> GetDistrictTitle(int districtId)
+        {
+            var countries = await _service.GetEntitiesAsync();
+            var district = countries
+                .SelectMany(c => c.Regions)
+                .SelectMany(r => r.Cities)
+                .SelectMany(ci => ci.Districts)
+                .FirstOrDefault(d => d.id == districtId);
+
+            if (district == null)
+                return NotFound(new { message = "District not found" });
+
+            return Ok(district.Title);
+        }
+
 
 
         protected override Country MapToModel(CountryRequest request)

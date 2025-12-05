@@ -7,6 +7,7 @@ namespace OfferApiService.Services.Interfaces.RentObject
 {
         public interface IRentObjParamValueService : IServiceBase<RentObjParamValue>
         {
+        Task<string> GetTitleParamItem(int id);
         }
     }
 

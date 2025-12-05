@@ -1,0 +1,26 @@
+.tableWrapper {
+    width: 100%;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* ======= Синий хедер таблицы ======= */
+
+.headerRow {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 2fr 1fr 1.3fr;
+    background: #2a66b8;
+    color: white;
+    padding: 12px 16px;
+    font-weight: bold;
+    font-size: 14px;
+    border-bottom: 1px solid #1f4d8d;
+    border-left: 1px solid var(--color-border);
+}
+.headerRow > div {
+    display: flex;
+    align-items: center;
+      border-left: 1px solid var(--color-border);
+}

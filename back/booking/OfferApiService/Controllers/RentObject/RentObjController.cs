@@ -12,21 +12,29 @@ namespace OfferApiService.Controllers.RentObject
     public class RentObjController : EntityControllerBase<Models.RentObject.RentObject, RentObjResponse, RentObjRequest>
     {
         private readonly string _baseUrl;
-        public RentObjController(IRentObjService rentObjService, IRabbitMqService mqService, IConfiguration configuration)
+        private IRentObjService _service;
+        private readonly IRentObjParamValueService _paramValueService;
+        public RentObjController(IRentObjService rentObjService, IRabbitMqService mqService, IConfiguration configuration, IRentObjParamValueService paramValueService)
             : base(rentObjService, mqService)
         {
             _baseUrl = configuration["AppSettings:BaseUrl"];
+            _service = rentObjService;
+            _paramValueService = paramValueService;
         }
 
- 
+
 
         protected override Models.RentObject.RentObject MapToModel(RentObjRequest request)
         {
+           
             return new Models.RentObject.RentObject
             {
                 id = request.id,
                 Title = request.Title,
                 Description = request.Description,
+                CountryId = request.CountryId,
+                RegionId = request.RegionId,
+                CityId = request.CityId,
                 DistrictId = request.DistrictId,
                 Address = request.Address,
 
@@ -44,14 +52,14 @@ namespace OfferApiService.Controllers.RentObject
                 BedsCount = request.BedsCount,
                 HasBabyCrib = request.HasBabyCrib,
 
-                ParamValues = request.ParamItems?.Select(p => new RentObjParamValue
+                ParamValues = request.ParamValues?.Select(p => new RentObjParamValue
                 {
-                    ParamItemId = p.id,
-                    ValueBool = p.ValueType == ParamValueType.Boolean ? p.ValueBool : null,
-                    ValueInt = p.ValueType == ParamValueType.Integer ? p.ValueInt : null,
-                    ValueString = p.ValueType == ParamValueType.String ? p.ValueString : String.Empty
+                    id = p.id,
+                    ParamItemId = p.ParamItemId,
+                    ValueBool =  p.ValueBool ,
+                    ValueInt =  p.ValueInt ,
+                    ValueString =  p.ValueString,
                 }).ToList() ?? new List<RentObjParamValue>(),
-
 
                 Images = request.Images?.Select(url => new RentObjImage { Url = url }).ToList() ?? new List<RentObjImage>()
             };
@@ -60,39 +68,48 @@ namespace OfferApiService.Controllers.RentObject
 
         protected override RentObjResponse MapToResponse(Models.RentObject.RentObject model)
         {
-            return new RentObjResponse
-            {
-                id = model.id,
-                Title = model.Title,
-                Description = model.Description,
-                DistrictId = model.DistrictId,
-                Address = model.Address,
+            return RentObjResponse.MapToResponse(model, _paramValueService, _baseUrl);
 
-                RoomCount = model.RoomCount,
-                BathroomCount = model.BathroomCount,
-                Area = model.Area,
-                Floor = model.Floor,
-                TotalFloors = model.TotalFloors,
-                RentObjType = model.RentObjType,
+            //return new RentObjResponse
+            //{
+            //    id = model.id,
+            //    Title = model.Title,
+            //    Description = model.Description,
+            //    CountryId = model.CountryId,
+            //    RegionId = model.RegionId,
+            //    CityId= model.CityId,
+            //    DistrictId = model.DistrictId,
+            //    Address = model.Address,
 
-                Latitude = model.Latitude,
-                Longitude = model.Longitude,
+            //    RoomCount = model.RoomCount,
+            //    BathroomCount = model.BathroomCount,
+            //    Area = model.Area,
+            //    Floor = model.Floor,
+            //    TotalFloors = model.TotalFloors,
+            //    RentObjType = model.RentObjType,
 
-                BedroomsCount = model.BedroomsCount,
-                BedsCount = model.BedsCount,
-                HasBabyCrib = model.HasBabyCrib,
+            //    Latitude = model.Latitude,
+            //    Longitude = model.Longitude,
 
-                ParamItems = model.ParamValues?.Select(p => new ParamItemResponse
-                {
-                    id = p.ParamItemId,
-                    Title = p.ParamItem?.Title,
-                    ValueType = p.ParamItem?.ValueType ?? ParamValueType.Boolean
-                }).ToList() ?? new List<ParamItemResponse>(),
+            //    BedroomsCount = model.BedroomsCount,
+            //    BedsCount = model.BedsCount,
+            //    HasBabyCrib = model.HasBabyCrib,
 
-                Images = model.Images
-                        ?.Select(i => $"{_baseUrl}/images/rentobj/{model.id}/{Path.GetFileName(i.Url)}")
-                        .ToList() ?? new List<string>(),
-            };
+            //    ParamValues = model.ParamValues?.Select(p => new RentObjParamValueResponse
+            //    {
+            //        id = p.id,
+            //        ParamItemId = p.ParamItemId,
+            //        ParamItemTitle = _service.GetTitleParamItem(p.ParamItemId).Result,
+            //        ValueBool = p.ValueBool,
+            //        ValueInt = p.ValueInt,
+            //        ValueString = p.ValueString,
+            //    })?.ToList() ?? new List<RentObjParamValueResponse>(),
+
+          
+            //    Images = model.Images
+            //            ?.Select(i => $"{_baseUrl}/images/rentobj/{model.id}/{Path.GetFileName(i.Url)}")
+            //            .ToList() ?? new List<string>(),
+            //};
         }
 
     }

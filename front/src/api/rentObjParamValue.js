@@ -1,9 +1,9 @@
 import http from "./http";
 
 export const rentObjParamValueApi = {
-  getAll: () => http.get("/rentobjparamvalue/get-all"),
-  getById: (id) => http.get(`/rentobjparamvalue/get/${id}`),
-  create: (data) => http.post("/rentobjparamvalue/create", data),
-  update: (id, data) => http.put(`/rentobjparamvalue/update/${id}`, data),
-  delete: (id) => http.delete(`/rentobjparamvalue/del/${id}`),
+  getAll: () => http.get("/Offer/rentobjparamvalue/get-all"),
+  getById: (id) => http.get(`/Offer/rentobjparamvalue/get/${id}`),
+  create: (data) => http.post("/Offer/rentobjparamvalue/create", data),
+  update: (id, data) => http.put(`/Offer/rentobjparamvalue/update/${id}`, data),
+  delete: (id) => http.delete(`/Offer/rentobjparamvalue/del/${id}`),
 };

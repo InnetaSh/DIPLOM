@@ -73,9 +73,11 @@ namespace Globals.Sevices
                 var dbSet = GetDbSet(db);
                 var existing = await dbSet.FindAsync(entity.id);
                 if (existing == null) return false;
+                dbSet.Remove(existing);
+                await dbSet.AddAsync(entity);
 
                 // Attach and mark modified
-                db.Entry(entity).State = EntityState.Modified;
+                //db.Entry(entity).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return true;
             }

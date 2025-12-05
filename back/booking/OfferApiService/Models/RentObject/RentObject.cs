@@ -10,9 +10,17 @@ namespace OfferApiService.Models.RentObject
 
         public string Description { get; set; }
 
+        //=====расположение==================
+        public int CountryId { get; set; }
         public int DistrictId { get; set; }
+        public int RegionId { get; set; }
+        public int CityId { get; set; }
 
         public string Address { get; set; }
+
+        /// Координаты для карты
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
 
         // === Основные характеристики объекта  ===
@@ -28,10 +36,6 @@ namespace OfferApiService.Models.RentObject
         public RentObjType RentObjType { get; set; }   //Тип жилья
 
 
-        /// Координаты для карты
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-
 
         // === Спальные места ===
         public int BedroomsCount { get; set; }        //Количество спальных мест
@@ -42,8 +46,6 @@ namespace OfferApiService.Models.RentObject
  
         public List<RentObjParamValue> ParamValues { get; set; } = new();  // Параметры квартиры (список всех параметров квартиры, выбранных из справочника ParamItem)
 
-        public string? MainImageUrl { get; set; }
-
-        public List<RentObjImage> Images { get; set; } // Изображения объекта
+        public List<RentObjImage> Images { get; set; } 
     }
 }

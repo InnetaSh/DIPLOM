@@ -15,16 +15,17 @@ const CitySelector = ({ value, onChange }) => {
     });
   }, [locationApi]);
 
-  // синхронизируем search с внешним value
+
   useEffect(() => {
     setSearch(value || "");
   }, [value]);
+
+
 
   const handleChange = (e) => {
     const value = e.target.value;
     setSearch(value);
 
-    if (onChange) onChange(value); // уведомляем родителя
 
     if (value.length > 0) {
       const filtered = cities.filter((city) =>
@@ -39,7 +40,7 @@ const CitySelector = ({ value, onChange }) => {
   const handleSelect = (city) => {
     setSearch(city.title);
     setSuggestions([]);
-    if (onChange) onChange(city.title); // уведомляем родителя
+    if (onChange) onChange(city.title, city.id); 
   };
 
   return (
