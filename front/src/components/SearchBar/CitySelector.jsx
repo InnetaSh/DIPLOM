@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./SearchBar.module.css";
-import { ApiContext } from "../../../contexts/ApiContext.jsx";
+import { ApiContext } from "../../contexts/ApiContext.jsx";
 
 const CitySelector = ({ value, onChange }) => {
   const { locationApi } = useContext(ApiContext); 

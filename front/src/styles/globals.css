@@ -1,38 +1,38 @@
-
 /* Светлая тема по умолчанию */
 :root {
-  --color-bg: #0071c2; 
-  --color-primary: #0071c2;    
-  --color-primary-rgb: 52, 152, 219; 
+  --color-bg: #0071c2;
+  --color-primary: #0071c2;
+  --color-primary-rgb: 52, 152, 219;
   --color-primary-dark: #005b9a;
   --color-on-primary: #ffffff;
 
   --color-secondary: #f0f0f0;
-  --color-secondary-light: #e0e0e0;; 
-  --color-secondary-light-rgb: 100, 150, 200; 
+  --color-secondary-light: #e0e0e0;
+  ;
+  --color-secondary-light-rgb: 100, 150, 200;
 
   --color-text: #333333;
 
   --color-border: #4a4949;
-   --color-border-rgb: 128, 128, 128;
+  --color-border-rgb: 128, 128, 128;
   --color-form-border: #db7500;
 }
 
 /* Тёмная тема */
 [data-theme="dark"] {
-  --color-bg: #0071c2; 
+  --color-bg: #0071c2;
   --color-primary: #1e90ff;
-   --color-primary-rgb: 52, 152, 219;
+  --color-primary-rgb: 52, 152, 219;
   --color-primary-dark: #0f5fae;
   --color-on-primary: #ffffff;
 
   --color-secondary: #2b2b2b;
   --color-secondary-light: #3c3c3c;
-  --color-secondary-light-rgb: 100, 150, 200; 
+  --color-secondary-light-rgb: 100, 150, 200;
   --color-text: #e0e0e0;
 
   --color-border: #4a4949;
-    --color-border-rgb: 128, 128, 128;
+  --color-border-rgb: 128, 128, 128;
   --color-form-border: #db7500;
 }
 
@@ -133,8 +133,8 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-   padding:  2rem;
-   font-size: 1.5em;
+  padding: 2rem;
+  font-size: 1.5em;
 }
 
 .btn-icon:hover:not(:disabled) {
@@ -191,10 +191,10 @@ body {
   padding: 20px;
   background-color: var(--color-secondary);
   min-height: calc(100vh - 60px);
-  width: 90%;            
-  max-width: 1200px;     
-  margin: 0 auto;        
-  box-sizing: border-box; 
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
 
 
@@ -205,23 +205,35 @@ body {
   margin-top: 20px;
 }
 
-.search-page__filters {
-}
+.search-page__filters {}
 
-.search-page__list {
-
-}
+.search-page__list {}
 
 /*=================================================
               Hotel Page
 ===================================================*/
 .hotel-page__layout {
- display: flex;
+  display: flex;
   gap: 24px;
 }
 
+/*=================================================
+              register-page
+===================================================*/
+.register-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--color-on-primary);
+  width: 100%;
+}
 
-
-
-
-
+.register-page__content {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+  width: 600px;
+  padding: 20px;
+  gap: 20px;
+}

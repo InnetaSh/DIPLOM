@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Header } from "../../components/Header.jsx";
+import { Header } from "../../components/Header/Header.jsx";
 import { useParams } from "react-router-dom";
 import styles from "./HotelPage.module.css";
 import { ApiContext } from "../../contexts/ApiContext.jsx";

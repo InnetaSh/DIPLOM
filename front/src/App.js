@@ -8,11 +8,10 @@ import React, { useState } from 'react';
 import {HomePage} from './pages/public/HomePage';
 import {SearchPage} from './pages/public/SearchPage';
 import {HotelPage} from './pages/public/HotelPage';
-// import LoginPage from './pages/public/LoginPage';
-// import RegisterPage from './pages/public/RegisterPage';
+import {LoginPage} from './pages/public/LoginPage';
+import {RegisterPage} from './pages/public/RegisterPage';
 
-// // Пользовательские страницы
-// import ProfilePage from './pages/user/ProfilePage';
+import ProfilePage from './pages/user/ProfilePage';
 
 
 // // Админ-панель
@@ -30,13 +29,13 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/search" element={<SearchPage />} />
             <Route path="/hotel/:id" element={<HotelPage />} />
-            {/* <Route path="/login" element={<LoginPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/about" element={<AboutPage />} /> */}
+            {/* <Route path="/about" element={<AboutPage />} /> */}
 
             {/* Приватные маршруты */}
-            {/* <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/bookings" element={<BookingsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+             {/*<Route path="/bookings" element={<BookingsPage />} />
             <Route path="/booking/:id" element={<BookingDetailsPage />} />
             <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/settings" element={<SettingsPage />} /> */}

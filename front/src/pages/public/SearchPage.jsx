@@ -1,5 +1,6 @@
 import React, { useState, useEffect,useContext } from "react";
-import { Header } from "../../components/Header.jsx";
+import { Header } from "../../components/Header/Header.jsx";
+import {SearchBar} from"../../components/SearchBar/SearchBar.jsx";
 import { Breadcrumbs } from "../../components/UI/Text/BreadcrumbsLinks.jsx";
 import { HotelCardList } from "../../components/HotelCard/HotelCardList.jsx";
 import { FilterSidebar } from "../../components/Filter/FilterSidebar.jsx";
@@ -13,7 +14,7 @@ export const SearchPage = () => {
   const [hotels, setHotels] = useState([]);
   const [city, setCity] = useState("");
 
-  const [filtersData, setFiltersData] = useState([]); // массив категорий с items
+  const [filtersData, setFiltersData] = useState([]); 
   const [selectedFilters, setSelectedFilters] = useState({});
   //const [filteredHotels, setFilteredHotels] = useState({});
 
@@ -52,7 +53,7 @@ useEffect(() => {
   return (
     <div className="search-page">
       <Header onSearchResults={handleSearchResults} />
-
+  <SearchBar onSearch={handleSearchResults} text="Найдите жилье для новой поездки"/>
       <main className="search-page__content">
         <Breadcrumbs />
 

@@ -1,5 +1,6 @@
-import React, { useState, useEffect,useContext } from "react";
-import { Header } from "../../components/Header.jsx";
+import React, { useState, useEffect, useContext } from "react";
+import { Header } from "../../components/Header/Header.jsx";
+import {SearchBar} from"../../components/SearchBar/SearchBar.jsx";
 import { Breadcrumbs } from "../../components/UI/Text/BreadcrumbsLinks.jsx";
 import { HotelCardList } from "../../components/HotelCard/HotelCardList.jsx";
 import { FilterSidebar } from "../../components/Filter/FilterSidebar.jsx";
@@ -9,7 +10,7 @@ import { ApiContext } from "../../contexts/ApiContext.jsx";
 import "../../styles/globals.css";
 
 export const HomePage = () => {
-  const { paramsCategoryApi, offerApi } = useContext(ApiContext); 
+  const { paramsCategoryApi, offerApi } = useContext(ApiContext);
   const [hotels, setHotels] = useState([]);
   const [city, setCity] = useState("");
 
@@ -18,14 +19,14 @@ export const HomePage = () => {
   //const [filteredHotels, setFilteredHotels] = useState({});
 
 
-useEffect(() => {
-  paramsCategoryApi.getAll()
-    .then((res) => {
-      setFiltersData(res.data);      
-      console.log("Filters loaded:", res.data);
-    })
-    .catch((err) => console.error("Error loading filters:", err));
-}, [paramsCategoryApi]);
+  useEffect(() => {
+    paramsCategoryApi.getAll()
+      .then((res) => {
+        setFiltersData(res.data);
+        console.log("Filters loaded:", res.data);
+      })
+      .catch((err) => console.error("Error loading filters:", err));
+  }, [paramsCategoryApi]);
 
 
 
@@ -52,6 +53,7 @@ useEffect(() => {
   return (
     <div className="search-page">
       <Header onSearchResults={handleSearchResults} />
+      <SearchBar onSearch={handleSearchResults} text="Найдите жилье для новой поездки"/>
 
       <main className="search-page__content">
         <Breadcrumbs />

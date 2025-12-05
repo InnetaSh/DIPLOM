@@ -1,11 +1,19 @@
 .header {
   width: 100%;
-  height: 250px;
+  height: 150px;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  mix-blend-mode: 0;
+}
+
+.header_without_btn {
+  width: 100%;
+  height: 150px;
   background-color: var(--color-bg);
   color: var(--color-text);
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-
 .header-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -32,4 +40,12 @@
 .search-bar {
   margin-top: 10px;
   width: 100%;
+}
+
+.user-cabiten__container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  padding: 5px 10px;
 }
