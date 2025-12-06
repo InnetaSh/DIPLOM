@@ -1,21 +1,25 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { Image } from "../UI/Image/Image.jsx";
 import { IconButton } from "../UI/Button/IconButton.jsx";
 import { TextButton } from "../UI/Button/TextButton.jsx";
 import { SecondaryButton } from "../UI/Button/SecondaryButton.jsx";
 import { Text } from "../../components/UI/Text/Text.jsx"
-import SearchBar from "../SearchBar/SearchBar.jsx";
+import {UserMenu} from "./UserMenu.jsx"
 import { useNavigate } from "react-router-dom";
 
 import "../../styles/globals.css";
 import "./Header.css";
 
 import logo from "../../img/logo/Booking-Emblema.jpg";
+import { ReactComponent as PhoneIcon } from "../../img/icons/phone.svg";
+
 
 export const Header = ({ showLogBtn = true }) => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+
+  const [openMenu, setOpenMenu] = useState(false);
   return (
     <div className="header">
       <div className="header-container">
@@ -27,17 +31,24 @@ export const Header = ({ showLogBtn = true }) => {
           <div className="actions-container">
             <IconButton icon="UAH" onClick={() => console.log("Menu clicked")} />
             <IconButton icon="EN" onClick={() => console.log("EN clicked")} />
-            <IconButton icon="Связаться" onClick={() => console.log("Связаться с нами clicked")} />
-            <TextButton text="Зарегистрировать свой объект" onClick={() => console.log("Зарегистрировать clicked")} />
+            <IconButton
+              icon={<PhoneIcon />}
+              onClick={() => console.log("Связаться с нами clicked")}
+            />
 
             {user ? (
               <div className="user-cabiten__container">
+                <TextButton text="Зарегистрировать свой объект" onClick={() => console.log("Зарегистрировать clicked")} />
+                <div className="user-cabiten__info">
 
-                <IconButton
-                  icon="👤"
-                  onClick={() => navigate("/profile")}
-                />
-                <Text text={user.name} type="bold" />
+                  <IconButton
+                    icon="👤"
+                    onClick={() => setOpenMenu(prev => !prev)}
+                  />
+                  <Text text={user.name} type="bold" />
+
+                  {openMenu && <UserMenu />}
+                </div>
               </div>
             ) : (
 

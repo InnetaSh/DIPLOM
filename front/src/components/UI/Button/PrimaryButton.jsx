@@ -1,10 +1,10 @@
 
 import "../../../styles/globals.css";
 
-export const PrimaryButton = ({ children, onClick, disabled }) => {
+export const PrimaryButton = ({ text, onClick, disabled }) => {
   return (
     <button className="btn btn-primary" onClick={onClick} disabled={disabled}>
-      {children}
+      {text}
     </button>
   );
 };

@@ -110,9 +110,10 @@ body {
 .btn-text {
   background: none;
   border: none;
-  color: var(--color-primary);
+  color: var(--color-secondary);
   font-weight: 500;
   cursor: pointer;
+  padding: 5px;
 }
 
 .btn-text:hover:not(:disabled) {
@@ -128,15 +129,15 @@ body {
 .btn-icon {
   background-color: rgba(var(--color-secondary-light-rgb), 0.05);
   border: none;
-  border-radius: 50%;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  padding: 2rem;
   font-size: 1.5em;
+  width: 60px !important;
+  height: 60px !important;
 }
-
 .btn-icon:hover:not(:disabled) {
   background-color: rgba(var(--color-secondary-light-rgb), 0.7);
 }
@@ -146,6 +147,10 @@ body {
   cursor: not-allowed;
 }
 
+.btn-icon svg {
+  width: 90%;
+  height: 90%;
+}
 
 /*====================================================
                   section-nav

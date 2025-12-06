@@ -3,7 +3,7 @@
   height: 150px;
   background-color: var(--color-bg);
   color: var(--color-text);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   mix-blend-mode: 0;
 }
 
@@ -12,13 +12,15 @@
   height: 150px;
   background-color: var(--color-bg);
   color: var(--color-text);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 .header-container {
   max-width: 1200px;
   margin: 0 auto;
   padding: var(--header-padding);
 }
+
 
 .header-main {
   display: flex;
@@ -30,11 +32,11 @@
 
 
 .actions-container {
-  width: 70%;
+  width: 60%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px; 
+  gap: 10px;
 }
 
 .search-bar {
@@ -42,10 +44,79 @@
   width: 100%;
 }
 
-.user-cabiten__container{
+/*================================================*/
+
+
+.user-cabiten__container {
   display: flex;
   align-items: center;
   justify-content: center;
   width: max-content;
   padding: 5px 10px;
+}
+
+.user-cabiten__info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  padding: 5px 10px;
+  position: relative;
+}
+
+/*=============================================
+                user menu
+==============================================*/
+.user-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--color-secondary-light);
+  box-shadow: 0 6px 20px var(--color-border);
+    border-radius: 12px;
+  z-index: 1000;
+  padding: 12px 0;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-menu {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px var(--color-border);
+  padding: 12px 0;
+  width: 260px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-menu-item {
+  padding: 12px 20px;
+  text-align: left;
+  background: none;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-menu-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  fill: currentColor;
+}
+
+.user-menu-item:hover {
+  background-color: var(--color-secondary-light);
+}
+
+.logout {
+  color: #d33;
 }
