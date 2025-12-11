@@ -1,20 +1,30 @@
 ﻿using Globals.Controllers;
 using OfferApiService.Models.Enum;
-using OfferApiService.Services.Interfaces.RentObject;
+using OfferApiService.Services.Interfaces.RentObj;
 using OfferApiService.View;
-using OfferApiService.View.RentObject;
+using OfferApiService.View.RentObj;
 
 namespace OfferApiService.Models.View
 {
     public class OfferResponse : IBaseResponse
     {
         public int id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
 
+        public string? Title { get; set; }
+        public string? Description { get; set; }
         public decimal PricePerDay { get; set; }
         public decimal? PricePerWeek { get; set; }
         public decimal? PricePerMonth { get; set; }
+
+        public string? CountryTitle { get; set; }
+        public string? RegionTitle { get; set; }
+        public string? CityTitle { get; set; }
+        public string? DistrictTitle { get; set; }
+
+        public int DistanceToCenter { get; set; } // расстояние до центра
+
+        public int GuestCount { get; set; }
+        public int DaysCount { get; set; }
 
 
         public decimal? OrderPrice { get; set; } // цена для текущего заказа (по количеству дней расчет)
@@ -51,7 +61,7 @@ namespace OfferApiService.Models.View
 
         public IEnumerable<BookedDateResponse> BookedDates { get; set; } = new List<BookedDateResponse>();
 
-        public IEnumerable<ReviewResponse> Reviews { get; set; } = new List<ReviewResponse>();
+
 
         public double Rating { get; set; }
 
@@ -61,37 +71,87 @@ namespace OfferApiService.Models.View
 
 
 
-        public static OfferResponse MapToResponse(Offer model, IRentObjParamValueService paramValueService, string baseUrl)
+        public static OfferResponse MapToResponse( Offer model,string baseUrl)
         {
             return new OfferResponse
             {
                 id = model.id,
-                Title = model.Title,
-                Description = model.Description,
+
                 PricePerDay = model.PricePerDay,
                 PricePerWeek = model.PricePerWeek,
                 PricePerMonth = model.PricePerMonth,
+
                 DepositPersent = model.DepositPersent,
                 PaymentStatus = model.PaymentStatus,
+
                 Tax = model.Tax,
+
                 MinRentDays = model.MinRentDays,
                 AllowPets = model.AllowPets,
                 AllowSmoking = model.AllowSmoking,
                 AllowChildren = model.AllowChildren,
                 AllowParties = model.AllowParties,
+
                 MaxGuests = model.MaxGuests,
                 CheckInTime = model.CheckInTime,
                 CheckOutTime = model.CheckOutTime,
+
                 OwnerId = model.OwnerId,
-                RentObj = RentObjResponse.MapToResponse(model.RentObj, paramValueService, baseUrl),
-                BookedDates = model.BookedDates?.Select(bd => new BookedDateResponse
-                 {
-                     id = bd.id,
-                     Start = bd.Start,
-                     End = bd.End,
-                     OfferId = bd.OfferId
-                 }).ToList() ?? new List<BookedDateResponse>()
+
+                // === Объект недвижимости ===
+                RentObj = model.RentObj != null
+                    ? RentObjResponse.MapToResponse(model.RentObj, baseUrl)
+                    : null,
+
+                // === Забронированные даты ===
+                BookedDates = model.BookedDates?
+                    .Select(bd => BookedDateResponse.MapToResponse(bd))
+                    .ToList()
+                    ?? new List<BookedDateResponse>(),
+
+           
+
+                //Rating = model.Rating,
+                //IsRecommended = model.IsRecommended,
+                //IsTopLocation = model.IsTopLocation,
+                //IsTopCleanliness = model.IsTopCleanliness
             };
         }
+        public static OfferResponse MapToFullResponse(Offer model, decimal? userDiscountPercent, int rentalDays, string baseUrl)
+        {
+            var response = MapToResponse(model, baseUrl);
+
+           
+            response.OwnerId = model.OwnerId;
+            response.PaymentStatus = model.PaymentStatus;
+            response.DepositPersent = model.DepositPersent;
+            response.Tax = model.Tax;
+            response.BookedDates = model.BookedDates?.Select(BookedDateResponse.MapToResponse).ToList()
+                                   ?? new List<BookedDateResponse>();
+            //response.Rating = model.Rating;
+            //response.IsRecommended = model.IsRecommended;
+            //response.IsTopLocation = model.IsTopLocation;
+            //response.IsTopCleanliness = model.IsTopCleanliness;
+
+            // Расчёт цен
+            var orderPrice = response.PricePerDay * rentalDays;
+            var discountPercent = userDiscountPercent ?? 0;
+            var discountAmount = orderPrice * discountPercent / 100;
+            var depositAmount = response.DepositPersent.HasValue ? orderPrice * response.DepositPersent.Value / 100 : 0;
+            var taxAmount = response.Tax.HasValue ? (orderPrice - discountAmount) * response.Tax.Value / 100 : 0;
+            var totalPrice = orderPrice - discountAmount + depositAmount + taxAmount;
+
+            response.OrderPrice = orderPrice;
+            response.DiscountPercent = discountPercent;
+            response.DiscountAmount = discountAmount;
+            response.DepositAmount = depositAmount;
+            response.TaxAmount = taxAmount;
+            response.TotalPrice = totalPrice;
+
+            return response;
+        }
+
+
     }
 }
+

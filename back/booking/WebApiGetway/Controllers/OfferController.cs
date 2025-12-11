@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApiGetway.Service.Interfase;
+using WebApiGetway.View;
 
 [ApiController]
 [Route("[controller]")]
@@ -210,16 +211,38 @@ public class OfferController : ControllerBase
     public Task<IActionResult> Delete(int id) =>
         _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/offer/del/{id}", HttpMethod.Delete, null);
 
-    [HttpGet("by-mainparams")]
-    public Task<IActionResult> GetMainSearch()
+
+    [HttpGet("search/main")]
+    public Task<IActionResult> GetMainSearch(
+    [FromQuery] OfferMainSearchRequest request,
+    [FromQuery] decimal userDiscountPercent)
     {
         var queryString = Request.QueryString.Value ?? string.Empty;
+
         return _gateway.ForwardRequestAsync<object>(
             "OfferApiService",
-            $"/api/offer/by-mainparams{queryString}",
+            $"/api/offer/search/main{queryString}",
             HttpMethod.Get,
             null
         );
     }
+
+
+
+    [HttpGet("get-offer/{id}")]
+    public Task<IActionResult> GetMaGetOfferByIdinSearch(
+        int id,
+        [FromQuery] decimal? userDiscountPercent,
+        [FromQuery] int rentalDays = 1)
+    {
+        
+        return _gateway.ForwardRequestAsync<object>(
+            "OfferApiService",
+            $"/api/offer/get-offer/{id}",
+            HttpMethod.Get,
+            null
+        );
+    }
+
 
 }

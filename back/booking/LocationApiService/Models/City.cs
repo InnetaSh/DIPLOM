@@ -6,8 +6,8 @@ namespace LocationApiService.Models
 {
     public class City : EntityBase
     {
-        [Required]
-        public string Title { get; set; }
+        //[Required]
+        //public string Title { get; set; }
 
         public int RegionId { get; set; }
         public Region Region { get; set; }

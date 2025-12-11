@@ -1,4 +1,6 @@
 ﻿using Globals.Controllers;
+using OfferApiService.Models;
+using OfferApiService.Models.Dto;
 using OfferApiService.Models.Enum;
 
 namespace OfferApiService.Models.Dto
@@ -6,8 +8,6 @@ namespace OfferApiService.Models.Dto
     public class OfferRequest : IBaseRequest
     {
         public int id { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
 
         public decimal PricePerDay { get; set; }
         public decimal? PricePerWeek { get; set; }
@@ -23,7 +23,6 @@ namespace OfferApiService.Models.Dto
         public bool AllowChildren { get; set; }
         public bool AllowParties { get; set; }
 
-
         public int MaxGuests { get; set; }
 
         public TimeSpan? CheckInTime { get; set; }
@@ -31,5 +30,36 @@ namespace OfferApiService.Models.Dto
 
         public int OwnerId { get; set; }
         public int RentObjId { get; set; }
+
+        public static Offer MapToModel(OfferRequest request)
+        {
+            return new Offer
+            {
+                id = request.id,
+
+                PricePerDay = request.PricePerDay,
+                PricePerWeek = request.PricePerWeek,
+                PricePerMonth = request.PricePerMonth,
+
+                DepositPersent = request.DepositPersent,
+                PaymentStatus = request.PaymentStatus,
+                Tax = request.Tax,
+
+                MinRentDays = request.MinRentDays,
+                AllowPets = request.AllowPets,
+                AllowSmoking = request.AllowSmoking,
+                AllowChildren = request.AllowChildren,
+                AllowParties = request.AllowParties,
+
+                MaxGuests = request.MaxGuests,
+
+                CheckInTime = request.CheckInTime,
+                CheckOutTime = request.CheckOutTime,
+
+                OwnerId = request.OwnerId,
+                RentObjId = request.RentObjId
+
+            };
+        }
     }
 }

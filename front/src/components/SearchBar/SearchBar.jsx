@@ -12,6 +12,7 @@ export const  SearchBar=({ onSearch, text })=> {
   const [hotels, setHotels] = useState([]);
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
   const [guests, setGuests] = useState({ adults: 1, children: 0, rooms: 1 });
+  const [guestsCount, setGuestsCount] = useState(1);
   const [isGuestOpen, setIsGuestOpen] = useState(false);
 
   const handleSearch = async () => {
@@ -24,19 +25,18 @@ export const  SearchBar=({ onSearch, text })=> {
     });
     try {
       const response = await offerApi.searchMain({
-        cityId: locationId,
         startDate: dateRange.start,
         endDate: dateRange.end,
-        bedroomsCount: guests.adults + guests.children,
-        userDiscountPercent: 0,
+        guests: guests.adults + guests.children,
+        userDiscountPercent: 5,
       });
 
       const foundHotels = response.data;
-
+      setGuestsCount(guests.adults + guests.children);
       setHotels(foundHotels);
 
       if (onSearch) {
-        onSearch(foundHotels, location);
+        onSearch(foundHotels, location,guestsCount, dateRange.start, dateRange.end);
       }
 
       console.log("Результаты поиска:", foundHotels);

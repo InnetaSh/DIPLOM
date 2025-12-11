@@ -1,65 +1,81 @@
 ﻿using Globals.Models;
 using OfferApiService.Models.Enum;
+using OfferApiService.Models.RentObjModel;
 
 namespace OfferApiService.Models
 {
     public class Offer : EntityBase
     {
-
         public Offer()
         {
-            CheckInTime = new TimeSpan(15, 0, 0);  
-            CheckOutTime = new TimeSpan(11, 0, 0); 
+            CheckInTime = new TimeSpan(15, 0, 0);   // Время заезда по умолчанию (15:00)
+            CheckOutTime = new TimeSpan(11, 0, 0);  // Время выезда по умолчанию (11:00)
         }
 
-        public string Title { get; set; }
-        public string Description { get; set; }
+        // ===== Название и описание объявления =====
 
-        // Цены
-        public decimal PricePerDay { get; set; }
-        public decimal? PricePerWeek { get; set; }
-        public decimal? PricePerMonth { get; set; }
-
-        // Депозит
-        public decimal? DepositPersent { get; set; }
-        public PaymentType PaymentStatus { get; set; } //Возвращаемый / нет
-
-        // Налог (%)
-        public decimal? Tax { get; set; } // Процент налога от стоимости аренды
+        //public string Title { get; set; }           // Заглавие объявления (переводимое поле)
+        //public string Description { get; set; }     // Описание объявления (переводимое поле)
 
 
-        // Правила аренды
-        public int MinRentDays { get; set; } = 1;
-        public bool AllowPets { get; set; }
-        public bool AllowSmoking { get; set; }
-        public bool AllowChildren { get; set; }
+        // ===== Базовые цены =====
 
-        public bool AllowParties { get; set; }
+        public decimal PricePerDay { get; set; }    // Цена за сутки
+        public decimal? PricePerWeek { get; set; }  // Цена за неделю (опционально)
+        public decimal? PricePerMonth { get; set; } // Цена за месяц (опционально)
 
 
-        public int MaxGuests { get; set; }
+        // ===== Депозит =====
 
-        //public bool? IsRecommended { get; set; }            // Booking recommends
-        //public bool? IsTopLocation { get; set; }            // High location rating
-        //public bool? IsTopCleanliness { get; set; }         // High cleanliness score
+        public decimal? DepositPersent { get; set; }    // Процент депозита
+        public PaymentType PaymentStatus { get; set; }  // Тип депозита — возвращаемый или нет
 
-        public decimal? CleaningFee { get; set; }
-        public decimal? AdditionalGuestFee { get; set; }
 
-        // Владелец и объект
-        public int OwnerId { get; set; }
-        public int RentObjId { get; set; }
-        public RentObject.RentObject RentObj { get; set; }
+        // ===== Налоги =====
 
-        // Время заезда / выезда (по умолчанию)
-        public TimeSpan? CheckInTime { get; set; }
-        public TimeSpan? CheckOutTime { get; set; } 
+        public decimal? Tax { get; set; }               // Налог в процентах от стоимости аренды
 
-        // Забронированные даты
-        public List<BookedDate> BookedDates { get; set; } = new List<BookedDate>();
 
-        
+        // ===== Правила проживания =====
+
+        public int MinRentDays { get; set; } = 1;       // Минимальное количество дней аренды
+        public bool AllowPets { get; set; }             // Можно ли с животными
+        public bool AllowSmoking { get; set; }          // Разрешено ли курение
+        public bool AllowChildren { get; set; }         // Можно ли с детьми
+        public bool AllowParties { get; set; }          // Разрешены ли вечеринки
+
+        public int MaxGuests { get; set; }              // Максимальное количество гостей
+
+
+        // ===== Дополнительные сборы =====
+
+        public decimal? CleaningFee { get; set; }       // Стоимость уборки
+        public decimal? AdditionalGuestFee { get; set; } // Доплата за гостя сверх лимита
+
+
+        // ===== Бесплатная отмена бронирования =====
+
+        public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
+        public int? FreeCancelUntilHours { get; set; }    // За сколько часов до заезда можно отменить бесплатно
+                                                          // Например: 48 → отмена за 48 часов до даты CheckIn
+
+
+        // ===== Отношения =====
+
+        public int OwnerId { get; set; }                // ID владельца объявления
+
+        public int RentObjId { get; set; }              // ID объекта недвижимости
+        public RentObject RentObj { get; set; } // Связь с объектом недвижимости
+
+
+        // ===== Время заезда / выезда =====
+
+        public TimeSpan? CheckInTime { get; set; }       // Время заезда
+        public TimeSpan? CheckOutTime { get; set; }      // Время выезда
+
+
+        // ===== Забронированные даты =====
+
+        public List<BookedDate> BookedDates { get; set; } = new List<BookedDate>();  // Список бронирований
     }
-
-    
 }

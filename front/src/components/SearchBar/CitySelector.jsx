@@ -8,12 +8,17 @@ const CitySelector = ({ value, onChange }) => {
   const [search, setSearch] = useState(value || ""); // используем value
   const [suggestions, setSuggestions] = useState([]);
 
-  useEffect(() => {
-    locationApi.getAllCities().then((res) => {
-      setCities(res.data); 
-      console.log("Add: cities loaded", res.data);
+useEffect(() => {
+  locationApi.getAllCities("en")
+    .then((res) => {
+      setCities(res.data.value);
+      console.log("cities loaded:", res.data.value);
+    })
+    .catch((err) => {
+      console.error("Error loading cities:", err);
     });
-  }, [locationApi]);
+}, []);
+
 
 
   useEffect(() => {
@@ -40,7 +45,7 @@ const CitySelector = ({ value, onChange }) => {
   const handleSelect = (city) => {
     setSearch(city.title);
     setSuggestions([]);
-    if (onChange) onChange(city.title, city.id); 
+    if (onChange) onChange(city.title, city.entityId); 
   };
 
   return (

@@ -2,8 +2,6 @@ import React, { createContext } from "react";
 import { authApi } from "../api/auth";
 import { offerApi } from "../api/offer";
 import { orderApi } from "../api/order";
-import { countryApi } from "../api/country";
-import { cityApi } from "../api/city";
 import { rentObjApi } from "../api/rentObject";
 import { locationApi } from "../api/location";
 import { paramItemApi } from "../api/paramItem";
@@ -19,8 +17,6 @@ export const ApiProvider = ({ children }) => {
         authApi,
         offerApi,
         orderApi,
-        countryApi,
-        cityApi,
         locationApi,
         rentObjApi,
         paramItemApi,

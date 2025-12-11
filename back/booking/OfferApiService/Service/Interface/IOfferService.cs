@@ -7,6 +7,6 @@ namespace OfferApiService.Service.Interface
 {
     public interface IOfferService : IServiceBase<Offer>
     {
-        Task<List<Offer>> GetMainAvailableOffers([FromQuery] OfferMainSearchRequest request);
+        Task<List<Offer>> SearchAvailableOffersAsync([FromQuery] OfferMainSearchRequest request);
     }
 }

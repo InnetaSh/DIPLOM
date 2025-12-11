@@ -4,7 +4,7 @@ namespace booking.Model
 {
     public class RentObj
     {
-        public int Id { get; set; }
+        public int id { get; set; }
         public string Title { get; set; }
 
        

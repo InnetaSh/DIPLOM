@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocationApiService", "Locat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReviewApiService", "ReviewApiService\ReviewApiService.csproj", "{083404B7-BA69-4CD3-939E-0FF850864102}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationApiService", "TranslationApiService\TranslationApiService.csproj", "{E9E860F5-E05A-4E15-948E-65AA4C118ED9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{083404B7-BA69-4CD3-939E-0FF850864102}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{083404B7-BA69-4CD3-939E-0FF850864102}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{083404B7-BA69-4CD3-939E-0FF850864102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9E860F5-E05A-4E15-948E-65AA4C118ED9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9E860F5-E05A-4E15-948E-65AA4C118ED9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9E860F5-E05A-4E15-948E-65AA4C118ED9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9E860F5-E05A-4E15-948E-65AA4C118ED9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

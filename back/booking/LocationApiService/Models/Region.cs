@@ -4,7 +4,7 @@ namespace LocationApiService.Models
 {
     public class Region : EntityBase
     {
-        public string Title { get; set; }
+        //public string Title { get; set; }
 
 
         public int CountryId { get; set; }

@@ -16,14 +16,16 @@ export const HotelCard = ({
     rating,
     reviews,
     price,
-    badges = [],
+    startDate,
+    endDate,
+    guests,
     onClick,
     onCheckAvailability,
 }) => {
      const navigate = useNavigate();
 
       const handleClick = () => {
-        navigate(`/hotel/${id}`);
+         navigate(`/hotel/${id}?checkin=${startDate}&checkout=${endDate}&guests=${guests}`);
     };
 
     return (
@@ -43,8 +45,7 @@ export const HotelCard = ({
 
 
             <div className={styles.card__content}>
-
-                <div className={styles.card__header}>
+            <div className={styles.card__header}>
                     <Text text={title} type="title" />
                     <div className={styles.card__location}>
                         <Link text={city} to={`/country/${country}/${city}`} type ="link"/>
@@ -52,16 +53,6 @@ export const HotelCard = ({
                     </div>
                 </div>
 
-
-                {badges.length > 0 && (
-                    <div className={styles.card__badges}>
-                        {badges.map((badge, i) => (
-                            <span className={styles.card__badge} key={i}>
-                                {badge}
-                            </span>
-                        ))}
-                    </div>
-                )}
 
 
                 <div className={styles.card__details}>

@@ -1,6 +1,5 @@
 ﻿using Globals.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 using UserApiService.Data.Seed;
 
 namespace UserApiService.Models
@@ -15,17 +14,22 @@ namespace UserApiService.Models
 
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
-
+          
             AdminSeed.Seed(builder);
 
-            builder.Entity<User>()
-                .ToTable("Users")
-                .HasDiscriminator<string>("UserType")
-                .HasValue<User>("User")
-                .HasValue<Client>("Client")
-                .HasValue<Owner>("Owner")
-                .HasValue<Admin>("Admin")
-                .HasValue<SuperAdmin>("SuperAdmin");
+            builder.Entity<User>(entity =>
+            {
+                entity.ToTable("users"); 
+                entity.HasKey(e => e.id);
+                entity.Property(e => e.id).HasColumnName("id");
+
+                entity.HasDiscriminator<string>("UserType")
+                    .HasValue<User>("User")
+                    .HasValue<Client>("Client")
+                    .HasValue<Owner>("Owner")
+                    .HasValue<Admin>("Admin")
+                    .HasValue<SuperAdmin>("SuperAdmin");
+            });
         }
     }
 }

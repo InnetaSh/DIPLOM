@@ -1,5 +1,6 @@
 ﻿using Globals.Controllers;
 using Globals.Models;
+using OrderApiService.Models;
 using OrderApiService.Models.Enum;
 
 namespace OrderApiService.View
@@ -25,6 +26,25 @@ namespace OrderApiService.View
 
         // Предпочтительный способ оплаты
         public PaymentMethod? PaymentMethod { get; set; }
-    }
 
+        // ===== Метод для конвертации в модель Order =====
+        public static Order MapToModel(OrderRequest request)
+        {
+            return new Order
+            {
+                OfferId = request.OfferId,
+                ClientId = request.ClientId,
+                TotalPersons = request.TotalPersons,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                CheckInTime = request.CheckInTime,
+                CheckOutTime = request.CheckOutTime,
+                ClientNote = request.ClientNote,
+                PaymentMethod = request.PaymentMethod,
+                Status = OrderStatus.Pending,           // по умолчанию новый заказ
+                IsPaid = false,                     // по умолчанию не оплачен
+                CreatedAt = DateTime.UtcNow
+            };
+        }
+    }
 }

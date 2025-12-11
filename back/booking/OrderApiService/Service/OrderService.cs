@@ -11,13 +11,7 @@ namespace OrderApiService.Services
 {
     public class OrderService : TableServiceBase<Order, OrderContext>, IOrderService
     {
-        //private readonly IHttpClientFactory _clientFactory;
-
-        //public OrderService(IHttpClientFactory clientFactory, IRabbitMqService mqService)
-        //{
-        //    _clientFactory = clientFactory;
-        //}
-
+       
       
         public override async Task<bool> AddEntityAsync(Order order)
         {

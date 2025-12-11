@@ -10,7 +10,12 @@ namespace OrderApiService.Models
 
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
-            builder.Entity<Order>().ToTable("Orders");
+            builder.Entity<Order>(entity =>
+            {
+                entity.ToTable("orders"); 
+                entity.HasKey(e => e.id);
+                entity.Property(e => e.id).HasColumnName("id"); 
+            });
         }
     }
 }

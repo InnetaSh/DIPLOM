@@ -10,8 +10,7 @@ namespace ReviewApiService.Models
         public int OfferId { get; set; }        // ID объекта/оффера
         public int UserId { get; set; }         // ID пользователя
 
-        // Текст отзыва
-        public string Comment { get; set; }
+    
 
         // Оценки по категориям (1-10)
         public double Staff { get; set; }           // Персонал

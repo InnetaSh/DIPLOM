@@ -1,34 +1,44 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Header } from "../../components/Header/Header.jsx";
-import {SearchBar} from"../../components/SearchBar/SearchBar.jsx";
+import { SearchBar } from "../../components/SearchBar/SearchBar.jsx";
 import { Breadcrumbs } from "../../components/UI/Text/BreadcrumbsLinks.jsx";
 import { HotelCardList } from "../../components/HotelCard/HotelCardList.jsx";
 import { FilterSidebar } from "../../components/Filter/FilterSidebar.jsx";
 import { Text } from "../../components/UI/Text/Text.jsx";
 import { ApiContext } from "../../contexts/ApiContext.jsx";
 
-import "../../styles/globals.css";
-
 export const HomePage = () => {
-  const { paramsCategoryApi, offerApi } = useContext(ApiContext);
+  const { paramsCategoryApi } = useContext(ApiContext);
+
   const [hotels, setHotels] = useState([]);
   const [city, setCity] = useState("");
+  const [guests, setGuests] = useState(1);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
-  const [filtersData, setFiltersData] = useState([]); // массив категорий с items
+  const [filtersData, setFiltersData] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({});
-  //const [filteredHotels, setFilteredHotels] = useState({});
 
+  // Загружаем данные из localStorage при монтировании
+  useEffect(() => {
+    const savedCity = localStorage.getItem("city");
+    const savedGuests = localStorage.getItem("guests");
+    const savedStart = localStorage.getItem("startDate");
+    const savedEnd = localStorage.getItem("endDate");
+    const savedHotels = localStorage.getItem("hotels");
+
+    if (savedCity) setCity(savedCity);
+    if (savedGuests) setGuests(Number(savedGuests));
+    if (savedStart) setStartDate(savedStart);
+    if (savedEnd) setEndDate(savedEnd);
+    if (savedHotels) setHotels(JSON.parse(savedHotels));
+  }, []);
 
   useEffect(() => {
-    paramsCategoryApi.getAll()
-      .then((res) => {
-        setFiltersData(res.data);
-        console.log("Filters loaded:", res.data);
-      })
+    paramsCategoryApi.getAll("en")
+      .then((res) => setFiltersData(res.data))
       .catch((err) => console.error("Error loading filters:", err));
   }, [paramsCategoryApi]);
-
-
 
   const handleFilterChange = (category, option) => {
     setSelectedFilters((prev) => {
@@ -41,23 +51,35 @@ export const HomePage = () => {
     });
   };
 
-  const handleSearchResults = (foundHotels, onSearchCity) => {
-    console.log("Search results received in HomePage:", foundHotels, onSearchCity);
+  const handleSearchResults = (foundHotels, onSearchCity, guestCount, start, end) => {
     setCity(onSearchCity);
     setHotels(foundHotels);
+    setGuests(guestCount);
+    setStartDate(start);
+    setEndDate(end);
+
+    // Сохраняем в localStorage
+    localStorage.setItem("city", onSearchCity);
+    localStorage.setItem("guests", guestCount);
+    localStorage.setItem("startDate", start);
+    localStorage.setItem("endDate", end);
+    localStorage.setItem("hotels", JSON.stringify(foundHotels));
+    
     setSelectedFilters({});
   };
 
-
-
   return (
     <div className="search-page">
-      <Header onSearchResults={handleSearchResults} />
-      <SearchBar onSearch={handleSearchResults} text="Найдите жилье для новой поездки"/>
+      <Header />
+      <SearchBar onSearch={handleSearchResults} text="Найдите жилье для новой поездки"
+        defaultCity={city}
+        defaultGuests={guests}
+        defaultStartDate={startDate}
+        defaultEndDate={endDate}
+      />
 
       <main className="search-page__content">
         <Breadcrumbs />
-
         <div className="search-page__layout">
           <aside className="search-page__filters">
             <FilterSidebar
@@ -70,12 +92,10 @@ export const HomePage = () => {
             {hotels.length !== 0 && (
               <Text text={`${city}: найдено вариантов ${hotels.length}`} type="title" />
             )}
-
-            <HotelCardList hotels={hotels} />
+            <HotelCardList hotels={hotels} guests={guests} startDate={startDate} endDate={endDate} />
           </section>
         </div>
       </main>
     </div>
   );
 };
-

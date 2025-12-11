@@ -1,5 +1,6 @@
 ﻿using Globals.Controllers;
 using Globals.Models;
+using OrderApiService.Models;
 using OrderApiService.Models.Enum;
 
 namespace OrderApiService.View
@@ -17,7 +18,6 @@ namespace OrderApiService.View
         public DateTime EndDate { get; set; }
 
         // Финансы
-      
         public decimal BasePrice { get; set; }
         public decimal DiscountPercent { get; set; }
         public decimal DiscountAmount { get; set; }
@@ -41,6 +41,33 @@ namespace OrderApiService.View
         public OrderStatus Status { get; set; }
 
         public DateTime CreatedAt { get; set; }
-    }
 
+        // ===== Метод маппинга =====
+        public static OrderResponse MapToResponse(Order model)
+        {
+            return new OrderResponse
+            {
+                id = model.id,
+                OfferId = model.OfferId,
+                ClientId = model.ClientId,
+                TotalPersons = model.TotalPersons,
+                StartDate = model.StartDate,
+                EndDate = model.EndDate,
+                BasePrice = model.BasePrice,
+                DiscountPercent = model.DiscountPercent,
+                DiscountAmount = model.DiscountAmount,
+                DepositAmount = model.DepositAmount,
+                TaxAmount = model.TaxAmount,
+                TotalPrice = model.TotalPrice,
+                PaymentMethod = model.PaymentMethod,
+                IsPaid = model.IsPaid,
+                PaidAt = model.PaidAt,
+                CheckInTime = model.CheckInTime,
+                CheckOutTime = model.CheckOutTime,
+                ClientNote = model.ClientNote,
+                Status = model.Status,
+                CreatedAt = model.CreatedAt
+            };
+        }
+    }
 }

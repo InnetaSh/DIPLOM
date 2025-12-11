@@ -3,7 +3,7 @@ import styles from "./HotelCard.module.css";
 import { Text } from "../UI/Text/Text.jsx";
 import { PrimaryButton } from "../UI/Button/PrimaryButton.jsx";
 
-import { FaBed, FaCouch, FaDoorOpen } from "react-icons/fa";
+import { FaBed, FaCouch, FaDoorOpen, FaShower } from "react-icons/fa";
 import { MdOutlineBedroomParent } from "react-icons/md";
 
 export const BookingCard = ({ hotel,offer, onCheckAvailability }) => {
@@ -14,7 +14,9 @@ export const BookingCard = ({ hotel,offer, onCheckAvailability }) => {
     const {
         type,
         bedroomsCount,
-        livingroom,
+        livingRoomCount,  
+        bathroomCount,
+        bedsCount,
         freeCancelUntil,
         payLater,
         stars,
@@ -45,15 +47,31 @@ const taxAmount = tax !== undefined ? (tax * totalPrice) / 100 : 0;
                     <div className={styles.card__icons}>
                         {bedroomsCount && (
                             <div className={styles.iconItem}>
-                                <MdOutlineBedroomParent className={styles.icon} />
-                                <Text text={`Спальня: ${bedroomsCount}`} type="small" />
+                                <FaCouch className={styles.icon} />
+                                <Text text={`Спальня:`} type="bold" />
+                                 <Text text={` ${bedroomsCount}`} type="small" />
                             </div>
                         )}
 
-                        {livingroom && (
+                        {livingRoomCount && (
                             <div className={styles.iconItem}>
-                                <FaCouch className={styles.icon} />
-                                <Text text={`Гостиная: ${bedroomsCount}`} type="small" />
+                                <FaDoorOpen className={styles.icon} />
+                                <Text text={`Гостиная: `} type="bold" />
+                                 <Text text={`${livingRoomCount}`} type="small" />
+                            </div>
+                        )}
+                        {bedsCount && (
+                            <div className={styles.iconItem}>
+                                <FaBed className={styles.icon} />
+                                <Text text={`Кровать:`} type="bold" />
+                                <Text text={` ${bedsCount}`} type="small" />
+                            </div>
+                        )}
+                         {bathroomCount && (
+                            <div className={styles.iconItem}>
+                                <FaShower className={styles.icon} />
+                                <Text text={`Ванная комната:`} type="bold" />
+                                <Text text={` ${bathroomCount}`} type="small" />
                             </div>
                         )}
                     </div>

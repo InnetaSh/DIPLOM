@@ -2,8 +2,7 @@
 using Globals.EventBus;
 using OfferApiService.Service.Interface;
 using OfferApiService.Services;
-using OfferApiService.Services.Interfaces.RentObject;
-using OfferApiService.Services.RentObject;
+using OfferApiService.Services.Interfaces.RentObj;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,8 +18,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IBookedDateService, BookedDateService>();
 
-builder.Services.AddScoped<ICityService, CityService>();
-builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IParamsCategoryService, ParamsCategoryService>();
 builder.Services.AddScoped<IRentObjService, RentObjService>();
 builder.Services.AddScoped<IRentObjImageService, RentObjImageService>();

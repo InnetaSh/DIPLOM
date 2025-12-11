@@ -4,12 +4,10 @@ using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using OfferApiService.Models;
 using OfferApiService.Models.Dto;
-using OfferApiService.Models.RentObject.Enums;
 using OfferApiService.Models.View;
 using OfferApiService.Service.Interface;
-using OfferApiService.Services.Interfaces.RentObject;
+using OfferApiService.Services.Interfaces.RentObj;
 using OfferApiService.View;
-using OfferApiService.View.RentObject;
 
 namespace OfferApiService.Controllers
 {
@@ -31,174 +29,121 @@ namespace OfferApiService.Controllers
         }
 
 
-        [HttpGet("by-mainparams")]
-        public async Task<ActionResult<List<OfferResponse>>> GetMainSearch(
+        [HttpGet("search/main")]
+        public async Task<ActionResult<List<OfferShortResponse>>> GetMainSearch(
             [FromQuery] OfferMainSearchRequest request,
-            [FromQuery] decimal UserDiscountPercent)
+            [FromQuery] decimal userDiscountPercent)
         {
-            
+            var offers = await _offerService.SearchAvailableOffersAsync(request);
 
-            var startDateUtc = DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc);
-            var endDateUtc = DateTime.SpecifyKind(request.EndDate, DateTimeKind.Utc);
+            //var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-            // Получаем предложения
-            var offers = await _offerService.GetMainAvailableOffers(request);
-
-            var response = new List<OfferResponse>();
-
-            foreach (var offer in offers)
+            var result = offers.Select(o => OfferShortResponse.MapToShortResponse(o, _baseUrl)).ToList();
+            foreach (var o in result)
             {
+                o.GuestCount = request.Guests;
 
-                var dto = MapToResponse(offer);
+                DateTime startDate = request.StartDate;
+                DateTime endDate = request.EndDate;
+                TimeSpan difference = endDate - startDate;
+                int daysCount = difference.Days;
+                o.DaysCount = daysCount;
 
-                // Количество дней аренды
-                int totalDays = (endDateUtc - startDateUtc).Days;
-                if (totalDays <= 0) totalDays = 1;
+                if (daysCount < 7)
+                    o.OrderPrice = daysCount * o.PricePerDay;
+                else if (daysCount < 30)
+                    o.OrderPrice = daysCount * (o.PricePerWeek / 7);
+                else
+                    o.OrderPrice = daysCount * (o.PricePerMonth / 30);
 
-                decimal orderPrice = 0;
 
-                // Считаем по месяцам
-                if (totalDays >= 30 && offer.PricePerMonth.HasValue)
-                {
-                    int months = totalDays / 30;
-                    orderPrice += months * offer.PricePerMonth.Value;
-                    totalDays -= months * 30;
-                }
 
-                // Считаем по неделям
-                if (totalDays >= 7 && offer.PricePerWeek.HasValue)
-                {
-                    int weeks = totalDays / 7;
-                    orderPrice += weeks * offer.PricePerWeek.Value;
-                    totalDays -= weeks * 7;
-                }
+                // Скидка
+                var discountPercent = userDiscountPercent;
+                var discountAmount = o.OrderPrice * discountPercent / 100;
 
-                // Остаток по дням
-                orderPrice += totalDays * offer.PricePerDay;
 
-                // Заполняем DTO
-                dto.OrderPrice = orderPrice;
-                dto.DiscountPercent = UserDiscountPercent;
-                dto.DiscountAmount = orderPrice * UserDiscountPercent / 100;
-                dto.TotalPrice = orderPrice - dto.DiscountAmount;
+                // Налог на аренду
+                var taxAmount = (o.OrderPrice - discountAmount) * o.Tax / 100;
+                o.TaxAmount = (decimal)taxAmount;
+                // Итоговая стоимость
+               o.TotalPrice = (o.OrderPrice - discountAmount) + taxAmount;
 
-         
-
-                // Используем фиксированный депозит (например 10%) или передаваемый через сервис
-                decimal depositPercent = 10;
-                dto.DepositAmount = dto.TotalPrice * depositPercent / 100;
-
-                // Если Tax есть в DTO/Offer
-                dto.TaxAmount = (dto.TotalPrice * (dto.Tax ?? 0)) / 100;
-
-                response.Add(dto);
             }
 
-            return Ok(response);
+
+            return Ok(result);
         }
+
+
+        [HttpGet("get-offer/{id}")]
+        public async Task<ActionResult<OfferResponse>> GetOfferById(
+            int id,
+             [FromQuery] OfferByIdRequest request,
+            [FromQuery] decimal userDiscountPercent)
+        {
+
+            var offer = await _offerService.GetEntityAsync(id);
+
+           
+
+            DateTime startDate = request.StartDate;
+            DateTime endDate = request.EndDate;
+            TimeSpan difference = endDate - startDate;
+            int daysCount = difference.Days;
+
+            if (offer == null)
+                return NotFound();
+
+            //var baseUrl = $"{Request.Scheme}://{Request.Host}";
+   
+
+            var fullResponse = OfferResponse.MapToFullResponse(
+                offer,
+                userDiscountPercent,
+                 daysCount,
+                _baseUrl);
+
+            fullResponse.GuestCount = request.Guests;
+            if (daysCount < 7)
+                fullResponse.OrderPrice = daysCount * fullResponse.PricePerDay;
+            else if (daysCount < 30)
+                fullResponse.OrderPrice = daysCount * (fullResponse.PricePerWeek / 7);
+            else
+                fullResponse.OrderPrice = daysCount * (fullResponse.PricePerMonth / 30);
+
+
+            // Скидка
+            var discountPercent = userDiscountPercent;
+            var discountAmount = fullResponse.OrderPrice * discountPercent / 100;
+
+
+            // Налог на аренду
+            var taxAmount = (fullResponse.OrderPrice - discountAmount) * fullResponse.Tax / 100;
+            fullResponse.TaxAmount = (decimal)taxAmount;
+            fullResponse.GuestCount = request.Guests;
+            fullResponse.DaysCount = daysCount;
+            // Итоговая стоимость
+            //fullResponse.TotalPrice = fullResponse.OrderPrice - discountAmount + taxAmount;
+
+
+            return Ok(fullResponse);
+        }
+
+
 
 
 
         protected override Offer MapToModel(OfferRequest request)
         {
-            return new Offer
-            {
-                id = request.id,
-                Title = request.Title,
-                Description = request.Description,
-                PricePerDay = request.PricePerDay,
-                PricePerWeek = request.PricePerWeek,
-                PricePerMonth = request.PricePerMonth,
-                DepositPersent = request.DepositPersent,
-                PaymentStatus = request.PaymentStatus,
-                Tax = request.Tax,
-                MinRentDays = request.MinRentDays,
-                AllowPets = request.AllowPets,
-                AllowSmoking = request.AllowSmoking,
-                AllowChildren = request.AllowChildren,
-                AllowParties = request.AllowParties,
-                MaxGuests = request.MaxGuests,
-                CheckInTime = request.CheckInTime ?? new TimeSpan(15, 0, 0),
-                CheckOutTime = request.CheckOutTime ?? new TimeSpan(11, 0, 0),
-                OwnerId = request.OwnerId,
-                RentObjId = request.RentObjId
-            };
+            return  OfferRequest.MapToModel(request);
         }
 
 
         protected override OfferResponse MapToResponse(Offer model)
         {
-           return OfferResponse.MapToResponse(model, _paramValueService, _baseUrl);
+            return OfferResponse.MapToResponse(model,_baseUrl);
 
-
-            //id = model.id,
-            //Title = model.Title,
-            //Description = model.Description,
-            //PricePerDay = model.PricePerDay,
-            //PricePerWeek = model.PricePerWeek,
-            //PricePerMonth = model.PricePerMonth,
-            //DepositPersent = model.DepositPersent,
-            //PaymentStatus = model.PaymentStatus,
-            //Tax = model.Tax,
-            //MinRentDays = model.MinRentDays,
-            //AllowPets = model.AllowPets,
-            //AllowSmoking = model.AllowSmoking,
-            //AllowChildren = model.AllowChildren,
-            //AllowParties = model.AllowParties,
-            //MaxGuests = model.MaxGuests,
-            //CheckInTime = model.CheckInTime,
-            //CheckOutTime = model.CheckOutTime,
-            //OwnerId = model.OwnerId,
-            //RentObj = RentObjResponse.MapToResponse(model.RentObj),
-
-
-            //model.RentObj == null ? null : new RentObjResponse
-            //{
-            //    id = model.RentObj.id,
-            //    Title = model.RentObj.Title,
-            //    Description = model.RentObj.Description,
-            //    CountryId = model.RentObj.CountryId,
-            //    RegionId = model.RentObj.RegionId,
-            //    CityId = model.RentObj.CityId,
-            //    DistrictId = model.RentObj.DistrictId,
-            //    Address = model.RentObj.Address,
-
-            //    RoomCount = model.RentObj.RoomCount,
-            //    BathroomCount = model.RentObj.BathroomCount,
-            //    Area = model.RentObj.Area,
-            //    Floor = model.RentObj.Floor,
-            //    TotalFloors = model.RentObj.TotalFloors,
-            //    RentObjType = model.RentObj.RentObjType,
-
-            //    Latitude = model.RentObj.Latitude,
-            //    Longitude = model.RentObj.Longitude,
-
-            //    BedroomsCount = model.RentObj.BedroomsCount,
-            //    BedsCount = model.RentObj.BedsCount,
-            //    HasBabyCrib = model.RentObj.HasBabyCrib,
-
-            //    ParamValues = model.RentObj.ParamValues?.Select(p => new RentObjParamValueResponse
-            //    {
-            //        id = p.ParamItemId,
-            //        //Title = p.ParamItem?.Title,
-            //        ValueBool = p.ValueBool,
-            //        ValueInt = p.ValueInt,
-            //        ValueString = p.ValueString,
-            //    }).ToList() ?? new List<RentObjParamValueResponse>(),
-
-            //    Images = model.RentObj.Images
-            //        ?.Select(i => $"{_baseUrl}/images/rentobj/{model.RentObj.id}/{Path.GetFileName(i.Url)}")
-            //        .ToList() ?? new List<string>()
-            //},
-
-            //BookedDates = model.BookedDates?.Select(bd => new BookedDateResponse
-            //    {
-            //        id = bd.id,
-            //        Start = bd.Start,
-            //        End = bd.End,
-            //        OfferId = bd.OfferId
-            //    }).ToList() ?? new List<BookedDateResponse>()
-            //};
         }
 
     }

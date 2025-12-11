@@ -23,7 +23,29 @@ namespace Globals.EventBus
         {
             _queueName = queueName;
             var factory = new ConnectionFactory { HostName = hostname };
-            _connection = factory.CreateConnection();
+
+            int retries = 5;
+            while (true)
+            {
+                try
+                {
+                    _connection = factory.CreateConnection();
+                    break;  
+                }
+                catch (RabbitMQ.Client.Exceptions.BrokerUnreachableException ex)
+                {
+                    retries--;
+                    if (retries == 0)
+                        throw; 
+
+                  
+                    Console.WriteLine($"Не удалось подключиться к RabbitMQ. Осталось попыток: {retries}. Ошибка: {ex.Message}");
+
+                 
+                    Task.Delay(2000).GetAwaiter().GetResult();
+                }
+            }
+
             _channel = _connection.CreateModel();
             _channel.QueueDeclare(queue: _queueName, durable: false, exclusive: false, autoDelete: false, arguments: null);
         }

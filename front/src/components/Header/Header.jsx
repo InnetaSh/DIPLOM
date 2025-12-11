@@ -3,6 +3,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 import { Image } from "../UI/Image/Image.jsx";
 import { IconButton } from "../UI/Button/IconButton.jsx";
 import { TextButton } from "../UI/Button/TextButton.jsx";
+import {IconWithTextButton} from "../UI/Button/IconWithTextButton.jsx"
 import { SecondaryButton } from "../UI/Button/SecondaryButton.jsx";
 import { Text } from "../../components/UI/Text/Text.jsx"
 import {UserMenu} from "./UserMenu.jsx"
@@ -41,11 +42,12 @@ export const Header = ({ showLogBtn = true }) => {
                 <TextButton text="Зарегистрировать свой объект" onClick={() => console.log("Зарегистрировать clicked")} />
                 <div className="user-cabiten__info">
 
-                  <IconButton
+                  <IconWithTextButton
                     icon="👤"
+                    text={user.name}
+                    textType ="bold"
                     onClick={() => setOpenMenu(prev => !prev)}
                   />
-                  <Text text={user.name} type="bold" />
 
                   {openMenu && <UserMenu />}
                 </div>

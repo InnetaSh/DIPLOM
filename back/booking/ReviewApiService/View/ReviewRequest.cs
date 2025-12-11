@@ -1,4 +1,5 @@
 ﻿using Globals.Controllers;
+using ReviewApiService.Models;
 
 namespace ReviewApiService.View
 {
@@ -6,7 +7,7 @@ namespace ReviewApiService.View
     {
         public int OfferId { get; set; }
         public int UserId { get; set; }
-        public string Comment { get; set; }
+     
 
         // Оценки по категориям (1-10)
         public double Staff { get; set; }
@@ -15,5 +16,23 @@ namespace ReviewApiService.View
         public double Comfort { get; set; }
         public double ValueForMoney { get; set; }
         public double Location { get; set; }
+
+
+        public static Review MapToModel(ReviewRequest request)
+        {
+            return new Review
+            {
+                OfferId = request.OfferId,
+                UserId = request.UserId,
+                Staff = request.Staff,
+                Facilities = request.Facilities,
+                Cleanliness = request.Cleanliness,
+                Comfort = request.Comfort,
+                ValueForMoney = request.ValueForMoney,
+                Location = request.Location,
+                CreatedAt = DateTime.UtcNow,
+                IsApproved = true
+            };
+        }
     }
 }

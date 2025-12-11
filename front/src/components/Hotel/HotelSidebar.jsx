@@ -1,8 +1,10 @@
 import { useMemo } from "react";
+import { HotelMap } from "./HotelMap"
 import styles from "./HotelSidebar.module.css";
 
 export const HotelSidebar = ({ hotel }) => {
-
+    const lat = 48.8566;
+    const lng = 2.3522;
     const getRatingLabel = (rating) => {
         if (rating >= 9) return "Потрясающе";
         if (rating >= 8.5) return "Отлично";
@@ -18,7 +20,6 @@ export const HotelSidebar = ({ hotel }) => {
         return hotel.reviews[Math.floor(Math.random() * hotel.reviews.length)];
     }, [hotel]);
 
-    // 🔥 Проверка после вызовов хуков!
     if (!hotel) return null;
 
     return (
@@ -59,9 +60,11 @@ export const HotelSidebar = ({ hotel }) => {
 
             <div className={styles.mapBlock}>
                 <h4>Расположение</h4>
-                <div className={styles.mapPlaceholder}>
-                    Карта (map placeholder)
-                </div>
+                {lat && lng ? (
+                    <HotelMap lat={hotel.latitude} lng={hotel.longitude} hotelName={hotel.name} />
+                ) : (
+                    <div className={styles.mapPlaceholder}>Координаты отсутствуют</div>
+                )}
             </div>
 
         </aside>

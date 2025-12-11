@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using WebApiGetway.Service.Interfase;
+using System.Text.Json;
 
 [ApiController]
 [Route("[controller]")]
@@ -19,7 +21,15 @@ public class LocationController : ControllerBase
     public Task<IActionResult> GetAll() =>
         _gateway.ForwardRequestAsync<object>("LocationApiService", "/api/country/get-all", HttpMethod.Get, null);
 
-    [HttpGet("get/{id}")]
+
+
+
+
+
+
+
+
+[HttpGet("get/{id}")]
     public Task<IActionResult> GetById(int id) =>
         _gateway.ForwardRequestAsync<object>("LocationApiService", $"/api/country/get/{id}", HttpMethod.Get, null);
 
@@ -36,16 +46,6 @@ public class LocationController : ControllerBase
     [HttpGet("get-countries-by-city/{id}")]
     public Task<IActionResult> GetByCityId(int id) =>
         _gateway.ForwardRequestAsync<object>("LocationApiService", $"/api/country/get-by-city/{id}", HttpMethod.Get, null);
-
-
-
-
-
-    [HttpPost("get-location-titles")]
-    public Task<IActionResult> GetLocationTitles([FromBody] object request) =>
-       _gateway.ForwardRequestAsync("LocationApiService", $"/api/country/get-location-titles/", HttpMethod.Post, request);
-
-
 
 
 

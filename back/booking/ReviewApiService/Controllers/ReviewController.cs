@@ -32,40 +32,13 @@ namespace ReviewApiService.Controllers
 
         protected override Review MapToModel(ReviewRequest request)
         {
-            return new Review
-            {
-                OfferId = request.OfferId,
-                UserId = request.UserId,
-                Comment = request.Comment,
-                Staff = request.Staff,
-                Facilities = request.Facilities,
-                Cleanliness = request.Cleanliness,
-                Comfort = request.Comfort,
-                ValueForMoney = request.ValueForMoney,
-                Location = request.Location
-            };
+            return ReviewRequest.MapToModel(request);
         }
 
 
         protected override ReviewResponse MapToResponse(Review model)
         {
-            return new ReviewResponse
-            {
-                id = model.id,
-                OfferId = model.OfferId,
-                UserId = model.UserId,
-                Comment = model.Comment,
-                Staff = model.Staff,
-                Facilities = model.Facilities,
-                Cleanliness = model.Cleanliness,
-                Comfort = model.Comfort,
-                ValueForMoney = model.ValueForMoney,
-                Location = model.Location,
-                OverallRating = model.OverallRating,
-                CreatedAt = model.CreatedAt,
-                UpdatedAt = model.UpdatedAt,
-                IsApproved = model.IsApproved
-            };
+            return ReviewResponse.MapToResponse(model);
         }
 
     }

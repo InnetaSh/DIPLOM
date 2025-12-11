@@ -14,8 +14,23 @@ namespace OfferApiService.Services
 {
     public class OfferService : TableServiceBase<Offer, OfferContext>, IOfferService
     {
-        
-        public async Task<List<Offer>> GetMainAvailableOffers([FromQuery] OfferMainSearchRequest request)
+
+
+        public override async Task<Offer> GetEntityAsync(int id, params string[] includeProperties)
+        {
+            using var db = new OfferContext();
+
+            return await db.Offers
+                .Include(o => o.BookedDates)
+                .Include(o => o.RentObj)
+                    .ThenInclude(ro => ro.Images)
+                .Include(o => o.RentObj)
+                    .ThenInclude(ro => ro.ParamValues)
+                .FirstOrDefaultAsync(o => o.id == id);
+        }
+
+
+        public async Task<List<Offer>> SearchAvailableOffersAsync([FromQuery] OfferMainSearchRequest request)
         {
             if (request.StartDate >= request.EndDate)
                 throw new ArgumentException("Invalid date range");
@@ -30,7 +45,7 @@ namespace OfferApiService.Services
                     .Include(o => o.RentObj)       
                          .ThenInclude(ro => ro.Images)
                     .Where(o => o.RentObj.CityId == request.CityId)
-                    .Where(o => o.RentObj.BedroomsCount >= request.BedroomsCount)
+                    .Where(o => o.MaxGuests >= request.Guests)
                     .Where(o =>
                         !o.BookedDates.Any(d =>
                             d.Start < request.EndDate &&

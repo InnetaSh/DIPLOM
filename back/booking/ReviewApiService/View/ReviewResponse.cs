@@ -1,4 +1,5 @@
 ﻿using Globals.Controllers;
+using ReviewApiService.Models;
 
 namespace ReviewApiService.View
 {
@@ -7,7 +8,7 @@ namespace ReviewApiService.View
         public int id { get; set; }
         public int OfferId { get; set; }
         public int UserId { get; set; }
-        public string Comment { get; set; }
+
 
         public double Staff { get; set; }
         public double Facilities { get; set; }
@@ -22,5 +23,28 @@ namespace ReviewApiService.View
         public DateTime? UpdatedAt { get; set; }
 
         public bool IsApproved { get; set; }
+
+
+        public static ReviewResponse MapToResponse(Review model)
+        {
+            return new ReviewResponse
+            {
+                id = model.id,
+                OfferId = model.OfferId,
+                UserId = model.UserId,
+                Staff = model.Staff,
+                Facilities = model.Facilities,
+                Cleanliness = model.Cleanliness,
+                Comfort = model.Comfort,
+                ValueForMoney = model.ValueForMoney,
+                Location = model.Location,
+                OverallRating = model.OverallRating,
+                CreatedAt = model.CreatedAt,
+                UpdatedAt = model.UpdatedAt,
+                IsApproved = model.IsApproved
+            };
+        }
     }
+
 }
+

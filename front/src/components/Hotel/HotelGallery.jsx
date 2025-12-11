@@ -8,14 +8,8 @@ export const HotelGallery = ({ images = [] }) => {
 
     return (
         <div className={styles.gallery}>
-
-           
             <div className={styles.row1Dynamic}>
-
-                
                 <img src={first} alt="" className={styles.big} />
-
-               
                 {rest.length >= 2 && (
                     <div className={styles.smallColumn}>
                         {rest.slice(0, 2).map((src, i) => (

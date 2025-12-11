@@ -68,6 +68,15 @@ builder.Services.AddHttpClient("ReviewApiService", client =>
     client.BaseAddress = new Uri($"{baseUrl}:{port}");
 });
 
+
+builder.Services.AddHttpClient("TranslationApiService", client =>
+{
+    var baseUrl = builder.Configuration["TranslationApiServiceUrl"] ?? "http://translationapiservice";
+    var port = builder.Configuration["TranslationApiServicePort"] ?? "8080";
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+});
+
+
 //builder.Services.AddHttpClient<IOfferServiceClient, OfferServiceClient>(client =>
 //{
 //    var baseUrl = "http://offerapiservice";

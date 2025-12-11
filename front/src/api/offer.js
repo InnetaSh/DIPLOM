@@ -1,21 +1,27 @@
 import http from "./http";
 
 export const offerApi = {
-  getAll: () => http.get("/Offer/get-all"),
-  getById: (id) => http.get(`/Offer/get/${id}`),
-  create: (data) => http.post("/Offer/create", data),
-  update: (id, data) => http.put(`/Offer/update/${id}`, data),
-  delete: (id) => http.delete(`/Offer/del/${id}`),
+ 
+  searchMain: ({ startDate, endDate, guests, userDiscountPercent, lang = "en"}) => {
+  const params = new URLSearchParams({
+    startDate,
+    endDate,
+    guests: guests.toString(),
+    userDiscountPercent: userDiscountPercent.toString()
+  });
 
+  return http.get(`/Bff/search/main/${lang}?${params.toString()}`);
+},
 
-  searchMain: ({ cityId, startDate, endDate, bedroomsCount, userDiscountPercent }) => {
+searchId: ({ id, cityId, startDate, endDate, guests, userDiscountPercent, lang = "en" }) => {
     const params = new URLSearchParams({
-      cityId,
-      startDate, 
-      endDate,
-      bedroomsCount: bedroomsCount.toString(),
-      userDiscountPercent: userDiscountPercent.toString(),
+        cityId,
+        startDate,
+        endDate,
+        guests: guests.toString(),
+        userDiscountPercent: userDiscountPercent.toString()
     });
-    return http.get(`/Offer/by-mainparams?${params.toString()}`);
-  },
+    return http.get(`/bff/search/booking/${id}/${lang}?${params.toString()}`);
+},
+
 };

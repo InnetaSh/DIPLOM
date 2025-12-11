@@ -5,7 +5,6 @@ namespace LocationApiService.Models
 {
         public class District : EntityBase
         {
-            public string Title { get; set; }
 
             public int CityId { get; set; }
             public City City { get; set; }

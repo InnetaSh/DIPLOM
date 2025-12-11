@@ -2,7 +2,7 @@
 {
     public class ReviewWithUserDto
     {
-        public int Id { get; set; }
+        public int id { get; set; }
         public string Comment { get; set; }
         public double OverallRating { get; set; }
         public DateTime CreatedAt { get; set; }
