@@ -11,6 +11,8 @@ namespace OfferApiService.View.RentObj
 
         public static RentObjImageResponse MapToResponse(RentObjImage model, string baseUrl)
         {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
             return new RentObjImageResponse
             {
                 id = model.id,

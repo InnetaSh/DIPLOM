@@ -1,4 +1,4 @@
-﻿namespace OrderApiService.Models.Enum
+﻿namespace OfferApiService.Models.Enum
 {
     public enum PaymentMethod
     {

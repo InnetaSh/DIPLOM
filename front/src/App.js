@@ -10,6 +10,7 @@ import {SearchPage} from './pages/public/SearchPage';
 import {HotelPage} from './pages/public/HotelPage';
 import {LoginPage} from './pages/public/LoginPage';
 import {RegisterPage} from './pages/public/RegisterPage';
+import { BookingDetailsPage} from './pages/public/BookingDetailsPage'
 
 import ProfilePage from './pages/user/ProfilePage';
 
@@ -35,8 +36,8 @@ function App() {
 
             {/* Приватные маршруты */}
             <Route path="/profile" element={<ProfilePage />} />
-             {/*<Route path="/bookings" element={<BookingsPage />} />
-            <Route path="/booking/:id" element={<BookingDetailsPage />} />
+            <Route path="/bookingdetails/:id" element={<BookingDetailsPage />} />
+             {/*<Route path="/booking/:id" element={<BookingDetailsPage />} />
             <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/settings" element={<SettingsPage />} /> */}
 

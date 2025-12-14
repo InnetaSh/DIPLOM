@@ -6,20 +6,21 @@ import { HotelCardList } from "../../components/HotelCard/HotelCardList.jsx";
 import { FilterSidebar } from "../../components/Filter/FilterSidebar.jsx";
 import { Text } from "../../components/UI/Text/Text.jsx";
 import { ApiContext } from "../../contexts/ApiContext.jsx";
+import { useLanguage } from "../../contexts/LanguageContext";
 
 export const HomePage = () => {
   const { paramsCategoryApi } = useContext(ApiContext);
+  const { language } = useLanguage();
 
   const [hotels, setHotels] = useState([]);
   const [city, setCity] = useState("");
   const [guests, setGuests] = useState(1);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-
   const [filtersData, setFiltersData] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({});
 
-  // Загружаем данные из localStorage при монтировании
+
   useEffect(() => {
     const savedCity = localStorage.getItem("city");
     const savedGuests = localStorage.getItem("guests");
@@ -34,11 +35,12 @@ export const HomePage = () => {
     if (savedHotels) setHotels(JSON.parse(savedHotels));
   }, []);
 
+  
   useEffect(() => {
-    paramsCategoryApi.getAll("en")
+    paramsCategoryApi.getAll(language)
       .then((res) => setFiltersData(res.data))
       .catch((err) => console.error("Error loading filters:", err));
-  }, [paramsCategoryApi]);
+  }, [paramsCategoryApi, language]);
 
   const handleFilterChange = (category, option) => {
     setSelectedFilters((prev) => {
@@ -58,20 +60,21 @@ export const HomePage = () => {
     setStartDate(start);
     setEndDate(end);
 
-    // Сохраняем в localStorage
     localStorage.setItem("city", onSearchCity);
     localStorage.setItem("guests", guestCount);
     localStorage.setItem("startDate", start);
     localStorage.setItem("endDate", end);
     localStorage.setItem("hotels", JSON.stringify(foundHotels));
-    
+
     setSelectedFilters({});
   };
 
   return (
     <div className="search-page">
       <Header />
-      <SearchBar onSearch={handleSearchResults} text="Найдите жилье для новой поездки"
+      <SearchBar
+        onSearch={handleSearchResults}
+        text="Найдите жилье для новой поездки"
         defaultCity={city}
         defaultGuests={guests}
         defaultStartDate={startDate}
@@ -92,7 +95,12 @@ export const HomePage = () => {
             {hotels.length !== 0 && (
               <Text text={`${city}: найдено вариантов ${hotels.length}`} type="title" />
             )}
-            <HotelCardList hotels={hotels} guests={guests} startDate={startDate} endDate={endDate} />
+            <HotelCardList
+              hotels={hotels}
+              guests={guests}
+              startDate={startDate}
+              endDate={endDate}
+            />
           </section>
         </div>
       </main>

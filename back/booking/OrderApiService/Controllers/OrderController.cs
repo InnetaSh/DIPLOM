@@ -13,10 +13,41 @@ namespace OrderApiService.Controllers
     public class OrderController
         : EntityControllerBase<Order, OrderResponse, OrderRequest>
     {
+
+        private IOrderService _orderService;
         public OrderController(IOrderService orderService, IRabbitMqService mqService)
             : base(orderService, mqService)
         {
+            _orderService = orderService;
         }
+
+
+        [HttpPost("orderAdd")]
+        public async Task<ActionResult> AddOrder(
+            [FromBody] OrderRequest orderRequest)
+        {
+            try
+            {
+                var model = MapToModel(orderRequest);
+
+                var result = await _service.AddEntityAsync(model);
+
+                if (result == null)
+                {
+                    return BadRequest("Не удалось создать заказ");
+                }
+
+                return StatusCode(StatusCodes.Status201Created);
+            }
+            catch (Exception ex)
+            {
+                // логируем и возвращаем ошибку сервера
+                // _logger.LogError(ex, "Ошибка при создании заказа");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Внутренняя ошибка сервера");
+            }
+        }
+
+
 
         protected override Order MapToModel(OrderRequest request)
         {

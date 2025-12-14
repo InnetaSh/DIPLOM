@@ -58,7 +58,8 @@ namespace OfferApiService.Models
         public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
         public int? FreeCancelUntilHours { get; set; }    // За сколько часов до заезда можно отменить бесплатно
                                                           // Например: 48 → отмена за 48 часов до даты CheckIn
-
+        // Предпочтительный способ оплаты
+        public PaymentMethod? PaymentMethod { get; set; }
 
         // ===== Отношения =====
 

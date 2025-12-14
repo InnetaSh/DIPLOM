@@ -12,6 +12,8 @@ namespace OfferApiService.View.RentObj
 
         public static ParamsCategoryResponse MapToResponse(ParamsCategory model)
         {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
             return new ParamsCategoryResponse
             {
                 id = model.id,

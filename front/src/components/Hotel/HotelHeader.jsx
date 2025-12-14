@@ -1,24 +1,26 @@
 import styles from "./HotelHeader.module.css";
+import { PrimaryButton } from "../UI/Button/PrimaryButton";
+import {IconButton} from "../UI/Button/IconButton";
+import { FiHeart } from "react-icons/fi";
 
-export const HotelHeader = ({ hotel }) => {
+export const HotelHeader = ({ hotel, offer, onClick }) => {
     if (!hotel) return null;
-
     return (
         <div className={styles.header}>
             <div className={styles.left}>
                 
                
-                <h1 className={styles.title}>{hotel.title}</h1>
+                <h1 className={styles.title}>{offer.title}</h1>
 
              
-                {hotel.rating && (
+                {/* {hotel.rating && (
                     <div className={styles.ratingBlock}>
                         <span className={styles.ratingScore}>{hotel.rating}</span>
                         <span className={styles.ratingText}>
                             {hotel.reviewsCount} отзывов
                         </span>
                     </div>
-                )}
+                )} */}
 
                 
                 {hotel.address && (
@@ -43,8 +45,9 @@ export const HotelHeader = ({ hotel }) => {
 
             
                 <div className={styles.actions}>
-                    <button className={styles.shareBtn}>Поделиться</button>
-                    <button className={styles.saveBtn}>Сохранить</button>
+                    <IconButton icon={<FiHeart />} onClick={() => console.log("Сохранить")}   title="Сохранить" />
+                    <PrimaryButton text={"Забронировать"}  onClick={onClick}/>
+                    
                 </div>
 
               

@@ -1,0 +1,20 @@
+{
+    "hello": "Hello",
+    "save": "Save",
+    "menu_home": "Home",
+    "hotel": {
+        "sections": {
+            "overview": "Overview",
+            "prices": "Pricing Information",
+            "services": "Amenities and Services",
+            "conditions": "Accommodation Conditions",
+            "important": "Good to Know",
+            "reviews": "Reviews"
+        }
+    },
+    "header": {
+        "registerProperty": "Register your property",
+        "signUp": "Sign Up",
+        "signIn": "Sign In"
+    }
+}

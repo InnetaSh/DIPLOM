@@ -98,36 +98,45 @@ namespace OfferApiService.Controllers
             //var baseUrl = $"{Request.Scheme}://{Request.Host}";
    
 
-            var fullResponse = OfferResponse.MapToFullResponse(
+            var response = OfferResponse.MapToResponse(
                 offer,
-                userDiscountPercent,
-                 daysCount,
                 _baseUrl);
 
-            fullResponse.GuestCount = request.Guests;
+            response.GuestCount = request.Guests;
+            decimal? orderPrice;
             if (daysCount < 7)
-                fullResponse.OrderPrice = daysCount * fullResponse.PricePerDay;
+                orderPrice = daysCount * response.PricePerDay;
             else if (daysCount < 30)
-                fullResponse.OrderPrice = daysCount * (fullResponse.PricePerWeek / 7);
+               orderPrice = daysCount * response.PricePerWeek;
             else
-                fullResponse.OrderPrice = daysCount * (fullResponse.PricePerMonth / 30);
+                orderPrice = daysCount * response.PricePerMonth;
 
+            response.OrderPrice = orderPrice;
+           // Расчёт цен
 
-            // Скидка
             var discountPercent = userDiscountPercent;
-            var discountAmount = fullResponse.OrderPrice * discountPercent / 100;
-
+            var discountAmount = orderPrice * discountPercent / 100;
+            var depositAmount = response.DepositPersent.HasValue ? orderPrice * response.DepositPersent.Value / 100 : 0;
 
             // Налог на аренду
-            var taxAmount = (fullResponse.OrderPrice - discountAmount) * fullResponse.Tax / 100;
-            fullResponse.TaxAmount = (decimal)taxAmount;
-            fullResponse.GuestCount = request.Guests;
-            fullResponse.DaysCount = daysCount;
-            // Итоговая стоимость
-            //fullResponse.TotalPrice = fullResponse.OrderPrice - discountAmount + taxAmount;
+            var taxAmount = (response.OrderPrice - discountAmount) * response.Tax / 100;
+            response.TaxAmount = (decimal)taxAmount;
+            response.GuestCount = request.Guests;
+            response.DaysCount = daysCount;
+
+            var totalPrice = orderPrice - discountAmount + depositAmount + taxAmount;
 
 
-            return Ok(fullResponse);
+
+            response.OrderPrice = orderPrice;
+            response.DiscountPercent = discountPercent;
+            response.DiscountAmount = discountAmount;
+            response.DepositAmount = depositAmount;
+            response.TaxAmount = taxAmount;
+            response.TotalPrice = totalPrice;
+
+       
+            return Ok(response);
         }
 
 

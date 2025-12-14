@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Json;
 using System.Text.Json;
 using WebApiGetway.Service.Interfase;
 
@@ -9,7 +10,9 @@ namespace WebApiGetway.Service
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger<GatewayService> _logger;
 
-        public GatewayService(IHttpClientFactory clientFactory, ILogger<GatewayService> logger)
+        public GatewayService(
+            IHttpClientFactory clientFactory,
+            ILogger<GatewayService> logger)
         {
             _clientFactory = clientFactory;
             _logger = logger;
@@ -19,8 +22,8 @@ namespace WebApiGetway.Service
             string serviceName,
             string route,
             HttpMethod method,
-           TRequest? request = null
-        ) where TRequest : class
+            TRequest? request = null)
+            where TRequest : class
         {
             var client = _clientFactory.CreateClient(serviceName);
             HttpResponseMessage response;
@@ -30,49 +33,70 @@ namespace WebApiGetway.Service
                 case "GET":
                     response = await client.GetAsync(route);
                     break;
+
                 case "POST":
                     response = await client.PostAsJsonAsync(route, request);
                     break;
+
                 case "PUT":
                     response = await client.PutAsJsonAsync(route, request);
                     break;
+
                 case "DELETE":
                     response = await client.DeleteAsync(route);
                     break;
+
                 default:
                     throw new ArgumentException($"Unsupported HTTP method: {method}");
             }
 
-            Console.WriteLine($"[Gateway] {method.Method} {serviceName}{route} - Status: {response.StatusCode}");
+            _logger.LogInformation(
+                "[Gateway] {Method} {Service}{Route} -> {Status}",
+                method.Method,
+                serviceName,
+                route,
+                response.StatusCode);
 
-            _logger.LogInformation("[Gateway] {Method} {Service}{Route} -> Status: {Status}",
-                method, serviceName, route, response.StatusCode);
-
-            if (request != null)
-                _logger.LogInformation("[Gateway] Payload: {Payload}", JsonSerializer.Serialize(request));
-
+            // ⬇️ ВАЖНАЯ ЧАСТЬ
             if (response.IsSuccessStatusCode)
             {
-                if (method == HttpMethod.Delete)
-                    return new OkResult();
+                object? content = null;
 
-                var result = await response.Content.ReadFromJsonAsync<object>();
-                return new OkObjectResult(result);
+                // если тело реально есть
+                if (response.Content.Headers.ContentLength > 0)
+                {
+                    content = await response.Content.ReadFromJsonAsync<object>();
+                }
+
+                if(response.StatusCode == System.Net.HttpStatusCode.OK)
+                    return new OkObjectResult(content)
+                    {
+                        StatusCode = (int)response.StatusCode
+                    };
+
+                // возвращаем ТОТ ЖЕ статус, что пришёл из сервиса
+                return new ObjectResult(content)
+                {
+                    StatusCode = (int)response.StatusCode
+                };
             }
 
-            return new StatusCodeResult((int)response.StatusCode);
+            // ошибки пробрасываем как есть
+            return new ObjectResult(await response.Content.ReadAsStringAsync())
+            {
+                StatusCode = (int)response.StatusCode
+            };
         }
 
         public async Task<IActionResult> ForwardFileAsync(
-             string serviceName,
-             string route,
-             HttpMethod method,
-             IFormFile file)
+            string serviceName,
+            string route,
+            HttpMethod method,
+            IFormFile file)
         {
             var client = _clientFactory.CreateClient(serviceName);
 
             using var content = new MultipartFormDataContent();
-
             var streamContent = new StreamContent(file.OpenReadStream());
             content.Add(streamContent, "file", file.FileName);
 
@@ -80,19 +104,19 @@ namespace WebApiGetway.Service
             {
                 "POST" => await client.PostAsync(route, content),
                 "PUT" => await client.PutAsync(route, content),
-                _ => throw new ArgumentException("Only POST/PUT allowed for file upload")
+                _ => throw new ArgumentException("Only POST/PUT allowed")
             };
 
-            string raw = await response.Content.ReadAsStringAsync();
             object result;
+            var raw = await response.Content.ReadAsStringAsync();
 
             try
             {
-                result = JsonSerializer.Deserialize<object>(raw);
+                result = JsonSerializer.Deserialize<object>(raw)!;
             }
             catch
             {
-                result = new { response = raw };
+                result = raw;
             }
 
             return new ObjectResult(result)
@@ -100,7 +124,5 @@ namespace WebApiGetway.Service
                 StatusCode = (int)response.StatusCode
             };
         }
-
-
     }
 }

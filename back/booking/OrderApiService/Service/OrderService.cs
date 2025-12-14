@@ -17,7 +17,7 @@ namespace OrderApiService.Services
         {
             try
             {
-                order.TotalPrice = order.BasePrice + order.TaxAmount;
+                order.TotalPrice = order.OrderPrice + order.TaxAmount;
       
                 order.Status = OrderStatus.Pending;
                 order.CreatedAt = DateTime.UtcNow;

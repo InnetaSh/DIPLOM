@@ -13,6 +13,8 @@ namespace OfferApiService.View.RentObj
 
         public static ParamItemResponse MapToResponse(ParamItem model)
         {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
             return new ParamItemResponse
             {
                 id = model.id,

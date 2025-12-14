@@ -1,11 +1,10 @@
 ﻿using Globals.Controllers;
 using Globals.Models;
-using OrderApiService.Models;
-using OrderApiService.Models.Enum;
+using WebApiGetway.Enum;
 
-namespace OrderApiService.View
+namespace WebApiGetway.View
 {
-    public class OrderRequest : IBaseRequest
+    public class OrderDto : IBaseRequest
     {
         public int OfferId { get; set; }
         public int ClientId { get; set; }
@@ -43,47 +42,5 @@ namespace OrderApiService.View
 
 
 
-        // ===== Метод для конвертации в модель Order =====
-        public static Order MapToModel(OrderRequest request)
-        {
-            return new Order
-            {
-                OfferId = request.OfferId,
-                ClientId = request.ClientId,
-                Guests = request.Guests,
-
-                StartDate = request.StartDate,
-                EndDate = request.EndDate,
-
-                // ===== Финансы =====
-                OrderPrice = request.OrderPrice,
-                DiscountPercent = request.DiscountPercent,
-                DiscountAmount = request.DiscountAmount,
-                DepositAmount = request.DepositAmount,
-                TaxAmount = request.TaxAmount,
-                TotalPrice = request.TotalPrice,
-
-                // ===== Бесплатная отмена / оплата =====
-                FreeCancelEnabled = request.FreeCancelEnabled,
-                PaidAt = request.PaidAt,
-
-                // ===== Время заезда / выезда =====
-                CheckInTime = request.CheckInTime,
-                CheckOutTime = request.CheckOutTime,
-
-                // ===== Дополнительно =====
-                ClientNote = request.ClientNote,
-
-                // ===== Статус =====
-                Status = request.Status == 0
-                    ? OrderStatus.Pending
-                    : request.Status,
-
-                PaymentMethod = request.PaymentMethod,
-
-                // ===== Системные поля =====
-                CreatedAt = DateTime.UtcNow
-            };
-        }
     }
 }

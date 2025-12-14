@@ -31,17 +31,18 @@ namespace OfferApiService.Models.View
 
         public decimal? DiscountPercent { get; set; } // процент скидки для текущего заказа
 
-        public decimal DiscountAmount { get; set; } // сумма скидки для текущего заказа
+        public decimal? DiscountAmount { get; set; } // сумма скидки для текущего заказа
 
         public decimal? DepositPersent { get; set; } // процент депозита
         public decimal? DepositAmount { get; set; } // сумма депозита для текущего заказа
 
         public decimal? Tax { get; set; }
-        public decimal TaxAmount { get; set; }        // Налог в валюте
-        public decimal TotalPrice { get; set; }       // Итоговая стоимость
+        public decimal? TaxAmount { get; set; }        // Налог в валюте
+        public decimal? TotalPrice { get; set; }       // Итоговая стоимость
 
-        public PaymentType PaymentStatus { get; set; }
-   
+        public string PaymentStatus { get; set; }// статус оплаты(ожидает подтверждения,  подтверждён владельцем и т п )
+
+        public string PaymentMethod { get; set; }  // Предпочтительный способ оплаты
 
         public int MinRentDays { get; set; }
         public bool AllowPets { get; set; }
@@ -51,6 +52,18 @@ namespace OfferApiService.Models.View
 
 
         public int MaxGuests { get; set; }
+
+        public decimal? CleaningFee { get; set; }       // Стоимость уборки
+        public decimal? AdditionalGuestFee { get; set; } // Доплата за гостя сверх лимита
+
+
+        // ===== Бесплатная отмена бронирования =====
+
+        public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
+        public int? FreeCancelUntilHours { get; set; }    // За сколько часов до заезда можно отменить бесплатно
+                                                          // Например: 48 → отмена за 48 часов до даты CheckIn
+                                                          
+
 
         public TimeSpan? CheckInTime { get; set; }
         public TimeSpan? CheckOutTime { get; set; }
@@ -73,6 +86,9 @@ namespace OfferApiService.Models.View
 
         public static OfferResponse MapToResponse( Offer model,string baseUrl)
         {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
             return new OfferResponse
             {
                 id = model.id,
@@ -82,7 +98,7 @@ namespace OfferApiService.Models.View
                 PricePerMonth = model.PricePerMonth,
 
                 DepositPersent = model.DepositPersent,
-                PaymentStatus = model.PaymentStatus,
+                PaymentStatus = model.PaymentStatus.ToString(),
 
                 Tax = model.Tax,
 
@@ -93,6 +109,15 @@ namespace OfferApiService.Models.View
                 AllowParties = model.AllowParties,
 
                 MaxGuests = model.MaxGuests,
+
+                CleaningFee = model.CleaningFee,
+                AdditionalGuestFee = model.AdditionalGuestFee,
+
+                FreeCancelEnabled = model.FreeCancelEnabled,
+                FreeCancelUntilHours = model.FreeCancelUntilHours,
+
+                PaymentMethod = model.PaymentMethod.ToString(),
+
                 CheckInTime = model.CheckInTime,
                 CheckOutTime = model.CheckOutTime,
 
@@ -109,7 +134,6 @@ namespace OfferApiService.Models.View
                     .ToList()
                     ?? new List<BookedDateResponse>(),
 
-           
 
                 //Rating = model.Rating,
                 //IsRecommended = model.IsRecommended,
@@ -117,40 +141,6 @@ namespace OfferApiService.Models.View
                 //IsTopCleanliness = model.IsTopCleanliness
             };
         }
-        public static OfferResponse MapToFullResponse(Offer model, decimal? userDiscountPercent, int rentalDays, string baseUrl)
-        {
-            var response = MapToResponse(model, baseUrl);
-
-           
-            response.OwnerId = model.OwnerId;
-            response.PaymentStatus = model.PaymentStatus;
-            response.DepositPersent = model.DepositPersent;
-            response.Tax = model.Tax;
-            response.BookedDates = model.BookedDates?.Select(BookedDateResponse.MapToResponse).ToList()
-                                   ?? new List<BookedDateResponse>();
-            //response.Rating = model.Rating;
-            //response.IsRecommended = model.IsRecommended;
-            //response.IsTopLocation = model.IsTopLocation;
-            //response.IsTopCleanliness = model.IsTopCleanliness;
-
-            // Расчёт цен
-            var orderPrice = response.PricePerDay * rentalDays;
-            var discountPercent = userDiscountPercent ?? 0;
-            var discountAmount = orderPrice * discountPercent / 100;
-            var depositAmount = response.DepositPersent.HasValue ? orderPrice * response.DepositPersent.Value / 100 : 0;
-            var taxAmount = response.Tax.HasValue ? (orderPrice - discountAmount) * response.Tax.Value / 100 : 0;
-            var totalPrice = orderPrice - discountAmount + depositAmount + taxAmount;
-
-            response.OrderPrice = orderPrice;
-            response.DiscountPercent = discountPercent;
-            response.DiscountAmount = discountAmount;
-            response.DepositAmount = depositAmount;
-            response.TaxAmount = taxAmount;
-            response.TotalPrice = totalPrice;
-
-            return response;
-        }
-
 
     }
 }

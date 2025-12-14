@@ -14,7 +14,9 @@ namespace OfferApiService.Models.Dto
         public decimal? PricePerMonth { get; set; }
 
         public decimal? DepositPersent { get; set; }
-        public PaymentType PaymentStatus { get; set; }
+        public PaymentType PaymentStatus { get; set; }// статус оплаты(ожидает подтверждения,  подтверждён владельцем и т п )
+
+        public PaymentMethod? PaymentMethod { get; set; }  // Предпочтительный способ оплаты
         public decimal? Tax { get; set; }
 
         public int MinRentDays { get; set; } = 1;
@@ -24,6 +26,17 @@ namespace OfferApiService.Models.Dto
         public bool AllowParties { get; set; }
 
         public int MaxGuests { get; set; }
+
+        public decimal? CleaningFee { get; set; }       // Стоимость уборки
+        public decimal? AdditionalGuestFee { get; set; } // Доплата за гостя сверх лимита
+
+
+        // ===== Бесплатная отмена бронирования =====
+
+        public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
+        public int? FreeCancelUntilHours { get; set; }    // За сколько часов до заезда можно отменить бесплатно
+                                                          // Например: 48 → отмена за 48 часов до даты CheckIn
+
 
         public TimeSpan? CheckInTime { get; set; }
         public TimeSpan? CheckOutTime { get; set; }
@@ -52,6 +65,13 @@ namespace OfferApiService.Models.Dto
                 AllowParties = request.AllowParties,
 
                 MaxGuests = request.MaxGuests,
+                CleaningFee = request.CleaningFee,
+                AdditionalGuestFee = request.AdditionalGuestFee,
+
+                FreeCancelEnabled = request.FreeCancelEnabled,
+                FreeCancelUntilHours = request.FreeCancelUntilHours,
+
+                PaymentMethod = request.PaymentMethod,
 
                 CheckInTime = request.CheckInTime,
                 CheckOutTime = request.CheckOutTime,

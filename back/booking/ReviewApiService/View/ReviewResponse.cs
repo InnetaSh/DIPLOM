@@ -27,6 +27,8 @@ namespace ReviewApiService.View
 
         public static ReviewResponse MapToResponse(Review model)
         {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
             return new ReviewResponse
             {
                 id = model.id,

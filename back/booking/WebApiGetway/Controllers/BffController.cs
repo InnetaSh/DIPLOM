@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using System.Net;
 using System.Text.Json;
 using System.Xml.Linq;
 using WebApiGetway.Service.Interfase;
 using WebApiGetway.View;
+using System.Text.Json;
 
 namespace WebApiGetway.Controllers
 {
@@ -344,6 +346,195 @@ namespace WebApiGetway.Controllers
 
             return Ok(reviewWithUsers);
         }
+
+
+
+
+
+
+        //============================================================================================
+        //                                                создание заказа
+        //============================================================================================
+
+
+        [HttpPost("create/booking")]
+        public async Task<IActionResult> CreateOrder(
+             [FromBody] CreateOrderRequest request,
+             [FromQuery] decimal userDiscountPercent,
+             string lang)
+        {
+
+            var offerRequest = new OfferByIdRequest
+            {
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                Guests = request.Guests
+            };
+
+            var offerQuery = QueryString.Create(new Dictionary<string, string?>
+            {
+                ["startDate"] = offerRequest.StartDate.ToString("O"),
+                ["endDate"] = offerRequest.EndDate.ToString("O"),
+                ["guests"] = offerRequest.Guests.ToString(),
+                ["userDiscountPercent"] = userDiscountPercent.ToString(),
+            });
+
+            var offerObjResult = await _gateway.ForwardRequestAsync<object>(
+                "OfferApiService",
+                $"/api/offer/get-offer/{request.OfferId}{offerQuery}",
+                HttpMethod.Get,
+                null
+            );
+
+
+
+            if (offerObjResult is not OkObjectResult okOffer)
+                return offerObjResult;
+
+            var offerDictList = ConvertActionResultToDict(okOffer);
+            var offer = offerDictList[0];
+            var rentObj = (offer["rentObj"] as List<Dictionary<string, object>>)[0];
+
+            var countryId = rentObj["countryId"];
+            var cityId = rentObj["cityId"];
+            var address = rentObj["address"];
+
+            var translateOffer = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/Offer/get-translations/{request.OfferId}/{lang}", HttpMethod.Get, null);
+            var titleOffer = GetStringFromActionResult(translateOffer, "title");
+
+            var translateCountry = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/Country/get-translations/{countryId}/{lang}", HttpMethod.Get, null);
+            var countryTitle = GetStringFromActionResult(translateCountry, "title");
+
+            var translateCity = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/City/get-translations/{cityId}/{lang}", HttpMethod.Get, null);
+            var cityTitle = GetStringFromActionResult(translateCity, "title");
+
+            var orderPrice = offer["orderPrice"];
+            var tax = offer["tax"];
+            var taxAmount = offer["taxAmount"];
+            var totalPrice = offer["totalPrice"];
+            var discountPercent = offer["discountPercent"];
+            var discountAmount = offer["discountAmount"];
+            var depositPersent = offer["depositPersent"];
+            var depositAmount = offer["depositAmount"];
+
+
+            var freeCancelEnabled = offer["freeCancelEnabled"];
+
+            var checkInTime = TimeSpan.Parse(offer["checkInTime"].ToString());
+            var checkOutTime = TimeSpan.Parse(offer["checkOutTime"].ToString());
+
+
+
+            var paymentStatus = offer["paymentStatus"].ToString();
+
+            var paymentMethod = offer["paymentMethod"].ToString();
+            int freeCancelUntilHours = int.Parse(offer["freeCancelUntilHours"].ToString());
+
+            DateTime paidAt = request.StartDate.AddHours(-freeCancelUntilHours);
+
+
+
+            var orderRequest = new OrderDto
+            {
+                OfferId = request.OfferId,
+                ClientId = request.ClientId,
+                Guests = request.Guests,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+               
+                OrderPrice = decimal.Parse(orderPrice.ToString()),
+                DiscountPercent = decimal.Parse(discountPercent.ToString()),
+                DiscountAmount = decimal.Parse(discountAmount.ToString()),
+                DepositAmount = decimal.Parse(depositAmount.ToString()),
+                TaxAmount = decimal.Parse(taxAmount.ToString()),
+                TotalPrice = decimal.Parse(totalPrice.ToString()),
+                FreeCancelEnabled = bool.Parse(freeCancelEnabled.ToString()),
+                PaidAt = paidAt,
+                CheckInTime = checkInTime,
+                CheckOutTime = checkOutTime,
+
+                ClientNote = request.ClientNote,
+                Status = 0,
+                PaymentMethod = paymentMethod,
+            };
+            var response = await _gateway.ForwardRequestAsync(
+                  "OrderApiService",
+                  "/api/order/orderAdd",
+                  HttpMethod.Post,
+                  orderRequest);
+
+            OrderResponse order = new OrderResponse();
+
+            if (response is ObjectResult obj)
+            {
+                switch (obj.StatusCode)
+                {
+                    case StatusCodes.Status201Created:
+                        // заказ создан
+
+                        order.OfferId = request.OfferId;
+                        order.ClientId = request.ClientId;
+                        order.Guests = request.Guests;
+                        order.Title = titleOffer;
+                        order.Country = countryTitle;
+                        order.City = cityTitle;
+                        order.Address = address.ToString();
+                        order.StartDate = request.StartDate;
+                        order.EndDate = request.EndDate;
+
+                        order.BasePrice = decimal.Parse(orderPrice.ToString());
+                        order.DiscountPercent = decimal.Parse(discountPercent.ToString());
+                        order.DiscountAmount = decimal.Parse(discountAmount.ToString());
+                        order.DepositAmount = decimal.Parse(depositAmount.ToString());
+                        order.TaxAmount = decimal.Parse(taxAmount.ToString());
+                        order.TotalPrice = decimal.Parse(totalPrice.ToString());
+                        order.FreeCancelEnabled = bool.Parse(freeCancelEnabled.ToString());
+                        order.PaidAt = paidAt;
+                        order.CheckInTime = checkInTime;
+                        order.CheckOutTime = checkOutTime;
+                        order.ClientNote = request.ClientNote;
+                        order.Status = "Pending"; // ожидает подтверждения
+
+
+                        order.PaymentStatus = paymentStatus.ToString();
+                        order.PaymentMethod = paymentMethod.ToString();
+
+
+                        BookedDateRequest bookedDateRequest = new BookedDateRequest
+                        {
+                            Start = request.StartDate,
+                            End = request.EndDate,
+                            OfferId = request.OfferId,
+                        };
+
+                        var dateResponse = await _gateway.ForwardRequestAsync<object>(
+                            "OfferApiService",
+                            $"/api/bookeddate/create",
+                            HttpMethod.Post,
+                            bookedDateRequest
+                        );
+
+                        if (dateResponse == null)
+                        {
+                            throw new InvalidOperationException("BookedDate не был создан");
+                        }
+
+                        break;
+                    case StatusCodes.Status400BadRequest:
+                        return BadRequest("Пустой запрос");
+                        break;
+                    case StatusCodes.Status500InternalServerError:
+                        // внутренняя ошибка сервиса
+                        break;
+                }
+            }
+
+
+            return Ok(order);
+
+        }
+
+
 
 
 

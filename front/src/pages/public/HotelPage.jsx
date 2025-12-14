@@ -12,21 +12,36 @@ import { BookingCard } from "../../components/Hotel/BookingCard.jsx";
 import { DescriptionCard } from "../../components/Hotel/DescriptionCard.jsx";
 import { BookingApartmentCard } from "../../components/Hotel/BookingApartmentCard.jsx";
 
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
 export const HotelPage = () => {
-  const sections = [
-    { id: "overview", label: "Обзор" },
-    { id: "prices", label: "Информация о стоимости" },
-    { id: "services", label: "Удобства и услуги" },
-    { id: "conditions", label: "Условия размещения" },
-    { id: "important", label: "Важно знать" },
-    { id: "reviews", label: "Отзывы" },
-  ];
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const handleClickBooking = () => {
+    navigate(`/bookingdetails/${id}?checkin=${startDate}&checkout=${endDate}&guests=${guests}`, {
+      state: {
+        hotel,
+        offer
+      }
+    });
+  }
+
+const sections = [
+  { id: "overview", label: t("hotel.sections.overview") },
+  { id: "prices", label: t("hotel.sections.prices") },
+  { id: "services", label: t("hotel.sections.services") },
+  { id: "conditions", label: t("hotel.sections.conditions") },
+  { id: "important", label: t("hotel.sections.important") },
+  { id: "reviews", label: t("hotel.sections.reviews") },
+];
+
 
   const { id } = useParams();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
-  // даты и количество гостей берём из URL
   const startDate = queryParams.get("checkin");
   const endDate = queryParams.get("checkout");
   const guests = queryParams.get("guests");
@@ -40,11 +55,7 @@ export const HotelPage = () => {
 
   useEffect(() => {
     if (!offerApi) return;
-
-    // Проверяем, что у нас есть ID отеля
     if (!id) return;
-
-    // Запрос к API: передаем параметры через объект
     offerApi
       .searchId({
         id,
@@ -60,19 +71,19 @@ export const HotelPage = () => {
         setHotel(data.rentObj[0]);
         setImages(data.rentObj[0]?.imagesUrl || []);
         setParamValues(data.rentObj[0]?.paramValues || []);
-        console.log("Loaded offer data:", res.data[0]); 
-        console.log("Loaded offer rentObj:", 
-            res.data[0].rentObj[0]); 
-            console.log("Loaded img rentObj:",res.data[0].rentObj[0].imagesUrl); 
-            console.log("Loaded param rentObj:", res.data[0].rentObj[0].paramValues);
+        console.log("Loaded offer data:", res.data[0]);
+        console.log("Loaded offer rentObj:",
+          res.data[0].rentObj[0]);
+        console.log("Loaded img rentObj:", res.data[0].rentObj[0].imagesUrl);
+        console.log("Loaded param rentObj:", res.data[0].rentObj[0].paramValues);
       })
       .catch((err) => console.error("Error loading offer:", err));
-  }, [id, offerApi, hotel.cityId, startDate, endDate, guests]);
+  }, [id, offerApi, startDate, endDate, guests]);
 
   return (
     <div className="search-page">
       <Header />
-
+      <div>{t("hello")}</div>
       <main className="hotel-page__content">
         <Breadcrumbs
           country={offer.countryTitle}
@@ -82,7 +93,7 @@ export const HotelPage = () => {
           last_path={`Предложения для ${offer?.title || ""}`}
         />
         <HotelSectionNav sections={sections} />
-        <HotelHeader hotel={hotel} />
+        <HotelHeader hotel={hotel} offer={offer} onClick={handleClickBooking} />
 
         <div className="hotel-page__layout">
           <section className="hotel-page__photo">

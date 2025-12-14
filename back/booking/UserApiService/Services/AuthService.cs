@@ -41,9 +41,9 @@ namespace UserApiService.Services
 
         public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
         {
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
-            if (existingUser != null)
-                throw new InvalidOperationException("Пользователь с таким именем уже существует");
+            //var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            //if (existingUser != null)
+            //    throw new InvalidOperationException("Пользователь с таким именем уже существует");
 
             _passwordHasher.CreatePasswordHash(request.Password, out byte[] hash, out byte[] salt);
 
@@ -90,6 +90,10 @@ namespace UserApiService.Services
             return await _context.Users.AnyAsync(u => u.id == id);
         }
 
+        public async Task<bool> ExistsEntityByNameAsync(string name)
+        {
+            return await _context.Users.AnyAsync(u => u.Username == name);
+        }
         //private void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
         //{
         //    using var hmac = new HMACSHA512();

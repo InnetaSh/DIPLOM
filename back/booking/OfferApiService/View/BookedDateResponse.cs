@@ -12,6 +12,9 @@ namespace OfferApiService.View
 
         public static BookedDateResponse MapToResponse(BookedDate model)
         {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
             return new BookedDateResponse
             {
                 id = model.id,

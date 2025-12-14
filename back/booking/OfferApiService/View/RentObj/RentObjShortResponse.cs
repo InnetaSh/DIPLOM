@@ -26,6 +26,8 @@ namespace OfferApiService.View.RentObj
 
         public static RentObjShortResponse MapToShortResponse(RentObject model, string baseUrl)
         {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
             var firstImage = model.Images?.FirstOrDefault();
 
             return  new RentObjShortResponse

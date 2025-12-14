@@ -2,7 +2,6 @@
 {
     public class OfferByIdRequest
     {
-       
         private DateTime _startDate;
         public DateTime StartDate
         {
