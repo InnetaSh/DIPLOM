@@ -18,12 +18,28 @@ namespace UserApiService.Controllers
     public class UserController
         : EntityControllerBase<User, UserResponse, UserRequest>
     {
+        private IUserService _userService;
         public UserController(IUserService userService, IRabbitMqService mqService)
             : base(userService, mqService)
         {
-
+            _userService = userService;
         }
 
+
+
+        [HttpPost]
+        [HttpPost("{userId}/orders")]
+        public async Task<ActionResult> AddOrderToUser(
+             int userId,
+            [FromBody] int orderId)
+        {
+            var result = await _userService.AddOrderToUser(userId,orderId);
+
+            if (!result)
+                return BadRequest("Не удалось добавить заказ пользователю");
+
+            return Ok(new { message = "Заказ добавлен" });
+        }
 
 
         protected override User MapToModel(UserRequest request)

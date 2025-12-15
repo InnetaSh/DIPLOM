@@ -9,5 +9,7 @@ namespace UserApiService.Models
  
         public int BonusCount { get; set; } = 0;
 
+        public List<int> OrdersIdList { get; set; } = new List<int>();
+
     }
 }

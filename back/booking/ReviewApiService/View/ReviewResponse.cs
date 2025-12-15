@@ -9,6 +9,12 @@ namespace ReviewApiService.View
         public int OfferId { get; set; }
         public int UserId { get; set; }
 
+        public string? UserName { get; set; }
+        public string? UserEmail { get; set; }
+        public string? UserCountry { get; set; }
+
+        public string? Title { get; set; }
+        public string? Description { get; set; }
 
         public double Staff { get; set; }
         public double Facilities { get; set; }

@@ -6,5 +6,6 @@ namespace UserApiService.Services.Interfaces
 {
     public interface IUserService : IServiceBase<User>
     {
+        Task<bool> AddOrderToUser(int userId, int orderId, params string[] includeProperties);
     }
 }

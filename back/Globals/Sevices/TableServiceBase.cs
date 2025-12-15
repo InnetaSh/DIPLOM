@@ -25,6 +25,17 @@ namespace Globals.Sevices
             return false;
         }
 
+        public virtual async Task<int> AddEntityGetIdAsync(T entity)
+        {
+            using (var db = (V)Activator.CreateInstance(typeof(V)))
+            {
+                var dbSet = GetDbSet(db);
+                var res =  dbSet.Add(entity);
+                db.SaveChanges();
+                return res.Entity.id;
+            }
+        }
+
         public virtual async Task<bool> DelEntityAsync(int id)
         {
             using (var db = (V)Activator.CreateInstance(typeof(V)))

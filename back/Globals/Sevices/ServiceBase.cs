@@ -12,16 +12,26 @@ namespace Globals.Sevices
 {
     public class ServiceBase<T, V> : IServiceBase<T> where T : EntityBase where V : ContextBase<T>
     {
-        public virtual async Task<bool> AddEntityAsync(T entity)
-        {
-            var result = false;
+        //public virtual async Task<bool> AddEntityAsync(T entity)
+        //{
+        //    var result = false;
+        //    using (var db = (V)Activator.CreateInstance(typeof(V)))
+        //    {
+        //        db.Values.Add(entity);
+        //        db.SaveChanges();
+        //        result = true;
+        //    }
+        //    return result;
+        //}
+
+        public virtual async Task<int> AddEntityGetIdAsync(T entity)
+        {            
             using (var db = (V)Activator.CreateInstance(typeof(V)))
             {
-                db.Values.Add(entity);
+                var res = db.Values.Add(entity);
                 db.SaveChanges();
-                result = true;
+                return res.Entity.id;
             }
-            return result;
         }
 
         public virtual async Task<bool> DelEntityAsync(int id)

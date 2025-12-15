@@ -12,22 +12,24 @@ namespace ReviewApiService.Controllers
     public class ReviewController
         : EntityControllerBase<Review, ReviewResponse, ReviewRequest>
     {
+        private readonly IReviewService _reviewService;
         public ReviewController(IReviewService reviewService, IRabbitMqService mqService)
             : base(reviewService, mqService) 
-        { 
+        {
+            _reviewService = reviewService;
         }
 
 
-        //[HttpGet("get-by-offerId")]
-        //public async Task<ActionResult<List<OfferResponse>>> GetMainSearch(
-        //    [FromQuery] int id)
-        //{
-        //    if (id<0))
-        //        return BadRequest("Review id is required");
+        [HttpGet("get-by-offerId/{offerId}")]
+        public async Task<ActionResult<List<ReviewResponse>>> GetReviewsByOffer(
+            [FromRoute] int offerId)
+        {
+            if (offerId < 0)
+                return BadRequest("Review id is required");
 
-        //    var offers = await reviewService.GetMainAvailableOffers(request);
-        //    return Ok(offers.Select(o => MapToResponse(o)).ToList());
-        //}
+            var reviews = await _reviewService.GetReviewsByOfferId(offerId);
+            return Ok(reviews.Select(o => MapToResponse(o)).ToList());
+        }
 
 
         protected override Review MapToModel(ReviewRequest request)

@@ -30,7 +30,24 @@ namespace OrderApiService.Services
             return false;
         }
 
-    
+
+        public  async Task<int> AddOrderAsync(Order order)
+        {
+            try
+            {
+                order.TotalPrice = order.OrderPrice + order.TaxAmount;
+
+                order.Status = OrderStatus.Pending;
+                order.CreatedAt = DateTime.UtcNow;
+                await base.AddEntityAsync(order);
+
+                return order.id;
+
+            }
+            catch (Exception ex) { }
+            return -1;
+        }
+
         //private async Task<bool> HasDateConflict(int offerId, DateTime start, DateTime end)
         //{
         //    using var db = new OrderContext();
@@ -42,7 +59,7 @@ namespace OrderApiService.Services
         //    );
         //}
 
-       
+
         //private async Task<OfferResponse?> GetOfferAsync(int offerId)
         //{
         //    var client = _clientFactory.CreateClient("OfferApiService");
@@ -89,6 +106,6 @@ namespace OrderApiService.Services
 
 
 
-       
+
     }
 }

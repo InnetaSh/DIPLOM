@@ -23,21 +23,21 @@ namespace OrderApiService.Controllers
 
 
         [HttpPost("orderAdd")]
-        public async Task<ActionResult> AddOrder(
+        public async Task<ActionResult<int>> AddOrder(
             [FromBody] OrderRequest orderRequest)
         {
             try
             {
                 var model = MapToModel(orderRequest);
 
-                var result = await _service.AddEntityAsync(model);
+                var result = await _orderService.AddOrderAsync(model);
 
-                if (result == null)
+                if (result == -1)
                 {
                     return BadRequest("Не удалось создать заказ");
                 }
 
-                return StatusCode(StatusCodes.Status201Created);
+                return Ok(result);
             }
             catch (Exception ex)
             {

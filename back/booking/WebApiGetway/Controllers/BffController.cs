@@ -164,7 +164,7 @@ namespace WebApiGetway.Controllers
         //                      получаем список обьявлений по главному запросу
         //=============================================================================
 
-        [HttpGet("search/main/{lang}")]
+        [HttpGet("search/main/booking-offers/{lang}")]
         public async Task<IActionResult> GetMainSearch(
          string lang,
          [FromQuery] OfferMainSearchRequest request,
@@ -227,7 +227,7 @@ namespace WebApiGetway.Controllers
 
 
 
-        [HttpGet("search/booking/{id}/{lang}")]
+        [HttpGet("search/booking-offer/{id}/{lang}")]
         public async Task<IActionResult> GetFullOfferById(int id, 
           string lang,
          [FromQuery] OfferByIdRequest request,
@@ -307,45 +307,45 @@ namespace WebApiGetway.Controllers
         //======================================================================================
 
 
-        // Карточка отзывы + автор
-        [HttpGet("offer-review-card/{id}")]
-        public async Task<IActionResult> GetOfferReviewCard(int id)
-        {
+        //// Карточка отзывы + автор
+        //[HttpGet("offer-review-card/{id}")]
+        //public async Task<IActionResult> GetOfferReviewCard(int id)
+        //{
 
-            var reviewsTask = _gateway.ForwardRequestAsync<List<ReviewDto>>(
-                "OfferApiService", $"/api/review/get-by-offerId/{id}", HttpMethod.Get, null);
+        //    var reviewsTask = _gateway.ForwardRequestAsync<List<ReviewDto>>(
+        //        "OfferApiService", $"/api/review/get-by-offerId/{id}", HttpMethod.Get, null);
 
-            await Task.WhenAll(reviewsTask);
-
-
-            var reviews = (reviewsTask.Result as OkObjectResult)?.Value as List<ReviewDto>;
+        //    await Task.WhenAll(reviewsTask);
 
 
-            if (reviews.Count == 0) return NotFound("Reviews not found");
+        //    var reviews = (reviewsTask.Result as OkObjectResult)?.Value as List<ReviewDto>;
 
-            var reviewWithUsers = new List<ReviewWithUserDto>();
-            foreach (var r in reviews)
-            {
-                var userResponce = await _gateway.ForwardRequestAsync<UserDto>(
-                    "UserApiService", $"/api/user/get/{r.UserId}", HttpMethod.Get, null);
-                var user = (userResponce as OkObjectResult)?.Value as UserDto;
 
-                reviewWithUsers.Add(new ReviewWithUserDto
-                {
-                    id = r.id,
-                    Comment = r.Comment,
-                    OverallRating = r.OverallRating,
-                    CreatedAt = r.CreatedAt,
-                    UpdatedAt = r.UpdatedAt,
-                    User = new UserShortInfo()
-                    {
-                        Username = user.Username
-                    }
-                });
-            }
+        //    if (reviews.Count == 0) return NotFound("Reviews not found");
 
-            return Ok(reviewWithUsers);
-        }
+        //    var reviewWithUsers = new List<ReviewWithUserDto>();
+        //    foreach (var r in reviews)
+        //    {
+        //        var userResponce = await _gateway.ForwardRequestAsync<UserDto>(
+        //            "UserApiService", $"/api/user/get/{r.UserId}", HttpMethod.Get, null);
+        //        var user = (userResponce as OkObjectResult)?.Value as UserDto;
+
+        //        reviewWithUsers.Add(new ReviewWithUserDto
+        //        {
+        //            id = r.id,
+        //            Comment = r.Comment,
+        //            OverallRating = r.OverallRating,
+        //            CreatedAt = r.CreatedAt,
+        //            UpdatedAt = r.UpdatedAt,
+        //            User = new UserShortInfo()
+        //            {
+        //                Username = user.Username
+        //            }
+        //        });
+        //    }
+
+        //    return Ok(reviewWithUsers);
+        //}
 
 
 
@@ -464,13 +464,16 @@ namespace WebApiGetway.Controllers
                   orderRequest);
 
             OrderResponse order = new OrderResponse();
-
+            int orderId = -1;
             if (response is ObjectResult obj)
             {
                 switch (obj.StatusCode)
                 {
                     case StatusCodes.Status201Created:
                         // заказ создан
+
+                        orderId = Convert.ToInt32(obj.Value);
+                        Console.WriteLine($"Заказ создан с Id = {orderId}");
 
                         order.OfferId = request.OfferId;
                         order.ClientId = request.ClientId;
@@ -519,6 +522,13 @@ namespace WebApiGetway.Controllers
                             throw new InvalidOperationException("BookedDate не был создан");
                         }
 
+                        var addOrder = await _gateway.ForwardRequestAsync<object>(
+                            "UserApiService",
+                            $"/api/user/{request.ClientId}/orders",
+                            HttpMethod.Post,
+                            orderId
+                        );
+
                         break;
                     case StatusCodes.Status400BadRequest:
                         return BadRequest("Пустой запрос");
@@ -533,6 +543,152 @@ namespace WebApiGetway.Controllers
             return Ok(order);
 
         }
+
+
+
+        //===============================================================================================================
+        //                                         создание отзыва
+        //===============================================================================================================
+
+        [HttpPost("booking/{id}/review/create")]
+        public async Task<IActionResult> CreateReview(
+             [FromBody] CreateReviewRequest request,
+             string lang)
+        {
+   
+            var orderObjResult = await _gateway.ForwardRequestAsync<object>(
+                "OrderApiService",
+                $"/api/order/get/{request.OrderId}",
+                HttpMethod.Get,
+                null
+            );
+
+            if (orderObjResult is not OkObjectResult okOrder)
+                return orderObjResult;
+
+            var orderDictList = ConvertActionResultToDict(okOrder);
+            var order = orderDictList[0];
+            var offerId = int.Parse(order["offerId"].ToString());
+            var userId = int.Parse(order["clientId"].ToString());
+
+
+            if (userId == request.UserId)
+            {
+                var reviewRequest = new ReviewDto
+                {
+                    OfferId = offerId,
+                    UserId = request.UserId,
+                    Staff = request.Staff,
+                    Facilities = request.Facilities,
+                    Cleanliness = request.Cleanliness,
+
+                    Comfort = request.Comfort,
+                    ValueForMoney = request.ValueForMoney,
+                    Location = request.Location,
+                    CreatedAt = DateTime.UtcNow,
+                    IsApproved = false,
+                };
+                var reviewObjResult = await _gateway.ForwardRequestAsync(
+                      "ReviewApiService",
+                      "/api/review/create",
+                      HttpMethod.Post,
+                      reviewRequest);
+
+
+                if (reviewObjResult is not OkObjectResult okReview)
+                    return reviewObjResult;
+
+                var reviewDictList = ConvertActionResultToDict(okReview);
+                var reviev = reviewDictList[0];
+                var id = reviev["id"];
+
+                    var translationDto = new TranslationDto
+                    {
+                        EntityId = int.Parse(id.ToString()),
+                        Lang = lang,
+                        Title = request.Comment
+                    };
+
+                var translateReview = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/Review/create-translations/{lang}", HttpMethod.Post, translationDto);
+                return Ok(reviev);
+            }
+
+            return Ok(null);
+
+        }
+
+
+        //===============================================================================================================
+        //                                         получение отзывoв обьявления
+        //===============================================================================================================
+
+        [HttpPost("offer/{OfferId}/reviews/get/{lang}")]
+        public async Task<IActionResult> GetReviewByOffer(
+             [FromRoute] int OfferId,
+             string lang)
+        {
+
+
+            var reviewsObjResult = await _gateway.ForwardRequestAsync<object>(
+                  "ReviewApiService",
+                  $"/api/review/get-by-offerId/{OfferId}",
+                  HttpMethod.Get,
+                  null);
+
+
+            if (reviewsObjResult is not OkObjectResult okReviews)
+                return reviewsObjResult;
+
+
+            // Получаем список переводов
+            var translateListResult = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/Review/get-all-translations/{lang}", HttpMethod.Get, null);
+
+
+            if (translateListResult is not OkObjectResult okTranslate)
+                return reviewsObjResult;
+
+
+            // Преобразуем переводы в список словарей
+            var translationsJson = okTranslate.Value as JsonElement?;
+            var translations = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(
+                translationsJson?.GetRawText() ?? "[]"
+            );
+            var reviewDictList = ConvertActionResultToDict(okReviews);
+            // Обновляем список 
+            UpdateListWithTranslations(reviewDictList, translations);
+
+            for (int i = 0; i < reviewDictList.Count; i++) { 
+            var reviev = reviewDictList[i];
+                var userId = reviev["userId"];
+
+                var userObjResult = await _gateway.ForwardRequestAsync<object>(
+                "UserApiService",
+                $"/api/user/get/{userId}",
+                HttpMethod.Get,
+                null
+            );
+                if (userObjResult is not OkObjectResult okUser)
+                    return userObjResult;
+
+                var userDictList = ConvertActionResultToDict(okUser);
+
+                var user = userDictList[0];
+                string userName = user["username"].ToString();
+                string userEmail = user["email"].ToString();
+                int countryId = int.Parse(user["countryId"].ToString());
+
+                var translateCountry = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/Country/get-translations/{countryId}/{lang}", HttpMethod.Get, null);
+                var countryTitle = GetStringFromActionResult(translateCountry, "title");
+
+                reviev["userName"] = userName;
+                reviev["userEmail"] = userEmail;
+                reviev["userCountry"] = countryTitle;
+            }
+            return Ok(reviewDictList);
+      
+
+        }
+
 
 
 

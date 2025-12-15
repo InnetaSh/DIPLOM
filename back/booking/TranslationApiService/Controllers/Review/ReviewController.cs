@@ -25,7 +25,7 @@ namespace TranslationApiService.Controllers
             {
 
                 id = request.id,
-                Comment = request.Title,
+                Title = request.Title,
                 EntityId = request.EntityId,
                 Lang = request.Lang
             };
@@ -37,7 +37,7 @@ namespace TranslationApiService.Controllers
             return new TranslationResponse
             {
                 id = model.id,
-                Title = model.Comment,
+                Title = model.Title,
                 EntityId = model.EntityId,
                 Lang = model.Lang
 

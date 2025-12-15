@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TranslationApiService.Data.Seed;
 using TranslationApiService.Models.Location;
 using TranslationApiService.Models.Offer;
+using TranslationApiService.Models.Review;
 
 namespace TranslationApiService.Models
 {
@@ -18,6 +19,7 @@ namespace TranslationApiService.Models
         public DbSet<ParamsCategoryTranslation> ParamsCategoriesTranslation { get; set; }
         public DbSet<ParamItemTranslation> ParamItemsTranslation { get; set; }
 
+        public DbSet<ReviewTranslation> ReviewTranslation { get; set; }
         public DbSet<Language> Languages { get; set; }
 
         protected override void ModelBuilderConfigure(ModelBuilder builder)

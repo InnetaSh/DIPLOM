@@ -58,14 +58,19 @@ namespace Globals.Controllers
                 return BadRequest(ModelState);
 
             var model = MapToModel(request);
-            var result = await _service.AddEntityAsync(model);
+            var result = await _service.AddEntityGetIdAsync(model);
 
-            if (!result)
+            if (result==-1)
                 return StatusCode(500, new { message = "Error creating item" });
 
             PublishMqEvent("Created", model);
+            model.id = result;
 
-            return CreatedAtAction(nameof(GetById), new { id = model.id }, MapToResponse(model));
+            return Ok(new
+            {
+                id = model.id,
+                data = MapToResponse(model)
+            });
         }
 
         [HttpPut("update/{id}")]

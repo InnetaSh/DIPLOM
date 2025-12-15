@@ -21,6 +21,7 @@ namespace UserApiService.Models
         public  UserRole RoleName { get; set; }
 
         public DateTime? LastLogin { get; set; }
+        public List<int> OrdersIdList { get; set; } = new List<int>();
     }
 
   

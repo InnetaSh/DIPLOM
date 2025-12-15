@@ -9,7 +9,8 @@ namespace Globals.Abstractions
 {
     public interface IServiceBase<T> where T : EntityBase
     {
-        Task<Boolean> AddEntityAsync(T entity);
+        //Task<Boolean> AddEntityAsync(T entity);
+        Task<int> AddEntityGetIdAsync(T entity);
 
         Task<T> GetEntityAsync(int id, params string[] includeProperties);
 

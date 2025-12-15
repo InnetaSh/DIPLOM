@@ -58,7 +58,7 @@ namespace Globals.Controllers
         }
 
 
-        [HttpPost("create-translations")]
+        [HttpPost("create-translations/{lang}")]
         public virtual async Task<ActionResult<TResponse>> Create([FromBody] TRequest request)
         {
             if (!ModelState.IsValid)
