@@ -28,8 +28,24 @@ namespace OfferApiService.Controllers
             _paramValueService = paramValueService;
         }
 
+        //===========================================================================================
+        [HttpPost("{offerId}/orders/add/{orderId}")]
+        public async Task<ActionResult> AddOrderLinkToOffer(
+            int offerId, 
+            int orderId)
+        {
+            var result = await _offerService.AddOrderLinkToOffer(offerId, orderId);
 
-        [HttpGet("search/main")]
+            if (!result)
+                return BadRequest("Не удалось добавить заказ для обьявления");
+
+            return Ok(new { message = "Заказ добавлен" });
+        }
+
+
+        //===========================================================================================
+
+        [HttpGet("search/main_page/offers")]
         public async Task<ActionResult<List<OfferShortResponse>>> GetMainSearch(
             [FromQuery] OfferMainSearchRequest request,
             [FromQuery] decimal userDiscountPercent)
@@ -76,7 +92,19 @@ namespace OfferApiService.Controllers
         }
 
 
-        [HttpGet("get-offer/{id}")]
+
+        //===========================================================================================
+
+        [HttpGet("{offerId}/get/orders/id")]
+        public async Task<ActionResult<List<int>>> GetOrdersIdLinkToOffer(
+            int offerId)
+        {
+            var ordersIdList = await _offerService.GetOrdersIdLinkToOffer(offerId);
+            return Ok(ordersIdList);
+        }
+
+            //===========================================================================================
+            [HttpGet("get-offer/{id}")]
         public async Task<ActionResult<OfferResponse>> GetOfferById(
             int id,
              [FromQuery] OfferByIdRequest request,
@@ -142,7 +170,7 @@ namespace OfferApiService.Controllers
 
 
 
-
+        //===========================================================================================
         protected override Offer MapToModel(OfferRequest request)
         {
             return  OfferRequest.MapToModel(request);

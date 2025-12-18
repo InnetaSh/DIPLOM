@@ -6,8 +6,8 @@ namespace ReviewApiService.Models
 {
     public class Review : EntityBase
     {
-            
-        public int OfferId { get; set; }        // ID объекта/оффера
+        public int OrderId { get; set; }
+        public int OfferId { get; set; }        // ID заказа/объекта/оффера
         public int UserId { get; set; }         // ID пользователя
 
     
@@ -35,7 +35,6 @@ namespace ReviewApiService.Models
 
         // Дата создания и обновления
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
 
         // Опционально: статус модерации
         public bool IsApproved { get; set; } = true;

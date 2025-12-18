@@ -32,6 +32,19 @@ namespace ReviewApiService.Controllers
         }
 
 
+        [HttpGet("get-by-userId/{userId}")]
+        public async Task<ActionResult<List<ReviewResponse>>> GetReviewsByUser(
+          [FromRoute] int userId)
+        {
+            if (userId < 0)
+                return BadRequest("Review id is required");
+
+            var reviews = await _reviewService.GetReviewsByUserId(userId);
+            return Ok(reviews.Select(o => MapToResponse(o)).ToList());
+        }
+
+
+
         protected override Review MapToModel(ReviewRequest request)
         {
             return ReviewRequest.MapToModel(request);

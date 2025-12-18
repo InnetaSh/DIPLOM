@@ -8,11 +8,10 @@ namespace UserApiService.Models
     using UserApiService.Models.Enums;
     public class Owner : User
     {
-
         public new UserRole RoleName { get; set; } = UserRole.Owner;
-        // Навигационное свойство для связки с подуслугами
-
+        public List<OwnerOfferLink> OwnerOfferLinks { get; set; } = new();
     }
 
-    
+
+
 }

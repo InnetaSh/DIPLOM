@@ -15,6 +15,8 @@ namespace OfferApiService.Models
         public DbSet<RentObject> RentObjects { get; set; }
         public DbSet<RentObjParamValue> RentObjParamValues { get; set; }
 
+        public DbSet<OfferOrderLink> OfferOrderLinks { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
@@ -79,6 +81,22 @@ namespace OfferApiService.Models
                     .WithOne(i => i.RentObj)
                     .HasForeignKey(i => i.RentObjId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+
+            // OfferOrderLink
+            builder.Entity<OfferOrderLink>(entity =>
+            {
+                entity.ToTable("offer_order_links");
+                entity.HasKey(x => x.Id);
+
+                entity.HasOne(x => x.Offer)
+                    .WithMany(o => o.OfferOrderLinks)
+                    .HasForeignKey(x => x.OfferId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(x => new { x.OfferId, x.OrderId })
+                    .IsUnique();
+            });
 
 
             ParamsSeed.Seed(builder);

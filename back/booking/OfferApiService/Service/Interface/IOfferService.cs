@@ -7,6 +7,8 @@ namespace OfferApiService.Service.Interface
 {
     public interface IOfferService : IServiceBase<Offer>
     {
+        Task<bool> AddOrderLinkToOffer(int offerId, int orderId);
+        Task<List<int>> GetOrdersIdLinkToOffer(int offerId);
         Task<List<Offer>> SearchAvailableOffersAsync([FromQuery] OfferMainSearchRequest request);
     }
 }

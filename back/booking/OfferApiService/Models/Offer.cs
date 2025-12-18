@@ -75,6 +75,9 @@ namespace OfferApiService.Models
         public TimeSpan? CheckOutTime { get; set; }      // Время выезда
 
 
+
+        public List<OfferOrderLink> OfferOrderLinks { get; set; } = new();
+
         // ===== Забронированные даты =====
 
         public List<BookedDate> BookedDates { get; set; } = new List<BookedDate>();  // Список бронирований

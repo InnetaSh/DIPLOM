@@ -13,6 +13,7 @@ namespace UserApiService.View
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
         public int CountryId { get; set; }
+        public decimal Discount { get; set; }
         public string RoleName { get; set; } = string.Empty;
         public string? Token { get; set; }
 
@@ -29,6 +30,7 @@ namespace UserApiService.View
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
                 CountryId = request.CountryId,
+                Discount = request.Discount,
                 RoleName = Enum.TryParse<UserRole>(request.RoleName, true, out var role)
                     ? role
                     : UserRole.Client

@@ -6,8 +6,7 @@ namespace WebApiGetway.View
     {
         // === Order ===
         public int OfferId { get; set; }
-        public int ClientId { get; set; }
-
+    
         public int Guests { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

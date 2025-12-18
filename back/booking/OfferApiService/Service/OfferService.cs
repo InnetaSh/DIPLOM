@@ -21,6 +21,7 @@ namespace OfferApiService.Services
             using var db = new OfferContext();
 
             return await db.Offers
+                .Include(o => o.OfferOrderLinks)
                 .Include(o => o.BookedDates)
                 .Include(o => o.RentObj)
                     .ThenInclude(ro => ro.Images)
@@ -29,7 +30,57 @@ namespace OfferApiService.Services
                 .FirstOrDefaultAsync(o => o.id == id);
         }
 
+        //==================================================================================================================
 
+        public async Task<List<int>> GetOrdersIdLinkToOffer(int offerId)
+        {
+            await using var db = new OfferContext();
+
+            var client = await db.Offers
+                .FirstOrDefaultAsync(x => x.id == offerId);
+
+            if (client == null)
+                return null;
+
+
+            var existsList =  db.OfferOrderLinks
+                .Where(x => x.OfferId == offerId).Select(x=>x.OrderId).ToList();
+            return existsList;
+        }
+
+        //==================================================================================================================
+
+        public async Task<bool> AddOrderLinkToOffer(int offerId, int orderId)
+        {
+            await using var db = new OfferContext();
+
+            var client = await db.Offers
+                .FirstOrDefaultAsync(x => x.id == offerId);
+
+            if (client == null)
+                return false;
+
+
+            var exists = await db.OfferOrderLinks
+                .AnyAsync(x => x.OfferId == offerId && x.OrderId == orderId);
+
+            if (exists)
+                return false;
+
+            var offerOrder = new OfferOrderLink
+            {
+                OfferId = offerId,
+                OrderId = orderId
+            };
+
+            db.OfferOrderLinks.Add(offerOrder);
+            await db.SaveChangesAsync();
+
+            return true;
+        }
+
+
+        //==================================================================================================================
         public async Task<List<Offer>> SearchAvailableOffersAsync([FromQuery] OfferMainSearchRequest request)
         {
             if (request.StartDate >= request.EndDate)
@@ -41,15 +92,16 @@ namespace OfferApiService.Services
                 using var db = new OfferContext();
 
                  fitOffers = await db.Offers
+                    .Include(o => o.OfferOrderLinks)
                     .Include(o => o.BookedDates)
                     .Include(o => o.RentObj)       
                          .ThenInclude(ro => ro.Images)
                     .Where(o => o.RentObj.CityId == request.CityId)
                     .Where(o => o.MaxGuests >= request.Guests)
-                    .Where(o =>
-                        !o.BookedDates.Any(d =>
-                            d.Start < request.EndDate &&
-                            d.End > request.StartDate))
+                    //.Where(o =>
+                    //    !o.BookedDates.Any(d =>
+                    //        d.Start < request.EndDate &&
+                    //        d.End > request.StartDate))
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -59,5 +111,6 @@ namespace OfferApiService.Services
             }
             return fitOffers;
         }
+        //==================================================================================================================
     }
 }

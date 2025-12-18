@@ -11,8 +11,9 @@ namespace OrderApiService.Services
 {
     public class OrderService : TableServiceBase<Order, OrderContext>, IOrderService
     {
-       
-      
+
+        //===========================================================================================
+
         public override async Task<bool> AddEntityAsync(Order order)
         {
             try
@@ -30,8 +31,9 @@ namespace OrderApiService.Services
             return false;
         }
 
+        //===========================================================================================
 
-        public  async Task<int> AddOrderAsync(Order order)
+        public async Task<int> AddOrderAsync(Order order)
         {
             try
             {
@@ -47,18 +49,21 @@ namespace OrderApiService.Services
             catch (Exception ex) { }
             return -1;
         }
+        //===========================================================================================
 
-        //private async Task<bool> HasDateConflict(int offerId, DateTime start, DateTime end)
-        //{
-        //    using var db = new OrderContext();
-        //    return await db.Orders.AnyAsync(o =>
-        //        o.OfferId == offerId &&
-        //        o.Status != OrderStatus.Cancelled &&
-        //        o.StartDate < end &&
-        //        o.EndDate > start
-        //    );
-        //}
+        public async Task<bool> HasDateConflict(int orderId, int offerId,  DateTime start, DateTime end)
+        {
+            using var db = new OrderContext();
+            return await db.Orders.AnyAsync(o =>
+                o.id == orderId &&
+                o.OfferId == offerId &&
+                o.Status != OrderStatus.Cancelled &&
+                o.StartDate < end &&
+                o.EndDate > start
+            );
+        }
 
+        //===========================================================================================
 
         //private async Task<OfferResponse?> GetOfferAsync(int offerId)
         //{

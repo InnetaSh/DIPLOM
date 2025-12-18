@@ -14,14 +14,16 @@ namespace UserApiService.Models
         public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
-        public string Token { get; set; }
+       // public string Token { get; set; }
+
+        public decimal  Discount { get; set; }    
 
         public int CountryId { get; set; }
         [Required]
         public  UserRole RoleName { get; set; }
 
         public DateTime? LastLogin { get; set; }
-        public List<int> OrdersIdList { get; set; } = new List<int>();
+      
     }
 
   

@@ -8,8 +8,8 @@ namespace UserApiService.Models
         public UserRole RoleName { get; set; } = UserRole.Client;
  
         public int BonusCount { get; set; } = 0;
-
-        public List<int> OrdersIdList { get; set; } = new List<int>();
+        public List<ClientOrderLink> ClientOrderLinks { get; set; } = new();
+       
 
     }
 }

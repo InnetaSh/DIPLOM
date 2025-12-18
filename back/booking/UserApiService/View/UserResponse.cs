@@ -13,6 +13,7 @@ namespace UserApiService.View
         public int CountryId { get; set; }
         public string RoleName { get; set; } = string.Empty;
         public string? Token { get; set; }
+        public decimal Discount { get; set; }
 
 
         public static UserResponse MapToResponse(User model)
@@ -24,8 +25,8 @@ namespace UserApiService.View
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
                 CountryId = model.CountryId,
+                Discount = model.Discount,
                 RoleName = model.RoleName.ToString(),
-                Token = model.Token
             };
         }
     }

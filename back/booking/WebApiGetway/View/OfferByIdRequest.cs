@@ -17,6 +17,17 @@
         }
 
         public int Guests { get; set; }
-    }
 
+
+        public static OfferByIdRequest MapToResponse(DateTime startDate, DateTime endDate, int guests)
+        {
+
+            return new OfferByIdRequest
+            {
+                StartDate = startDate,
+                EndDate = endDate,
+                Guests = guests
+            };         
+        }
+    }
 }

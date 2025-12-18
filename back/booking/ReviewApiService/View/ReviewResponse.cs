@@ -8,7 +8,7 @@ namespace ReviewApiService.View
         public int id { get; set; }
         public int OfferId { get; set; }
         public int UserId { get; set; }
-
+        public int OrderId { get; set; }
         public string? UserName { get; set; }
         public string? UserEmail { get; set; }
         public string? UserCountry { get; set; }
@@ -26,7 +26,6 @@ namespace ReviewApiService.View
         public double OverallRating { get; set; }
 
         public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
 
         public bool IsApproved { get; set; }
 
@@ -38,7 +37,7 @@ namespace ReviewApiService.View
             return new ReviewResponse
             {
                 id = model.id,
-                OfferId = model.OfferId,
+                OrderId = model.OrderId,
                 UserId = model.UserId,
                 Staff = model.Staff,
                 Facilities = model.Facilities,
@@ -48,7 +47,6 @@ namespace ReviewApiService.View
                 Location = model.Location,
                 OverallRating = model.OverallRating,
                 CreatedAt = model.CreatedAt,
-                UpdatedAt = model.UpdatedAt,
                 IsApproved = model.IsApproved
             };
         }

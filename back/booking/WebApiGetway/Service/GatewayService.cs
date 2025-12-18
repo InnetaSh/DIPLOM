@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using WebApiGetway.Service.Interfase;
@@ -9,23 +10,41 @@ namespace WebApiGetway.Service
     {
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger<GatewayService> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public GatewayService(
             IHttpClientFactory clientFactory,
-            ILogger<GatewayService> logger)
+            ILogger<GatewayService> logger,
+            IHttpContextAccessor httpContextAccessor) 
         {
             _clientFactory = clientFactory;
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
         }
+
 
         public async Task<IActionResult> ForwardRequestAsync<TRequest>(
             string serviceName,
             string route,
             HttpMethod method,
-            TRequest? request = null)
+            TRequest? request = null
+            )
             where TRequest : class
         {
             var client = _clientFactory.CreateClient(serviceName);
+
+            // Прокидываем JWT из входящего запроса, если есть
+            var authHeader = _httpContextAccessor.HttpContext?
+                .Request.Headers["Authorization"]
+                .FirstOrDefault();
+
+            if (!string.IsNullOrWhiteSpace(authHeader))
+            {
+                client.DefaultRequestHeaders.Remove("Authorization");
+                client.DefaultRequestHeaders.Add("Authorization", authHeader);
+            }
+
+
             HttpResponseMessage response;
 
             switch (method.Method)

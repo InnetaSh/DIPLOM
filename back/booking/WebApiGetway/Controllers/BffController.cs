@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+﻿
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
-using System.Net;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Claims;
 using System.Text.Json;
-using System.Xml.Linq;
 using WebApiGetway.Service.Interfase;
 using WebApiGetway.View;
-using System.Text.Json;
+
+
 
 namespace WebApiGetway.Controllers
 {
@@ -23,20 +24,6 @@ namespace WebApiGetway.Controllers
         }
 
 
-
-
-        //[HttpGet("country/{id}/{lang}")]
-        //public async Task<IActionResult> GetCountryById(int id, string lang)
-        //{
-        //    var translateCountry = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/country/get-translations/{id}/{lang}", HttpMethod.Get, null);
-        //    var titleCountry = GetTitleFromActionResult(translateCountry, "title");
-
-        //    var countryObj = await _gateway.ForwardRequestAsync<object>("LocationApiService", $"/api/country/get/{id}", HttpMethod.Get, null);
-        //    SetTitleToActionResult(countryObj, titleCountry);
-
-        //    return Ok(countryObj);
-
-        //}
 
 
         //=============================================================================
@@ -164,59 +151,300 @@ namespace WebApiGetway.Controllers
         //                      получаем список обьявлений по главному запросу
         //=============================================================================
 
-        [HttpGet("search/main/booking-offers/{lang}")]
-        public async Task<IActionResult> GetMainSearch(
-         string lang,
-         [FromQuery] OfferMainSearchRequest request,
-         [FromQuery] decimal userDiscountPercent)
-        {
-            var queryString = Request.QueryString.Value ?? string.Empty;
+        //[HttpGet("search/main/booking-offers/{lang}")]
+        //[Authorize]
+        //public async Task<IActionResult> GetMainSearch(
+        // string lang,
+        // [FromQuery] OfferMainSearchRequest request)
+        //{
 
-            // Получаем список объявлений
+
+        //    decimal userDiscountPercent = 0; 
+        //    int? userId = null;
+
+        //    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+        //                    ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
+
+        //    if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int parsedUserId))
+        //    {
+        //        userId = parsedUserId;
+
+        //        var userObjResult = await _gateway.ForwardRequestAsync<object>(
+        //            "UserApiService",
+        //            $"/api/user/me",
+        //            HttpMethod.Get,
+        //            null,
+        //            null 
+        //        );
+
+        //        if (userObjResult is OkObjectResult okUser)
+        //        {
+        //            var userDictList = ConvertActionResultToDict(okUser);
+        //            if (userDictList.Any())
+        //            {
+        //                var user = userDictList[0];
+        //                if (user.ContainsKey("discount"))
+        //                    userDiscountPercent = Convert.ToDecimal(user["discount"]);
+        //            }
+        //        }
+        //    }
+
+
+
+        //    var offerQuery = QueryString.Create(new Dictionary<string, string?>
+        //    {
+        //        ["cityId"] = request.CityId.ToString(),
+        //        ["guests"] = request.Guests.ToString(),
+        //        ["userDiscountPercent"] = userDiscountPercent.ToString(),
+        //        ["startDate"] = request.StartDate.ToString(),
+        //        ["endDate"] = request.EndDate.ToString(),
+        //    });
+
+
+        //    // Получаем список объявлений
+        //    var offerObjResult = await _gateway.ForwardRequestAsync<object>(
+        //        "OfferApiService",
+        //        $"/api/offer/search/main_page/offers{offerQuery}",
+        //        HttpMethod.Get,
+        //        null);
+
+        //    if (offerObjResult is not OkObjectResult okOffer)
+        //        return offerObjResult;
+
+        //    var offerDictList = ConvertActionResultToDict(okOffer);
+
+        //    var filteredOfferList = new List<Dictionary<string, object>>();
+
+        //    for (var i = 0; i< offerDictList.Count; i++)
+        //    {
+        //        var offer= offerDictList[i];
+        //        var offerId = int.Parse(offer["id"].ToString());
+
+        //        var ordersIdListResult = await _gateway.ForwardRequestAsync<object>(
+        //            "OfferApiService",
+        //            $"/api/offer/{offerId}/get/orders/id",
+        //            HttpMethod.Get,
+        //            null);
+
+        //        if (ordersIdListResult is not OkObjectResult okOrdersIdList)
+        //            return ordersIdListResult;
+
+        //        List<int> ordersIdList;
+        //        try
+        //        {
+        //            var json = JsonSerializer.Serialize(okOrdersIdList.Value);
+        //            ordersIdList = JsonSerializer.Deserialize<List<int>>(json) ?? new List<int>();
+        //        }
+        //        catch
+        //        {
+        //            return BadRequest("Невозможно распарсить список заказов");
+        //        }
+
+        //        // Проверяем конфликт дат
+        //        var validRequest = new DateValidationRequest
+        //        {
+        //            Start = request.StartDate,
+        //            End = request.EndDate,
+        //            OrdersIdList = ordersIdList
+        //        };
+
+        //        var validResult = await _gateway.ForwardRequestAsync<object>(
+        //            "OrderApiService",
+        //            $"/api/order/{offerId}/valid/date-time",
+        //            HttpMethod.Post,
+        //            validRequest);
+
+        //        if (validResult is not OkObjectResult okResult)
+        //            return validResult;
+
+        //        bool hasConflict = false;
+
+        //        if (okResult.Value is bool b)
+        //            hasConflict = b;
+        //        else if (okResult.Value is JsonElement je && je.ValueKind == JsonValueKind.True)
+        //            hasConflict = true;
+
+        //        // Добавляем только если конфликтов нет
+        //        if (!hasConflict)
+        //            filteredOfferList.Add(offer);
+
+        //    }
+
+        //    // Получаем список переводов
+        //    var translateListResult = await _gateway.ForwardRequestAsync<object>(
+        //        "TranslationApiService",
+        //        $"/api/Offer/get-all-translations/{lang}",
+        //        HttpMethod.Get,
+        //        null);
+
+        //    if (translateListResult is not OkObjectResult okTranslate)
+        //        return offerObjResult;
+
+        //    var translations = ConvertActionResultToDict(okTranslate);
+
+        //    // Берём город один раз
+        //    int cityId = request.CityId;
+        //    var cityObj = await _gateway.ForwardRequestAsync<object>(
+        //        "LocationApiService",
+        //        $"/api/city/get/{cityId}",
+        //        HttpMethod.Get,
+        //        null);
+
+        //    var cityLat = GetDoubleFromActionResult(cityObj, "latitude").Value;
+        //    var cityLon = GetDoubleFromActionResult(cityObj, "longitude").Value;
+
+        //    var updateOfferDictList = UpdateListWithTranslations(offerDictList, translations);
+
+        //    // Обновляем все объявления: переписываем DistanceToCenter у родителя
+        //    var result = UpdateAllOffersDistance(offerDictList, cityLat, cityLon); 
+
+        //    return Ok(result);
+        //}
+
+
+
+        [HttpGet("search/main/booking-offers/{lang}")]
+        [Authorize]
+                public async Task<IActionResult> GetMainSearch(
+            string lang,
+            [FromQuery] OfferMainSearchRequest request)
+        {
+            var (userId, userDiscountPercent) = await GetUserIdAndDiscountAsync();
+
+            var offerQuery = QueryString.Create(new Dictionary<string, string?>
+            {
+                ["cityId"] = request.CityId.ToString(),
+                ["guests"] = request.Guests.ToString(),
+                ["userDiscountPercent"] = userDiscountPercent.ToString(),
+                ["startDate"] = request.StartDate.ToString("O"),
+                ["endDate"] = request.EndDate.ToString("O"),
+            });
+
             var offerObjResult = await _gateway.ForwardRequestAsync<object>(
                 "OfferApiService",
-                $"/api/offer/search/main{queryString}",
+                $"/api/offer/search/main_page/offers{offerQuery}",
                 HttpMethod.Get,
                 null);
 
             if (offerObjResult is not OkObjectResult okOffer)
                 return offerObjResult;
 
-            // Получаем список переводов
+            var offerDictList = ConvertActionResultToDict(okOffer);
+
+           
+            var filteredOfferList = new List<Dictionary<string, object>>();
+            foreach (var offer in offerDictList)
+            {
+                var offerId = int.Parse(offer["id"].ToString());
+                if (await HasDateConflictAsync(offerId, request.StartDate, request.EndDate))
+                    filteredOfferList.Add(offer);
+            }
+
+            var translations = await GetTranslationsAsync(lang);
+            var updateOfferDictList = UpdateListWithTranslations(filteredOfferList, translations);
+
+     
+            var cityObj = await _gateway.ForwardRequestAsync<object>(
+                "LocationApiService",
+                $"/api/city/get/{request.CityId}",
+                HttpMethod.Get,
+                null);
+            var cityLat = GetDoubleFromActionResult(cityObj, "latitude").Value;
+            var cityLon = GetDoubleFromActionResult(cityObj, "longitude").Value;
+            var result = UpdateAllOffersDistance(updateOfferDictList, cityLat, cityLon);
+
+            return Ok(updateOfferDictList);
+        }
+
+        //================= Вспомогательные методы =================
+        private async Task<(int? userId, decimal discount)> GetUserIdAndDiscountAsync()
+        {
+            int? userId = null;
+            decimal discount = 0;
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                            ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
+
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int parsedUserId))
+            {
+                userId = parsedUserId;
+                var userObjResult = await _gateway.ForwardRequestAsync<object>(
+                    "UserApiService", "/api/user/me", HttpMethod.Get, null);
+
+                if (userObjResult is OkObjectResult okUser)
+                {
+                    var userDictList = ConvertActionResultToDict(okUser);
+                    if (userDictList.Any())
+                    {
+                        var user = userDictList[0];
+                        if (user.ContainsKey("discount"))
+                            discount = Convert.ToDecimal(user["discount"]);
+                    }
+                }
+            }
+
+            return (userId, discount);
+        }
+
+        private async Task<bool> HasDateConflictAsync(int offerId, DateTime start, DateTime end)
+        {
+            var ordersIdListResult = await _gateway.ForwardRequestAsync<object>(
+                "OfferApiService",
+                $"/api/offer/{offerId}/get/orders/id",
+                HttpMethod.Get,
+                null);
+
+            if (ordersIdListResult is not OkObjectResult okOrders)
+                return true;
+
+            List<int> ordersIdList;
+            try
+            {
+                var json = JsonSerializer.Serialize(okOrders.Value);
+                ordersIdList = JsonSerializer.Deserialize<List<int>>(json) ?? new List<int>();
+            }
+            catch
+            {
+                return true;
+            }
+
+            var validRequest = new DateValidationRequest
+            {
+                Start = start,
+                End = end,
+                OrdersIdList = ordersIdList
+            };
+
+            var validResult = await _gateway.ForwardRequestAsync<object>(
+                "OrderApiService",
+                $"/api/order/{offerId}/valid/date-time",
+                HttpMethod.Post,
+                validRequest);
+
+            if (validResult is not OkObjectResult okResult)
+                return true;
+
+            if (okResult.Value is bool b)
+                return b;
+            if (okResult.Value is JsonElement je && je.ValueKind == JsonValueKind.True)
+                return true;
+            return false;
+        }
+
+        private async Task<List<Dictionary<string, object>>> GetTranslationsAsync(string lang)
+        {
             var translateListResult = await _gateway.ForwardRequestAsync<object>(
                 "TranslationApiService",
                 $"/api/Offer/get-all-translations/{lang}",
                 HttpMethod.Get,
                 null);
 
-            if (translateListResult is not OkObjectResult okTranslate)
-                return offerObjResult;
+            if (translateListResult is OkObjectResult okTranslate)
+                return ConvertActionResultToDict(okTranslate);
 
-            var translations = ConvertActionResultToDict(okTranslate);
-
-            // Берём город один раз
-            int cityId = request.CityId;
-            var cityObj = await _gateway.ForwardRequestAsync<object>(
-                "LocationApiService",
-                $"/api/city/get/{cityId}",
-                HttpMethod.Get,
-                null);
-
-            var cityLat = GetDoubleFromActionResult(cityObj, "latitude").Value;
-            var cityLon = GetDoubleFromActionResult(cityObj, "longitude").Value;
-
-            var offerDictList = ConvertActionResultToDict(okOffer);
-
-            // Применяем переводы
-            var updateOfferDictList = UpdateListWithTranslations(offerDictList, translations);
-
-            // Обновляем все объявления: переписываем DistanceToCenter у родителя
-            var result = UpdateAllOffersDistance(offerDictList, cityLat, cityLon); 
-
-            return Ok(offerDictList);
+            return new List<Dictionary<string, object>>();
         }
 
-       
 
 
         //======================================================================================
@@ -304,79 +532,54 @@ namespace WebApiGetway.Controllers
         }
 
 
-        //======================================================================================
-
-
-        //// Карточка отзывы + автор
-        //[HttpGet("offer-review-card/{id}")]
-        //public async Task<IActionResult> GetOfferReviewCard(int id)
-        //{
-
-        //    var reviewsTask = _gateway.ForwardRequestAsync<List<ReviewDto>>(
-        //        "OfferApiService", $"/api/review/get-by-offerId/{id}", HttpMethod.Get, null);
-
-        //    await Task.WhenAll(reviewsTask);
-
-
-        //    var reviews = (reviewsTask.Result as OkObjectResult)?.Value as List<ReviewDto>;
-
-
-        //    if (reviews.Count == 0) return NotFound("Reviews not found");
-
-        //    var reviewWithUsers = new List<ReviewWithUserDto>();
-        //    foreach (var r in reviews)
-        //    {
-        //        var userResponce = await _gateway.ForwardRequestAsync<UserDto>(
-        //            "UserApiService", $"/api/user/get/{r.UserId}", HttpMethod.Get, null);
-        //        var user = (userResponce as OkObjectResult)?.Value as UserDto;
-
-        //        reviewWithUsers.Add(new ReviewWithUserDto
-        //        {
-        //            id = r.id,
-        //            Comment = r.Comment,
-        //            OverallRating = r.OverallRating,
-        //            CreatedAt = r.CreatedAt,
-        //            UpdatedAt = r.UpdatedAt,
-        //            User = new UserShortInfo()
-        //            {
-        //                Username = user.Username
-        //            }
-        //        });
-        //    }
-
-        //    return Ok(reviewWithUsers);
-        //}
-
-
-
-
-
+       
 
         //============================================================================================
         //                                                создание заказа
         //============================================================================================
 
 
-        [HttpPost("create/booking")]
+        [HttpPost("create/booking-order")]
+        [Authorize]
         public async Task<IActionResult> CreateOrder(
              [FromBody] CreateOrderRequest request,
-             [FromQuery] decimal userDiscountPercent,
              string lang)
         {
 
-            var offerRequest = new OfferByIdRequest
-            {
-                StartDate = request.StartDate,
-                EndDate = request.EndDate,
-                Guests = request.Guests
-            };
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
 
+            if (userIdClaim == null)
+                return Unauthorized();
+
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+
+     
+            var userObjResult = await _gateway.ForwardRequestAsync<object>(
+                "UserApiService",
+                $"/api/user/me",
+                HttpMethod.Get,
+                null
+            );
+
+            if (userObjResult is not OkObjectResult okUser)
+                return userObjResult;
+
+            var userDictList = ConvertActionResultToDict(okUser);
+            var user = userDictList[0];
+            var discount = decimal.Parse(user["discount"].ToString());
+
+
+
+            var offerRequest = OfferByIdRequest.MapToResponse(request.StartDate, request.EndDate, request.Guests);
+           
             var offerQuery = QueryString.Create(new Dictionary<string, string?>
             {
                 ["startDate"] = offerRequest.StartDate.ToString("O"),
                 ["endDate"] = offerRequest.EndDate.ToString("O"),
                 ["guests"] = offerRequest.Guests.ToString(),
-                ["userDiscountPercent"] = userDiscountPercent.ToString(),
+                ["userDiscountPercent"] = discount.ToString(),
             });
 
             var offerObjResult = await _gateway.ForwardRequestAsync<object>(
@@ -394,6 +597,7 @@ namespace WebApiGetway.Controllers
             var offerDictList = ConvertActionResultToDict(okOffer);
             var offer = offerDictList[0];
             var rentObj = (offer["rentObj"] as List<Dictionary<string, object>>)[0];
+
 
             var countryId = rentObj["countryId"];
             var cityId = rentObj["cityId"];
@@ -437,7 +641,7 @@ namespace WebApiGetway.Controllers
             var orderRequest = new OrderDto
             {
                 OfferId = request.OfferId,
-                ClientId = request.ClientId,
+                ClientId = userId,
                 Guests = request.Guests,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
@@ -476,7 +680,7 @@ namespace WebApiGetway.Controllers
                         Console.WriteLine($"Заказ создан с Id = {orderId}");
 
                         order.OfferId = request.OfferId;
-                        order.ClientId = request.ClientId;
+                        order.ClientId = userId;
                         order.Guests = request.Guests;
                         order.Title = titleOffer;
                         order.Country = countryTitle;
@@ -503,6 +707,32 @@ namespace WebApiGetway.Controllers
                         order.PaymentMethod = paymentMethod.ToString();
 
 
+
+                        var orderToOfferResponse = await _gateway.ForwardRequestAsync<object>(
+                            "OfferApiService",
+                            $"/api/offer/{request.OfferId}/orders/add/{orderId}",
+                            HttpMethod.Post,
+                            null
+                        );
+                        if (orderToOfferResponse == null)
+                        {
+                            throw new InvalidOperationException("Order не был добавлен в список для заказа");
+                        }
+
+
+                        var addOrder = await _gateway.ForwardRequestAsync<object>(
+                            "UserApiService",
+                            $"/api/user/client/orders/add/{orderId}",
+                            HttpMethod.Post,
+                            null
+                        );
+                        if (addOrder == null)
+                        {
+                            throw new InvalidOperationException("Order не был добавлен в список для клиента");
+                        }
+
+
+
                         BookedDateRequest bookedDateRequest = new BookedDateRequest
                         {
                             Start = request.StartDate,
@@ -522,12 +752,6 @@ namespace WebApiGetway.Controllers
                             throw new InvalidOperationException("BookedDate не был создан");
                         }
 
-                        var addOrder = await _gateway.ForwardRequestAsync<object>(
-                            "UserApiService",
-                            $"/api/user/{request.ClientId}/orders",
-                            HttpMethod.Post,
-                            orderId
-                        );
 
                         break;
                     case StatusCodes.Status400BadRequest:
@@ -547,47 +771,126 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                                         создание отзыва
-        //===============================================================================================================
+        //                                         редактирование статуса заказа
+        //======================================+=========================================================================
 
-        [HttpPost("booking/{id}/review/create")]
-        public async Task<IActionResult> CreateReview(
-             [FromBody] CreateReviewRequest request,
-             string lang)
+
+        [HttpPost("update_status/booking/{orderId}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateStateOrder(
+             int orderId,
+             [FromQuery] string otderState)
         {
-   
-            var orderObjResult = await _gateway.ForwardRequestAsync<object>(
-                "OrderApiService",
-                $"/api/order/get/{request.OrderId}",
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                         ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
+
+            if (userIdClaim == null)
+                return Unauthorized();
+
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+
+
+            var userObjResult = await _gateway.ForwardRequestAsync<object>(
+                "UserApiService",
+                $"/api/user/me",
                 HttpMethod.Get,
                 null
             );
+
+            if (userObjResult is not OkObjectResult okUser)
+                return userObjResult;
+
+            var userDictList = ConvertActionResultToDict(okUser);
+            var user = userDictList[0];
+
+          
+            var userRole = user["roleName"].ToString();
+            if (!string.Equals(userRole, "owner", StringComparison.OrdinalIgnoreCase))
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    new { message = "Вы не собственник имущества" }
+                );
+
+
+
+
+            var orderObjResult = await _gateway.ForwardRequestAsync<object>(
+              "OrderApiService",
+              $"/api/order/get/{orderId}",
+              HttpMethod.Get,
+              null
+          );
+
 
             if (orderObjResult is not OkObjectResult okOrder)
                 return orderObjResult;
 
             var orderDictList = ConvertActionResultToDict(okOrder);
             var order = orderDictList[0];
+
             var offerId = int.Parse(order["offerId"].ToString());
-            var userId = int.Parse(order["clientId"].ToString());
+            
 
+            var isValidResult = await _gateway.ForwardRequestAsync<object>(
+              "UserApiService",
+              $"/user/valid/offers/{offerId}\")]",
+              HttpMethod.Get,
+              null
+          );
+            if (isValidResult is not OkObjectResult okIsValid)
+                return isValidResult;
 
-            if (userId == request.UserId)
+            if (okIsValid.Value is bool result && result)
             {
-                var reviewRequest = new ReviewDto
+                order["status"] = otderState;
+            }
+            else
+            {
+                return Ok(new
                 {
-                    OfferId = offerId,
-                    UserId = request.UserId,
-                    Staff = request.Staff,
-                    Facilities = request.Facilities,
-                    Cleanliness = request.Cleanliness,
+                    message = "Такого заказа нет у пользователя"
+                });
 
-                    Comfort = request.Comfort,
-                    ValueForMoney = request.ValueForMoney,
-                    Location = request.Location,
-                    CreatedAt = DateTime.UtcNow,
-                    IsApproved = false,
-                };
+            }
+
+            return Ok(order);
+
+        }
+
+        //===============================================================================================================
+        //                                         создание отзыва
+        //======================================+=========================================================================
+
+
+      
+
+        [HttpPost("user/orders/{orderId}/reviews/create")]
+        [Authorize]
+        public async Task<IActionResult> CreateReview(
+             [FromBody] CreateReviewRequest request,
+             int orderId,
+             string lang)
+        {
+
+            var(userIdRequest, status) = await GetClientIdAndStatusFromOrder(orderId);
+
+
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                         ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
+
+            if (userIdClaim == null)
+                return Unauthorized();
+
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+
+
+
+            if (userIdRequest == userId)
+            {
+                var reviewRequest = ReviewDto.MapToDto(request, orderId, userId);
                 var reviewObjResult = await _gateway.ForwardRequestAsync(
                       "ReviewApiService",
                       "/api/review/create",
@@ -600,6 +903,7 @@ namespace WebApiGetway.Controllers
 
                 var reviewDictList = ConvertActionResultToDict(okReview);
                 var reviev = reviewDictList[0];
+                reviev["orderId"] = orderId;
                 var id = reviev["id"];
 
                     var translationDto = new TranslationDto
@@ -622,16 +926,16 @@ namespace WebApiGetway.Controllers
         //                                         получение отзывoв обьявления
         //===============================================================================================================
 
-        [HttpPost("offer/{OfferId}/reviews/get/{lang}")]
+        [HttpPost("offer/{offerId}/reviews/get/{lang}")]
         public async Task<IActionResult> GetReviewByOffer(
-             [FromRoute] int OfferId,
+             [FromRoute] int offerId,
              string lang)
         {
 
 
             var reviewsObjResult = await _gateway.ForwardRequestAsync<object>(
                   "ReviewApiService",
-                  $"/api/review/get-by-offerId/{OfferId}",
+                  $"/api/review/get-by-offerId/{offerId}",
                   HttpMethod.Get,
                   null);
 
@@ -658,8 +962,8 @@ namespace WebApiGetway.Controllers
             UpdateListWithTranslations(reviewDictList, translations);
 
             for (int i = 0; i < reviewDictList.Count; i++) { 
-            var reviev = reviewDictList[i];
-                var userId = reviev["userId"];
+                var review = reviewDictList[i];
+                var userId = review["userId"];
 
                 var userObjResult = await _gateway.ForwardRequestAsync<object>(
                 "UserApiService",
@@ -680,9 +984,9 @@ namespace WebApiGetway.Controllers
                 var translateCountry = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/Country/get-translations/{countryId}/{lang}", HttpMethod.Get, null);
                 var countryTitle = GetStringFromActionResult(translateCountry, "title");
 
-                reviev["userName"] = userName;
-                reviev["userEmail"] = userEmail;
-                reviev["userCountry"] = countryTitle;
+                review["userName"] = userName;
+                review["userEmail"] = userEmail;
+                review["userCountry"] = countryTitle;
             }
             return Ok(reviewDictList);
       
@@ -692,10 +996,208 @@ namespace WebApiGetway.Controllers
 
 
 
+        //===============================================================================================================
+        //                                         получение отзывoв user
+        //===============================================================================================================
+
+        [HttpPost("user/reviews/get/{lang}")]
+        [Authorize]
+        public async Task<IActionResult> GetReviewByUser(
+             string lang)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
+
+            if (userIdClaim == null)
+                return Unauthorized();
+
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+
+
+            var reviewsObjResult = await _gateway.ForwardRequestAsync<object>(
+                  "ReviewApiService",
+                  $"/api/review/get-by-userId/{userId}",
+                  HttpMethod.Get,
+                  null);
+
+
+            if (reviewsObjResult is not OkObjectResult okReviews)
+                return reviewsObjResult;
+
+
+            // Получаем список переводов
+            var translateListResult = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/Review/get-all-translations/{lang}", HttpMethod.Get, null);
+
+
+            if (translateListResult is not OkObjectResult okTranslate)
+                return reviewsObjResult;
+
+
+            // Преобразуем переводы в список словарей
+            var translationsJson = okTranslate.Value as JsonElement?;
+            var translations = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(
+                translationsJson?.GetRawText() ?? "[]"
+            );
+            var reviewDictList = ConvertActionResultToDict(okReviews);
+            // Обновляем список 
+            UpdateListWithTranslations(reviewDictList, translations);
+
+            for (int i = 0; i < reviewDictList.Count; i++)
+            {
+                var review = reviewDictList[i];
+
+                var offerId = review["offerId"];
+
+
+                var translateOffer = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/Offer/get-translations/{offerId}/{lang}", HttpMethod.Get, null);
+                var titleOffer = GetStringFromActionResult(translateOffer, "title");
+                //var descriptionOffer = GetStringFromActionResult(translateOffer, "description");
+
+                //review["offerId"] = offerId;
+                //review["offerTitle"] = titleOffer;
+
+
+            }
+            return Ok(reviewDictList);
+
+
+        }
 
 
 
         //===============================================================================================================
+        //                                         редактирование отзывoв 
+        //===============================================================================================================
+
+        [HttpPost("user/{orderId}/reviews/update/{reviewId}/{lang}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateReviewById(
+             [FromBody] CreateReviewRequest request,
+             int reviewId,
+             int orderId,
+             string lang)
+        {
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
+
+            if (userIdClaim == null)
+                return Unauthorized();
+
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+
+            var (userIdRequest, status) = await GetClientIdAndStatusFromOrder(orderId);
+            //if (userIdRequest == userId &&  status == "Completed")
+            if (userIdRequest == userId)
+            {
+                var reviewRequest = ReviewDto.MapToDto(request, orderId, userId);
+
+                var reviewObjResult = await _gateway.ForwardRequestAsync(
+                      "ReviewApiService",
+                      $"/api/review/update/{reviewId}",
+                      HttpMethod.Put,
+                      reviewRequest);
+
+
+                if (reviewObjResult is not OkObjectResult okReview)
+                    return reviewObjResult;
+
+                var reviewDictList = ConvertActionResultToDict(okReview);
+                var review = reviewDictList[0];
+              
+
+                var translationDto = new TranslationDto
+                {
+                    EntityId = reviewId,
+                    Lang = lang,
+                    Title = request.Comment
+                };
+
+                var translateReview = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/Review/create-translations/{lang}", HttpMethod.Post, translationDto);
+                return Ok(review);
+            }
+
+            return Ok(null);
+        }
+
+
+
+
+
+        //===============================================================================================================
+        //                                         удаление отзывoв 
+        //===============================================================================================================
+
+        [HttpDelete("user/{userId}/{orderId}/reviews/delete/{reviewId}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteReviewById(
+             int reviewId,
+             int orderId)
+        {
+
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
+
+            if (userIdClaim == null)
+                return Unauthorized();
+
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+
+
+            var (userIdRequest, status) = await GetClientIdAndStatusFromOrder(orderId);
+            //if (userIdRequest == userId &&  status == "Completed")
+            if (userIdRequest == userId)
+            {
+                await _gateway.ForwardRequestAsync<object>(
+                      "ReviewApiService",
+                      $"/api/review/update/{reviewId}",
+                      HttpMethod.Delete,
+                      null);
+
+                var lang = "en";
+                await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/Review/del-translations/{reviewId}/{lang}", HttpMethod.Delete, null);
+                return Ok();
+            }
+
+            return Ok(null);
+        }
+
+
+
+
+
+        //===============================================================================================================
+
+        //                                                   private
+
+        //===============================================================================================================
+
+
+        private async Task<(int userId, string status)> GetClientIdAndStatusFromOrder(int orderId)
+        {
+            var orderObjResult = await _gateway.ForwardRequestAsync<object>(
+                "OrderApiService",
+                $"/api/order/get/{orderId}",
+                HttpMethod.Get,
+                null
+            );
+
+            if (orderObjResult is OkObjectResult okOrder)
+            {
+
+                var orderDictList = ConvertActionResultToDict(okOrder);
+                var order = orderDictList[0];
+                var status = order["status"].ToString();
+                var userId = int.Parse(order["clientId"].ToString());
+
+                return (userId, status);
+            }
+            return (-1, "Pending");
+        }
+
 
         private List<Dictionary<string, object>> ConvertActionResultToDict(OkObjectResult objResult)
         {
@@ -769,68 +1271,6 @@ namespace WebApiGetway.Controllers
 
 
 
-        //private bool SetTitleToActionResult(object result, string title)
-        //{
-        //    var valuePi = result.GetType().GetProperty("Value");
-        //    if (valuePi != null)
-        //    {
-        //        var val = valuePi.GetValue(result);
-        //        if (val is JsonElement jsonElement)
-        //        {
-
-        //            var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonElement.GetRawText());
-
-        //            if (dict != null)
-        //            {
-        //                dict["title"] = title; 
-
-
-        //                if (result is Microsoft.AspNetCore.Mvc.OkObjectResult okResult)
-        //                {
-        //                    okResult.Value = dict;
-        //                    return true;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return false;
-        //}
-
-
-
-        private bool SetPropertiesFromDictionaryToActionResult(object result, Dictionary<string, string> properties)
-        {
-            var valuePi = result.GetType().GetProperty("Value");
-            if (valuePi != null)
-            {
-                var val = valuePi.GetValue(result);
-                if (val is JsonElement jsonElement)
-                {
-                    // Десериализуем Json в словарь
-                    var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonElement.GetRawText());
-                    if (dict != null)
-                    {
-                        // Обновляем все свойства из словаря
-                        foreach (var kvp in properties)
-                        {
-                            dict[kvp.Key] = kvp.Value;
-                        }
-
-                        // Присваиваем обратно, если это OkObjectResult
-                        if (result is Microsoft.AspNetCore.Mvc.OkObjectResult okResult)
-                        {
-                            okResult.Value = dict;
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-
-
-
         private List<Dictionary<string, object>> UpdateListWithTranslations(List<Dictionary<string, object>> list, List<Dictionary<string, object>> translations,
             string idFieldName = "id",
             string translationIdFieldName = "entityId")
@@ -865,59 +1305,17 @@ namespace WebApiGetway.Controllers
         }
 
 
-        private int? GetNestedIntFromActionResult(object result, string objectName, string fieldName)
-        {
-            var value_pi = result.GetType().GetProperty("Value");
-            if (value_pi != null)
-            {
-                var val = value_pi.GetValue(result);
-                if (val is JsonElement jsonElement)
-                {
-                    //if(jsonElement.TryGetProperty(objectName, out var field))
-                    //{
-                    //    if (field.TryGetInt32(out int v))
-                    //        return v;
-                    //}
-                    if (jsonElement.ValueKind == JsonValueKind.Object &&
-                        jsonElement.TryGetProperty(objectName, out var nestedObj))
-                    {
-                        if (nestedObj.ValueKind == JsonValueKind.Object &&
-                            nestedObj.TryGetProperty(fieldName, out var field))
-                        {
-                            if (field.TryGetInt32(out int v))
-                                return v;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-
-
-        private decimal? GetNestedDecimal(object result, string parentName, string fieldName)
-        {
-            var valueProperty = result.GetType().GetProperty("Value");
-            if (valueProperty == null)
-                return null;
-
-            var val = valueProperty.GetValue(result);
-            if (val is not JsonElement root)
-                return null;
-
-            return FindDecimalUnderParent(root, parentName, fieldName, insideParent: false);
-        }
-
+      
         private decimal? FindDecimalUnderParent(JsonElement element, string parentName, string fieldName, bool insideParent)
         {
-            // ---- Если мы уже находимся внутри родительского объекта ----
+       
             if (insideParent)
             {
                 if (element.ValueKind == JsonValueKind.Object)
                 {
                     foreach (var prop in element.EnumerateObject())
                     {
-                        // проверяем нужный параметр
+                      
                         if (prop.NameEquals(fieldName))
                         {
                             if (prop.Value.ValueKind == JsonValueKind.Number &&
@@ -926,8 +1324,7 @@ namespace WebApiGetway.Controllers
                                 return decValue;
                             }
                         }
-
-                        // рекурсивно продолжаем искать внутри родителя
+                      
                         var nested = FindDecimalUnderParent(prop.Value, parentName, fieldName, insideParent: true);
                         if (nested != null)
                             return nested;
@@ -946,18 +1343,15 @@ namespace WebApiGetway.Controllers
                 return null;
             }
 
-            // ---- Ещё не нашли родителя — ищем parentName ----
             if (element.ValueKind == JsonValueKind.Object)
             {
                 foreach (var prop in element.EnumerateObject())
                 {
-                    // нашли нужного родителя
                     if (prop.NameEquals(parentName))
                     {
                         return FindDecimalUnderParent(prop.Value, parentName, fieldName, insideParent: true);
                     }
 
-                    // продолжаем поиск
                     var nested = FindDecimalUnderParent(prop.Value, parentName, fieldName, insideParent: false);
                     if (nested != null)
                         return nested;

@@ -28,7 +28,7 @@ namespace UserApiService.Services
                 throw new UnauthorizedAccessException("Неверное имя пользователя или пароль");
 
             var token = _tokenService.GenerateJwtToken(user);
-            user.Token = token;
+            //user.Token = token;
             await _context.SaveChangesAsync();
 
             return new LoginResponse
@@ -62,7 +62,7 @@ namespace UserApiService.Services
             };
 
             var token = _tokenService.GenerateJwtToken(newUser);
-            newUser.Token = token;
+           // newUser.Token = token;
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();

@@ -19,6 +19,7 @@
         }
 
         public int Guests { get; set; }
+        public int UserDiscountPercent { get; set; }
     }
 
 }

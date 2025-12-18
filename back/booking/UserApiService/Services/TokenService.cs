@@ -26,25 +26,20 @@ namespace UserApiService.Services
 
         public string GenerateJwtToken(User user)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
-
+            if (user == null) throw new ArgumentNullException(nameof(user));
 
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.id.ToString()), 
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim("name", user.Username),
-                
                 new Claim(ClaimTypes.Role, user.RoleName.ToString()),
-
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
-
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
 
             var token = new JwtSecurityToken(
                 issuer: _issuer,

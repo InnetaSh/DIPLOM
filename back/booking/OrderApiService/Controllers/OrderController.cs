@@ -1,6 +1,7 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using OrderApiGetway.View;
 using OrderApiService.Models;
 using OrderApiService.Service.Interface;
 using OrderApiService.Services;
@@ -20,7 +21,7 @@ namespace OrderApiService.Controllers
         {
             _orderService = orderService;
         }
-
+        //===========================================================================================
 
         [HttpPost("orderAdd")]
         public async Task<ActionResult<int>> AddOrder(
@@ -48,6 +49,27 @@ namespace OrderApiService.Controllers
         }
 
 
+
+
+        //===========================================================================================
+        [HttpPost("{offerId}/valid/date-time")]
+        public async Task<ActionResult<bool>> HasDateConflict(
+           int offerId,
+             [FromBody] DateValidationRequest request)
+        {
+            var ordersIdList = request.OrdersIdList;
+            var start = request.Start;
+            var end = request.End;
+            foreach (var orderId in ordersIdList)
+            {
+                var result = await _orderService.HasDateConflict(orderId, offerId, start, end);
+                if (result)
+                    return false;
+            }
+            return true;
+        }
+
+        //===========================================================================================
 
         protected override Order MapToModel(OrderRequest request)
         {
