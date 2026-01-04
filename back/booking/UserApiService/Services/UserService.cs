@@ -37,6 +37,37 @@ namespace UserApiService.Services
             return true;
         }
 
+
+        // =====================================================================
+        // CLIENT → добавить заказ в избранное
+        // =====================================================================
+        public async Task<bool> AddOfferToClientFavorite(int userId, int offerId, bool isFavorite)
+        {
+            await using var db = new UserContext();
+
+            var client = await db.Clients
+              .FirstOrDefaultAsync(x => x.id == userId);
+
+
+            if (client == null)
+                return false;
+
+            var exists = await db.HistoryOfferLinks
+                .AnyAsync(x => x.ClientId == client.id && x.OfferId == offerId);
+
+            if (exists)
+                return false;
+
+            db.HistoryOfferLinks.Add(new HistoryOfferLink
+            {
+                ClientId = client.id,
+                OfferId = offerId,
+                IsFavorites = isFavorite
+            });
+
+            await db.SaveChangesAsync();
+            return true;
+        }
         // =====================================================================
         // OWNER → добавить объявление
         // =====================================================================
@@ -67,13 +98,47 @@ namespace UserApiService.Services
         }
 
         // =====================================================================
-        // Получить пользователя по id
+        //              Получить пользователя по id
         // =====================================================================
-        public async Task<User?> GetByIdAsync(int userId)
+        public async Task<User?> GetUserByIdAsync(int userId)
         {
             await using var db = new UserContext();
-            return await db.Users.FirstOrDefaultAsync(x => x.id == userId);
+            return await db.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.id == userId);
         }
+
+
+        // =====================================================================
+        //              Client — полные данные
+        // =====================================================================
+
+        public async Task<Client?> GetClientFullByIdAsync(int userId)
+        {
+            await using var db = new UserContext();
+
+            return await db.Clients
+                .AsNoTracking()
+                .Include(c => c.ClientOrderLinks)
+                .Include(c => c.HistoryOfferLinks)
+                .FirstOrDefaultAsync(c => c.id == userId);
+        }
+
+
+        // =====================================================================
+        //             Owner — полные данные
+        // =====================================================================
+
+        public async Task<Owner?> GetOwnerFullByIdAsync(int userId)
+        {
+            await using var db = new UserContext();
+
+            return await db.Owners
+                .AsNoTracking()
+                .Include(o => o.OwnerOfferLinks)
+                .FirstOrDefaultAsync(o => o.id == userId);
+        }
+
 
         // =====================================================================
         // Проверка: принадлежит ли offer владельцу

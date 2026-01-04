@@ -41,28 +41,30 @@ namespace UserApiService.Services
 
         public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
         {
-            //var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
-            //if (existingUser != null)
-            //    throw new InvalidOperationException("Пользователь с таким именем уже существует");
-
             _passwordHasher.CreatePasswordHash(request.Password, out byte[] hash, out byte[] salt);
 
             var role = Enum.TryParse<UserRole>(request.RoleName, true, out var parsedRole)
                 ? parsedRole
                 : UserRole.Client;
 
-            var newUser = new User
+            User newUser = role switch
             {
-                Username = request.Username,
-                PasswordHash = hash,
-                PasswordSalt = salt,
-                Email = request.Email,
-                PhoneNumber = request.PhoneNumber,
-                RoleName = role
+                UserRole.Client => new Client(),
+                UserRole.Owner => new Owner(),
+                UserRole.Admin => new Admin(),
+                UserRole.SuperAdmin => new SuperAdmin(),
+                _ => new User()
             };
 
+            newUser.Username = request.Username;
+            newUser.PasswordHash = hash;
+            newUser.PasswordSalt = salt;
+            newUser.Email = request.Email;
+            newUser.PhoneNumber = request.PhoneNumber;
+            newUser.CountryId = request.CountryId;
+            newUser.RoleName = role;
+
             var token = _tokenService.GenerateJwtToken(newUser);
-           // newUser.Token = token;
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
@@ -74,6 +76,7 @@ namespace UserApiService.Services
                 RoleName = newUser.RoleName.ToString()
             };
         }
+
 
         public async Task<bool> DeleteUserAsync(int id)
         {

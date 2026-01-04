@@ -1,6 +1,7 @@
 ﻿using Globals.Models;
 using Microsoft.EntityFrameworkCore;
 using TranslationApiService.Data.Seed;
+using TranslationApiService.Models.Attraction;
 using TranslationApiService.Models.Location;
 using TranslationApiService.Models.Offer;
 using TranslationApiService.Models.Review;
@@ -10,6 +11,7 @@ namespace TranslationApiService.Models
     public class TranslationContext : ContextBase<Language>
     {
         public DbSet<OfferTranslation> OffersTranslation { get; set; }
+        public DbSet<AttractionTranslation> AttractionTranslation { get; set; }
 
         public DbSet<CityTranslation> CitiesTranslation { get; set; }
         public DbSet<CountryTranslation> CountriesTranslation { get; set; }

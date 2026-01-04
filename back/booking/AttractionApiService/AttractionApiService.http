@@ -1,0 +1,6 @@
+@AttractionApiService_HostAddress = http://localhost:5037
+
+GET {{AttractionApiService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

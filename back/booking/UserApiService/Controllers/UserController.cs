@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using UserApiService.Models;
+using UserApiService.Models.Enums;
 using UserApiService.Services.Interfaces;
 using UserApiService.View;
 
@@ -42,6 +43,30 @@ namespace UserApiService.Controllers
             return Ok(new { message = "Заказ добавлен" });
         }
 
+
+
+        // =====================================================================
+        // CLIENT: добавить заказ в избранное
+        // =====================================================================
+        [Authorize]
+        [HttpPost("client/offer/isfavorite/add/{offerId}")]
+        public async Task<IActionResult> AddOfferToClientFavorite(
+            int offerId,
+            [FromQuery] bool isFavorite)
+        {
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var result = await _userService.AddOfferToClientFavorite(userId.Value, offerId, isFavorite);
+
+            if (!result)
+                return BadRequest("Не удалось добавить заказ пользователю");
+
+            return Ok(new { message = "Заказ добавлен" });
+        }
+
+
         // =====================================================================
         // OWNER: добавить объявление
         // =====================================================================
@@ -64,21 +89,28 @@ namespace UserApiService.Controllers
         // =====================================================================
         // Получить текущего пользователя
         // =====================================================================
-        [Authorize]
+
         [HttpGet("me")]
-        public async Task<ActionResult<UserResponse>> GetMe()
+        [Authorize]
+        public async Task<IActionResult> GetMe()
         {
             var userId = GetUserId();
             if (userId == null)
                 return Unauthorized();
 
-            var user = await _userService.GetByIdAsync(userId.Value);
+            var user = await _userService.GetUserByIdAsync(userId.Value);
             if (user == null)
                 return NotFound();
-            UserResponse userResponse = UserResponse.MapToResponse(user);
 
-            return Ok(userResponse);
+            return user.RoleName switch
+            {
+                UserRole.Client => Ok(await _userService.GetClientFullByIdAsync(userId.Value)),
+                UserRole.Owner => Ok(await _userService.GetOwnerFullByIdAsync(userId.Value)),
+                _ => Ok(user)
+            };
         }
+
+
 
         // =====================================================================
         // Проверка: принадлежит ли offer текущему владельцу

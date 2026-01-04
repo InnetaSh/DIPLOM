@@ -13,10 +13,22 @@ namespace OfferApiService.View.RentObj
         public int RegionId { get; set; }
         public int CityId { get; set; }
         public int DistrictId { get; set; }
-        public string Address { get; set; }
 
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        //public string Address { get; set; }
+
+
+        //  Адрес для геокодинга
+
+        public string CountryTitle { get; set; }
+        public string CityTitle { get; set; }
+
+        public string Street { get; set; }        
+        public string HouseNumber { get; set; }  
+        public string Postcode { get; set; }     
+
+
+       // public double? Latitude { get; set; }
+       //public double? Longitude { get; set; }
 
         public int RoomCount { get; set; }
         public int LivingRoomCount { get; set; }   
@@ -35,7 +47,9 @@ namespace OfferApiService.View.RentObj
         public List<RentObjParamValueRequest> ParamValues { get; set; } = new();
         public List<string> Images { get; set; } = new();
 
-        public static RentObject MapToModel(RentObjRequest request)
+        public static RentObject MapToModel(
+             RentObjRequest request
+         )
         {
             return new RentObject
             {
@@ -44,9 +58,9 @@ namespace OfferApiService.View.RentObj
                 RegionId = request.RegionId,
                 CityId = request.CityId,
                 DistrictId = request.DistrictId,
-                Address = request.Address,
-                Latitude = request.Latitude,
-                Longitude = request.Longitude,
+                Address = $"{request.Street} {request.HouseNumber}",
+                Latitude = 0,
+                Longitude = 0,
                 RoomCount = request.RoomCount,
                 LivingRoomCount = request.LivingRoomCount,
                 BathroomCount = request.BathroomCount,
@@ -67,5 +81,35 @@ namespace OfferApiService.View.RentObj
                     .ToList() ?? new List<RentObjImage>()
             };
         }
+
+
+        public static RentObject MapToModelWithCoords(RentObjRequest request, double latitude, double longitude)
+        {
+            return new RentObject
+            {
+                CountryId = request.CountryId,
+                RegionId = request.RegionId,
+                CityId = request.CityId,
+                DistrictId = request.DistrictId,
+                Address = $"{request.Street} {request.HouseNumber}",
+                Latitude = latitude,
+                Longitude = longitude,
+                RoomCount = request.RoomCount,
+                LivingRoomCount = request.LivingRoomCount,
+                BathroomCount = request.BathroomCount,
+                HasKitchen = request.HasKitchen,
+                HasBalcony = request.HasBalcony,
+                Area = request.Area,
+                Floor = request.Floor,
+                TotalFloors = request.TotalFloors,
+                RentObjType = request.RentObjType,
+                BedroomsCount = request.BedroomsCount,
+                BedsCount = request.BedsCount,
+                HasBabyCrib = request.HasBabyCrib,
+                ParamValues = request.ParamValues?.Select(RentObjParamValueRequest.MapToModel).ToList() ?? new(),
+                Images = request.Images?.Select(url => new RentObjImage { Url = url }).ToList() ?? new()
+            };
+        }
+
     }
 }

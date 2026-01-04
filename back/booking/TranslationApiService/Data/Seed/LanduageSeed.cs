@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TranslationApiService.Models;
+using TranslationApiService.Models.Attraction;
 using TranslationApiService.Models.Location;
 using TranslationApiService.Models.Offer;
 
@@ -398,7 +399,127 @@ namespace TranslationApiService.Data.Seed
                 new AttractionTranslation { id = 87, EntityId = 44, Lang = "en", Title = "La Canebière", Description = "Historic street" },
                 new AttractionTranslation { id = 88, EntityId = 44, Lang = "ru", Title = "Ля Канебиер", Description = "Историческая улица" },
                 new AttractionTranslation { id = 89, EntityId = 45, Lang = "en", Title = "Palais Longchamp", Description = "Fountain and palace" },
-                new AttractionTranslation { id = 90, EntityId = 45, Lang = "ru", Title = "Пале Лоншан", Description = "Фонтан и дворец" }
+                new AttractionTranslation { id = 90, EntityId = 45, Lang = "ru", Title = "Пале Лоншан", Description = "Фонтан и дворец" },
+
+                // EntityId 46–50 (London)
+                new AttractionTranslation { id = 91, EntityId = 46, Lang = "en", Title = "Tower of London", Description = "Historic castle and former prison" },
+                new AttractionTranslation { id = 92, EntityId = 46, Lang = "ru", Title = "Тауэр", Description = "Исторический замок и бывшая тюрьма" },
+                new AttractionTranslation { id = 93, EntityId = 47, Lang = "en", Title = "Buckingham Palace", Description = "Royal residence" },
+                new AttractionTranslation { id = 94, EntityId = 47, Lang = "ru", Title = "Букингемский дворец", Description = "Королевская резиденция" },
+                new AttractionTranslation { id = 95, EntityId = 48, Lang = "en", Title = "London Eye", Description = "Giant Ferris wheel" },
+                new AttractionTranslation { id = 96, EntityId = 48, Lang = "ru", Title = "Лондонский глаз", Description = "Огромное колесо обозрения" },
+                new AttractionTranslation { id = 97, EntityId = 49, Lang = "en", Title = "British Museum", Description = "World-famous museum" },
+                new AttractionTranslation { id = 98, EntityId = 49, Lang = "ru", Title = "Британский музей", Description = "Знаменитый музей мира" },
+                new AttractionTranslation { id = 99, EntityId = 50, Lang = "en", Title = "St. Paul's Cathedral", Description = "Famous cathedral" },
+                new AttractionTranslation { id = 100, EntityId = 50, Lang = "ru", Title = "Собор Святого Павла", Description = "Знаменитый собор" },
+
+                // EntityId 51–55 (Manchester)
+                new AttractionTranslation { id = 101, EntityId = 51, Lang = "en", Title = "Old Trafford", Description = "Football stadium" },
+                new AttractionTranslation { id = 102, EntityId = 51, Lang = "ru", Title = "Олд Траффорд", Description = "Футбольный стадион" },
+                new AttractionTranslation { id = 103, EntityId = 52, Lang = "en", Title = "Manchester Cathedral", Description = "Historic cathedral" },
+                new AttractionTranslation { id = 104, EntityId = 52, Lang = "ru", Title = "Манчестерский собор", Description = "Исторический собор" },
+                new AttractionTranslation { id = 105, EntityId = 53, Lang = "en", Title = "John Rylands Library", Description = "Historic library" },
+                new AttractionTranslation { id = 106, EntityId = 53, Lang = "ru", Title = "Библиотека Джона Райлэндса", Description = "Историческая библиотека" },
+                new AttractionTranslation { id = 107, EntityId = 54, Lang = "en", Title = "Science and Industry Museum", Description = "Museum of science" },
+                new AttractionTranslation { id = 108, EntityId = 54, Lang = "ru", Title = "Музей науки и промышленности", Description = "Музей науки" },
+                new AttractionTranslation { id = 109, EntityId = 55, Lang = "en", Title = "Castlefield", Description = "Historic area with canals" },
+                new AttractionTranslation { id = 110, EntityId = 55, Lang = "ru", Title = "Каслфилд", Description = "Исторический район с каналами" },
+
+                // EntityId 56–60 (Birmingham)
+                new AttractionTranslation { id = 111, EntityId = 56, Lang = "en", Title = "Birmingham Museum & Art Gallery", Description = "Art museum" },
+                new AttractionTranslation { id = 112, EntityId = 56, Lang = "ru", Title = "Музей и художественная галерея Бирмингема", Description = "Художественный музей" },
+                new AttractionTranslation { id = 113, EntityId = 57, Lang = "en", Title = "Cadbury World", Description = "Chocolate-themed attraction" },
+                new AttractionTranslation { id = 114, EntityId = 57, Lang = "ru", Title = "Кэдбери Уорлд", Description = "Аттракцион о шоколаде" },
+                new AttractionTranslation { id = 115, EntityId = 58, Lang = "en", Title = "Birmingham Botanical Gardens", Description = "Botanical gardens" },
+                new AttractionTranslation { id = 116, EntityId = 58, Lang = "ru", Title = "Ботанические сады Бирмингема", Description = "Ботанические сады" },
+                new AttractionTranslation { id = 117, EntityId = 59, Lang = "en", Title = "Thinktank Birmingham Science Museum", Description = "Science museum" },
+                new AttractionTranslation { id = 118, EntityId = 59, Lang = "ru", Title = "Научный музей Тинктанк", Description = "Научный музей" },
+                new AttractionTranslation { id = 119, EntityId = 60, Lang = "en", Title = "Jewellery Quarter", Description = "Historic jewelry district" },
+                new AttractionTranslation { id = 120, EntityId = 60, Lang = "ru", Title = "Ювелирный квартал", Description = "Исторический ювелирный район" },
+
+                // EntityId 61–65 (Madrid)
+                new AttractionTranslation { id = 121, EntityId = 61, Lang = "en", Title = "Royal Palace of Madrid", Description = "Official residence of the Spanish royal family" },
+                new AttractionTranslation { id = 122, EntityId = 61, Lang = "ru", Title = "Королевский дворец Мадрида", Description = "Официальная резиденция испанской королевской семьи" },
+                new AttractionTranslation { id = 123, EntityId = 62, Lang = "en", Title = "Plaza Mayor", Description = "Historic city square" },
+                new AttractionTranslation { id = 124, EntityId = 62, Lang = "ru", Title = "Пласа-Майор", Description = "Историческая городская площадь" },
+                new AttractionTranslation { id = 125, EntityId = 63, Lang = "en", Title = "Puerta del Sol", Description = "Famous city square" },
+                new AttractionTranslation { id = 126, EntityId = 63, Lang = "ru", Title = "Пуэрта-дель-Соль", Description = "Знаменитая городская площадь" },
+                new AttractionTranslation { id = 127, EntityId = 64, Lang = "en", Title = "Retiro Park", Description = "Large public park" },
+                new AttractionTranslation { id = 128, EntityId = 64, Lang = "ru", Title = "Парк Ретиро", Description = "Большой общественный парк" },
+                new AttractionTranslation { id = 129, EntityId = 65, Lang = "en", Title = "Temple of Debod", Description = "Ancient Egyptian temple" },
+                new AttractionTranslation { id = 130, EntityId = 65, Lang = "ru", Title = "Храм Дебод", Description = "Древний египетский храм" },
+
+                // EntityId 66–70 (Barcelona)
+                new AttractionTranslation { id = 131, EntityId = 66, Lang = "en", Title = "Sagrada Familia", Description = "Famous basilica by Gaudi" },
+                new AttractionTranslation { id = 132, EntityId = 66, Lang = "ru", Title = "Саграда Фамилия", Description = "Знаменитая базилика Гауди" },
+                new AttractionTranslation { id = 133, EntityId = 67, Lang = "en", Title = "Park Güell", Description = "Public park with Gaudi architecture" },
+                new AttractionTranslation { id = 134, EntityId = 67, Lang = "ru", Title = "Парк Гуэль", Description = "Общественный парк с архитектурой Гауди" },
+                new AttractionTranslation { id = 135, EntityId = 68, Lang = "en", Title = "Casa Batlló", Description = "Modernist building by Gaudi" },
+                new AttractionTranslation { id = 136, EntityId = 68, Lang = "ru", Title = "Каса Бальо", Description = "Модернистское здание Гауди" },
+                new AttractionTranslation { id = 137, EntityId = 69, Lang = "en", Title = "La Rambla", Description = "Famous street" },
+                new AttractionTranslation { id = 138, EntityId = 69, Lang = "ru", Title = "Ла Рамбла", Description = "Знаменитая улица" },
+                new AttractionTranslation { id = 139, EntityId = 70, Lang = "en", Title = "Gothic Quarter", Description = "Historic city center" },
+                new AttractionTranslation { id = 140, EntityId = 70, Lang = "ru", Title = "Готический квартал", Description = "Исторический центр города" },
+
+                // EntityId 71–75 (Valencia)
+                new AttractionTranslation { id = 141, EntityId = 71, Lang = "en", Title = "City of Arts and Sciences", Description = "Modern architectural complex" },
+                new AttractionTranslation { id = 142, EntityId = 71, Lang = "ru", Title = "Город искусств и наук", Description = "Современный архитектурный комплекс" },
+                new AttractionTranslation { id = 143, EntityId = 72, Lang = "en", Title = "Valencia Cathedral", Description = "Historic cathedral" },
+                new AttractionTranslation { id = 144, EntityId = 72, Lang = "ru", Title = "Собор Валенсии", Description = "Исторический собор" },
+                new AttractionTranslation { id = 145, EntityId = 73, Lang = "en", Title = "Central Market", Description = "Historic market hall" },
+                new AttractionTranslation { id = 146, EntityId = 73, Lang = "ru", Title = "Центральный рынок", Description = "Исторический рынок" },
+                new AttractionTranslation { id = 147, EntityId = 74, Lang = "en", Title = "Turia Gardens", Description = "Public gardens in former riverbed" },
+                new AttractionTranslation { id = 148, EntityId = 74, Lang = "ru", Title = "Сады Турия", Description = "Общественные сады на месте бывшего русла реки" },
+                new AttractionTranslation { id = 149, EntityId = 75, Lang = "en", Title = "Silk Exchange", Description = "Historic building" },
+                new AttractionTranslation { id = 150, EntityId = 75, Lang = "ru", Title = "Биржа шелка", Description = "Историческое здание" },
+
+                // EntityId 76–80 (Warsaw)
+                new AttractionTranslation { id = 151, EntityId = 76, Lang = "en", Title = "Old Town Warsaw", Description = "Historic city center" },
+                new AttractionTranslation { id = 152, EntityId = 76, Lang = "ru", Title = "Старый город Варшавы", Description = "Исторический центр города" },
+                new AttractionTranslation { id = 153, EntityId = 77, Lang = "en", Title = "Royal Castle", Description = "Historic royal residence" },
+                new AttractionTranslation { id = 154, EntityId = 77, Lang = "ru", Title = "Королевский замок", Description = "Историческая королевская резиденция" },
+                new AttractionTranslation { id = 155, EntityId = 78, Lang = "en", Title = "Palace of Culture and Science", Description = "Tall historic building" },
+                new AttractionTranslation { id = 156, EntityId = 78, Lang = "ru", Title = "Дворец культуры и науки", Description = "Высокое историческое здание" },
+                new AttractionTranslation { id = 157, EntityId = 79, Lang = "en", Title = "Łazienki Park", Description = "Large city park" },
+                new AttractionTranslation { id = 158, EntityId = 79, Lang = "ru", Title = "Лазенки", Description = "Большой городской парк" },
+                new AttractionTranslation { id = 159, EntityId = 80, Lang = "en", Title = "Warsaw Uprising Museum", Description = "Museum dedicated to WWII uprising" },
+                new AttractionTranslation { id = 160, EntityId = 80, Lang = "ru", Title = "Музей Варшавского восстания", Description = "Музей, посвященный восстанию во Второй мировой" },
+
+                // EntityId 81–85 (Krakow)
+                new AttractionTranslation { id = 161, EntityId = 81, Lang = "en", Title = "Wawel Castle", Description = "Historic royal castle" },
+                new AttractionTranslation { id = 162, EntityId = 81, Lang = "ru", Title = "Вавельский замок", Description = "Исторический королевский замок" },
+                new AttractionTranslation { id = 163, EntityId = 82, Lang = "en", Title = "Main Market Square", Description = "Central city square" },
+                new AttractionTranslation { id = 164, EntityId = 82, Lang = "ru", Title = "Главная рыночная площадь", Description = "Центральная площадь города" },
+                new AttractionTranslation { id = 165, EntityId = 83, Lang = "en", Title = "St. Mary's Basilica", Description = "Famous historic church" },
+                new AttractionTranslation { id = 166, EntityId = 83, Lang = "ru", Title = "Базилика Святой Марии", Description = "Знаменитая историческая церковь" },
+                new AttractionTranslation { id = 167, EntityId = 84, Lang = "en", Title = "Kazimierz District", Description = "Historic Jewish quarter" },
+                new AttractionTranslation { id = 168, EntityId = 84, Lang = "ru", Title = "Казимеж", Description = "Исторический еврейский квартал" },
+                new AttractionTranslation { id = 169, EntityId = 85, Lang = "en", Title = "Schindler's Factory", Description = "Museum in former factory" },
+                new AttractionTranslation { id = 170, EntityId = 85, Lang = "ru", Title = "Фабрика Шиндлера", Description = "Музей в бывшей фабрике" },
+
+                // EntityId 86–90 (Gdansk)
+                new AttractionTranslation { id = 171, EntityId = 86, Lang = "en", Title = "Old Town Gdansk", Description = "Historic city center" },
+                new AttractionTranslation { id = 172, EntityId = 86, Lang = "ru", Title = "Старый город Гданьска", Description = "Исторический центр города" },
+                new AttractionTranslation { id = 173, EntityId = 87, Lang = "en", Title = "St. Mary's Church", Description = "Large historic church" },
+                new AttractionTranslation { id = 174, EntityId = 87, Lang = "ru", Title = "Базилика Святой Марии", Description = "Большая историческая церковь" },
+                new AttractionTranslation { id = 175, EntityId = 88, Lang = "en", Title = "Neptune Fountain", Description = "Famous city fountain" },
+                new AttractionTranslation { id = 176, EntityId = 88, Lang = "ru", Title = "Фонтан Нептуна", Description = "Знаменитый городской фонтан" },
+                new AttractionTranslation { id = 177, EntityId = 89, Lang = "en", Title = "Long Market", Description = "Historic market street" },
+                new AttractionTranslation { id = 178, EntityId = 89, Lang = "ru", Title = "Длинный рынок", Description = "Историческая торговая улица" },
+                new AttractionTranslation { id = 179, EntityId = 90, Lang = "en", Title = "European Solidarity Centre", Description = "Museum and cultural center" },
+                new AttractionTranslation { id = 180, EntityId = 90, Lang = "ru", Title = "Центр европейской солидарности", Description = "Музей и культурный центр" },
+
+                // EntityId 91–95
+                new AttractionTranslation { id = 181, EntityId = 91, Lang = "en", Title = "Old Market Square", Description = "Central square of Poznan" },
+                new AttractionTranslation { id = 182, EntityId = 91, Lang = "ru", Title = "Старая рыночная площадь", Description = "Центральная площадь Познани" },
+                new AttractionTranslation { id = 183, EntityId = 92, Lang = "en", Title = "Poznan Town Hall", Description = "Historic town hall" },
+                new AttractionTranslation { id = 184, EntityId = 92, Lang = "ru", Title = "Ратуша Познани", Description = "Историческая ратуша" },
+                new AttractionTranslation { id = 185, EntityId = 93, Lang = "en", Title = "St. Peter and Paul Cathedral", Description = "Historic cathedral" },
+                new AttractionTranslation { id = 186, EntityId = 93, Lang = "ru", Title = "Кафедральный собор Святых Петра и Павла", Description = "Исторический собор" },
+                new AttractionTranslation { id = 187, EntityId = 94, Lang = "en", Title = "Imperial Castle", Description = "Historic castle" },
+                new AttractionTranslation { id = 188, EntityId = 94, Lang = "ru", Title = "Императорский замок", Description = "Исторический замок" },
+                new AttractionTranslation { id = 189, EntityId = 95, Lang = "en", Title = "Citadel Park", Description = "Public park with monuments" },
+                new AttractionTranslation { id = 190, EntityId = 95, Lang = "ru", Title = "Парк Цитадель", Description = "Общественный парк с памятниками" }
 
              );
 

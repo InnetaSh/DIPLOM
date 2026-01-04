@@ -22,7 +22,7 @@ namespace OfferApiService.View.RentObj
 
         // Одно основное фото (как на Booking)
         public string? MainImageUrl { get; set; }
-
+        public List<RentObjParamValueResponse>? ParamValues { get; set; } = new();
 
         public static RentObjShortResponse MapToShortResponse(RentObject model, string baseUrl)
         {
@@ -46,7 +46,9 @@ namespace OfferApiService.View.RentObj
                     MainImageUrl = firstImage != null
                         ? $"{baseUrl}/images/rentobj/{model.id}/{Path.GetFileName(firstImage.Url)}"
                         : null,
-
+                    ParamValues = model.ParamValues?
+                        .Select(RentObjParamValueResponse.MapToResponse)
+                        .ToList() ?? new List<RentObjParamValueResponse>(),
 
             };
         }

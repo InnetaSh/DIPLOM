@@ -20,7 +20,7 @@ namespace UserApiService.Models
 
         public int CountryId { get; set; }
         [Required]
-        public  UserRole RoleName { get; set; }
+        public UserRole RoleName { get; set; } = UserRole.Client;
 
         public DateTime? LastLogin { get; set; }
       

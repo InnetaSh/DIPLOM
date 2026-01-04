@@ -5,11 +5,9 @@ namespace UserApiService.Models
 {
     public class Client : User
     {
-        public UserRole RoleName { get; set; } = UserRole.Client;
- 
         public int BonusCount { get; set; } = 0;
         public List<ClientOrderLink> ClientOrderLinks { get; set; } = new();
-       
 
+        public List<HistoryOfferLink> HistoryOfferLinks { get; set; } = new();
     }
 }

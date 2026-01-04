@@ -1,5 +1,7 @@
 using Globals.Abstractions;
 using Globals.EventBus;
+using TranslationApiService.Service.Attraction;
+using TranslationApiService.Service.Attraction.Interface;
 using TranslationApiService.Service.Location;
 using TranslationApiService.Service.Location.Interface;
 using TranslationApiService.Service.Offer;

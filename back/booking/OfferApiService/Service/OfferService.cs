@@ -30,6 +30,20 @@ namespace OfferApiService.Services
                 .FirstOrDefaultAsync(o => o.id == id);
         }
 
+        public override async Task<List<Offer>> GetEntitiesAsync(params string[] includeProperties)
+        {
+            using var db = new OfferContext();
+
+            return await db.Offers
+                .Include(o => o.OfferOrderLinks)
+                .Include(o => o.BookedDates)
+                .Include(o => o.RentObj)
+                    .ThenInclude(ro => ro.Images)
+                .Include(o => o.RentObj)
+                    .ThenInclude(ro => ro.ParamValues)
+                .ToListAsync();
+        }
+
         //==================================================================================================================
 
         public async Task<List<int>> GetOrdersIdLinkToOffer(int offerId)
@@ -96,6 +110,8 @@ namespace OfferApiService.Services
                     .Include(o => o.BookedDates)
                     .Include(o => o.RentObj)       
                          .ThenInclude(ro => ro.Images)
+                    .Include(o => o.RentObj)
+                         .ThenInclude(ro => ro.ParamValues)
                     .Where(o => o.RentObj.CityId == request.CityId)
                     .Where(o => o.MaxGuests >= request.Guests)
                     //.Where(o =>

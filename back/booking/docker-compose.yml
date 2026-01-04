@@ -119,7 +119,20 @@ services:
       - locationapiservice
 
 
-
+  attractionapiservice:
+    build:
+      context: ./AttractionApiService
+      dockerfile: Dockerfile
+    ports:
+      - "5007:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Connection string for Postgres service (adjust values in code if needed)
+      #- ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=userdb;Username=postgres;Password=postgrespw
+    depends_on:
+      - postgres
+      - rabbitmq
+      - locationapiservice
 
 
   postgres:

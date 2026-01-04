@@ -1,6 +1,6 @@
 ﻿using Globals.Models;
 
-namespace TranslationApiService.Models.Location
+namespace TranslationApiService.Models.Attraction
 {
     public class AttractionTranslation : TranslationEntityBase
     {

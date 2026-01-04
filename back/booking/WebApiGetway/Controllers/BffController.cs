@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Claims;
 using System.Text.Json;
 using WebApiGetway.Service.Interfase;
 using WebApiGetway.View;
-
-
+using Microsoft.Extensions.Caching.Memory;
+using System.Net.WebSockets;
 
 namespace WebApiGetway.Controllers
 {
@@ -17,12 +16,12 @@ namespace WebApiGetway.Controllers
     public class BffController : ControllerBase
     {
         private readonly IGatewayService _gateway;
-
-        public BffController(IGatewayService gateway)
+        private readonly IMemoryCache _cache;
+        public BffController(IGatewayService gateway, IMemoryCache cache)
         {
             _gateway = gateway;
+            _cache = cache;
         }
-
 
 
 
@@ -148,176 +147,28 @@ namespace WebApiGetway.Controllers
             return Ok(paramDictList);
         }
         //=============================================================================
-        //                      получаем список обьявлений по главному запросу
+        //                      получаем список обьявлений по запросу
         //=============================================================================
-
-        //[HttpGet("search/main/booking-offers/{lang}")]
-        //[Authorize]
-        //public async Task<IActionResult> GetMainSearch(
-        // string lang,
-        // [FromQuery] OfferMainSearchRequest request)
-        //{
-
-
-        //    decimal userDiscountPercent = 0; 
-        //    int? userId = null;
-
-        //    var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
-        //                    ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
-
-        //    if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int parsedUserId))
-        //    {
-        //        userId = parsedUserId;
-
-        //        var userObjResult = await _gateway.ForwardRequestAsync<object>(
-        //            "UserApiService",
-        //            $"/api/user/me",
-        //            HttpMethod.Get,
-        //            null,
-        //            null 
-        //        );
-
-        //        if (userObjResult is OkObjectResult okUser)
-        //        {
-        //            var userDictList = ConvertActionResultToDict(okUser);
-        //            if (userDictList.Any())
-        //            {
-        //                var user = userDictList[0];
-        //                if (user.ContainsKey("discount"))
-        //                    userDiscountPercent = Convert.ToDecimal(user["discount"]);
-        //            }
-        //        }
-        //    }
-
-
-
-        //    var offerQuery = QueryString.Create(new Dictionary<string, string?>
-        //    {
-        //        ["cityId"] = request.CityId.ToString(),
-        //        ["guests"] = request.Guests.ToString(),
-        //        ["userDiscountPercent"] = userDiscountPercent.ToString(),
-        //        ["startDate"] = request.StartDate.ToString(),
-        //        ["endDate"] = request.EndDate.ToString(),
-        //    });
-
-
-        //    // Получаем список объявлений
-        //    var offerObjResult = await _gateway.ForwardRequestAsync<object>(
-        //        "OfferApiService",
-        //        $"/api/offer/search/main_page/offers{offerQuery}",
-        //        HttpMethod.Get,
-        //        null);
-
-        //    if (offerObjResult is not OkObjectResult okOffer)
-        //        return offerObjResult;
-
-        //    var offerDictList = ConvertActionResultToDict(okOffer);
-
-        //    var filteredOfferList = new List<Dictionary<string, object>>();
-
-        //    for (var i = 0; i< offerDictList.Count; i++)
-        //    {
-        //        var offer= offerDictList[i];
-        //        var offerId = int.Parse(offer["id"].ToString());
-
-        //        var ordersIdListResult = await _gateway.ForwardRequestAsync<object>(
-        //            "OfferApiService",
-        //            $"/api/offer/{offerId}/get/orders/id",
-        //            HttpMethod.Get,
-        //            null);
-
-        //        if (ordersIdListResult is not OkObjectResult okOrdersIdList)
-        //            return ordersIdListResult;
-
-        //        List<int> ordersIdList;
-        //        try
-        //        {
-        //            var json = JsonSerializer.Serialize(okOrdersIdList.Value);
-        //            ordersIdList = JsonSerializer.Deserialize<List<int>>(json) ?? new List<int>();
-        //        }
-        //        catch
-        //        {
-        //            return BadRequest("Невозможно распарсить список заказов");
-        //        }
-
-        //        // Проверяем конфликт дат
-        //        var validRequest = new DateValidationRequest
-        //        {
-        //            Start = request.StartDate,
-        //            End = request.EndDate,
-        //            OrdersIdList = ordersIdList
-        //        };
-
-        //        var validResult = await _gateway.ForwardRequestAsync<object>(
-        //            "OrderApiService",
-        //            $"/api/order/{offerId}/valid/date-time",
-        //            HttpMethod.Post,
-        //            validRequest);
-
-        //        if (validResult is not OkObjectResult okResult)
-        //            return validResult;
-
-        //        bool hasConflict = false;
-
-        //        if (okResult.Value is bool b)
-        //            hasConflict = b;
-        //        else if (okResult.Value is JsonElement je && je.ValueKind == JsonValueKind.True)
-        //            hasConflict = true;
-
-        //        // Добавляем только если конфликтов нет
-        //        if (!hasConflict)
-        //            filteredOfferList.Add(offer);
-
-        //    }
-
-        //    // Получаем список переводов
-        //    var translateListResult = await _gateway.ForwardRequestAsync<object>(
-        //        "TranslationApiService",
-        //        $"/api/Offer/get-all-translations/{lang}",
-        //        HttpMethod.Get,
-        //        null);
-
-        //    if (translateListResult is not OkObjectResult okTranslate)
-        //        return offerObjResult;
-
-        //    var translations = ConvertActionResultToDict(okTranslate);
-
-        //    // Берём город один раз
-        //    int cityId = request.CityId;
-        //    var cityObj = await _gateway.ForwardRequestAsync<object>(
-        //        "LocationApiService",
-        //        $"/api/city/get/{cityId}",
-        //        HttpMethod.Get,
-        //        null);
-
-        //    var cityLat = GetDoubleFromActionResult(cityObj, "latitude").Value;
-        //    var cityLon = GetDoubleFromActionResult(cityObj, "longitude").Value;
-
-        //    var updateOfferDictList = UpdateListWithTranslations(offerDictList, translations);
-
-        //    // Обновляем все объявления: переписываем DistanceToCenter у родителя
-        //    var result = UpdateAllOffersDistance(offerDictList, cityLat, cityLon); 
-
-        //    return Ok(result);
-        //}
-
-
 
         [HttpGet("search/main/booking-offers/{lang}")]
         [Authorize]
                 public async Task<IActionResult> GetMainSearch(
             string lang,
-            [FromQuery] OfferMainSearchRequest request)
+            [FromQuery] int CityId,
+            [FromQuery] DateTime StartDate,
+            [FromQuery] DateTime EndDate,
+            [FromQuery] int Guests,
+            [FromQuery] string paramItemFilters = null)
         {
             var (userId, userDiscountPercent) = await GetUserIdAndDiscountAsync();
 
             var offerQuery = QueryString.Create(new Dictionary<string, string?>
             {
-                ["cityId"] = request.CityId.ToString(),
-                ["guests"] = request.Guests.ToString(),
+                ["cityId"] = CityId.ToString(),
+                ["guests"] = Guests.ToString(),
                 ["userDiscountPercent"] = userDiscountPercent.ToString(),
-                ["startDate"] = request.StartDate.ToString("O"),
-                ["endDate"] = request.EndDate.ToString("O"),
+                ["startDate"] = StartDate.ToString("O"),
+                ["endDate"] = EndDate.ToString("O"),
             });
 
             var offerObjResult = await _gateway.ForwardRequestAsync<object>(
@@ -330,33 +181,126 @@ namespace WebApiGetway.Controllers
                 return offerObjResult;
 
             var offerDictList = ConvertActionResultToDict(okOffer);
-
-           
+            var filterDicts = ParseParamFiltersToDict(paramItemFilters);
             var filteredOfferList = new List<Dictionary<string, object>>();
+
+            var dateConflictCache =
+                new Dictionary<(int offerId, DateTime start, DateTime end), bool>();
+
             foreach (var offer in offerDictList)
             {
-                var offerId = int.Parse(offer["id"].ToString());
-                if (await HasDateConflictAsync(offerId, request.StartDate, request.EndDate))
+                if (!TryGetOfferId(offer, out var offerId))
+                    continue;
+
+                var cacheKey = (offerId, StartDate, EndDate);
+
+                if (!dateConflictCache.TryGetValue(cacheKey, out var hasConflict))
+                {
+                    hasConflict = await HasDateConflictAsync(
+                        offerId, StartDate, EndDate);
+
+                    dateConflictCache[cacheKey] = hasConflict;
+                }
+
+                if (!hasConflict)
+                    continue;
+
+                if (!filterDicts.Any())
+                {
+                    filteredOfferList.Add(offer);
+                    continue;
+                }
+
+                if (!TryGetParamValues(offer, out var paramValues))
+                    continue;
+
+                if (MatchAllFilters(paramValues, filterDicts))
                     filteredOfferList.Add(offer);
             }
 
-            var translations = await GetTranslationsAsync(lang);
-            var updateOfferDictList = UpdateListWithTranslations(filteredOfferList, translations);
 
-     
-            var cityObj = await _gateway.ForwardRequestAsync<object>(
-                "LocationApiService",
-                $"/api/city/get/{request.CityId}",
-                HttpMethod.Get,
-                null);
-            var cityLat = GetDoubleFromActionResult(cityObj, "latitude").Value;
-            var cityLon = GetDoubleFromActionResult(cityObj, "longitude").Value;
+
+            var offerTranslations = await GetTranslationsAsync(lang, "Offer");
+
+            var updateOfferDictList = UpdateListWithTranslations(filteredOfferList, offerTranslations);
+
+            var (cityLat, cityLon) = await GetCityCoordinatesCachedAsync(CityId);
+
             var result = UpdateAllOffersDistance(updateOfferDictList, cityLat, cityLon);
 
             return Ok(updateOfferDictList);
         }
 
-        //================= Вспомогательные методы =================
+        //================= Вспомогательные методы ============================================
+
+
+        private static List<Dictionary<string, object>> ParseParamFiltersToDict(string filter)
+        {
+            var result = new List<Dictionary<string, object>>();
+            if (string.IsNullOrWhiteSpace(filter)) return result;
+            foreach (var part in filter.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
+                var kv = part.Split(':', 2, StringSplitOptions.TrimEntries);
+                if (int.TryParse(kv[0], out var id))
+                {
+                    var dict = new Dictionary<string, object> { ["id"] = id };
+                    if (kv.Length > 1) dict["value"] = kv[1];
+                    result.Add(dict);
+                }
+            }
+            return result;
+        }
+
+        static bool TryGetOfferId(
+            Dictionary<string, object> offer,
+            out int offerId)
+                {
+                    offerId = default;
+
+                    return offer.TryGetValue("id", out var idObj)
+                           && int.TryParse(idObj?.ToString(), out offerId);
+                }
+        static bool TryGetParamValues(
+            Dictionary<string, object> offer,
+            out List<Dictionary<string, object>> paramValues)
+            {
+                paramValues = null;
+
+                if (!offer.TryGetValue("rentObj", out var rentObjObj)
+                    || rentObjObj is not List<Dictionary<string, object>> rentObjList
+                    || rentObjList.Count == 0)
+                    return false;
+
+                var rentObj = rentObjList[0];
+
+                return rentObj.TryGetValue("paramValues", out var pvObj)
+                        && pvObj is List<Dictionary<string, object>> pvList
+                        && (paramValues = pvList) != null;
+            }
+
+
+        static bool MatchAllFilters(
+            List<Dictionary<string, object>> paramValues,
+            List<Dictionary<string, object>> filters)
+        {
+            var flag = true;
+            foreach (var f in filters)
+            {
+                if (!paramValues.Any(p => p["id"].ToString() == f["id"].ToString()
+                    && (p["valueBool"].ToString().ToLower() == f["value"].ToString().ToLower()
+                    || p["valueInt"].ToString().ToLower() == f["value"].ToString().ToLower()
+                    || p["valueString"].ToString().ToLower() == f["value"].ToString().ToLower())))
+                {
+                    flag = false;
+                    break;
+                }
+            }
+            return flag;
+        }
+
+
+
+
         private async Task<(int? userId, decimal discount)> GetUserIdAndDiscountAsync()
         {
             int? userId = null;
@@ -431,11 +375,26 @@ namespace WebApiGetway.Controllers
             return false;
         }
 
-        private async Task<List<Dictionary<string, object>>> GetTranslationsAsync(string lang)
+ 
+        private async Task<List<Dictionary<string, object>>> GetTranslationsAsync(string lang, string resource)
+        {
+            if (string.IsNullOrWhiteSpace(lang)) return new List<Dictionary<string, object>>();
+            if (string.IsNullOrWhiteSpace(resource)) throw new ArgumentException("Resource cannot be empty", nameof(resource));
+
+            var cacheKey = $"translations_{resource}_{lang}";
+
+            return await _cache.GetOrCreateAsync(cacheKey, entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(60);
+                return FetchTranslationsFromServiceAsync(lang, resource);
+            });
+        }
+
+        private async Task<List<Dictionary<string, object>>> FetchTranslationsFromServiceAsync(string lang, string resource)
         {
             var translateListResult = await _gateway.ForwardRequestAsync<object>(
                 "TranslationApiService",
-                $"/api/Offer/get-all-translations/{lang}",
+                $"/api/{resource}/get-all-translations/{lang}",
                 HttpMethod.Get,
                 null);
 
@@ -446,6 +405,33 @@ namespace WebApiGetway.Controllers
         }
 
 
+        private async Task<(double lat, double lon)> GetCityCoordinatesCachedAsync(int cityId)
+        {
+            var cacheKey = $"city_coords_{cityId}";
+
+            return await _cache.GetOrCreateAsync(cacheKey, entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
+                return FetchCityCoordinatesAsync(cityId);
+            });
+        }
+
+        private async Task<(double lat, double lon)> FetchCityCoordinatesAsync(int cityId)
+        {
+            var cityObj = await _gateway.ForwardRequestAsync<object>(
+                "LocationApiService",
+                $"/api/city/get/{cityId}",
+                HttpMethod.Get,
+                null);
+
+            double lat = 0, lon = 0;
+            var dLat = GetDoubleFromActionResult(cityObj, "latitude");
+            var dLon = GetDoubleFromActionResult(cityObj, "longitude");
+            if (dLat.HasValue) lat = dLat.Value;
+            if (dLon.HasValue) lon = dLon.Value;
+
+            return (lat, lon);
+        }
 
         //======================================================================================
         //                      получаем полные данные об обьявлении по id
@@ -532,14 +518,62 @@ namespace WebApiGetway.Controllers
         }
 
 
-       
 
         //============================================================================================
-        //                                                создание заказа
+        //                                               ближайшие  достопримечательности
         //============================================================================================
 
+        [HttpGet("search/booking-offer/attractions/{id}/{distance}/{lang}")]
+        public async Task<IActionResult> GetNearSttractionsByIdWithDistance(int id,
+        decimal distance,
+        string lang)
+        {
+            var offerObjResult = await _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/offer/get/{id}", HttpMethod.Get, null);
+            if (offerObjResult is not OkObjectResult okOffer)
+                return offerObjResult;
+            var offerDictList = ConvertActionResultToDict(okOffer);
 
-        [HttpPost("create/booking-order")]
+            var offer = offerDictList[0];
+            var rentObj = (offer["rentObj"] as List<Dictionary<string, object>>)[0];
+
+     
+            var latitude = rentObj["latitude"];
+            var longitude = rentObj["longitude"];
+
+            var url = $"/api/attraction/near/by-distance/{latitude}/{longitude}/{distance}";
+            var attractionsObjResult = await _gateway.ForwardRequestAsync<object>(
+                "AttractionApiService",
+                url,
+                HttpMethod.Get,
+                null
+            );
+
+
+            if (attractionsObjResult is not OkObjectResult okAttraction)
+                return attractionsObjResult;
+            var attractionDictList = ConvertActionResultToDict(okAttraction);
+
+
+            var translateList = await GetTranslationsAsync("en", "attraction");
+
+    
+            var updateAttractionList =  UpdateListWithTranslations(attractionDictList, translateList);
+
+            return Ok(updateAttractionList);
+        }
+
+
+
+
+
+
+
+            //============================================================================================
+            //                                                создание заказа
+            //============================================================================================
+
+
+            [HttpPost("create/booking-order")]
         [Authorize]
         public async Task<IActionResult> CreateOrder(
              [FromBody] CreateOrderRequest request,

@@ -1,5 +1,6 @@
 ﻿using Globals.Abstractions;
 using Globals.EventBus;
+using OfferApiService.Service;
 using OfferApiService.Service.Interface;
 using OfferApiService.Services;
 using OfferApiService.Services.Interfaces.RentObj;
@@ -23,6 +24,8 @@ builder.Services.AddScoped<IRentObjService, RentObjService>();
 builder.Services.AddScoped<IRentObjImageService, RentObjImageService>();
 builder.Services.AddScoped<IRentObjParamValueService, RentObjParamValueService>();
 builder.Services.AddScoped<IParamItemService, ParamItemService>();
+
+builder.Services.AddHttpClient<GeocodingService>();
 
 
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();

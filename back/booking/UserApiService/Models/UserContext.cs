@@ -17,6 +17,8 @@ public class UserContext : ContextBase<User>
     // Заказы клиентов
     public DbSet<ClientOrderLink> ClientOrderLinks { get; set; }
 
+    public DbSet<HistoryOfferLink> HistoryOfferLinks { get; set; }
+
     protected override void ModelBuilderConfigure(ModelBuilder builder)
     {
         AdminSeed.Seed(builder);
@@ -64,6 +66,21 @@ public class UserContext : ContextBase<User>
 
             entity.HasIndex(x => new { x.ClientId, x.OrderId })
                 .IsUnique(); // защита от дубликатов
+        });
+
+        // Client-HistoryOffer
+        builder.Entity<HistoryOfferLink>(entity =>
+        {
+            entity.ToTable("history_offer_links");
+            entity.HasKey(x => x.Id);
+
+            entity.HasOne(x => x.Client)
+                .WithMany(o => o.HistoryOfferLinks)
+                .HasForeignKey(x => x.ClientId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(x => new { x.ClientId, x.OfferId })
+                .IsUnique();
         });
     }
 }

@@ -102,12 +102,20 @@ builder.Services.AddHttpClient("ReviewApiService", client =>
 });
 
 
+builder.Services.AddHttpClient("AttractionApiService", client =>
+{
+    var baseUrl = builder.Configuration["AttractionApiService"] ?? "http://attractionapiservice";
+    var port = builder.Configuration["AttractionApiServicePort"] ?? "8080";
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+});
+
 builder.Services.AddHttpClient("TranslationApiService", client =>
 {
     var baseUrl = builder.Configuration["TranslationApiServiceUrl"] ?? "http://translationapiservice";
     var port = builder.Configuration["TranslationApiServicePort"] ?? "8080";
     client.BaseAddress = new Uri($"{baseUrl}:{port}");
 });
+
 
 
 //builder.Services.AddHttpClient<IOfferServiceClient, OfferServiceClient>(client =>
@@ -121,6 +129,7 @@ builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 builder.Services.AddHostedService<GetwayRabbitListener>();
 
 builder.Services.AddScoped<IGatewayService, GatewayService>();
+builder.Services.AddMemoryCache(); 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -15,8 +15,8 @@ namespace Globals.Models
 
         public ContextBase()
         {
-            //if (TypeName == "User")
-            //    Database.EnsureDeleted();
+            //if (TypeName == "AttractionTranslation")
+                //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
