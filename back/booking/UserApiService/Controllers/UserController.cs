@@ -213,7 +213,7 @@ namespace UserApiService.Controllers
         // =====================================================================
         // Проверка: принадлежит ли offer текущему владельцу
         // =====================================================================
-        [Authorize(Roles = "Owner")]
+        [Authorize]
         [HttpGet("valid/offers/{offerId}")]
         public async Task<ActionResult<bool>> ValidOffer(int offerId)
         {

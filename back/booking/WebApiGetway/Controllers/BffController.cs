@@ -89,14 +89,14 @@ namespace WebApiGetway.Controllers
             var translations = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(
                 translationsJson?.GetRawText() ?? "[]"
             );
-            var paramDictList = ConvertActionResultToDict(okParamCategory);
+            var paramDictList = BffHelper.ConvertActionResultToDict(okParamCategory);
             // Обновляем список 
             UpdateListWithTranslations(paramDictList, translations);
 
 
             // получаем список названий параметров для главного екрана
             var translateItemListResult = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/paramitem/get-all-translations/{lang}", HttpMethod.Get, null);
-            var transItemDict = ConvertActionResultToDict(translateItemListResult as OkObjectResult);
+            var transItemDict = BffHelper.ConvertActionResultToDict(translateItemListResult as OkObjectResult);
             foreach(var param in paramDictList)
             {
                 if (param["items"] is List<Dictionary<string, object>> itemsDictList)
@@ -138,7 +138,7 @@ namespace WebApiGetway.Controllers
             var translations = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(
                 translationsJson?.GetRawText() ?? "[]"
             );
-            var paramDictList = ConvertActionResultToDict(okParamItem);
+            var paramDictList = BffHelper.ConvertActionResultToDict(okParamItem);
             // Обновляем список 
             UpdateListWithTranslations(paramDictList, translations);
 
@@ -180,7 +180,7 @@ namespace WebApiGetway.Controllers
             if (offerObjResult is not OkObjectResult okOffer)
                 return offerObjResult;
 
-            var offerDictList = ConvertActionResultToDict(okOffer);
+            var offerDictList = BffHelper.ConvertActionResultToDict(okOffer);
             var filterDicts = ParseParamFiltersToDict(paramItemFilters);
             var filteredOfferList = new List<Dictionary<string, object>>();
 
@@ -320,7 +320,7 @@ namespace WebApiGetway.Controllers
 
                 if (userObjResult is OkObjectResult okUser)
                 {
-                    var userDictList = ConvertActionResultToDict(okUser);
+                    var userDictList = BffHelper.ConvertActionResultToDict(okUser);
                     if (userDictList.Any())
                     {
                         var user = userDictList[0];
@@ -402,7 +402,7 @@ namespace WebApiGetway.Controllers
                 null);
 
             if (translateListResult is OkObjectResult okTranslate)
-                return ConvertActionResultToDict(okTranslate);
+                return BffHelper.ConvertActionResultToDict(okTranslate);
 
             return new List<Dictionary<string, object>>();
         }
@@ -457,7 +457,7 @@ namespace WebApiGetway.Controllers
             if (offerObjResult is not OkObjectResult okOffer)
                 return offerObjResult;
 
-            var offerDictList = ConvertActionResultToDict(okOffer);
+            var offerDictList = BffHelper.ConvertActionResultToDict(okOffer);
             var offer = offerDictList[0];
             var rentObj = (offer["rentObj"] as List<Dictionary<string, object>>)[0];
 
@@ -499,7 +499,7 @@ namespace WebApiGetway.Controllers
             var paramItems = (rentObj["paramValues"] as List<Dictionary<string, object>>);
 
             var translateParamListResult = await _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/paramitem/get-all-translations/{lang}", HttpMethod.Get, null);
-            var transItemDict = ConvertActionResultToDict(translateParamListResult as OkObjectResult);
+            var transItemDict = BffHelper.ConvertActionResultToDict(translateParamListResult as OkObjectResult);
 
             UpdateListWithTranslations(paramItems, transItemDict);
 
@@ -534,7 +534,7 @@ namespace WebApiGetway.Controllers
             var offerObjResult = await _gateway.ForwardRequestAsync<object>("OfferApiService", $"/api/offer/get/{id}", HttpMethod.Get, null);
             if (offerObjResult is not OkObjectResult okOffer)
                 return offerObjResult;
-            var offerDictList = ConvertActionResultToDict(okOffer);
+            var offerDictList = BffHelper.ConvertActionResultToDict(okOffer);
 
             var offer = offerDictList[0];
             var rentObj = (offer["rentObj"] as List<Dictionary<string, object>>)[0];
@@ -554,7 +554,7 @@ namespace WebApiGetway.Controllers
 
             if (attractionsObjResult is not OkObjectResult okAttraction)
                 return attractionsObjResult;
-            var attractionDictList = ConvertActionResultToDict(okAttraction);
+            var attractionDictList = BffHelper.ConvertActionResultToDict(okAttraction);
 
 
             var translateList = await GetTranslationsAsync("en", "attraction");
@@ -603,7 +603,7 @@ namespace WebApiGetway.Controllers
             if (userObjResult is not OkObjectResult okUser)
                 return userObjResult;
 
-            var userDictList = ConvertActionResultToDict(okUser);
+            var userDictList = BffHelper.ConvertActionResultToDict(okUser);
             var user = userDictList[0];
             var discount = decimal.Parse(user["discount"].ToString());
 
@@ -631,7 +631,7 @@ namespace WebApiGetway.Controllers
             if (offerObjResult is not OkObjectResult okOffer)
                 return offerObjResult;
 
-            var offerDictList = ConvertActionResultToDict(okOffer);
+            var offerDictList = BffHelper.ConvertActionResultToDict(okOffer);
             var offer = offerDictList[0];
             var rentObj = (offer["rentObj"] as List<Dictionary<string, object>>)[0];
 
@@ -838,7 +838,7 @@ namespace WebApiGetway.Controllers
             if (userObjResult is not OkObjectResult okUser)
                 return userObjResult;
 
-            var userDictList = ConvertActionResultToDict(okUser);
+            var userDictList = BffHelper.ConvertActionResultToDict(okUser);
             var user = userDictList[0];
 
           
@@ -863,7 +863,7 @@ namespace WebApiGetway.Controllers
             if (orderObjResult is not OkObjectResult okOrder)
                 return orderObjResult;
 
-            var orderDictList = ConvertActionResultToDict(okOrder);
+            var orderDictList = BffHelper.ConvertActionResultToDict(okOrder);
             var order = orderDictList[0];
 
             var offerId = int.Parse(order["offerId"].ToString());
@@ -871,7 +871,7 @@ namespace WebApiGetway.Controllers
 
             var isValidResult = await _gateway.ForwardRequestAsync<object>(
               "UserApiService",
-              $"/user/valid/offers/{offerId}\")]",
+              $"api/user/valid/offers/{offerId}",
               HttpMethod.Get,
               null
           );
@@ -938,7 +938,7 @@ namespace WebApiGetway.Controllers
                 if (reviewObjResult is not OkObjectResult okReview)
                     return reviewObjResult;
 
-                var reviewDictList = ConvertActionResultToDict(okReview);
+                var reviewDictList = BffHelper.ConvertActionResultToDict(okReview);
                 var reviev = reviewDictList[0];
                 reviev["orderId"] = orderId;
                 var id = reviev["id"];
@@ -994,7 +994,7 @@ namespace WebApiGetway.Controllers
             var translations = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(
                 translationsJson?.GetRawText() ?? "[]"
             );
-            var reviewDictList = ConvertActionResultToDict(okReviews);
+            var reviewDictList = BffHelper.ConvertActionResultToDict(okReviews);
             // Обновляем список 
             UpdateListWithTranslations(reviewDictList, translations);
 
@@ -1011,7 +1011,7 @@ namespace WebApiGetway.Controllers
                 if (userObjResult is not OkObjectResult okUser)
                     return userObjResult;
 
-                var userDictList = ConvertActionResultToDict(okUser);
+                var userDictList = BffHelper.ConvertActionResultToDict(okUser);
 
                 var user = userDictList[0];
                 string userName = user["username"].ToString();
@@ -1076,7 +1076,7 @@ namespace WebApiGetway.Controllers
             var translations = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(
                 translationsJson?.GetRawText() ?? "[]"
             );
-            var reviewDictList = ConvertActionResultToDict(okReviews);
+            var reviewDictList = BffHelper.ConvertActionResultToDict(okReviews);
             // Обновляем список 
             UpdateListWithTranslations(reviewDictList, translations);
 
@@ -1141,7 +1141,7 @@ namespace WebApiGetway.Controllers
                 if (reviewObjResult is not OkObjectResult okReview)
                     return reviewObjResult;
 
-                var reviewDictList = ConvertActionResultToDict(okReview);
+                var reviewDictList = BffHelper.ConvertActionResultToDict(okReview);
                 var review = reviewDictList[0];
               
 
@@ -1225,7 +1225,7 @@ namespace WebApiGetway.Controllers
             if (orderObjResult is OkObjectResult okOrder)
             {
 
-                var orderDictList = ConvertActionResultToDict(okOrder);
+                var orderDictList = BffHelper.ConvertActionResultToDict(okOrder);
                 var order = orderDictList[0];
                 var status = order["status"].ToString();
                 var userId = int.Parse(order["clientId"].ToString());
@@ -1236,32 +1236,32 @@ namespace WebApiGetway.Controllers
         }
 
 
-        private List<Dictionary<string, object>> ConvertActionResultToDict(OkObjectResult objResult)
-        {
-            if (objResult?.Value is JsonElement element)
-                return ConvertElementToDict(element);
-            return null;
-        }
+        //private List<Dictionary<string, object>> ConvertActionResultToDict(OkObjectResult objResult)
+        //{
+        //    if (objResult?.Value is JsonElement element)
+        //        return ConvertElementToDict(element);
+        //    return null;
+        //}
 
-        private List<Dictionary<string, object>> ConvertElementToDict(JsonElement element)
-        {
-            var dictList = new List<Dictionary<string, object>>();
-            if (element.ValueKind == JsonValueKind.Array)
-                dictList = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(element.GetRawText());
-            else if (element.ValueKind == JsonValueKind.Object)
-            {
-                var obj = JsonSerializer.Deserialize<Dictionary<string, object>>(element.GetRawText());
-                dictList.Add(obj);
-            }
-            else return null;
+        //private List<Dictionary<string, object>> ConvertElementToDict(JsonElement element)
+        //{
+        //    var dictList = new List<Dictionary<string, object>>();
+        //    if (element.ValueKind == JsonValueKind.Array)
+        //        dictList = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(element.GetRawText());
+        //    else if (element.ValueKind == JsonValueKind.Object)
+        //    {
+        //        var obj = JsonSerializer.Deserialize<Dictionary<string, object>>(element.GetRawText());
+        //        dictList.Add(obj);
+        //    }
+        //    else return null;
 
-            foreach (var dl in dictList)
-                foreach (var key in dl.Keys)
-                    if (dl[key] is JsonElement el
-                        && (el.ValueKind == JsonValueKind.Array || el.ValueKind == JsonValueKind.Object))
-                        dl[key] = ConvertElementToDict(el);
-            return dictList;
-        }
+        //    foreach (var dl in dictList)
+        //        foreach (var key in dl.Keys)
+        //            if (dl[key] is JsonElement el
+        //                && (el.ValueKind == JsonValueKind.Array || el.ValueKind == JsonValueKind.Object))
+        //                dl[key] = ConvertElementToDict(el);
+        //    return dictList;
+        //}
 
         private string GetStringFromActionResult(object result, string param)
         {

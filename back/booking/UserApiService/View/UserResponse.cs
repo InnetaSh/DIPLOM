@@ -11,6 +11,7 @@ namespace UserApiService.View
         public string Email { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
         public int CountryId { get; set; }
+        public string? CountryTitle { get; set; }
         public string RoleName { get; set; } = string.Empty;
         public string? Token { get; set; }
         public decimal Discount { get; set; }

@@ -79,8 +79,8 @@ public class TranslationController : ControllerBase
 
 
     [HttpGet("region/get-translations/{id}")]
-    public Task<IActionResult> GetByIdRegion(int id) =>
-    _gateway.ForwardRequestAsync<object>("AttractionApTranslationApiServiceiService", $"/api/region/get-translations/{id}", HttpMethod.Get, null);
+    public Task<IActionResult> GetByIdRegion(int id,string lang) =>
+    _gateway.ForwardRequestAsync<object>("AttractionApTranslationApiServiceiService", $"/api/region/get-translations/{id}/{lang}", HttpMethod.Get, null);
 
 
     [HttpPost("region/create-translations")]
@@ -105,9 +105,9 @@ public class TranslationController : ControllerBase
       _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/country/get-all-translations/{lang}", HttpMethod.Get, null);
 
 
-    [HttpGet("country/get-translations/{id}")]
-    public Task<IActionResult> GetByIdCountry(int id) =>
-    _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/country/get-translations/{id}", HttpMethod.Get, null);
+    [HttpGet("country/get-translations/{id}/{lang}")]
+    public Task<IActionResult> GetByIdCountry(int id,string lang) =>
+    _gateway.ForwardRequestAsync<object>("TranslationApiService", $"/api/country/get-translations/{id}/{lang}", HttpMethod.Get, null);
 
 
     [HttpPost("country/create-translations")]

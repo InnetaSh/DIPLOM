@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.Data;
 using UserApiService.Models;
 using UserApiService.Models.Enums;
+using UserApiService.View;
 
 namespace UserApiService.Services.Interfaces
 {
@@ -11,8 +12,8 @@ namespace UserApiService.Services.Interfaces
         Task<bool> AddOfferToOwner(int userId, int offerId);
         Task<bool> AddOfferToClientFavorite(int userId, int offerId, bool isFavorite);
         Task<User?> GetUserByIdAsync(int userId);
-        Task<Client?> GetClientFullByIdAsync(int userId);
-        Task<Owner?> GetOwnerFullByIdAsync(int userId);
+        Task<ClientResponse?> GetClientFullByIdAsync(int userId);
+        Task<OwnerResponse?> GetOwnerFullByIdAsync(int userId);
 
        Task<bool> ValidOfferIdByOwner(int userId, int offerId);
     }

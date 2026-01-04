@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using UserApiService.Models;
 using UserApiService.Models.Enums;
 using UserApiService.Services.Interfaces;
+using UserApiService.View;
 
 namespace UserApiService.Services
 {
@@ -113,31 +114,82 @@ namespace UserApiService.Services
         //              Client — полные данные
         // =====================================================================
 
-        public async Task<Client?> GetClientFullByIdAsync(int userId)
+        public async Task<ClientResponse?> GetClientFullByIdAsync(int userId)
         {
             await using var db = new UserContext();
 
             return await db.Clients
-                .AsNoTracking()
-                .Include(c => c.ClientOrderLinks)
-                .Include(c => c.HistoryOfferLinks)
-                .FirstOrDefaultAsync(c => c.id == userId);
+                .Where(c => c.id == userId)
+                .Select(c => new ClientResponse
+                {
+                    id = c.id,
+                    Username = c.Username,
+                    Email = c.Email,
+                    PhoneNumber = c.PhoneNumber,
+                    RoleName = "Client",
+                    CountryId = c.CountryId,
+                    Discount = c.Discount,
+
+                    ClientOrderLinks = c.ClientOrderLinks
+                        .Select(o => new ClientOrderResponse
+                        {
+                            Id = o.Id,
+                            ClientId = o.ClientId,
+                            OrderId = o.OrderId,
+                        })
+                        .ToList(),
+
+                    HistoryOfferLinks = c.HistoryOfferLinks
+                        .Select(h => new HistoryOfferResponse
+                        {
+                            Id = h.Id,
+                            ClientId = h.ClientId,
+                            OfferId = h.OfferId,
+                            IsFavorites = h.IsFavorites
+                        })
+                        .ToList()
+                })
+                .FirstOrDefaultAsync();
         }
+
 
 
         // =====================================================================
         //             Owner — полные данные
         // =====================================================================
 
-        public async Task<Owner?> GetOwnerFullByIdAsync(int userId)
+        public async Task<OwnerResponse?> GetOwnerFullByIdAsync(int userId)
         {
             await using var db = new UserContext();
 
             return await db.Owners
-                .AsNoTracking()
-                .Include(o => o.OwnerOfferLinks)
-                .FirstOrDefaultAsync(o => o.id == userId);
+                .Where(o => o.id == userId)
+                .Select(o => new OwnerResponse
+                {
+                   
+                    id = o.id,
+                    Username = o.Username,
+                    Email = o.Email,
+                    PhoneNumber = o.PhoneNumber,
+                    RoleName = "Owner",
+
+                 
+                    CountryId = o.CountryId,
+                    Discount = o.Discount,
+
+                    // ===== OwnerOfferLinks =====
+                    OwnerOfferLinks = o.OwnerOfferLinks
+                        .Select(ol => new OwnerOfferResponse
+                        {
+                            Id = ol.Id,
+                            OwnerId = ol.OwnerId,
+                            OfferId = ol.OfferId
+                        })
+                        .ToList()
+                })
+                .FirstOrDefaultAsync();
         }
+
 
 
         // =====================================================================

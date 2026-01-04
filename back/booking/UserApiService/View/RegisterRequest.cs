@@ -13,6 +13,6 @@ namespace UserApiService.View
         public string? PhoneNumber { get; set; }
         public int CountryId { get; set; }
         public decimal Discount { get; set; }
-        public string? RoleName { get; set; } = "Client";
+        public string? RoleName { get; set; }
     }
 }

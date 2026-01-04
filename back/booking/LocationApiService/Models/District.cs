@@ -12,7 +12,7 @@ namespace LocationApiService.Models
             public double? Latitude { get; set; }
             public double? Longitude { get; set; }
 
-             public ICollection<Attraction>? Attractions { get; set; } = new List<Attraction>();
+           
     }
 }
 

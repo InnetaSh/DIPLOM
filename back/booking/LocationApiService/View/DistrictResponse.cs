@@ -12,7 +12,6 @@ namespace LocationApiService.View
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
 
-        public List<AttractionResponse>? Attractions { get; set; } = new();
 
         public static DistrictResponse MapToResponse(District model)
         {
@@ -22,9 +21,6 @@ namespace LocationApiService.View
                 CityId = model.CityId,      
                 Latitude = model.Latitude,
                 Longitude = model.Longitude,
-                Attractions = model.Attractions?
-                    .Select(AttractionResponse.MapToResponse)
-                    .ToList()
             };
         }
     }

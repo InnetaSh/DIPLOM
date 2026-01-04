@@ -73,13 +73,6 @@ namespace LocationApiService.Controllers
                         CityId = c.id,
                         Latitude = d.Latitude,
                         Longitude = d.Longitude,
-                        Attractions = d.Attractions?.Select(a => new AttractionResponse
-                        {
-                            id = a.id,
-                            DistrictId = d.id,
-                            Latitude = a.Latitude,
-                            Longitude = a.Longitude
-                        }).ToList() ?? new List<AttractionResponse>()
                     }).ToList() ?? new List<DistrictResponse>()
                 }).ToList();
 

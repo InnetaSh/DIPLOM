@@ -15,7 +15,6 @@ namespace LocationApiService.Services
                     .Include(c => c.Regions)
                         .ThenInclude(r => r.Cities)
                             .ThenInclude(ci => ci.Districts)
-                                .ThenInclude(d => d.Attractions)
                     .ToListAsync();
             }
         }
@@ -28,7 +27,6 @@ namespace LocationApiService.Services
                     .Include(c => c.Regions)
                         .ThenInclude(r => r.Cities)
                             .ThenInclude(ci => ci.Districts)
-                                .ThenInclude(d => d.Attractions)
                     .FirstOrDefaultAsync(c => c.id == id);
             }
         }

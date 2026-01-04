@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using WebApiGetway.Controllers;
 using WebApiGetway.Service.Interfase;
 
 [ApiController]
@@ -13,6 +15,10 @@ public class UserController : ControllerBase
         _gateway = gateway;
     }
 
+    //===========================================================================================
+    //  GET METHODS (для админа)
+    //===========================================================================================
+
     [HttpGet("get-all")]
     public Task<IActionResult> GetAll() =>
         _gateway.ForwardRequestAsync<object>("UserApiService", "/api/user/get-all", HttpMethod.Get, null);
@@ -21,24 +27,62 @@ public class UserController : ControllerBase
     public Task<IActionResult> GetById(int id) =>
         _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/user/get/{id}", HttpMethod.Get, null);
 
-    [HttpGet("me")]
+
+    //===========================================================================================
+
+
+    [HttpGet("me/{lang}")]
     [Authorize]
-    public Task<IActionResult> GetMy(int id) =>
-        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/user/me", HttpMethod.Get, null);
+    public async Task<IActionResult> GetMe(string lang)
+{
+        var userResult = await _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/user/me", HttpMethod.Get, null);
+        if (userResult is not OkObjectResult okResult)
+        {
+            return userResult;
+        }
+        var userDictList = BffHelper.ConvertActionResultToDict(okResult);
+
+        var user = userDictList[0];
+        int userId = int.Parse(user["id"].ToString());
+        int countryId = int.Parse(user["countryId"].ToString());
+
+        var cityResult = await _gateway.ForwardRequestAsync<object>(
+                "TranslationApiService",
+                $"/api/country/get-translations/{countryId}/{lang}",
+                HttpMethod.Get,
+                null
+            );
+        if (cityResult is not OkObjectResult okCityResult)
+        {
+            return Ok(user);
+        }
+        var cityDictList = BffHelper.ConvertActionResultToDict(okCityResult);
+        user["countryTitle"] = cityDictList[0]["title"];
+        return Ok(user);
+    }
+
+    //===========================================================================================
 
 
     [HttpPost("login")]
     public Task<IActionResult> Login([FromBody] object request) =>
         _gateway.ForwardRequestAsync("UserApiService", "/api/auth/login", HttpMethod.Post, request);
 
-    [HttpPost("register")]
-    public Task<IActionResult> Register([FromBody] object request) =>
-        _gateway.ForwardRequestAsync("UserApiService", "/api/auth/register", HttpMethod.Post, request);
+    //===========================================================================================
+
+
+    [HttpPost("register/client")]
+    public Task<IActionResult> RegisterClient([FromBody] object request) =>
+        _gateway.ForwardRequestAsync("UserApiService", "/api/auth/register/client", HttpMethod.Post, request);
+
+    [HttpPost("register/owner")]
+    public Task<IActionResult> RegisterOwner([FromBody] object request) =>
+      _gateway.ForwardRequestAsync("UserApiService", "/api/auth/register/owner", HttpMethod.Post, request);
 
 
     //===========================================================================================
-   
-    
+
+
     [HttpPut("me/update")]
     [Authorize]
     public Task<IActionResult> Update( [FromBody] object request) =>

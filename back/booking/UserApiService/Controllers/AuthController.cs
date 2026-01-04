@@ -30,11 +30,27 @@ namespace UserApiService.Controllers
             }
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
+        [HttpPost("register/client")]
+        public async Task<IActionResult> RegisterClient([FromBody] RegisterRequest request)
         {
             try
             {
+                request.RoleName = "Client";
+                var response = await _authService.RegisterAsync(request);
+                return Ok(response);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("register/owner")]
+        public async Task<IActionResult> RegisterOwner([FromBody] RegisterRequest request)
+        {
+            try
+            {
+                request.RoleName = "Owner";
                 var response = await _authService.RegisterAsync(request);
                 return Ok(response);
             }
