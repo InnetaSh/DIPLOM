@@ -1,6 +1,6 @@
 ﻿namespace OfferApiService.View
 {
-    public class OfferMainSearchRequest
+    public class OfferSearchRequestByCityAndCountGuest
     {
         public int CityId { get; set; }
 
@@ -19,7 +19,7 @@
         }
 
         public int Guests { get; set; }
-        public int UserDiscountPercent { get; set; }
+
     }
 
 }

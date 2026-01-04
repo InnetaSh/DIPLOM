@@ -62,7 +62,7 @@ namespace WebApiGetway.Controllers
         //=============================================================================
 
 
-        [HttpGet("params/category/main/{lang}")]
+        [HttpGet("params/category/{lang}")]
         public async Task<IActionResult> GetMainParamCategory(string lang)
         {
             // Получаем список параметров
@@ -111,7 +111,7 @@ namespace WebApiGetway.Controllers
         //=============================================================================
 
 
-        [HttpGet("paramitem/main/{lang}")]
+        [HttpGet("paramitem/{lang}")]
         public async Task<IActionResult> GetMainParamItem(string lang)
         {
             // Получаем список параметров
@@ -146,13 +146,13 @@ namespace WebApiGetway.Controllers
 
             return Ok(paramDictList);
         }
-        //=============================================================================
-        //                      получаем список обьявлений по запросу
-        //=============================================================================
+        //=====================================================================================
+        //      получаем список обьявлений по запросу(город, даты и параметры(если они есть))
+        //=====================================================================================
 
-        [HttpGet("search/main/booking-offers/{lang}")]
+        [HttpGet("search/offers/{lang}")]
         [Authorize]
-                public async Task<IActionResult> GetMainSearch(
+                public async Task<IActionResult> GetSearchOffers(
             string lang,
             [FromQuery] int CityId,
             [FromQuery] DateTime StartDate,
@@ -173,7 +173,7 @@ namespace WebApiGetway.Controllers
 
             var offerObjResult = await _gateway.ForwardRequestAsync<object>(
                 "OfferApiService",
-                $"/api/offer/search/main_page/offers{offerQuery}",
+                $"/api/offer/search/offers{offerQuery}",
                 HttpMethod.Get,
                 null);
 
@@ -230,6 +230,9 @@ namespace WebApiGetway.Controllers
 
             return Ok(updateOfferDictList);
         }
+
+
+  
 
         //================= Вспомогательные методы ============================================
 

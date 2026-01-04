@@ -45,12 +45,16 @@ namespace OfferApiService.Controllers
 
         //===========================================================================================
 
-        [HttpGet("search/main_page/offers")]
-        public async Task<ActionResult<List<OfferShortResponse>>> GetMainSearch(
-            [FromQuery] OfferMainSearchRequest request,
+        [HttpGet("search/offers")]
+        public async Task<ActionResult<List<OfferShortResponse>>> GetSearchOffers(
+            [FromQuery] OfferSearchRequestByCityAndCountGuest request,
             [FromQuery] decimal userDiscountPercent)
         {
-            var offers = await _offerService.SearchAvailableOffersAsync(request);
+
+            if (request.StartDate >= request.EndDate)
+                throw new ArgumentException("Invalid date range");
+
+            var offers = await _offerService.SearchOffersAsync(request);
 
             //var baseUrl = $"{Request.Scheme}://{Request.Host}";
 

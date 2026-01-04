@@ -95,11 +95,8 @@ namespace OfferApiService.Services
 
 
         //==================================================================================================================
-        public async Task<List<Offer>> SearchAvailableOffersAsync([FromQuery] OfferMainSearchRequest request)
+        public async Task<List<Offer>> SearchOffersAsync([FromQuery] OfferSearchRequestByCityAndCountGuest request)
         {
-            if (request.StartDate >= request.EndDate)
-                throw new ArgumentException("Invalid date range");
-
             var fitOffers = new List<Offer>();
             try
             {
@@ -114,10 +111,6 @@ namespace OfferApiService.Services
                          .ThenInclude(ro => ro.ParamValues)
                     .Where(o => o.RentObj.CityId == request.CityId)
                     .Where(o => o.MaxGuests >= request.Guests)
-                    //.Where(o =>
-                    //    !o.BookedDates.Any(d =>
-                    //        d.Start < request.EndDate &&
-                    //        d.End > request.StartDate))
                     .ToListAsync();
             }
             catch (Exception ex)

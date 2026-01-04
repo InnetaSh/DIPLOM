@@ -9,6 +9,6 @@ namespace OfferApiService.Service.Interface
     {
         Task<bool> AddOrderLinkToOffer(int offerId, int orderId);
         Task<List<int>> GetOrdersIdLinkToOffer(int offerId);
-        Task<List<Offer>> SearchAvailableOffersAsync([FromQuery] OfferMainSearchRequest request);
+        Task<List<Offer>> SearchOffersAsync([FromQuery] OfferSearchRequestByCityAndCountGuest request);
     }
 }
