@@ -47,24 +47,44 @@ namespace UserApiService.Controllers
 
 
         // =====================================================================
-        // CLIENT: добавить заказ в избранное
+        // CLIENT: добавить заказ в историю просмотров
         // =====================================================================
         [Authorize]
-        [HttpPost("client/offer/isfavorite/add/{offerId}")]
-        public async Task<IActionResult> AddOfferToClientFavorite(
-            int offerId,
-            [FromQuery] bool isFavorite)
+        [HttpPost("client/offer/history/add/{offerId}")]
+        public async Task<IActionResult> AddOfferToClientHistory(
+            int offerId)
         {
             var userId = GetUserId();
             if (userId == null)
                 return Unauthorized();
 
-            var result = await _userService.AddOfferToClientFavorite(userId.Value, offerId, isFavorite);
+            var result = await _userService.AddOfferToClientFavorite(userId.Value, offerId);
 
             if (!result)
-                return BadRequest("Не удалось добавить заказ пользователю");
+                return BadRequest("Не удалось добавить в просмотренные пользователю");
 
-            return Ok(new { message = "Заказ добавлен" });
+            return Ok(new { message = "Обьявление добавлено" });
+        }
+
+
+        // =====================================================================
+        // CLIENT: добавить заказ в избранное
+        // =====================================================================
+        [Authorize]
+        [HttpPost("client/offer/isfavorite/add/{offerId}")]
+        public async Task<IActionResult> AddOfferToClientFavorite(
+            int offerId)
+        {
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var result = await _userService.AddOfferToClientFavorite(userId.Value, offerId);
+
+            if (!result)
+                return BadRequest("Не удалось добавить в избранное пользователю");
+
+            return Ok(new { message = "Обьявление добавлено" });
         }
 
 
@@ -205,8 +225,6 @@ namespace UserApiService.Controllers
             var userDto = UserResponse.MapToResponse(user);
             return Ok(userDto);
         }
-
-       
 
 
 

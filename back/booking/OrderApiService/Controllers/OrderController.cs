@@ -3,6 +3,7 @@ using Globals.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using OrderApiGetway.View;
 using OrderApiService.Models;
+using OrderApiService.Models.Enum;
 using OrderApiService.Service.Interface;
 using OrderApiService.Services;
 using OrderApiService.View;
@@ -42,14 +43,41 @@ namespace OrderApiService.Controllers
             }
             catch (Exception ex)
             {
-                // логируем и возвращаем ошибку сервера
                 // _logger.LogError(ex, "Ошибка при создании заказа");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Внутренняя ошибка сервера");
             }
         }
 
 
+        //===========================================================================================
 
+        [HttpPost("update/status/{orderId}")]
+        public async Task<IActionResult> UpdateOrderStatus(
+        int orderId,
+        [FromQuery] OrderStatus orderState) 
+        {
+
+            var result = await _orderService.UpdateOrderStatus(orderId, orderState);
+            if (result == -1)
+                return BadRequest("Не удалось изменить заказ");
+
+            return Ok(result);
+        }
+
+        //===========================================================================================
+
+        [HttpGet("get/orders/{clientId}")]
+        public async Task<ActionResult<List<OrderResponse>>> GetOrderById(
+        int clientId)
+        {
+
+            var orders = await _orderService.GetOrdersByClientIdAsync(clientId);
+
+            if (orders == null || !orders.Any())
+                return NotFound();
+
+            return Ok(orders);
+        }
 
         //===========================================================================================
         [HttpPost("{offerId}/valid/date-time")]

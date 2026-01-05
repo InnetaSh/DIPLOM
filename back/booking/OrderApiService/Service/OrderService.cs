@@ -49,6 +49,37 @@ namespace OrderApiService.Services
             catch (Exception ex) { }
             return -1;
         }
+
+
+
+
+        //===========================================================================================
+        public async Task<int> UpdateOrderStatus(int orderId, OrderStatus status)
+        {
+            try
+            {
+                using var db = new OrderContext();
+
+                var order = await db.Orders.FindAsync(orderId);
+                if (order == null)
+                    return -1;
+
+              
+
+                order.Status = status;
+
+                await db.SaveChangesAsync();
+                return order.id;
+            }
+            catch
+            {
+                return -1;
+            }
+        }
+     
+
+
+
         //===========================================================================================
 
         public async Task<bool> HasDateConflict(int orderId, int offerId,  DateTime start, DateTime end)
@@ -64,6 +95,21 @@ namespace OrderApiService.Services
         }
 
         //===========================================================================================
+
+        public async Task<List<OrderResponse>> GetOrdersByClientIdAsync(int clientId)
+        {
+            using var db = new OrderContext();
+            var orders = await db.Orders
+                .Where(o => o.ClientId == clientId)
+                .ToListAsync();
+            var orderResponses = orders
+                .Select(o => OrderResponse.MapToResponse(o))
+                .ToList();
+            return orderResponses;
+        }
+
+
+
 
         //private async Task<OfferResponse?> GetOfferAsync(int offerId)
         //{

@@ -120,6 +120,85 @@ namespace OfferApiService.Services
             }
             return fitOffers;
         }
+
         //==================================================================================================================
+
+        public async Task<List<Offer>> GetOffersByOwnerIdAsync(int ownerId)
+        {
+            var fitOffers = new List<Offer>();
+            try
+            {
+                using var db = new OfferContext();
+                fitOffers = await db.Offers
+                   .Include(o => o.OfferOrderLinks)
+                   .Include(o => o.BookedDates)
+                   .Include(o => o.RentObj)
+                        .ThenInclude(ro => ro.Images)
+                   .Include(o => o.RentObj)
+                        .ThenInclude(ro => ro.ParamValues)
+                   .Where(o => o.OwnerId == ownerId)
+                   .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (not implemented here)
+                //throw new Exception("An error occurred while retrieving offers", ex);
+            }
+            return fitOffers;
+        }
+        //==================================================================================================================
+
+        public async Task<List<Offer>> GetOffersByOwnerIdAndCityAsync(int ownerId, int cityId)
+        {
+            var fitOffers = new List<Offer>();
+            try
+            {
+                using var db = new OfferContext();
+                fitOffers = await db.Offers
+                   .Include(o => o.OfferOrderLinks)
+                   .Include(o => o.BookedDates)
+                   .Include(o => o.RentObj)
+                        .ThenInclude(ro => ro.Images)
+                   .Include(o => o.RentObj)
+                        .ThenInclude(ro => ro.ParamValues)
+                   .Where(o => o.RentObj.CityId == cityId)
+                   .Where(o => o.OwnerId == ownerId)
+                   .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (not implemented here)
+                //throw new Exception("An error occurred while retrieving offers", ex);
+            }
+            return fitOffers;
+        }
+
+
+        //==================================================================================================================
+
+        public async Task<List<Offer>> GetOffersByOwnerIdAndCountryAsync(int ownerId, int countryId)
+        {
+            var fitOffers = new List<Offer>();
+            try
+            {
+                using var db = new OfferContext();
+                fitOffers = await db.Offers
+                   .Include(o => o.OfferOrderLinks)
+                   .Include(o => o.BookedDates)
+                   .Include(o => o.RentObj)
+                        .ThenInclude(ro => ro.Images)
+                   .Include(o => o.RentObj)
+                        .ThenInclude(ro => ro.ParamValues)
+                   .Where(o => o.RentObj.CountryId == countryId)
+                   .Where(o => o.OwnerId == ownerId)
+                   .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (not implemented here)
+                //throw new Exception("An error occurred while retrieving offers", ex);
+            }
+            return fitOffers;
+        }
     }
 }

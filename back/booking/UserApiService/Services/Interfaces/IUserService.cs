@@ -10,7 +10,8 @@ namespace UserApiService.Services.Interfaces
     {
         Task<bool> AddOrderToClient(int userId, int orderId);
         Task<bool> AddOfferToOwner(int userId, int offerId);
-        Task<bool> AddOfferToClientFavorite(int userId, int offerId, bool isFavorite);
+        Task<bool> AddOfferToClientHistory(int userId, int offerId);
+        Task<bool> AddOfferToClientFavorite(int userId, int offerId);
         Task<User?> GetUserByIdAsync(int userId);
         Task<ClientResponse?> GetClientFullByIdAsync(int userId);
         Task<OwnerResponse?> GetOwnerFullByIdAsync(int userId);

@@ -172,7 +172,83 @@ namespace OfferApiService.Controllers
         }
 
 
+        //===========================================================================================
+        [HttpGet("get/offers/{ownerId}")]
+        public async Task<ActionResult<OfferResponse>> GetOfferById(
+        int ownerId)
+        {
 
+            var offerList = await _offerService.GetOffersByOwnerIdAsync(ownerId);
+
+
+
+            if (offerList.Count() == 0)
+                return NotFound();
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var responseList = new List<OfferResponse>();
+            foreach (var offer in offerList)
+            {
+                var response = OfferResponse.MapToResponse(
+                offer,
+                baseUrl);
+                responseList.Add(response);
+            }
+
+            return Ok(responseList);
+        }
+
+
+        //===========================================================================================
+        [HttpGet("get/offers/{ownerId}/{cityId}")]
+        public async Task<ActionResult<OfferResponse>> GetOfferByIdAndCity(
+        int ownerId,
+        int cityId)
+        {
+
+            var offerList = await _offerService.GetOffersByOwnerIdAndCityAsync(ownerId, cityId);
+
+            if (offerList.Count() == 0)
+                return NotFound();
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var responseList = new List<OfferResponse>();
+            foreach (var offer in offerList)
+            {
+                var response = OfferResponse.MapToResponse(
+                offer,
+                baseUrl);
+                responseList.Add(response);
+            }
+           
+            return Ok(responseList);
+        }
+
+
+        //===========================================================================================
+        [HttpGet("get/offers/{ownerId}/{countryId}")]
+        public async Task<ActionResult<OfferResponse>> GetOfferByIdAndCountry(
+        int ownerId,
+        int countryId)
+        {
+
+            var offerList = await _offerService.GetOffersByOwnerIdAndCountryAsync(ownerId, countryId);
+
+            if (offerList.Count() == 0)
+                return NotFound();
+
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            var responseList = new List<OfferResponse>();
+            foreach (var offer in offerList)
+            {
+                var response = OfferResponse.MapToResponse(
+                offer,
+                baseUrl);
+                responseList.Add(response);
+            }
+
+            return Ok(responseList);
+        }
 
         //===========================================================================================
         protected override Offer MapToModel(OfferRequest request)

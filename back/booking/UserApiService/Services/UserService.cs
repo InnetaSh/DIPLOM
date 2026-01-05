@@ -40,9 +40,9 @@ namespace UserApiService.Services
 
 
         // =====================================================================
-        // CLIENT → добавить заказ в избранное
+        // CLIENT → добавить заказ в историю просмотров
         // =====================================================================
-        public async Task<bool> AddOfferToClientFavorite(int userId, int offerId, bool isFavorite)
+        public async Task<bool> AddOfferToClientHistory(int userId, int offerId)
         {
             await using var db = new UserContext();
 
@@ -63,12 +63,49 @@ namespace UserApiService.Services
             {
                 ClientId = client.id,
                 OfferId = offerId,
-                IsFavorites = isFavorite
+                IsFavorites = false
             });
 
             await db.SaveChangesAsync();
             return true;
         }
+
+        // =====================================================================
+        // CLIENT → добавить заказ в избранное
+        // =====================================================================
+        public async Task<bool> AddOfferToClientFavorite(int userId, int offerId)
+        {
+            await using var db = new UserContext();
+
+            var client = await db.Clients
+                .FirstOrDefaultAsync(x => x.id == userId);
+
+            if (client == null)
+                return false;
+
+            var historyLink = await db.HistoryOfferLinks
+                .FirstOrDefaultAsync(x => x.ClientId == client.id && x.OfferId == offerId);
+
+            if (historyLink != null)
+            {
+                historyLink.IsFavorites = true;
+            }
+            else
+            {
+                db.HistoryOfferLinks.Add(new HistoryOfferLink
+                {
+                    ClientId = client.id,
+                    OfferId = offerId,
+                    IsFavorites = true
+                });
+            }
+
+            await db.SaveChangesAsync();
+            return true;
+        }
+
+
+
         // =====================================================================
         // OWNER → добавить объявление
         // =====================================================================

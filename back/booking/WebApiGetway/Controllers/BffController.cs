@@ -151,7 +151,6 @@ namespace WebApiGetway.Controllers
         //=====================================================================================
 
         [HttpGet("search/offers/{lang}")]
-        [Authorize]
                 public async Task<IActionResult> GetSearchOffers(
             string lang,
             [FromQuery] int CityId,
@@ -160,7 +159,15 @@ namespace WebApiGetway.Controllers
             [FromQuery] int Guests,
             [FromQuery] string paramItemFilters = null)
         {
-            var (userId, userDiscountPercent) = await GetUserIdAndDiscountAsync();
+
+
+            decimal userDiscountPercent = 0;
+            int? userId = null;
+
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                (userId, userDiscountPercent) = await GetUserIdAndDiscountAsync();
+            }
 
             var offerQuery = QueryString.Create(new Dictionary<string, string?>
             {
@@ -221,6 +228,7 @@ namespace WebApiGetway.Controllers
 
 
             var offerTranslations = await GetTranslationsAsync(lang, "Offer");
+
 
             var updateOfferDictList = UpdateListWithTranslations(filteredOfferList, offerTranslations);
 
@@ -315,6 +323,7 @@ namespace WebApiGetway.Controllers
             if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int parsedUserId))
             {
                 userId = parsedUserId;
+
                 var userObjResult = await _gateway.ForwardRequestAsync<object>(
                     "UserApiService", "/api/user/me", HttpMethod.Get, null);
 
@@ -324,14 +333,30 @@ namespace WebApiGetway.Controllers
                     if (userDictList.Any())
                     {
                         var user = userDictList[0];
-                        if (user.ContainsKey("discount"))
-                            discount = Convert.ToDecimal(user["discount"]);
+
+                        if (user.ContainsKey("discount") && user["discount"] is JsonElement discountElement)
+                        {
+                            switch (discountElement.ValueKind)
+                            {
+                                case JsonValueKind.Number:
+                                    discount = discountElement.GetDecimal();
+                                    break;
+                                case JsonValueKind.String:
+                                    if (!decimal.TryParse(discountElement.GetString(), out discount))
+                                        discount = 0; 
+                                    break;
+                                default:
+                                    discount = 0;
+                                    break;
+                            }
+                        }
                     }
                 }
             }
 
             return (userId, discount);
         }
+
 
         private async Task<bool> HasDateConflictAsync(int offerId, DateTime start, DateTime end)
         {
@@ -436,12 +461,13 @@ namespace WebApiGetway.Controllers
             return (lat, lon);
         }
 
+
+
+
+
         //======================================================================================
         //                      получаем полные данные об обьявлении по id
         //======================================================================================
-
-
-
 
 
         [HttpGet("search/booking-offer/{id}/{lang}")]
@@ -516,17 +542,53 @@ namespace WebApiGetway.Controllers
             //var ImagesUrl = (rentObj["imagesUrl"] as List<string>);
 
             rentObj["imagesUrl"] =  imagesArray;
+
+
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                await _gateway.ForwardRequestAsync<object>(
+                    "UserApiService",
+                    $"/api/user/me/history/add/offer/{id}",
+                    HttpMethod.Post,
+                    null
+                );
+            }
             return Ok(offerDictList);
 
         }
 
+
+        // =====================================================================
+        // CLIENT: добавить заказ в избранное
+        // =====================================================================
+
+        [Authorize]
+        [HttpPost("me/offer/isfavorite/add/{offerId}")]
+        public async Task<IActionResult> AddOfferToClientFavorite(
+            int offerId)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
+                      ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
+            if (userIdClaim == null)
+                return Unauthorized();
+            if (!int.TryParse(userIdClaim.Value, out var userId))
+                return Unauthorized();
+            var result = await _gateway.ForwardRequestAsync<object>(
+                "UserApiService",
+                $"/api/user/client/offer/isfavorite/add/{offerId}",
+                HttpMethod.Post,
+                null
+            );
+            return result;
+
+        }
 
 
         //============================================================================================
         //                                               ближайшие  достопримечательности
         //============================================================================================
 
-        [HttpGet("search/booking-offer/attractions/{id}/{distance}/{lang}")]
+            [HttpGet("search/booking-offer/attractions/{id}/{distance}/{lang}")]
         public async Task<IActionResult> GetNearSttractionsByIdWithDistance(int id,
         decimal distance,
         string lang)
@@ -816,7 +878,7 @@ namespace WebApiGetway.Controllers
         [Authorize]
         public async Task<IActionResult> UpdateStateOrder(
              int orderId,
-             [FromQuery] string otderState)
+             [FromQuery] string orderState)
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)
                          ?? User.FindFirst(JwtRegisteredClaimNames.Sub);
@@ -878,18 +940,37 @@ namespace WebApiGetway.Controllers
             if (isValidResult is not OkObjectResult okIsValid)
                 return isValidResult;
 
-            if (okIsValid.Value is bool result && result)
+            if (okIsValid.Value is JsonElement json &&
+                json.GetBoolean())
             {
-                order["status"] = otderState;
+                order["status"] = orderState;
+                var resultObj = await _gateway.ForwardRequestAsync<object>(
+                    "OrderApiService",
+                    $"/api/order/update/status/{orderId}?orderState={orderState}",
+                    HttpMethod.Post,
+                    null
+                );
+                if (resultObj is not OkObjectResult okResult)
+                {
+                    return resultObj;
+                }
+
+                if (okResult.Value is int resultId)
+                {
+                    if (resultId == -1)
+                    {
+                        return BadRequest(new { message = "Не удалось изменить заказ" });
+                    }
+                }
             }
             else
             {
-                return Ok(new
-                {
-                    message = "Такого заказа нет у пользователя"
-                });
-
+                return StatusCode(
+                    StatusCodes.Status403Forbidden,
+                    new { message = "Такого заказа нет у пользователя" }
+                );
             }
+
 
             return Ok(order);
 
@@ -1034,10 +1115,10 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                                         получение отзывoв user
+        //                                         получение отзывoв клиента
         //===============================================================================================================
 
-        [HttpPost("user/reviews/get/{lang}")]
+        [HttpPost("me/reviews/get/{lang}")]
         [Authorize]
         public async Task<IActionResult> GetReviewByUser(
              string lang)
@@ -1107,7 +1188,7 @@ namespace WebApiGetway.Controllers
         //                                         редактирование отзывoв 
         //===============================================================================================================
 
-        [HttpPost("user/{orderId}/reviews/update/{reviewId}/{lang}")]
+        [HttpPost("me/{orderId}/reviews/update/{reviewId}/{lang}")]
         [Authorize]
         public async Task<IActionResult> UpdateReviewById(
              [FromBody] CreateReviewRequest request,
@@ -1167,7 +1248,7 @@ namespace WebApiGetway.Controllers
         //                                         удаление отзывoв 
         //===============================================================================================================
 
-        [HttpDelete("user/{userId}/{orderId}/reviews/delete/{reviewId}")]
+        [HttpDelete("me/{userId}/{orderId}/reviews/delete/{reviewId}")]
         [Authorize]
         public async Task<IActionResult> DeleteReviewById(
              int reviewId,
@@ -1331,11 +1412,6 @@ namespace WebApiGetway.Controllers
                     if (item.ContainsKey("description"))
                         item["description"] = translation["description"];
 
-                    //foreach (var kvp in translation)
-                    //{
-                    //    if (kvp.Key == translationIdFieldName) continue; 
-                    //    item[kvp.Key] = kvp.Value;
-                    //}
                 }
             }
             return list;

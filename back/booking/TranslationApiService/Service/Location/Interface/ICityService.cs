@@ -6,5 +6,6 @@ namespace TranslationApiService.Service.Location.Interface
 {
     public interface ICityService : ITranslationServiceBase<CityTranslation>
     {
+       // Task<List<int>> GetCityIdByTitle(string title, string lang);
     }
 }
