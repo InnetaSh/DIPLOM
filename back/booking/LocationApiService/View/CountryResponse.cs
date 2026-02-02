@@ -12,7 +12,7 @@ namespace LocationApiService.View
 
         public List<RegionResponse> Regions { get; set; } = new();
 
-        public static CountryResponse MapToResponse(Country model)
+        public static CountryResponse MapToResponse(Country model, string baseUrl)
         {
             return new CountryResponse
             {
@@ -21,7 +21,7 @@ namespace LocationApiService.View
                 Longitude = model.Longitude,
 
                 Regions = model.Regions?
-                    .Select(RegionResponse.MapToResponse)
+                    .Select(region => RegionResponse.MapToResponse(region, baseUrl))
                     .ToList() ?? new List<RegionResponse>()
             };
         }

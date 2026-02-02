@@ -1,0 +1,24 @@
+.hotel_map {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 29px;
+}
+
+.mapContainer_adress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 109px;
+    padding: 11px 26px;
+    border-radius: 20px;
+    background: var(--color--hotel-info-title-bg);
+    color: var(--color-text);
+}
+
+.mapContainer {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+     border-radius: 20px;
+}

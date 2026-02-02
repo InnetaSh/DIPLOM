@@ -1,10 +1,12 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
+using Globals.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using OfferApiService.Models.RentObjModel;
 using OfferApiService.Service;
 using OfferApiService.Services.Interfaces.RentObj;
 using OfferApiService.View.RentObj;
+using System.Diagnostics.CodeAnalysis;
 
 namespace OfferApiService.Controllers.RentObj
 {
@@ -34,14 +36,20 @@ namespace OfferApiService.Controllers.RentObj
         {
             var coords = await GetCoordinatesAsync(request);
 
+            var latitude = coords?.lat ?? 0;
+            var longitude = coords?.lon ?? 0;
             if (coords == null)
-                return BadRequest("Адрес не найден");
+            {
+                Console.WriteLine("Адрес не найден");
+            }
+            request.Latitude = latitude;
+            request.Longitude = longitude;
 
-            var model = RentObjRequest.MapToModelWithCoords(
-                request,
-                coords.Value.lat,
-                coords.Value.lon
-            );
+            double cityLatitude  = request.CityLatitude ?? 0;
+            double cityLongitude = request.CityLongitude ?? 0;
+            request.DistanceToCenter = (int)Helper.CalculateDistanceMeters(latitude, longitude, cityLatitude, cityLongitude);
+
+            var model = RentObjRequest.MapToModel(request);
 
             var result = await _service.AddEntityGetIdAsync(model);
 
@@ -62,47 +70,56 @@ namespace OfferApiService.Controllers.RentObj
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var exists = await _service.ExistsEntityAsync(id);
-            if (!exists)
+            var existingRentObj= await _service.GetEntityAsync(id);
+            if (existingRentObj == null)
                 return NotFound(new { message = "Item not found" });
 
             var coords = await GetCoordinatesAsync(request);
-            if (coords == null)
-                return BadRequest("Адрес не найден");
 
-            var updatedModel = RentObjRequest.MapToModelWithCoords(
+            var latitude = coords?.lat ?? 0;
+            var longitude = coords?.lon ?? 0;
+            if (coords == null)
+            {
+                Console.WriteLine("Адрес не найден");
+            }
+            request.Latitude = latitude;
+            request.Longitude = longitude;
+
+            double cityLatitude = request.CityLatitude ?? 0;
+            double cityLongitude = request.CityLongitude ?? 0;
+            request.DistanceToCenter = (int)Helper.CalculateDistanceMeters(latitude, longitude, cityLatitude, cityLongitude);
+
+            
+            PatchHelper.ApplyPatch<RentObject, RentObjRequest>(
+                existingRentObj,
                 request,
-                coords.Value.lat,
-                coords.Value.lon
+                nameof(RentObject.id)
             );
 
-            if (updatedModel.id != id)
-                updatedModel.id = id;
+            //var existingEntity = await _service.GetEntityAsync(id);
+            //if (existingEntity == null)
+            //    return NotFound(new { message = "Item not found in DB" });
 
-            var existingEntity = await _service.GetEntityAsync(id);
-            if (existingEntity == null)
-                return NotFound(new { message = "Item not found in DB" });
+            //foreach (var prop in typeof(RentObject).GetProperties())
+            //{
+            //    if (prop.CanWrite)
+            //    {
+            //        var value = prop.GetValue(updatedModel);
+            //        prop.SetValue(existingEntity, value);
+            //    }
+            //}
 
-            foreach (var prop in typeof(RentObject).GetProperties())
-            {
-                if (prop.CanWrite)
-                {
-                    var value = prop.GetValue(updatedModel);
-                    prop.SetValue(existingEntity, value);
-                }
-            }
-
-            var success = await _service.UpdateEntityAsync(existingEntity);
+            var success = await _service.UpdateEntityAsync(existingRentObj);
             if (!success)
                 return StatusCode(500, new { message = "Error updating item" });
 
-            PublishMqEvent("Updated", existingEntity);
+            PublishMqEvent("Updated", existingRentObj);
 
-            return Ok(new
-            {
-                id = existingEntity.id,
-                data = MapToResponse(existingEntity)
-            });
+            var rentObjResponse = RentObjResponse.MapToResponse(existingRentObj, _baseUrl);
+            if (rentObjResponse == null)
+                return NotFound(new { message = "Item not found after update" });
+
+            return Ok(rentObjResponse);
         }
 
 

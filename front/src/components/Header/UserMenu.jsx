@@ -7,7 +7,7 @@ import { ReactComponent as ReviewsIcon } from "../../img/icons/reviews.svg";
 import { ReactComponent as HeartIcon } from "../../img/icons/heart.svg";
 import { ReactComponent as LogoutIcon } from "../../img/icons/logout.svg";
 
-import "./Header.css";
+//import "./Header.css";
 
 export const UserMenu = ({ onLogout }) => {
   const navigate = useNavigate();

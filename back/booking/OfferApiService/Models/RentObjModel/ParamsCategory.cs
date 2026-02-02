@@ -4,7 +4,8 @@ namespace OfferApiService.Models.RentObjModel
 {
     public class ParamsCategory : EntityBase
     {
-                // Например: "Кухня", "Ванная", "Удобства"
+        // Например: "Кухня", "Ванная", "Удобства"
+        public bool IsFilterable { get; set; } = true; // Можно ли использовать эту категорию в фильтрах поиска
         public List<ParamItem> Items { get; set; } = new(); // Все параметры этой категории
     }
 

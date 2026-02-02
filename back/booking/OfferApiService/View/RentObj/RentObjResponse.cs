@@ -18,25 +18,34 @@ namespace OfferApiService.View.RentObj
         public int RegionId { get; set; }
         public int CityId { get; set; }
 
-       
-        public string Address { get; set; }
+
+        //  Адрес для геокодинга
+
+        public string CountryTitle { get; set; }
+        public string CityTitle { get; set; }
+
+        public string Street { get; set; }
+        public string HouseNumber { get; set; }
+        public string Postcode { get; set; }
 
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        public int RoomCount { get; set; }
-        public int LivingRoomCount { get; set; }
-        public int BathroomCount { get; set; }
-        public bool HasKitchen { get; set; }
-        public bool HasBalcony { get; set; }
-        public double Area { get; set; }
-        public int Floor { get; set; }
-        public int TotalFloors { get; set; }
-        public RentObjType RentObjType { get; set; }
+        public int? DistanceToCenter { get; set; } // расстояние до центра
 
-        public int BedroomsCount { get; set; }
-        public int BedsCount { get; set; }
-        public bool HasBabyCrib { get; set; }
+        // основная информация
+
+        public int RoomCount { get; set; }              //Количество комнат
+        public int LivingRoomCount { get; set; }         // Количество гостиных
+        public int BathroomCount { get; set; }          //Количество ванных комнат
+       
+        public double Area { get; set; }               //Площадь объекта (кв. м)
+
+
+        public int TotalBedsCount { get; set; }       //Общее количество спальных мест
+        public int SingleBedsCount { get; set; }      // Количество односпальных кроватей
+        public int DoubleBedsCount { get; set; }      // Количество двуспальных кроватей
+        public bool HasBabyCrib { get; set; }         // Детская кроватка
 
         public List<string> ImagesUrl {get; set;} = new List<string>();
         public List<RentObjParamValueResponse>? ParamValues { get; set; } = new();
@@ -53,23 +62,23 @@ namespace OfferApiService.View.RentObj
                 RegionId = model.RegionId,
                 CityId = model.CityId,
                 DistrictId = model.DistrictId,
-                Address = model.Address,
+                Street = model.Street,
+                HouseNumber = model.HouseNumber,
+                Postcode = model.Postcode,
 
                 RoomCount = model.RoomCount,
                 LivingRoomCount = model.LivingRoomCount,
                 BathroomCount = model.BathroomCount,
-                HasKitchen = model.HasKitchen,
-                HasBalcony = model.HasBalcony,
+                
                 Area = model.Area,
-                Floor = model.Floor,
-                TotalFloors = model.TotalFloors,
-                RentObjType = model.RentObjType,
+               
 
                 Latitude = model.Latitude,
                 Longitude = model.Longitude,
 
-                BedroomsCount = model.BedroomsCount,
-                BedsCount = model.BedsCount,
+                TotalBedsCount = model.TotalBedsCount,
+                SingleBedsCount = model.SingleBedsCount,
+                DoubleBedsCount = model.DoubleBedsCount,
                 HasBabyCrib = model.HasBabyCrib,
 
                 ParamValues = model.ParamValues?

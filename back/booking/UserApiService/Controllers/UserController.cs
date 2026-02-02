@@ -50,7 +50,7 @@ namespace UserApiService.Controllers
         // CLIENT: добавить заказ в историю просмотров
         // =====================================================================
         [Authorize]
-        [HttpPost("client/offer/history/add/{offerId}")]
+        [HttpPost("me/history/add/offer/{offerId}")]
         public async Task<IActionResult> AddOfferToClientHistory(
             int offerId)
         {
@@ -58,7 +58,7 @@ namespace UserApiService.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var result = await _userService.AddOfferToClientFavorite(userId.Value, offerId);
+            var result = await _userService.AddOfferToClientHistory(userId.Value, offerId);
 
             if (!result)
                 return BadRequest("Не удалось добавить в просмотренные пользователю");
@@ -71,7 +71,7 @@ namespace UserApiService.Controllers
         // CLIENT: добавить заказ в избранное
         // =====================================================================
         [Authorize]
-        [HttpPost("client/offer/isfavorite/add/{offerId}")]
+        [HttpPost("me/isfavorite/add/offer/{offerId}")]
         public async Task<IActionResult> AddOfferToClientFavorite(
             int offerId)
         {
@@ -106,6 +106,63 @@ namespace UserApiService.Controllers
 
             return Ok(new { message = "Объявление добавлено" });
         }
+        // =====================================================================
+        // ADMIN:  Получить пользователя по id если админ
+        // =====================================================================
+
+        [HttpGet("admin/get/userfullinfo/{userId}")]
+        [Authorize]
+        public async Task<IActionResult> GetUserFullInfoById(int userId)
+        {
+            var adminId = GetUserId();
+            if (adminId == null)
+                return Unauthorized();
+
+            var result = await _userService.ValidAdminById(adminId.Value);
+            if (!result)
+                return Forbid();
+
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            return user.RoleName switch
+            {
+                UserRole.Client => Ok(await _userService.GetClientFullByIdAsync(userId)),
+                UserRole.Owner => Ok(await _userService.GetOwnerFullByIdAsync(userId)),
+                _ => Ok(user)
+            };
+        }
+
+        // =====================================================================
+        // ADMIN:  Получить пользователя по почте если админ
+        // =====================================================================
+
+        [HttpGet("admin/get/userfullinfo/{email}")]
+        [Authorize]
+        public async Task<IActionResult> GetUserFullInfoByEmail(string email)
+        {
+            var adminId = GetUserId();
+            if (adminId == null)
+                return Unauthorized();
+
+            var result = await _userService.ValidAdminById(adminId.Value);
+            if (!result)
+                return Forbid();
+
+            var user = await _userService.GetUserByEmailAsync(email);
+            if (user == null)
+                return NotFound();
+
+            return user.RoleName switch
+            {
+                UserRole.Client => Ok(await _userService.GetClientFullByIdAsync(user.id)),
+                UserRole.Owner => Ok(await _userService.GetOwnerFullByIdAsync(user.id)),
+                _ => Ok(user)
+            };
+        }
+
+
 
         // =====================================================================
         // Получить текущего пользователя
@@ -130,6 +187,44 @@ namespace UserApiService.Controllers
                 _ => Ok(user)
             };
         }
+
+        // =====================================================================
+        // Получить имя пользователя по id
+        // =====================================================================
+
+        [HttpGet("get/name/{userId}")]
+        public async Task<IActionResult> GetNameById(int userId)
+        {
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            return Ok(new { 
+                userName = user.Username,
+                countryId = user.CountryId
+            });
+
+
+        }
+
+        // =====================================================================
+        // Увеличить дисконт пользователя по id
+        // =====================================================================
+
+        [HttpGet("update/discount/{userId}/{discountCount}")]
+        public async Task<IActionResult> UpdateDiscount(int userId, decimal discountCount)
+        {
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (user == null)
+                return NotFound();
+
+            user.Discount += discountCount;
+            await _userService.UpdateEntityAsync(user);
+            var userDto = UserResponse.MapToResponse(user);
+
+            return Ok(userDto);
+        }
+
         // =====================================================================
         // Редактировать текущего пользователя
         // =====================================================================

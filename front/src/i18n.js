@@ -6,7 +6,7 @@ i18n
   .use(HttpBackend)
   .use(initReactI18next)
   .init({
-    lng: "ru", // ← ЯЗЫК ПО УМОЛЧАНИЮ
+    lng: "uk", // ← ЯЗЫК ПО УМОЛЧАНИЮ
     fallbackLng: "en",// ← если нет перевода
     debug: false,
 

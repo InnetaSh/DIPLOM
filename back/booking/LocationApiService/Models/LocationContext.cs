@@ -11,8 +11,7 @@ namespace LocationApiService.Models
         public DbSet<Region> Regions { get; set; }
         public DbSet<Country> Countries { get; set; }
 
-        public DbSet<Attraction> Attractions { get; set; }
-
+       
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
             // --- Country ---
@@ -43,12 +42,6 @@ namespace LocationApiService.Models
             builder.Entity<District>(entity =>
             {
                 entity.ToTable("districts");
-                entity.HasKey(e => e.id);
-                entity.Property(e => e.id).HasColumnName("id");
-            });
-            builder.Entity<Attraction>(entity =>
-            {
-                entity.ToTable("attractions");
                 entity.HasKey(e => e.id);
                 entity.Property(e => e.id).HasColumnName("id");
             });

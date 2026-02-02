@@ -1,10 +1,8 @@
 ﻿using Globals.Controllers;
-using OfferApiService.Models.Enum;
-using OfferApiService.Services.Interfaces.RentObj;
-using OfferApiService.View;
+using OfferApiService.Models;
 using OfferApiService.View.RentObj;
 
-namespace OfferApiService.Models.View
+namespace OfferApiService.View
 {
     public class OfferResponse : IBaseResponse
     {
@@ -33,36 +31,22 @@ namespace OfferApiService.Models.View
 
         public decimal? DiscountAmount { get; set; } // сумма скидки для текущего заказа
 
-        public decimal? DepositPersent { get; set; } // процент депозита
-        public decimal? DepositAmount { get; set; } // сумма депозита для текущего заказа
-
         public decimal? Tax { get; set; }
         public decimal? TaxAmount { get; set; }        // Налог в валюте
         public decimal? TotalPrice { get; set; }       // Итоговая стоимость
 
-        public string PaymentStatus { get; set; }// статус оплаты(ожидает подтверждения,  подтверждён владельцем и т п )
 
-        public string PaymentMethod { get; set; }  // Предпочтительный способ оплаты
-
-        public int MinRentDays { get; set; }
-        public bool AllowPets { get; set; }
-        public bool AllowSmoking { get; set; }
-        public bool AllowChildren { get; set; }
-        public bool AllowParties { get; set; }
-
-
-        public int MaxGuests { get; set; }
-
-        public decimal? CleaningFee { get; set; }       // Стоимость уборки
-        public decimal? AdditionalGuestFee { get; set; } // Доплата за гостя сверх лимита
+  
+        public int MinRentDays { get; set; } = 1;       // Минимальное количество дней аренды
+        public bool AllowPets { get; set; }             // Можно ли с животными
+        public bool AllowSmoking { get; set; }          // Разрешено ли курение
+        public bool AllowChildren { get; set; }         // Можно ли с детьми
+        public bool AllowParties { get; set; }          // Разрешены ли вечеринки
+        public int MaxGuests { get; set; }              // Максимальное количество гостей
 
 
-        // ===== Бесплатная отмена бронирования =====
-
-        public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
-        public int? FreeCancelUntilHours { get; set; }    // За сколько часов до заезда можно отменить бесплатно
-                                                          // Например: 48 → отмена за 48 часов до даты CheckIn
-                                                          
+        // =====оценка====================
+        public double OverallRating { get; set; }  // общий рейтинг
 
 
         public TimeSpan? CheckInTime { get; set; }
@@ -97,8 +81,8 @@ namespace OfferApiService.Models.View
                 PricePerWeek = model.PricePerWeek,
                 PricePerMonth = model.PricePerMonth,
 
-                DepositPersent = model.DepositPersent,
-                PaymentStatus = model.PaymentStatus.ToString(),
+                //DepositPersent = model.DepositPersent,
+                //DepositStatus = model.DepositStatus.ToString(),
 
                 Tax = model.Tax,
 
@@ -107,16 +91,13 @@ namespace OfferApiService.Models.View
                 AllowSmoking = model.AllowSmoking,
                 AllowChildren = model.AllowChildren,
                 AllowParties = model.AllowParties,
-
                 MaxGuests = model.MaxGuests,
 
-                CleaningFee = model.CleaningFee,
-                AdditionalGuestFee = model.AdditionalGuestFee,
 
-                FreeCancelEnabled = model.FreeCancelEnabled,
-                FreeCancelUntilHours = model.FreeCancelUntilHours,
+                //FreeCancelEnabled = model.FreeCancelEnabled,
+                //FreeCancelUntilHours = model.FreeCancelUntilHours,
 
-                PaymentMethod = model.PaymentMethod.ToString(),
+                //PaymentMethod = model.PaymentMethod.ToString(),
 
                 CheckInTime = model.CheckInTime,
                 CheckOutTime = model.CheckOutTime,
@@ -128,17 +109,14 @@ namespace OfferApiService.Models.View
                     ? RentObjResponse.MapToResponse(model.RentObj, baseUrl)
                     : null,
 
-                // === Забронированные даты ===
-                BookedDates = model.BookedDates?
-                    .Select(bd => BookedDateResponse.MapToResponse(bd))
-                    .ToList()
-                    ?? new List<BookedDateResponse>(),
+                //// === Забронированные даты ===
+                //BookedDates = model.BookedDates?
+                //    .Select(bd => BookedDateResponse.MapToResponse(bd))
+                //    .ToList()
+                //    ?? new List<BookedDateResponse>(),
 
 
-                //Rating = model.Rating,
-                //IsRecommended = model.IsRecommended,
-                //IsTopLocation = model.IsTopLocation,
-                //IsTopCleanliness = model.IsTopCleanliness
+               
             };
         }
 

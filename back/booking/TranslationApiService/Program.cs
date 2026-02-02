@@ -1,5 +1,7 @@
 using Globals.Abstractions;
 using Globals.EventBus;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using TranslationApiService.Service.Attraction;
 using TranslationApiService.Service.Attraction.Interface;
 using TranslationApiService.Service.Location;
@@ -41,6 +43,19 @@ builder.Services.AddHostedService<TranslationRabbitListener>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter(
+                JsonNamingPolicy.CamelCase, 
+                allowIntegerValues: true
+            )
+        );
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true; 
+    });
 
 var app = builder.Build();
 

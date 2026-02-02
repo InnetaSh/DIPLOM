@@ -1,32 +1,51 @@
 import styles from "./HotelGallery.module.css";
+import { Text } from "../UI/Text/Text.jsx";
+import { useTranslation } from "react-i18next";
 
 export const HotelGallery = ({ images = [] }) => {
-    if (!images.length) return <div>Нет изображений</div>;
+    const { t } = useTranslation();
 
-    const first = images[0];
-    const rest = images.slice(1);
+  if (!images.length) return <div>{t("hotel_gallery.no photos")}</div>;
+  return (
+    <div className={styles.gallery}>
+      <div className={styles.gallery__container}>
+        {images.length >= 5 && (
+          <div className={styles.gallery__columns}>
 
-    return (
-        <div className={styles.gallery}>
-            <div className={styles.row1Dynamic}>
-                <img src={first} alt="" className={styles.big} />
-                {rest.length >= 2 && (
-                    <div className={styles.smallColumn}>
-                        {rest.slice(0, 2).map((src, i) => (
-                            <img key={i} src={src} alt="" className={styles.small} />
-                        ))}
-                    </div>
-                )}
+            {/* Левая колонка */}
+            <div className={styles.gallery__column_container}>
+              <div className={styles.gallery__columnItem_first}>
+                <img src={images[1]} alt="" />
+              </div>
+
+              <div className={styles.gallery__columnItem_second}>
+                <img src={images[2]} alt="" />
+                <div className={styles.blurOverlay}>
+                  <Text text={t("hotel_gallery.all_photos")} type="m_700_s_24" />
+                </div>
+              </div>
             </div>
 
-            {rest.length > 2 && (
-                <div className={styles.row2Dynamic}>
-                    {rest.slice(2).map((src, i) => (
-                        <img key={i} src={src} alt="" className={styles.gridImg} />
-                    ))}
-                </div>
-            )}
+            {/* Центр */}
+            <div className={styles.gallery__center_container}>
+              <div className={styles.gallery__center_wrapper}>
+                <img src={images[0]} alt="" />
+              </div>
+            </div>
 
-        </div>
-    );
+            {/* Правая колонка */}
+            <div className={styles.gallery__column_container}>
+              <div className={styles.gallery__columnItem_first}>
+                <img src={images[3]} alt="" />
+              </div>
+              <div className={styles.gallery__columnItem_second}>
+                <img src={images[4]} alt="" />
+              </div>
+            </div>
+
+          </div>
+        )}
+      </div>
+    </div>
+  );
 };

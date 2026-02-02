@@ -1,0 +1,12 @@
+.more_tour_outer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+ 
+   margin-bottom: 50px;
+}
+
+.more_tour {
+  width: 1920px; /* исходный макет Figma */
+  height: 1712px;
+}

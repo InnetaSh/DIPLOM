@@ -4,6 +4,7 @@ using OfferApiService.Service;
 using OfferApiService.Service.Interface;
 using OfferApiService.Services;
 using OfferApiService.Services.Interfaces.RentObj;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +32,16 @@ builder.Services.AddHttpClient<GeocodingService>();
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 builder.Services.AddHostedService<OfferRabbitListener>();
 
-
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });
+builder.Services.AddControllers()
+    .AddJsonOptions(o =>
+    {
+        o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 //builder.WebHost.ConfigureKestrel(options =>
 //{

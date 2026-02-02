@@ -1,0 +1,35 @@
+.bunner{
+  width: 100%;
+  /* min-width:  1760px; */
+  color: var( --color--bunner-text);
+    padding: 0 4%;
+}
+
+.bunner__container {
+  position: relative;
+  width:  100%;
+  height: 348px;
+
+ border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.bunner__container_img_room {
+ background-image: url('../../../public/img/bunner/room.svg');
+}
+
+.bunner__container_img_hotel {
+ background-image: url('../../../public/img/bunner/hotel.svg');
+}
+.bunner__container_img_house {
+ background-image: url('../../../public/img/bunner/house.svg');
+}
+.textOverImage {
+  color: white;
+  font-weight: 700;
+  font-size: 24px;
+  text-shadow: 0 0 5px rgba(0,0,0,0.7);
+}

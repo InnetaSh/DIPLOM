@@ -15,8 +15,8 @@ namespace Globals.Models
 
         public ContextBase()
         {
-            //if (TypeName == "AttractionTranslation")
-                //Database.EnsureDeleted();
+            //if (TypeName == "Offer")
+             //  Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
@@ -33,6 +33,15 @@ namespace Globals.Models
             npgsqlConnectionStringBuilder.SslMode = SslMode.Disable;
 
             optionsBuilder.UseNpgsql(npgsqlConnectionStringBuilder.ConnectionString);
+
+            var enableSensitive = Environment.GetEnvironmentVariable("ENABLE_SENSITIVE_LOGGING");
+            var aspEnv = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+            if (string.Equals(enableSensitive, "true", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(aspEnv, "Development", StringComparison.OrdinalIgnoreCase))
+            {
+                optionsBuilder.EnableSensitiveDataLogging();
+                optionsBuilder.EnableDetailedErrors();
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

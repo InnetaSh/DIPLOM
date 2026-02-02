@@ -1,16 +1,107 @@
-.category {
+.filterSidebar__category {
   margin-bottom: 24px;
 }
 
-.category h4, /* если используешь обычный h4 */
-.category .Text {
-  font-weight: 700;
-  font-size: 16px;
-  margin-bottom: 12px;
+
+.filterCategory__params {
+ display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.FilterCategory_title{
+  margin-bottom: 10px;
 }
 
-.options {
+/*======================================================*/
+.priceProgressBar {
+  width: 100%;
+  padding: 15px 20px 15px; 
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  color: #6d6a57; 
+  user-select: none;
+}
+
+
+
+.sliderWrapper {
+  position: relative;
+  width: 100%;
+  height: 25px; 
+  border: 3px solid var( --color--progressBar-border); 
+  background-color:transparent; 
+  border-radius: 30px; 
+  box-sizing: border-box;
+  overflow: visible; 
+}
+
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--color--progressBar-bg);
+  border-right: 2px solid var( --color--progressBar-border); 
+  border-radius: 15px 0 0 15px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  background: transparent; 
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ползунок - черный круг диаметром ~15px с белой обводкой */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  background-color:var(  --color--progressBar-border); 
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 32px; 
+  position: relative;
+  z-index: 3;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+  transition: box-shadow 0.2s ease;
+}
+
+.slider::-webkit-slider-thumb:hover,
+.slider::-webkit-slider-thumb:focus {
+  box-shadow: 0 0 8px rgba(0,0,0,0.6);
+}
+
+.slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  background-color:var(  --color--progressBar-border); 
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0,0,0,0.3);
+  transition: box-shadow 0.2s ease;
+}
+
+.slider::-moz-range-thumb:hover,
+.slider::-moz-range-thumb:focus {
+  box-shadow: 0 0 8px rgba(0,0,0,0.6);
+}
+
+
+.priceLabels {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  justify-content: space-between;
+  margin-top: 5px;
 }

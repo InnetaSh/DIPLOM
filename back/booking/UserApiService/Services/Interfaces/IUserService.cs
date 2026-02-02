@@ -13,9 +13,11 @@ namespace UserApiService.Services.Interfaces
         Task<bool> AddOfferToClientHistory(int userId, int offerId);
         Task<bool> AddOfferToClientFavorite(int userId, int offerId);
         Task<User?> GetUserByIdAsync(int userId);
+        Task<User?> GetUserByEmailAsync(string email);
         Task<ClientResponse?> GetClientFullByIdAsync(int userId);
         Task<OwnerResponse?> GetOwnerFullByIdAsync(int userId);
 
        Task<bool> ValidOfferIdByOwner(int userId, int offerId);
+        Task<bool> ValidAdminById(int userId);
     }
 }

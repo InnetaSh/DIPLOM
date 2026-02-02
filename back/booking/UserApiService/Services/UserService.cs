@@ -146,6 +146,19 @@ namespace UserApiService.Services
                 .FirstOrDefaultAsync(u => u.id == userId);
         }
 
+ 
+
+        // =====================================================================
+        //              Получить пользователя по email
+        // =====================================================================
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            await using var db = new UserContext();
+
+            return await db.Users
+                .AsNoTracking()                  
+                .FirstOrDefaultAsync(u => u.Email == email);
+        }
 
         // =====================================================================
         //              Client — полные данные
@@ -229,15 +242,49 @@ namespace UserApiService.Services
 
 
 
-        // =====================================================================
-        // Проверка: принадлежит ли offer владельцу
-        // =====================================================================
+        // ==============================================================================
+        // Проверка: принадлежит ли offer владельцу (или же это супер админ или админ)
+        // ==============================================================================
         public async Task<bool> ValidOfferIdByOwner(int userId, int offerId)
         {
             await using var db = new UserContext();
 
-            return await db.OwnerOfferLinks
-                .AnyAsync(x => x.OwnerId == userId && x.OfferId == offerId);
+            var user = await db.Users
+                .Where(u => u.id == userId)
+                .Select(u => new { u.id, u.RoleName })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+                return false;
+
+            if (user.RoleName == UserRole.SuperAdmin ||
+                user.RoleName == UserRole.Admin)
+            {
+                return true;
+            }
+
+            if (user.RoleName == UserRole.Owner)
+            {
+                return await db.OwnerOfferLinks
+                    .AnyAsync(x => x.OwnerId == userId && x.OfferId == offerId);
+            }
+
+            return false;
+        }
+        // ==============================================================================
+        // Проверка:  это супер админ или админ
+        // ==============================================================================
+        public async Task<bool> ValidAdminById(int userId)
+        {
+            await using var db = new UserContext();
+
+            var user = await db.Users
+                .Where(u => u.id == userId)
+                .Select(u => new { u.id, u.RoleName })
+                .FirstOrDefaultAsync();
+
+            return user != null &&
+                    (user.RoleName == UserRole.SuperAdmin || user.RoleName == UserRole.Admin);
         }
     }
 }

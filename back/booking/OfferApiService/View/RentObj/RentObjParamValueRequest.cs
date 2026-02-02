@@ -10,9 +10,10 @@ namespace OfferApiService.View.RentObj
         public int RentObjId { get; set; }
         public int ParamItemId { get; set; }
 
-        public bool ValueBool { get; set; }
-        public int ValueInt { get; set; }
-        public string ValueString { get; set; }
+        public bool? ValueBool { get; set; }
+        public int? ValueInt { get; set; }
+        public string? ValueString { get; set; }
+
 
         public static RentObjParamValue MapToModel(RentObjParamValueRequest request)
         {

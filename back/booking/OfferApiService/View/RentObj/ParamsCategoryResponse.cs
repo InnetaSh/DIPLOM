@@ -8,6 +8,7 @@ namespace OfferApiService.View.RentObj
     {
         public int id { get; set; }
         public string? Title { get; set; }
+        public bool IsFilterable { get; set; }
         public List<ParamItemResponse> Items { get; set; } = new();
 
         public static ParamsCategoryResponse MapToResponse(ParamsCategory model)
@@ -17,6 +18,7 @@ namespace OfferApiService.View.RentObj
             return new ParamsCategoryResponse
             {
                 id = model.id,
+                IsFilterable = model.IsFilterable,
                 Items = model.Items?.Select(ParamItemResponse.MapToResponse).ToList()
                         ?? new List<ParamItemResponse>()
             };

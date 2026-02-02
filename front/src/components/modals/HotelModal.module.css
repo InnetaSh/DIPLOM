@@ -1,0 +1,61 @@
+.hotelInfoModal {
+  position: relative;
+    width: 1084px;
+  max-width: 95%;       
+  height: 846px;
+  max-height: 90vh;  
+  border-radius: 20px;
+  background-color: var(--color-bg__2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  align-items: center; 
+  gap: 22px; 
+    padding: 36px 67px 29px 70px;  
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3); 
+  overflow-y: auto;    
+}
+.HotelInfoModal_paramsList__container{
+   position: relative;
+   height: 100%;
+  border-radius: 20px;
+  background-color: var(--color-bg__2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  align-items: center; 
+  gap: 22px; 
+    padding: 36px 67px 29px 70px;  
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3); 
+  overflow-y: auto;  
+}
+
+.hotelInfoModal__text_container{
+ height: 100%;
+  width: 100%;
+  display: flex;
+  gap: 18px;
+
+}
+.hotelInfoModal__text_left{
+  height: 100%;
+  width: 356px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 30px 10px 30px;
+border-radius: 20px;
+border: 2px solid var(--color-text);
+}
+.hotelInfoModal__text_right{
+   height: 100%;
+  width: 100%;
+  display: flex;
+  gap: 19px;
+}
+.right_columns_item{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

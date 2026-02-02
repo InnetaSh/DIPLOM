@@ -21,8 +21,8 @@ namespace OfferApiService.Services
             using var db = new OfferContext();
 
             return await db.Offers
-                .Include(o => o.OfferOrderLinks)
-                .Include(o => o.BookedDates)
+                //.Include(o => o.OfferOrderLinks)
+                //.Include(o => o.BookedDates)
                 .Include(o => o.RentObj)
                     .ThenInclude(ro => ro.Images)
                 .Include(o => o.RentObj)
@@ -35,8 +35,8 @@ namespace OfferApiService.Services
             using var db = new OfferContext();
 
             return await db.Offers
-                .Include(o => o.OfferOrderLinks)
-                .Include(o => o.BookedDates)
+                //.Include(o => o.OfferOrderLinks)
+                //.Include(o => o.BookedDates)
                 .Include(o => o.RentObj)
                     .ThenInclude(ro => ro.Images)
                 .Include(o => o.RentObj)
@@ -50,10 +50,10 @@ namespace OfferApiService.Services
         {
             await using var db = new OfferContext();
 
-            var client = await db.Offers
+            var offer = await db.Offers
                 .FirstOrDefaultAsync(x => x.id == offerId);
 
-            if (client == null)
+            if (offer == null)
                 return null;
 
 
@@ -103,20 +103,22 @@ namespace OfferApiService.Services
                 using var db = new OfferContext();
 
                  fitOffers = await db.Offers
-                    .Include(o => o.OfferOrderLinks)
-                    .Include(o => o.BookedDates)
-                    .Include(o => o.RentObj)       
-                         .ThenInclude(ro => ro.Images)
                     .Include(o => o.RentObj)
-                         .ThenInclude(ro => ro.ParamValues)
-                    .Where(o => o.RentObj.CityId == request.CityId)
-                    .Where(o => o.MaxGuests >= request.Guests)
+                        .ThenInclude(ro => ro.Images)
+                    .Include(o => o.RentObj)
+                        .ThenInclude(ro => ro.ParamValues)
+                    .Where(o => o.RentObj != null &&
+                                o.RentObj.CityId == request.CityId &&
+                                o.MaxGuests >= request.Guests)
                     .ToListAsync();
             }
             catch (Exception ex)
             {
                 // Log the exception (not implemented here)
                 //throw new Exception("An error occurred while retrieving offers", ex);
+                Console.WriteLine("Exception message: " + ex.Message);
+                Console.WriteLine("Stack trace: " + ex.StackTrace);
+                throw; 
             }
             return fitOffers;
         }
@@ -130,8 +132,8 @@ namespace OfferApiService.Services
             {
                 using var db = new OfferContext();
                 fitOffers = await db.Offers
-                   .Include(o => o.OfferOrderLinks)
-                   .Include(o => o.BookedDates)
+                   //.Include(o => o.OfferOrderLinks)
+                   //.Include(o => o.BookedDates)
                    .Include(o => o.RentObj)
                         .ThenInclude(ro => ro.Images)
                    .Include(o => o.RentObj)
@@ -155,8 +157,8 @@ namespace OfferApiService.Services
             {
                 using var db = new OfferContext();
                 fitOffers = await db.Offers
-                   .Include(o => o.OfferOrderLinks)
-                   .Include(o => o.BookedDates)
+                  //.Include(o => o.OfferOrderLinks)
+                   //.Include(o => o.BookedDates)
                    .Include(o => o.RentObj)
                         .ThenInclude(ro => ro.Images)
                    .Include(o => o.RentObj)
@@ -183,8 +185,8 @@ namespace OfferApiService.Services
             {
                 using var db = new OfferContext();
                 fitOffers = await db.Offers
-                   .Include(o => o.OfferOrderLinks)
-                   .Include(o => o.BookedDates)
+                   //.Include(o => o.OfferOrderLinks)
+                   //.Include(o => o.BookedDates)
                    .Include(o => o.RentObj)
                         .ThenInclude(ro => ro.Images)
                    .Include(o => o.RentObj)

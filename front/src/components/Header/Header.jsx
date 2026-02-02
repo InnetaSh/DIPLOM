@@ -1,84 +1,83 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../contexts/LanguageContext";
 
-import { Image } from "../UI/Image/Image.jsx";
-import { IconButton } from "../UI/Button/IconButton.jsx";
-import { TextButton } from "../UI/Button/TextButton.jsx";
-import { IconWithTextButton } from "../UI/Button/IconWithTextButton.jsx";
-import { SecondaryButton } from "../UI/Button/SecondaryButton.jsx";
-import { UserMenu } from "./UserMenu.jsx";
+import { Logo_Oselya } from "../../components/Logo/Logo_Oselya.jsx";
+import { Text } from "../../components/UI/Text/Text.jsx";
+import { IconButton__50 } from "../UI/Button/IconButton_50.jsx";
+import { MenuModal } from "../../components/modals/MenuModal.jsx";
+import { LanguageModal } from "../modals/LanguageModal.jsx";
 
-import "../../styles/globals.css";
-import "./Header.css";
+import styles from './Header.module.css';
 
-import logo from "../../img/logo/Booking-Emblema.jpg";
-import { ReactComponent as PhoneIcon } from "../../img/icons/phone.svg";
-
-export const Header = ({ showLogBtn = true }) => {
+export const Header = ({ isLoginModalOpen = false, setIsLoginModalOpen }) => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [openMenu, setOpenMenu] = useState(false);
+  const [isModalLanguageOpen, setIsModalLanguageOpen] = useState(false);
 
   const { t } = useTranslation();
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage } = useLanguage(); // Контекст языка
+  const [currency, setCurrency] = useState("");
 
-  // Переключаем язык при клике
   const handleLanguageToggle = () => {
-    setLanguage(language === "en" ? "ru" : "en");
+    setIsModalLanguageOpen(true);
   };
 
-  return (
-    <div className="header">
-      <div className="header-container">
-        <div className="header-main">
-          <div className="logo-container">
-            <Image src={logo} alt="Logo" type="logo" />
-          </div>
+    const handleMenuToggle = () => {
+    setOpenMenu(true);
+  };
 
-          <div className="actions-container">
-            {/* Кнопка переключения языка */}
-            <IconButton
-              icon={language.toUpperCase()}
+
+  useEffect(() => {
+    console.log("Language changed:", language);
+  }, [language]);
+
+  return (
+    <div className={`${styles.headerMain} ${styles.headerMain_small} flex-center`}>
+      <div className={`${styles.headerMain__container} ${styles.headerMain__container_small} p-t-24 flex-between`}>
+        <div className={`${styles.headerMain_Logo__container} flex-between`}>
+          <div className={styles.headerMain__logo}>
+            <Logo_Oselya />
+          </div>
+          <Text text={t("header.subtitle_header_main")} type="m_400_s_32" />
+          <div className={`${styles.headerMain__logo__actions_container} flex-center gap-20`}>
+            <IconButton__50
+              icon_name="user-male"
+              onClick={() => setIsLoginModalOpen(prev => !prev)}
+              title="User"
+            />
+
+            <IconButton__50
+              icon_src="/img/earth-globe.svg"
+              title="Earth"
               onClick={handleLanguageToggle}
             />
 
-            <IconButton
-              icon={<PhoneIcon />}
-              onClick={() => console.log("Связаться с нами clicked")}
+            <IconButton__50
+              icon_name="menu"
+              title="Menu"
+               onClick={handleMenuToggle}
             />
-
-            {user ? (
-              <div className="user-cabiten__container">
-                <TextButton
-                  text={t("header.registerProperty")}
-                  onClick={() => console.log("Register clicked")}
-                />
-                <div className="user-cabiten__info">
-                  <IconWithTextButton
-                    icon="👤"
-                    text={user.name}
-                    textType="bold"
-                    onClick={() => setOpenMenu((prev) => !prev)}
-                  />
-                  {openMenu && <UserMenu />}
-                </div>
+            {openMenu && (
+              <div className={styles.headerMain_sortBtn__dropdown}>
+                <MenuModal setIsModalOpen={setOpenMenu} />
               </div>
-            ) : (
-              showLogBtn && (
-                <>
-                  <SecondaryButton
-                    text={t("header.signUp")}
-                    onClick={() => navigate("/register")}
-                  />
-                  <SecondaryButton
-                    text={t("header.signIn")}
-                    onClick={() => navigate("/login")}
-                  />
-                </>
-              )
+            )}
+
+            {isModalLanguageOpen && (
+              <div className="modalOverlay">
+                <LanguageModal
+                  setIsModalOpen={setIsModalLanguageOpen}
+                  setLanguage={(lang) => {
+                    setLanguage(lang);
+                    // setIsModalLanguageOpen(false);
+                  }}
+                  setCurrency={setCurrency}
+                />
+              </div>
             )}
           </div>
         </div>

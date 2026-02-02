@@ -12,7 +12,7 @@ namespace LocationApiService.View
 
         public List<CityResponse> Cities { get; set; } = new();
 
-        public static RegionResponse MapToResponse(Region model)
+        public static RegionResponse MapToResponse(Region model, string baseUrl)
         {
             return new RegionResponse
             {
@@ -21,7 +21,7 @@ namespace LocationApiService.View
                 Longitude = model.Longitude,
 
                 Cities = model.Cities?
-                    .Select(CityResponse.MapToResponse)
+                    .Select(city => CityResponse.MapToResponse(city, baseUrl))
                     .ToList() ?? new List<CityResponse>()
             };
         }

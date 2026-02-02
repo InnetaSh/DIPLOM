@@ -22,11 +22,11 @@ namespace OrderApiService.View
         public decimal OrderPrice { get; set; }        // Цена без скидок и налогов
         public decimal DiscountPercent { get; set; }  // Процент скидки
         public decimal DiscountAmount { get; set; }   // Сумма скидки в валюте
-        public decimal? DepositAmount { get; set; }   // Сумма депозита (если есть)
+        //public decimal? DepositAmount { get; set; }   // Сумма депозита (если есть)
         public decimal TaxAmount { get; set; }        // Налог в валюте
         public decimal TotalPrice { get; set; }       // Итоговая стоимость с учётом всех скидок и налогов
 
-        public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
+       // public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
         // ===== Оплата до=====
         public DateTime? PaidAt { get; set; }            // Дата и время оплаты (если есть)
 
@@ -38,7 +38,7 @@ namespace OrderApiService.View
         public string? ClientNote { get; set; }
         // ===== Статус заказа =====
         public OrderStatus Status { get; set; }          // Текущий статус заказа (новый, подтверждён, отменён и т.д.)
-        public string PaymentMethod { get; set; }
+        //public string PaymentMethod { get; set; }
 
 
 
@@ -59,13 +59,13 @@ namespace OrderApiService.View
                 OrderPrice = request.OrderPrice,
                 DiscountPercent = request.DiscountPercent,
                 DiscountAmount = request.DiscountAmount,
-                DepositAmount = request.DepositAmount,
+               // DepositAmount = request.DepositAmount,
                 TaxAmount = request.TaxAmount,
                 TotalPrice = request.TotalPrice,
 
                 // ===== Бесплатная отмена / оплата =====
-                FreeCancelEnabled = request.FreeCancelEnabled,
-                PaidAt = request.PaidAt,
+               // FreeCancelEnabled = request.FreeCancelEnabled,
+                //PaidAt = request.PaidAt,
 
                 // ===== Время заезда / выезда =====
                 CheckInTime = request.CheckInTime,
@@ -79,7 +79,7 @@ namespace OrderApiService.View
                     ? OrderStatus.Pending
                     : request.Status,
 
-                PaymentMethod = request.PaymentMethod,
+               // PaymentMethod = request.PaymentMethod,
 
                 // ===== Системные поля =====
                 CreatedAt = DateTime.UtcNow

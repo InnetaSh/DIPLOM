@@ -1,0 +1,44 @@
+.addGuestModal {
+  background: var(--color-bg);
+  border: 3px solid var(--color-text);
+  border-radius: 20px;
+  padding: 10px 30px 30px 30px;
+
+  width: 728px;
+  min-width: 728px;
+  height: 506px;
+  position: relative;
+
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.guest-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.guest-controls button {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  background-color: var(--color-secondary-light);
+  cursor: pointer;
+}
+
+.guest-controls span {
+  margin: 0 8px;
+}

@@ -9,6 +9,7 @@ namespace OfferApiService.View.RentObj
         public int id { get; set; }
         public string? Title { get; set; }
         public int CategoryId { get; set; }
+        public bool IsFilterable { get; set; }
         public ParamValueType ValueType { get; set; } = ParamValueType.Boolean;
 
         public static ParamItemResponse MapToResponse(ParamItem model)
@@ -19,7 +20,8 @@ namespace OfferApiService.View.RentObj
             {
                 id = model.id,
                 ValueType = model.ValueType,
-                CategoryId = model.CategoryId
+                CategoryId = model.CategoryId,
+                IsFilterable = model.IsFilterable,
             };
         }
     }

@@ -1,0 +1,65 @@
+.cityPage {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: transparent;
+
+}
+
+.cityPage main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    /* max-width: 1920px;      */
+    padding: 0 4%;
+    box-sizing: border-box;
+    gap: 32px;
+}
+
+
+.description_container {
+    width: 100%;
+    min-height: 280px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start; 
+}
+
+
+.text_column {
+    flex: 1;
+      height: fit-content;
+    text-align: justify;
+    text-align-last: left;
+
+    margin: 0 auto;
+    white-space: pre-line;
+    hyphens: auto;
+     height: auto;
+}
+
+.map_column {
+    flex: 0 0 573px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+     min-height: 280px;
+     height: 100%;
+     gap: 15px;
+}
+
+.card_map {
+    flex: 1;
+    min-height: 0; 
+     overflow: hidden;
+}
+.btn_container{
+     flex: 0 0 59px;
+}
+

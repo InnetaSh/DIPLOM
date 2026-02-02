@@ -14,7 +14,7 @@ namespace OrderApiService.Models
             {
                 entity.ToTable("orders"); 
                 entity.HasKey(e => e.id);
-                entity.Property(e => e.id).HasColumnName("id"); 
+                entity.Property(e => e.id).HasColumnName("id");
             });
         }
     }

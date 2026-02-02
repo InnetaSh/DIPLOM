@@ -1,0 +1,95 @@
+.footer {
+  position: relative;
+  width: 100%;
+  min-height: 425px;
+ 
+  display: flex;
+justify-content: center; 
+  align-items: flex-end;   
+  overflow: hidden;
+  margin-top: 50px;
+}
+
+.footer__svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+   aspect-ratio: 1920 / 445;
+  width: 100%;
+  min-width: 1920px;
+  z-index: -1;
+}
+
+.footer__logo_wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start; 
+  align-items: flex-start;    
+}
+
+.footer__columns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+     background-color: var(  --color-bg__2);
+  gap: 20px;
+  width: 100%;
+  padding: 0 10%;
+
+  /* top:173px; */
+  bottom: 10px;
+  padding-bottom: 10px;
+  left: 0;
+  z-index: 2;
+}
+
+@media (max-width: 1324px) {
+ .footer {
+     aspect-ratio: unset;
+    min-height: fit-content;   
+    height: fit-content;
+    padding-top: 150px;
+  }
+  .footer__columns {
+    width: 100%;
+    height: fit-content;
+    /* background-color: var(  --color-bg__2); */
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.footer__column {
+  min-width: 0;
+}
+
+.footer__column h4 {
+  margin-bottom: 12px;
+}
+
+
+
+.footer__column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.footer__column ul li {
+  margin-bottom: 8px;
+}
+
+
+/* Соцсети */
+.footer__socials {
+  margin-top: 10px;
+  display: flex;
+  gap: 12px;
+}
+
+/* Кнопка приложения */
+.footer__app_button {
+width: 100%;
+display: flex;
+justify-content: flex-end;
+  cursor: pointer;
+}

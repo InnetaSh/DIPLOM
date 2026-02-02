@@ -8,7 +8,7 @@ namespace OfferApiService.Models.View
         public int id { get; set; }
 
         public string? Title { get; set; } //название 
-        //public string? Description { get; set; }
+        public string? Description { get; set; }
 
         public int DistanceToCenter { get; set; } // расстояние до центра
 
@@ -26,13 +26,14 @@ namespace OfferApiService.Models.View
         public decimal? OrderPrice { get; set; } // цена для текущего заказа (по количеству дней расчет)
         public decimal? TotalPrice { get; set; }       // Итоговая стоимость
 
-        // Рейтинг
-        public double Rating { get; set; }
+       
 
         // Метки
         public bool? IsRecommended { get; set; }
         public bool? IsTopLocation { get; set; }
         public bool? IsTopCleanliness { get; set; }
+         
+        public double OverallRating { get; set; }  // общий рейтинг
 
         // Основная информация о жилье
         public RentObjShortResponse RentObj { get; set; }
@@ -50,13 +51,6 @@ namespace OfferApiService.Models.View
                 PricePerDay = model.PricePerDay,
                 PricePerWeek = model.PricePerWeek,
                 PricePerMonth = model.PricePerMonth,
-
-
-
-                //Rating = model.Rating,
-                //IsRecommended = model.IsRecommended,
-                //IsTopLocation = model.IsTopLocation,
-                //IsTopCleanliness = model.IsTopCleanliness,
 
                 RentObj = model.RentObj != null
                     ? RentObjShortResponse.MapToShortResponse(model.RentObj, baseUrl)

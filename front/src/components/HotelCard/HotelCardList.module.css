@@ -1,8 +1,10 @@
 .hotelCardList {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-
+.hotelCardWrapper {
+  box-sizing: border-box;
+  /* Переход ширины задается через inline-style, можно дублировать здесь для надежности */
+  transition: width 0.3s ease;
+}

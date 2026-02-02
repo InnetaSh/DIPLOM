@@ -21,13 +21,13 @@ namespace OrderApiService.Models
         public decimal OrderPrice { get; set; }        // Цена без скидок и налогов
         public decimal DiscountPercent { get; set; }  // Процент скидки
         public decimal DiscountAmount { get; set; }   // Сумма скидки в валюте
-        public decimal? DepositAmount { get; set; }   // Сумма депозита (если есть)
+       // public decimal? DepositAmount { get; set; }   // Сумма депозита (если есть)
         public decimal TaxAmount { get; set; }        // Налог в валюте
         public decimal TotalPrice { get; set; }       // Итоговая стоимость с учётом всех скидок и налогов
 
-        public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
+       // public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
         // ===== Оплата до=====
-        public DateTime? PaidAt { get; set; }            // Дата и время оплаты (если есть)
+        //public DateTime? PaidAt { get; set; }            // Дата и время оплаты (если есть)
 
         // ===== Время заезда / выезда (может отличаться от Offer) =====
         public TimeSpan? CheckInTime { get; set; }       // Время заезда для конкретного заказа
@@ -38,7 +38,7 @@ namespace OrderApiService.Models
 
         // ===== Статус заказа =====
         public OrderStatus Status { get; set; }          // Текущий статус заказа (новый, подтверждён, отменён и т.д.)
-        public string PaymentMethod { get; set; }
+       // public string PaymentMethod { get; set; }
         // ===== Дата создания заказа =====
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Дата создания записи
     }

@@ -1,17 +1,399 @@
 
 /* стили Leaflet */
 @import url('https://unpkg.com/leaflet/dist/leaflet.css');
+@import '../src/styles/globals.css';
+@import 'normalize.css';
+@import 'fonts.css';
 
-body {
+
+
+/* Сброс */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
 }
+
+
+/* Светлая тема по умолчанию */
+:root {
+  --color-bg: #F5F3EE;                 /* 01*/
+  --color-bg__2: #EDE5D1;                 /* l-tema_2 */
+  --color-primary: #F5F3EE;            /* 01 */
+  --color-secondary: #FFEDC3;          /* 05 */
+  --color--selected: #FFDB8A;          /* 06 */
+
+  --color--btn-action:#FF9839;                /* 03 */
+  --color--btn-action-hover:#FF9839;          /* 03 */
+  --color--btn-action-onclick:#FF9839;        /* 03 */
+
+   --color-btn-text-dark: #0D2D4A;               /* 02 не менять оттенок в другой теме**/
+  --color-btn-text-light: #F5F3EE;               /* 01 не менять оттенок в другой теме*/
+   --color-btn-text: #0D2D4A;                   /* 02 */
+  --color-btn-text-secondary: #F5F3EE;          /* 01 */
+
+   --color--btn-action-secondary: #FFDB8A;            /* 06 */
+  --color--btn-action-secondary-hover: #FFDB8A;       /* 06 */
+  --color--btn-action-secondary-onclick: #FFDB8A;     /* 06 */
+
+  --color--btn-state: #F5F3EE;            /* 01 */
+  --color--btn-state-hover: #FFEDC3;       /* 05 */
+  --color--btn-state-onclick: #FFDB8A;     /* 06 */
+  --color--btn-state-border: #0D2D4A;       /* 02 */
+   --color--btn-state-border-hover: #FFDB8A;     /* 06 */
+
+  --color--btn-counter:#FFFFFF;            
+  --color--btn-counter-border: #1D3F5E;   
+  
+  --color--btn-icon: #FFDB8A;               /* 06 */
+ 
+  --color-text: #0D2D4A;               /* 02 */
+  --color-text-secondary: #FF9839;     /* 03 */
+
+ --color-link: #0D2D4A; 
+
+  --color-input-form-bg: #EDE5D1;        /* l-tema_2 */
+  --color-input-bg: #EDE5D1;                 /* l-tema_2 */
+  --color-input-border: #0D2D4A;            /* 02 */
+
+  --color-sort-modal-bg: #EDE5D1;        /* l-tema_2 */
+ --color--sort-modal-btn-hover: #FFDB8A;               /* 06 */
+
+  /*-----------------------------------*/
+  --color-menu-modal-bg: #EDE5D1;        /* l-tema_2 */
+ --color-menu-modal-icon:#FFDB8A;               /* 06 */
+
+  /*-----------------------------------*/
+  --color-search-bg: #0D2D4A;          /* 02 */
+  --color-search-input-bg:  #F5F3EE;            /* 01 */
+  --color--btn-search:#FF9839;               /* 03 */ 
+  --color--btn-orange:#FF9839;               /* 03 */ 
+
+  --color--btn-hotel-info-params: #EDE5D1;        /* l-tema_2 */
+
+  --color-btn-arrow: #0D2D4A;               /* 02 */
+
+  /*-----------------------------------*/
+  --color--hotel-info-border: #FFDB8A;               /* 06 */
+    --color--hotel-info-title-bg:#EDE5D1;        /* l-tema_2 */
+        --color--hotel-info-bg:#EDE9DF;                 /* l-tema_1 */
+    --color--hotel-info-btn: #FFDB8A;               /* 06 */
+
+ /*-----------------------------------*/
+
+  --color--hotel-review-btn:#EDE5D1;        /* l-tema_2 */
+ --color--hotel-review-bg: #EDE9DF;;        /* l-tema_1 */
+ --color--hotel-review-text: #F5F3EE;            /* 01 */
+ /*-----------------------------------*/
+
+  --color--progressBar-border: #0D2D4A;   
+ --color--progressBar-bg: #FFDB8A;               /* 06 */
+
+  --color--bunner-text: #F5F3EE;            /* 01 */
+
+  --color--card-lisr-recmd-bg: #F5F3EE;            /* 01 */
+
+
+
+  --color-primary-rgb: 52, 152, 219;
+  --color-primary-dark: #005b9a;
+  --color-on-primary: #ffffff;
+  --color-secondary-light: #e0e0e0;
+  
+  --color-secondary-light-rgb: 100, 150, 200;
+  --color-border: #4a4949;
+  --color-border-rgb: 128, 128, 128;
+  --color-form-border: #db7500;
+}
+
+/* Тёмная тема */
+[data-theme="dark"] {
+  --color-bg: #0E1E2C;                 /* d-tema_ */
+  --color-primary: #0D2D4A;            /* 02 */
+  --color-secondary: #0D2D4A;          /* 02 */
+  --color--selected: #FFDB8A;          /* 06 */  
+
+  --color--btn-action:#FF9839;               /* 03 */ 
+  --color--btn-action-hover: #FF9839;        /* 03 */ 
+  --color--btn-action-onclick: #FF9839;      /* 03 */ 
+   --color--btn-state-border: #FFDB8A;     /* 06 */
+
+  --color--btn-state:#0D2D4A;            /* 02 */
+  --color--btn-state-hover: #FFEDC3;       /* 05 */
+  --color--btn-state-onclick: #FFDB8A;     /* 06 */
+  --color--btn-state-border: #FFDB8A;     /* 06 */
+
+  --color--btn-search:#FF9839;               /* 03 */ 
+
+  --color-text: #F5F3EE;               /* 02 */
+  --color-text-secondary: #FF9839;     /* 03 */
+
+
+
+
+
+  --color-primary-rgb: 52, 152, 219;
+  --color-primary-dark: #0f5fae;
+  --color-on-primary: #ffffff;
+
+  --color-secondary-light: #3c3c3c;
+  --color-secondary-light-rgb: 100, 150, 200;
+  --color-text: #e0e0e0;
+
+  --color-border: #4a4949;
+  --color-border-rgb: 128, 128, 128;
+  --color-form-border: #db7500;
+}
+
+
+
+
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.flex-left {
+  display: flex;
+  justify-content:flex-start;
+  align-items: center;
+}
+.flex-right {
+  display: flex;
+  justify-content:flex-end;
+  align-items: center;
+}
+.flex-between {
+  display: flex;
+  justify-content:space-between !important;
+  align-items: center;
+}
+
+
+.flex-center-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.flex-left-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: start;
+}
+.flex-stretch-column {
+  display: flex;
+  flex-direction: column;
+  justify-content:space-between;
+  height: 100%;  
+}
+
+
+.modalOverlay {
+  position: fixed;      /* поверх всего контента */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+   backdrop-filter: blur(8px); /* размытие фона позади */
+  -webkit-backdrop-filter: blur(8px); /* для Safari */
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;        /* чтобы быть выше всего */
+}
+
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/*=================================================*/
+.btn-br-r-20 {
+  border-radius: clamp(18px, 1.5vw, 20px);
+}
+.btn-br-r-15 {
+    border-radius: clamp(12px, 1vw, 15px);
+}
+.btn-br-r-10 {
+  border-radius: clamp(8px, 0.7vw, 10px);
+}
+.btn-br-r-50 {
+  border-radius: 50%;
+}
+
+.btn_brdr_1{
+  border: 1px solid var(--color--btn-state-border) !important;
+}
+/*=================================================*/
+.btn-w-1451 {  width:  1451px; }
+.btn-w-1165 {  width: 1165px; }
+.btn-w-960 {  width: 960px;}
+
+.btn-w-573 {  width:  573px;}
+.btn-w-562 {  width:  562px;}
+.btn-w-447 {width:  447px;}
+.btn-w-425 { width:  425px; }
+.btn-w-400 {  width:  400px;}
+.btn-w-385{  width:  385px;}
+.btn-w-293 {width:  293px;}
+.btn-w-276 {width:  276px;}
+.btn-w-276 {width:  276px;} 
+.btn-w-190 {width:  190px;}
+.btn-w-151 {  width: 151px;}
+.btn-w-148 {  width: 148px;}
+.btn-w-134 {  width: 135px;}
+.btn-w-112 {  width: 112px;}
+.btn-w-112_aspect {
+  width: clamp(110px, 7.7vw, 112px);
+  aspect-ratio: 1 / 1;
+}
+.btn-w-100 {  width: 100px;}
+.btn-w-72 { width:72px;}
+.btn-w-68 {  width:  68px;}
+.btn-w-50 {  width:  50px;}
+.btn-w-35 {  width:  35px;}
+.btn-w-full {  width: 100%;}
+.btn-w-fit-content {  width: fit-content;}
+
+/*=================================================*/
+.btn-h-35 { height: 35px; }
+.btn-h-37 { height: 37px; }
+.btn-h-44 { height: 44px; }
+.btn-h-50 { height: 50px; }
+.btn-h-59 { height: 59px; }
+.btn-h-60 { height: 60px; }
+.btn-h-68 { height: 68px; }
+.btn-h-70 { height: 70px; }
+.btn-h-72 { height: 72px; }
+.btn-h-94 { height: 94px; }
+.btn-h-100 { height: 100px; }
+.btn-h-101 { height: 101px; }
+.btn-h-106 { height: 106px; }
+.btn-h-112 { height: 112px; }
+.btn-h-120 { height: 120px; }
+.btn-h-466 { height: 466px; }
+.btn-h-656 { height: 656px; }
+.btn-h-full { height: 100%; }
+.btn-h-fit-content {  height: fit-content;}
+
+
+@media (max-width: 1024px) {
+  .btn-h-72 ,
+  .btn-h-70{
+    height: 60px;
+  } 
+  .btn-h-120,
+  .btn-h-100 {
+    height: 80px; 
+  }
+
+  .btn-h-59 {
+    height: 50px;
+  }
+    .btn-h-50 {
+    height: 50px;
+  }
+}
+
+@media (max-width: 768px) {
+    .btn-h-72 ,
+    .btn-h-70 {
+    height: 55px;
+  }
+  .btn-h-120,
+  .btn-h-100 {
+    height: 60px; 
+  }
+
+  .btn-h-59 {
+    height: 45px;
+  }
+}
+@media (max-width: 480px) {
+    .btn-h-72 ,
+    .btn-h-70 {
+    height: 52px;
+  }
+  .btn-h-120,
+  .btn-h-100 {
+    height: 40px; 
+  }
+
+  .btn-h-59 {
+    height: 40px;
+  }
+}
+/*=================================================*/
+.mt-5  { margin-top: clamp(3px, 1vw, 5px); }
+.mt-10  { margin-top: clamp(5px, 1vw, 10px); }
+.mt-20  { margin-top: clamp(10px, 1.5vw, 20px); }
+.mt-30  { margin-top: clamp(15px, 2vw, 30px); }
+.mt-50  { margin-top: clamp(25px, 3vw, 50px); }
+.mt-54  { margin-top: clamp(25px, 3vw, 54px); }
+.mt-80  { margin-top: clamp(40px, 4vw, 80px); }
+.mt-100 { margin-top: clamp(50px, 5vw, 100px); }
+
+/*==================================================*/
+.mb-10  { margin-bottom: clamp(5px, 1vw, 10px); }
+.mb-20  { margin-bottom: clamp(10px, 1.5vw, 20px); }
+.mb-30  { margin-bottom: clamp(15px, 2vw, 30px); }
+.mb-50  { margin-bottom: clamp(25px, 3vw, 50px); }
+.mb-80  { margin-bottom: clamp(40px, 4vw, 80px); }
+.mb-100 { margin-bottom: clamp(50px, 5vw, 100px); }
+/*==================================================*/
+
+.ml-10  { margin-left:  clamp(15px, 1.4%, 20px);}
+.ml-228  { margin-left:  clamp(11%, 11.9%, 228px);}
+/*==================================================*/
+
+.mr-10  { margin-right:  clamp(15px, 1.4%, 20px);}
+
+/*=================================================*/
+.gap-5  { gap: 5px; }
+.gap-10  { gap: clamp(5px, 1vw, 10px); }
+.gap-12  { gap: clamp(7px, 1.2vw, 12px); }
+.gap-20  { gap: clamp(10px, 1.5vw, 20px); }
+.gap-30  { gap: clamp(15px, 2vw, 30px); }
+.gap-50  { gap: clamp(25px, 3vw, 50px); }
+.gap-80  { gap: clamp(40px, 4vw, 80px); }
+.gap-100 { gap: clamp(50px, 5vw, 100px); }
+.gap-174 {gap:  174px;}
+/*==================================================*/
+.p-10  { padding: clamp(5px, 1vw, 10px); }
+.p-20  { padding: clamp(10px, 1.5vw, 20px); }
+.p-25  { padding: clamp(12px, 1.8vw, 25px); }
+.p-30  { padding: clamp(15px, 2vw, 30px); }
+.p-50  { padding: clamp(25px, 3vw, 50px); }
+.p-80  { padding: clamp(40px, 4vw, 80px); }
+.p-100 { padding: clamp(50px, 5vw, 100px); }
+/*==================================================*/
+.p-l-50  { padding-left: clamp(25px, 3vw, 50px); }
+.p-l-80  { padding-left: clamp(40px, 4vw, 80px); }
+/*==================================================*/
+.p-t-24  { padding-top: clamp(20px, 24px, 24px); }
+.p-t-42  { padding-top: clamp(40px, 42px, 42px); }
+/*==================================================*/
+.p-r-87  { padding-right:  clamp(80px, 6%, 87px);}
+.p-r-98  { padding-right:  clamp(90px, 6.8%, 98px);}
+
+
+
+.react-datepicker-wrapper {
+  display: flex !important; 
+  align-items: center; 
+  justify-content: flex-start;   
+  width: 100%;
+  height: 100%;        
+}
+.react-datepicker__input-container{
+  height: 100%;
 }

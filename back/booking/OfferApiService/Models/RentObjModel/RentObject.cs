@@ -6,9 +6,7 @@ namespace OfferApiService.Models.RentObjModel
 {
     public class RentObject : EntityBase
     {
-        //public string Title { get; set; }
-
-        //public string Description { get; set; }
+        
 
         //=====расположение==================
         public int CountryId { get; set; }
@@ -16,33 +14,36 @@ namespace OfferApiService.Models.RentObjModel
         public int RegionId { get; set; }
         public int CityId { get; set; }
 
-        public string Address { get; set; }
+
+        //  Адрес для геокодинга
+
+        public string Street { get; set; }
+        public string HouseNumber { get; set; }
+        public string Postcode { get; set; }
 
         /// Координаты для карты
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
 
+
+        //=====Основная информация==================
+        public int? DistanceToCenter { get; set; } // расстояние до центра
+
+
         // === Основные характеристики объекта  ===
         public int RoomCount { get; set; }              //Количество комнат
-        public int LivingRoomCount { get; set; }    // Количество гостиных
-
+        public int LivingRoomCount { get; set; }         // Количество гостиных
         public int BathroomCount { get; set; }          //Количество ванных комнат
-        public bool HasKitchen { get; set; }           // Есть кухня
-        public bool HasBalcony { get; set; }           // Балкон
+
 
         public double Area { get; set; }                //Площадь объекта (кв. м)
 
-        public int Floor { get; set; }                  // Этаж, на котором находится жилье 
-
-        public int TotalFloors { get; set; }           // Общее количество этажей в здании
-        public RentObjType RentObjType { get; set; }   //Тип жилья
-
-
-
+        
         // === Спальные места ===
-        public int BedroomsCount { get; set; }        //Количество спальных мест
-        public int BedsCount { get; set; }            //Количество кроватей
+        public int TotalBedsCount { get; set; }       //Общее количество спальных мест
+        public int SingleBedsCount { get; set; }      // Количество односпальных кроватей
+        public int DoubleBedsCount { get; set; }      // Количество двуспальных кроватей
         public bool HasBabyCrib { get; set; }         // Детская кроватка
 
 

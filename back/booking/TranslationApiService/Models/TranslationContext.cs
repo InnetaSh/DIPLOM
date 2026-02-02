@@ -31,6 +31,18 @@ namespace TranslationApiService.Models
                 entity.ToTable("offertranslation");
                 entity.HasKey(e => e.id);
                 entity.Property(e => e.id).HasColumnName("id");
+
+                entity.Property(e => e.Title)
+                    .HasColumnType("text")
+                    .IsRequired();
+
+                entity.Property(e => e.TitleInfo)
+                    .HasColumnType("text")
+                    .IsRequired(false); 
+
+                entity.Property(e => e.Description)
+                    .HasColumnType("text")
+                    .IsRequired(); 
             });
 
             builder.Entity<CityTranslation>(entity =>

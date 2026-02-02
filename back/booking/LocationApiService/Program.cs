@@ -14,7 +14,6 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IAttractionService, AttractionService>();
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IDistrictService, DistrictService>();

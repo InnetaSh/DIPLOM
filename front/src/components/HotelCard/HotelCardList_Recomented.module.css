@@ -1,0 +1,72 @@
+.hotelCardList {
+  width: 100%;
+  height: fit-content;
+  min-height: 890px;
+  padding-left: 91px;
+  background-color: var(--color--card-lisr-recmd-bg);
+}
+
+.hotelCardList__container {
+  width: 100%;
+}
+
+.hotelCardList__columns {
+  width: 100%;
+  display: flex;
+  gap: 0 105px;
+}
+
+.hotelCardList__cardsColumn {
+
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 27px 30px;
+  margin-top: 33px;
+}
+
+.hotelCardList__imgColumn {
+  width: 860px;
+  flex-shrink: 0;
+}
+
+
+
+@media (max-width: 1920px) {
+  .hotelCardList {
+    width: 80%;
+  }
+
+  .hotelCardList__cardsColumn {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(416px, 1fr));
+    gap: 27px 30px;
+  }
+}
+
+/*======================================================*/
+.imageCard {
+  position: relative;
+  width: 100%;
+}
+
+.image {
+  width: 100%;
+  display: block;
+}
+
+ .badge {
+  color: var(--color--text);
+  padding: 8px 12px;
+  border-radius: 10px;
+  position: absolute;
+  height: 64px;
+  left: 27px;
+  top: 65px;
+  transform: rotate(5.5deg);
+}
+.line{
+  width: 210px;
+  height: 1px;
+  background-color: var(--color-text);
+}

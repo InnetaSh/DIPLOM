@@ -24,7 +24,7 @@ namespace OrderApiService.Controllers
         }
         //===========================================================================================
 
-        [HttpPost("orderAdd")]
+        [HttpPost("order/add")]
         public async Task<ActionResult<int>> AddOrder(
             [FromBody] OrderRequest orderRequest)
         {
@@ -77,6 +77,21 @@ namespace OrderApiService.Controllers
                 return NotFound();
 
             return Ok(orders);
+        }
+
+        //===========================================================================================
+
+        [HttpGet("{orderId}/get/offerId")]
+        public async Task<ActionResult<int>> GetOfferByIdFromOrder(
+        int orderId)
+        {
+
+            var order = await _orderService.GetEntityAsync(orderId);
+
+            if (order == null )
+                return NotFound();
+
+            return Ok(new {offerId = order.OfferId});
         }
 
         //===========================================================================================

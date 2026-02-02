@@ -21,14 +21,14 @@ namespace OrderApiService.View
         public decimal OrderPrice { get; set; }
         public decimal DiscountPercent { get; set; }
         public decimal DiscountAmount { get; set; }
-        public decimal? DepositAmount { get; set; }
+        //public decimal? DepositAmount { get; set; }
         public decimal TaxAmount { get; set; }
         public decimal TotalPrice { get; set; }
 
-        public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
+        //public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
 
  
-        public DateTime? PaidAt { get; set; }
+        //public DateTime? PaidAt { get; set; }
 
         // Время заезда/выезда
         public TimeSpan? CheckInTime { get; set; }
@@ -40,7 +40,7 @@ namespace OrderApiService.View
         // Статус заказа
         public string? Status { get; set; }
         // Оплата
-        public string? PaymentMethod { get; set; }
+        //public string? PaymentMethod { get; set; }
         public DateTime CreatedAt { get; set; }
 
         // ===== Метод маппинга =====
@@ -67,13 +67,13 @@ namespace OrderApiService.View
                 OrderPrice = model.OrderPrice,
                 DiscountPercent = model.DiscountPercent,
                 DiscountAmount = model.DiscountAmount,
-                DepositAmount = model.DepositAmount,
+               // DepositAmount = model.DepositAmount,
                 TaxAmount = model.TaxAmount,
                 TotalPrice = model.TotalPrice,
 
                 // ===== Бесплатная отмена / оплата =====
-                FreeCancelEnabled = model.FreeCancelEnabled,
-                PaidAt = model.PaidAt,
+                //FreeCancelEnabled = model.FreeCancelEnabled,
+                //PaidAt = model.PaidAt,
 
                 // ===== Время заезда / выезда =====
                 CheckInTime = model.CheckInTime,
@@ -84,7 +84,7 @@ namespace OrderApiService.View
 
                 // ===== Статус и оплата =====
                 Status = model.Status.ToString(),
-                PaymentMethod = model.PaymentMethod,
+                //PaymentMethod = model.PaymentMethod,
 
                 // ===== Системные поля =====
                 CreatedAt = model.CreatedAt

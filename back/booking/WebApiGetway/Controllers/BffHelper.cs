@@ -5,91 +5,84 @@ namespace WebApiGetway.Controllers
 {
     public class BffHelper
     {
+        //public static List<Dictionary<string, object>> ConvertActionResultToDict(OkObjectResult objResult)
+        //{
+        //    if (objResult?.Value is JsonElement element)
+        //        return ConvertElementToDict(element);
+        //    return null;
+        //}
+
+        //public static List<Dictionary<string, object>> ConvertElementToDict(JsonElement element)
+        //{
+        //    var dictList = new List<Dictionary<string, object>>();
+        //    if (element.ValueKind == JsonValueKind.Array)
+        //        dictList = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(element.GetRawText());
+        //    else if (element.ValueKind == JsonValueKind.Object)
+        //    {
+        //        var obj = JsonSerializer.Deserialize<Dictionary<string, object>>(element.GetRawText());
+        //        dictList.Add(obj);
+        //    }
+        //    else return null;
+
+        //    foreach (var dl in dictList)
+        //        foreach (var key in dl.Keys)
+        //            if (dl[key] is JsonElement el
+        //                && (el.ValueKind == JsonValueKind.Array || el.ValueKind == JsonValueKind.Object))
+        //                dl[key] = ConvertElementToDict(el);
+        //    return dictList;
+        //}
+
         public static List<Dictionary<string, object>> ConvertActionResultToDict(OkObjectResult objResult)
         {
-            if (objResult?.Value is JsonElement element)
+            if (objResult?.Value == null)
+                return new List<Dictionary<string, object>>();
+
+            if (objResult.Value is List<Dictionary<string, object>> list)
+                return list;
+
+            if (objResult.Value is JsonElement element)
                 return ConvertElementToDict(element);
-            return null;
+
+            return new List<Dictionary<string, object>>();
         }
 
         public static List<Dictionary<string, object>> ConvertElementToDict(JsonElement element)
         {
             var dictList = new List<Dictionary<string, object>>();
+
             if (element.ValueKind == JsonValueKind.Array)
-                dictList = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(element.GetRawText());
+                dictList = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(element.GetRawText()) ?? new List<Dictionary<string, object>>();
             else if (element.ValueKind == JsonValueKind.Object)
             {
                 var obj = JsonSerializer.Deserialize<Dictionary<string, object>>(element.GetRawText());
-                dictList.Add(obj);
+                if (obj != null) dictList.Add(obj);
             }
-            else return null;
+            else
+                return new List<Dictionary<string, object>>();
 
-            foreach (var dl in dictList)
-                foreach (var key in dl.Keys)
-                    if (dl[key] is JsonElement el
-                        && (el.ValueKind == JsonValueKind.Array || el.ValueKind == JsonValueKind.Object))
+            for (int i = 0; i < dictList.Count; i++)
+            {
+                var dl = dictList[i];
+                foreach (var key in dl.Keys.ToList())
+                {
+                    if (dl[key] is JsonElement el &&
+                        (el.ValueKind == JsonValueKind.Array || el.ValueKind == JsonValueKind.Object))
+                    {
                         dl[key] = ConvertElementToDict(el);
+                    }
+                }
+            }
+
             return dictList;
         }
 
 
 
 
-        //public static List<Dictionary<string, object>> ConvertElementToDict(JsonElement element)
-        //{
-        //    var result = new List<Dictionary<string, object>>();
-
-        //    if (element.ValueKind == JsonValueKind.Array)
-        //    {
-        //        foreach (var item in element.EnumerateArray())
-        //        {
-        //            if (item.ValueKind == JsonValueKind.Object)
-        //                result.Add(ConvertObject(item));
-        //        }
-        //    }
-        //    else if (element.ValueKind == JsonValueKind.Object)
-        //    {
-        //        result.Add(ConvertObject(element));
-        //    }
-
-        //    return result;
-        //}
-
-        //private static Dictionary<string, object> ConvertObject(JsonElement element)
-        //{
-        //    var dict = new Dictionary<string, object>();
-
-        //    foreach (var prop in element.EnumerateObject())
-        //    {
-        //        dict[prop.Name] = ConvertValue(prop.Value);
-        //    }
-
-        //    return dict;
-        //}
-
-        //private static object ConvertValue(JsonElement element)
-        //{
-        //    return element.ValueKind switch
-        //    {
-        //        JsonValueKind.String => element.GetString(),
-        //        JsonValueKind.Number => element.TryGetInt64(out var l) ? l : element.GetDecimal(),
-        //        JsonValueKind.True => true,
-        //        JsonValueKind.False => false,
-        //        JsonValueKind.Object => ConvertObject(element),
-        //        JsonValueKind.Array => element.EnumerateArray()
-        //                                      .Select(ConvertValue)
-        //                                      .ToList(),
-        //        _ => null
-        //    };
-        //}
-
-
-
-
 
         public static List<Dictionary<string, object>> UpdateListWithTranslations(List<Dictionary<string, object>> list, List<Dictionary<string, object>> translations,
-                   string idFieldName = "id",
-                   string translationIdFieldName = "entityId")
+          string idFieldName = "id",
+          string translationIdFieldName = "entityId")
         {
             foreach (var item in list)
             {
@@ -105,15 +98,64 @@ namespace WebApiGetway.Controllers
 
                 if (translation != null)
                 {
-                    if (item.ContainsKey("title"))
-                        item["title"] = translation["title"];
-                    if (item.ContainsKey("description"))
-                        item["description"] = translation["description"];
-
+                    CopyIfExists(item, translation, "title");
+                    CopyIfExists(item, translation, "description");
+                    CopyIfExists(item, translation, "titleInfo");
+                    CopyIfExists(item, translation, "street");
                 }
             }
             return list;
         }
+
+
+        public static List<Dictionary<string, object>> UpdateOfferListWithRating(List<Dictionary<string, object>> list, List<Dictionary<string, object>> ratings,
+            string idFieldName = "id",
+            string ratingIdFieldName = "OfferId")
+        {
+            foreach (var item in list)
+            {
+                var itemKey = item.Keys.FirstOrDefault(k => k.Equals(idFieldName, StringComparison.OrdinalIgnoreCase));
+                if (itemKey == null) continue;
+
+                if (!int.TryParse(item[itemKey]?.ToString(), out int id)) continue;
+
+                var rating = ratings.FirstOrDefault(r =>
+                {
+                    var ratingKey = r.Keys.FirstOrDefault(k => k.Equals(ratingIdFieldName, StringComparison.OrdinalIgnoreCase));
+                    return ratingKey != null && int.TryParse(r[ratingKey]?.ToString(), out int rid) && rid == id;
+                });
+
+                if (rating == null) continue;
+
+                CopyIfExists(item, rating, "Staff");
+                CopyIfExists(item, rating, "Facilities");
+                CopyIfExists(item, rating, "Cleanliness");
+                CopyIfExists(item, rating, "Comfort");
+                CopyIfExists(item, rating, "ValueForMoney");
+                CopyIfExists(item, rating, "Location");
+                CopyIfExists(item, rating, "OverallRating");
+            }
+            return list;
+        }
+        private static void CopyIfExists(
+            Dictionary<string, object> target,
+            Dictionary<string, object> source,
+            string key)
+        {
+            var targetKey = target.Keys
+               .FirstOrDefault(k => k.Equals(key, StringComparison.OrdinalIgnoreCase));
+            if (targetKey == null) return;
+
+            var sourceKey = source.Keys
+                .FirstOrDefault(k => k.Equals(key, StringComparison.OrdinalIgnoreCase));
+            if (sourceKey == null) return;
+
+            target[targetKey] = source[sourceKey];
+        }
+
+
+
+
 
     }
 

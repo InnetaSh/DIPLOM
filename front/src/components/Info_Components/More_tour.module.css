@@ -1,0 +1,162 @@
+
+
+
+.more_tour {
+  width: 1920px;
+  height: 1712px;
+  background-color: transparent;
+  padding: 111px 0 0 0;
+   transform: none;
+}
+
+.more_tour__container {
+  width: 100%;
+  position: relative;
+  
+  padding: 0 57px 0 71px;
+}
+
+.imageCard {
+  position: relative;
+  width: 1768.8px;
+  height: 1608.08px;
+  overflow: hidden; 
+  
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  display: block;
+}
+
+
+.container_spain  {
+left: 268.63px;
+  top: 96.15px;
+} 
+.rotation_spain {
+   transform: rotate(19.02deg);
+
+}
+
+
+.container_poland {
+right: 304.22px;
+  top: 56.09px;
+}
+.rotation_poland {
+   transform: rotate(-24.89deg);
+}
+
+.container_france  {
+left: 108.93px;
+  top: 507.27px;
+}
+.rotation_france {
+  transform: rotate(-24.28deg);
+
+}
+
+.container_italy  {
+right: 172.41px;
+  top: 489.83px;
+}
+.rotation_italy {
+   transform: rotate(27.05deg);
+} 
+
+.container_czech_republic  {
+left: 166.71px;
+  top:934.16px;
+}
+.rotation_czech_republic {
+   transform: rotate(20.85deg);
+}
+
+.container_germany   {
+right: 123.54px;
+  top: 965.78px;
+}
+.rotation_germany {
+   transform: rotate(-24.66deg);
+}
+
+.title_wrapper {
+  position: absolute;
+  top: 298.08px;
+  left: 607px;
+  width: 710px;
+  height: 195px;
+
+  text-align: center;
+
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+.title_inner {
+  display: inline;
+}
+
+.inline_logo {
+  display: inline-flex;
+  vertical-align:baseline;
+  margin-right: 8px;
+}
+
+.note_wrapper {
+  position: absolute;
+  bottom: 18px;
+  left: 587px;
+  width: 895px;
+  height: 49px;
+
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+
+/*=========== New Card Style =================*/
+.more_tour_card {
+  position: absolute;
+  width: 318px;
+height: 321px;
+}
+
+.more_tour_card_container{
+  position: relative;
+  width: 318px;
+height: 321px;
+
+}
+.container_wrapper{
+  position: relative;
+  width: 318px;
+height: 321px;
+
+background: #C4C4C4;
+/* transform: rotate(20.85deg); */
+z-index: 100;
+
+display: flex;
+flex-direction: column;
+justify-content: space-between;
+align-items: center;
+ padding: 24px 22px 32px 21px;
+}
+.card__imageWrapper{
+  width: 275px;
+  height: 206px;
+}
+.card__textWrapper{
+  width: 275px;
+  height: 95px;
+  padding: 0px 22px 0px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

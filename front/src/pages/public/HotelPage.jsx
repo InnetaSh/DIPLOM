@@ -1,19 +1,41 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Header } from "../../components/Header/Header.jsx";
+import { Header_Full } from "../../components/Header/Header_Full.jsx";
 import { useParams, useLocation } from "react-router-dom";
-import styles from "./HotelPage.module.css";
+
 import { ApiContext } from "../../contexts/ApiContext.jsx";
-import { HotelSectionNav } from "../../components/Hotel/HotelSectionNav.jsx";
-import { Breadcrumbs } from "../../components/UI/Text/BreadcrumbsLinks.jsx";
-import { HotelHeader } from "../../components/Hotel/HotelHeader.jsx";
+import { HotelReviews } from "../../components/Hotel/HotelReviews.jsx";
 import { HotelGallery } from "../../components/Hotel/HotelGallery.jsx";
-import { HotelSidebar } from "../../components/Hotel/HotelSidebar.jsx";
-import { BookingCard } from "../../components/Hotel/BookingCard.jsx";
-import { DescriptionCard } from "../../components/Hotel/DescriptionCard.jsx";
-import { BookingApartmentCard } from "../../components/Hotel/BookingApartmentCard.jsx";
+import { Hotel_info_card } from "../../components/Hotel/Hotel_info_card.jsx";
+import { HotelDescription } from "../../components/Hotel/Hotel_description.jsx";
+import { HotelParamsList } from "../../components/Hotel/HotelParamsList.jsx";
+import { HotelMap } from "../../components/Hotel/HotelMap.jsx";
+import { Footer } from "../../components/Footer/Footer.jsx";
+import {HotelInfoModal} from "../../components/modals/HotelInfoModal.jsx";
 
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+
+import styles from "./HotelPage.module.css";
+
+const imagesList = [
+  "/img/hotel_info/hotel_1.jpg",
+  "/img/hotel_info/hotel_2.jpg",
+  "/img/hotel_info/hotel_3.jpg",
+  "/img/hotel_info/hotel_4.jpg",
+  "/img/hotel_info/hotel_5.jpg",
+  "/img/hotel_info/hotel_6.jpg",
+  "/img/hotel_info/hotel_7.jpg",
+  "/img/hotel_info/hotel_8.jpg"
+];
+
+const dummyParams = [
+  { id: 1, title: "Free Wi-Fi" },
+  { id: 2, title: "Parking" },
+  { id: 3, title: "Swimming Pool" },
+  { id: 4, title: "Fitness Center" },
+  { id: 5, title: "Spa Services" },
+  { id: 6, title: "Restaurant" },
+];
 
 export const HotelPage = () => {
   const navigate = useNavigate();
@@ -28,14 +50,19 @@ export const HotelPage = () => {
     });
   }
 
-const sections = [
-  { id: "overview", label: t("hotel.sections.overview") },
-  { id: "prices", label: t("hotel.sections.prices") },
-  { id: "services", label: t("hotel.sections.services") },
-  { id: "conditions", label: t("hotel.sections.conditions") },
-  { id: "important", label: t("hotel.sections.important") },
-  { id: "reviews", label: t("hotel.sections.reviews") },
-];
+  const sections = [
+    { id: "overview", label: t("hotel.sections.overview") },
+    { id: "prices", label: t("hotel.sections.prices") },
+    { id: "services", label: t("hotel.sections.services") },
+    { id: "conditions", label: t("hotel.sections.conditions") },
+    { id: "important", label: t("hotel.sections.important") },
+    { id: "reviews", label: t("hotel.sections.reviews") },
+  ];
+  const hotelDescriptionText = `Інформація про цей готель
+Зручне розташування: Готель Jam Hotel Staroyevreyska у Львові пропонує зручне розташування з близькістю до основних визначних пам'яток. Бернардинський монастир знаходиться за 4 хвилини ходьби, а площа Ринок — за 2 хвилини. Латинський кафедральний собор розташований за 300 метрів, а Вірменський кафедральний собор — за 400 метрів від готелю.
+Комфортабельне розміщення: У номерах є власна ванна кімната з душем, феном та паркетною підлогою. Додаткові вигоди включають телевізор, електричний чайник, шафу та робочий стіл. Для задоволення різних потреб гостей передбачені сімейні номери та дивани-ліжка.
+Зручності: Гості можуть користуватися безкоштовним Wi-Fi у громадських зонах, платним трансфером та цілодобовою стійкою реєстрації. Для тих, хто воліє дослідити місто на двох колесах, передбачено велосипедне паркування.
+Местные достопримечательности: В окрестностях есть каток, который обеспечивает развлечения для посетителей.`;
 
 
   const { id } = useParams();
@@ -50,8 +77,29 @@ const sections = [
 
   const [hotel, setHotel] = useState({});
   const [offer, setOffer] = useState({});
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState(imagesList);
   const [paramValues, setParamValues] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const reviews = [
+    { id: 1, title: "reviews.overall_rating", grade: "9.1" },
+    { id: 2, title: "reviews.staff", grade: "9.3" },
+    { id: 3, title: "reviews.cleanliness", grade: "9.2" },
+    { id: 4, title: "reviews.comfort", grade: "9.2" },
+    { id: 5, title: "reviews.location", grade: "8.8" },
+    { id: 6, title: "reviews.value_for_money", grade: "9.6" },
+    { id: 7, title: "reviews.amenities", grade: "8.9" },
+
+  ];
+
+  const comments = [
+    { id: 1, name: "Olena", grade: "7.1", review: "Все супер, не вистачало за цю ціну одноразових щіток почистити зуби, і одноразових тапок, а так все чисто постіль без плям і приємно пахне, бонусом нам написали, що ми можемо заселитися на годину раніше, рекомендую!" },
+    { id: 2, name: "Maxim", grade: "9.1", review: "Величезне спасибі за наявність праски та дошки для прасування, в наш час рідко зустрінеш таке навіть у п'ятизіркових готелях. Також приємно наявність фена. В іншому нам теж усе сподобалося. Тихе, чисте місце." },
+    { id: 3, name: "Oleg", grade: "7.9", review: "Сподобалася повна автономність заселення та виселення з номера, без контактів із людьми, зустрічей та очікувань. Номер чистий і комфортний, є все необхідне, нічого додаткового не потребували. Вигляд з вікна був красивий!" },
+    { id: 4, name: "Iruna", grade: "8.5", review: "У номері є все необхідне! Чисто!!Є і фен, і праска, і навіть кавоварка. Номер чистий і комфортний, є все необхідне, нічого додаткового не потребували. Вигляд з вікна був красивий!" },
+  ];
+
+
 
   useEffect(() => {
     if (!offerApi) return;
@@ -80,41 +128,49 @@ const sections = [
       .catch((err) => console.error("Error loading offer:", err));
   }, [id, offerApi, startDate, endDate, guests]);
 
+
+  const lat = 48.8566;
+  const lng = 2.3522;
+
   return (
-    <div className="search-page">
-      <Header />
-      <div>{t("hello")}</div>
-      <main className="hotel-page__content">
-        <Breadcrumbs
-          country={offer.countryTitle}
-          region={offer.regionTitle}
-          city={offer.cityTitle}
-          district={offer.districtTitle}
-          last_path={`Предложения для ${offer?.title || ""}`}
-        />
-        <HotelSectionNav sections={sections} />
-        <HotelHeader hotel={hotel} offer={offer} onClick={handleClickBooking} />
+    <div className={styles.hotelPage}>
+      <Header_Full title="hotel" showFilterBtn={false} />
+      <main className={styles.hotel_page__content}>
 
-        <div className="hotel-page__layout">
-          <section className="hotel-page__photo">
-            <HotelGallery images={images} />
-          </section>
-
-          <aside className="hotel-page__info">
-            <HotelSidebar hotel={hotel} reviews={hotel?.reviews || []} />
-          </aside>
+        <div className="flex-center btn-w-full">
+          <HotelGallery images={images} />
         </div>
 
-        <div id="services">
-          {/* <HotelParamsList params={paramValues} /> */}
+        <HotelDescription text={hotel?.description || hotelDescriptionText} />
+
+        <div className="flex-left btn-w-full" >
+          <HotelParamsList params={dummyParams} />
+        </div>
+        <div id="prices" className="flex-center btn-w-full gap-20 ">
+          <div className={styles.info_card}>
+            <Hotel_info_card hotel={hotel} offer={offer} />
+          </div>
+
+          <div className={`${styles.card_map} flex-left btn-w-full`} >
+            {lat && lng ? (
+              <HotelMap lat={lat} lng={lng} hotelName={hotel.name} />
+            ) : (
+              <div className={styles.mapPlaceholder}>Координаты отсутствуют</div>
+            )}
+          </div>
         </div>
 
-        <BookingCard hotel={hotel} offer={offer} />
-        <DescriptionCard hotel={hotel} />
-        <div id="prices">
-          <BookingApartmentCard hotel={hotel} offer={offer} />
-        </div>
+
+        <HotelReviews reviews={reviews} comments={comments} />
+
       </main>
+      <Footer />
+
+      {isModalOpen && (
+        <div className="modalOverlay">
+         <HotelInfoModal images={images} setIsModalOpen ={setIsModalOpen}/>
+        </div>
+      )}
     </div>
   );
 };

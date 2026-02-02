@@ -5,6 +5,7 @@ using OrderApiService.Models;
 using OrderApiService.Models.Enum;
 using OrderApiService.Service.Interface;
 using OrderApiService.View;
+using System.Collections.Generic;
 using System.Net.Http.Json;
 
 namespace OrderApiService.Services
@@ -37,14 +38,16 @@ namespace OrderApiService.Services
         {
             try
             {
-                order.TotalPrice = order.OrderPrice + order.TaxAmount;
+                await using var db = new OrderContext();
 
+                order.TotalPrice = order.OrderPrice + order.TaxAmount;
                 order.Status = OrderStatus.Pending;
                 order.CreatedAt = DateTime.UtcNow;
-                await base.AddEntityAsync(order);
 
-                return order.id;
+                var res = db.Orders.Add(order);
+                await db.SaveChangesAsync();
 
+                return res.Entity.id;
             }
             catch (Exception ex) { }
             return -1;

@@ -12,13 +12,16 @@ namespace OfferApiService.View.RentObj
         public double Longitude { get; set; }
         public int CityId { get; set; }
 
-        public int RoomCount { get; set; }
-        public int LivingRoomCount { get; set; }
-        public int BathroomCount { get; set; }
-        public double Area { get; set; }
+        public int RoomCount { get; set; }              //Количество комнат
+        public int LivingRoomCount { get; set; }         // Количество гостиных
+        public int BathroomCount { get; set; }          //Количество ванных комнат 
+        public double Area { get; set; } = 0;           //Площадь объекта (кв. м)
 
-        public int BedsCount { get; set; }
-        public bool HasBabyCrib { get; set; }
+        public int TotalBedsCount { get; set; }       //Общее количество спальных мест
+        public int SingleBedsCount { get; set; }      // Количество односпальных кроватей
+        public int DoubleBedsCount { get; set; }      // Количество двуспальных кроватей
+        public bool HasBabyCrib { get; set; }         // Детская кроватка
+
 
         // Одно основное фото (как на Booking)
         public string? MainImageUrl { get; set; }
@@ -39,7 +42,9 @@ namespace OfferApiService.View.RentObj
                     RoomCount = model.RoomCount,
                     LivingRoomCount = model.LivingRoomCount,
                     Area = model.Area,
-                    BedsCount = model.BedsCount,
+                    TotalBedsCount = model.TotalBedsCount,
+                    SingleBedsCount = model.SingleBedsCount,
+                    DoubleBedsCount = model.DoubleBedsCount,
                     HasBabyCrib = model.HasBabyCrib,
 
 

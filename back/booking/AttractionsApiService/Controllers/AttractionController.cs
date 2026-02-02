@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AttractionsApiService.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class AttractionController : EntityControllerBase<Attraction, AttractionResponse, AttractionRequest>
     {
         private readonly string _baseUrl;

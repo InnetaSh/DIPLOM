@@ -20,7 +20,8 @@ namespace AttractionApiService.View
         public string Street { get; set; }
         public string HouseNumber { get; set; }
         public string Postcode { get; set; }
-        public List<string> Images { get; set; } = new();
+        public string? ImageUrl { get; set; }
+        public List<string>? Images { get; set; } = new();
 
 
         public static Attraction MapToModel(AttractionRequest request)
@@ -36,6 +37,7 @@ namespace AttractionApiService.View
                 Address = $"{request.Street} {request.HouseNumber}",
                 Latitude = 0,
                 Longitude = 0,
+                ImageUrl = request.ImageUrl,
                 Images = request.Images?
                     .Select(url => new AttractionImage { Url = url })
                     .ToList() ?? new List<AttractionImage>()

@@ -1,0 +1,100 @@
+.cityCard_carousel {
+  width: 100%;
+  height: 402px;
+  padding: 0 4% 36px 4%;
+    position: relative;
+    z-index: 0;
+}
+
+.cityCard_carousel_btn_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 47px;
+}
+
+
+
+.carouselViewport {
+  overflow: hidden;
+  width: 100%; 
+  margin: 0 auto;
+  border-radius: 20px;
+}
+
+
+.cityList {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.5s ease;
+  will-change: transform;
+}
+
+
+.card {
+  flex: 0 0 425px; 
+  height: 221px;
+}
+
+
+.slider_indicators {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: #ccc;
+  border-radius: 50%;
+  margin: 0 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.activeIndicator {
+  background-color: #333;
+}
+
+
+
+
+
+
+/* контейнер слайдера */
+.slickSlider .slick-slide > div {
+  margin-right: 20px; 
+}
+
+.cardWrapper {
+  flex: 0 0 425px;
+}
+
+
+.customArrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  cursor: pointer;
+}
+
+.customArrow.left {
+  left: -40px; 
+}
+
+.customArrow.right {
+  right: -40px;
+}
+
+
+.slick-prev,
+.slick-next {
+  display: none !important;
+}
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}

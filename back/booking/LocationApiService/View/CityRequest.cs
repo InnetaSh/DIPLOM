@@ -11,7 +11,7 @@ namespace LocationApiService.View
 
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
-
+        public string? ImageUrl { get; set; }
         public List<DistrictRequest> Districts { get; set; } = new();
 
         public static City MapToModel(CityRequest request)
@@ -24,6 +24,7 @@ namespace LocationApiService.View
                 Latitude = request.Latitude,
                 Longitude = request.Longitude,
 
+                ImageUrl = request.ImageUrl,
                 Districts = request.Districts?
                     .Select(DistrictRequest.MapToModel)
                     .ToList() ?? new List<District>()

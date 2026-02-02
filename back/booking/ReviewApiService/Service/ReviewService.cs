@@ -29,6 +29,20 @@ namespace ReviewApiService.Service
         }
 
 
+        public async Task<double> GetRatingByOfferId(int offerId)
+        {
+            using var db = new ReviewContext();
+
+            var fitReviews = await db.Reviews
+                .Where(r => r.OfferId == offerId && r.IsApproved)
+                .ToListAsync();
+
+            if (!fitReviews.Any())
+                return 0; 
+
+            return fitReviews.Average(r => r.OverallRating);
+        }
+
         //public async Task<Dictionary<int, OfferReviewStats>> GetOfferReviewStatsAsync(IEnumerable<int> offerIds)
         //{
         //    using var db = new ReviewContext();
@@ -49,7 +63,7 @@ namespace ReviewApiService.Service
         //                IsTopCleanliness = g.Any(r => r.Cleanliness >= 9)
         //            });
 
-          
+
         //    foreach (var id in offerIds.Except(stats.Keys))
         //    {
         //        stats[id] = new OfferReviewStats

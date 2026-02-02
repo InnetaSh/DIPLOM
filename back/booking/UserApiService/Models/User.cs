@@ -14,7 +14,7 @@ namespace UserApiService.Models
         public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
-       // public string Token { get; set; }
+        public DateTime? BirthDate { get; set; }
 
         public decimal  Discount { get; set; }    
 

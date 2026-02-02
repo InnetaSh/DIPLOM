@@ -1,0 +1,84 @@
+.profilePageMenu {
+  width: 100%;
+    height: fit-content; 
+  min-height: 929px;
+  position: relative;
+  margin-bottom: 0;
+  overflow: hidden;
+  background-image: url('data:image/svg+xml,<svg width="1760" height="927" viewBox="0 0 1760 927" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 155.773C0 148.19 4.16282 141.323 10.9595 137.962C63.8849 111.786 291.803 0 324.25 0C361 0 581 131.772 648.5 143.399C710.514 154.081 1596.76 145.135 1740.4 143.61C1751.53 143.492 1760 152.49 1760 163.623V907C1760 918.046 1751.05 927 1740 927H20C8.95429 927 0 918.046 0 907V155.773Z" fill="%23EDE5D1"/></svg>');
+  background-repeat: no-repeat;
+  background-size: cover;
+
+}
+.logo{
+  position: absolute;
+  top: 101px;
+  left: 8.4%;
+}
+
+
+.profilePageMenu__logo_wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+
+
+.profilePageMenu__title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding-left: 23px;
+
+}
+.profilePageMenu__container {
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  gap: 20px;
+  margin-top: 223px;
+  padding:  0 119px 80px 123px;
+    /* background-color: var(--color-bg__2); */
+}
+
+
+
+.profilePageMenu__columns {
+  width: 100%;
+  min-height: 624px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+gap: 74px;
+
+}
+
+.profilePageMenu__column_left{
+  flex: 0 0 425px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  gap: 40px;
+}
+
+.profilePageMenu__column_right{
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+.profilePageMenu__column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}

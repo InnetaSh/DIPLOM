@@ -9,9 +9,14 @@ namespace LocationApiService.Controllers
 {
     public class CountryController : EntityControllerBase<Country, CountryResponse, CountryRequest>
     {
-        public CountryController(ICountryService countryService, IRabbitMqService mqService)
+        private readonly string _baseUrl;
+        public CountryController(
+            ICountryService countryService,
+            IRabbitMqService mqService,
+           IConfiguration configuration)
             : base(countryService, mqService)
         {
+            _baseUrl = configuration["AppSettings:BaseUrl"];
         }
 
         [HttpGet("get-countries-by-district/{id}")]
@@ -114,7 +119,7 @@ namespace LocationApiService.Controllers
 
         protected override CountryResponse MapToResponse(Country model)
         {
-            return CountryResponse.MapToResponse(model);
+            return CountryResponse.MapToResponse(model, _baseUrl);
 
         }
 

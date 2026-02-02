@@ -1,0 +1,165 @@
+.hotel_info_card {
+    width: 100%;
+    height: 561px;
+        margin: 39px 0;
+}
+
+.hotel_info_card_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: transparent;
+   
+}
+
+.card_wrapper {
+    width: 100%;
+    background: transparent;
+    border-top: 2px solid var(--color--hotel-info-border);
+    border-bottom: 2px solid var(--color--hotel-info-border);
+    padding: 16px 0 21px 0  ;
+
+    display: flex;
+     flex-direction: column;
+    gap: 22px;
+}
+
+.card_header {
+    width: 100%;
+    height: 50px;
+    display: grid;
+    grid-template-columns: 21% 9.7% 32% 32.3%;
+    gap: 22px;
+}
+
+
+.card_row {
+    width: 100%;
+    height: 171px;
+    display: grid;
+     grid-template-columns: 21% 9.7% 32% 32.3%;
+    gap: 22px;
+}
+
+
+.footerRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.footerLink a {
+    color: var(--color-text-secondary) !important;
+}
+
+.headerRow {
+    height: 50px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color--hotel-info-title-bg);
+    color: var(--color-text);
+    border-radius: 10px;
+}
+
+.colApartment {
+    width: 100%;
+    height: 171px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--color--hotel-info-bg);
+}
+
+.colApartment_container {
+    width: 100%;
+    height: 100%;
+    padding: 28px 44px 33px 28px;
+    background: var(--color--hotel-info-bg);
+}
+
+.colApartment img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 30px;
+
+}
+
+.guestsIcons {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 26px;
+    gap: 10px;
+}
+
+.old_price {
+    color: var(--color-text);
+}
+
+.diagonalStrike {
+    position: relative;
+    display: inline-block;
+    color: inherit;
+}
+
+.diagonalStrike::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--color-text);
+    transform: rotate(-45deg);
+    transform-origin: left top;
+    pointer-events: none;
+}
+
+.new_price {
+    color: var(--color-text-secondary-text);
+}
+
+.sale {
+    display: flex;
+    justify-content: center;
+    margin-top: 9px;
+}
+
+.discount,
+.discount_info {
+    padding: 5px;
+    border-radius: 10px;
+    background: var(--color--hotel-info-btn);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.discount {
+    margin-right: 31px;
+}
+
+
+
+.title {
+    font-size: 18px;
+    color: #005cbf;
+    margin-bottom: 6px;
+}
+
+.title {
+    color: var(--color-text);
+    margin-bottom: 16px;
+    text-align: start;
+}
+
+.paramList {
+    color: var(--color-text);
+}

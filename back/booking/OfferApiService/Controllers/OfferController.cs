@@ -1,13 +1,16 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
+using Globals.Helpers;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using OfferApiService.Models;
-using OfferApiService.Models.Dto;
+using OfferApiService.Models.RentObjModel;
 using OfferApiService.Models.View;
+using OfferApiService.Service;
 using OfferApiService.Service.Interface;
 using OfferApiService.Services.Interfaces.RentObj;
 using OfferApiService.View;
+using OfferApiService.View.RentObj;
 
 namespace OfferApiService.Controllers
 {
@@ -19,15 +22,26 @@ namespace OfferApiService.Controllers
         private IOfferService _offerService;
         private readonly string _baseUrl;
         private readonly IRentObjParamValueService _paramValueService;
+        private readonly IRentObjService _rentObjService;
+        private readonly GeocodingService _geocodingService;
 
-        public OfferController(IOfferService offerService, IRabbitMqService mqService, IConfiguration configuration, IRentObjParamValueService paramValueService)
+        public OfferController(IOfferService offerService,
+            IRabbitMqService mqService,
+            IConfiguration configuration,
+            IRentObjParamValueService paramValueService,
+            IRentObjService rentObjService,
+             GeocodingService geocodingService)
             : base(offerService, mqService)
         {
             _offerService = offerService;
             _baseUrl = configuration["AppSettings:BaseUrl"];
             _paramValueService = paramValueService;
+            _rentObjService = rentObjService;
+            _geocodingService = geocodingService;
         }
 
+        //===========================================================================================
+        //  добавление ссылки на заказ в обьявление
         //===========================================================================================
         [HttpPost("{offerId}/orders/add/{orderId}")]
         public async Task<ActionResult> AddOrderLinkToOffer(
@@ -43,6 +57,8 @@ namespace OfferApiService.Controllers
         }
 
 
+        //===========================================================================================
+        //  получение обьявлений по параметрам поиска
         //===========================================================================================
 
         [HttpGet("search/offers")]
@@ -97,9 +113,39 @@ namespace OfferApiService.Controllers
 
 
 
+
+
+        //===========================================================================================
+        //  получение обьявлений для списка популярных обьявлений
         //===========================================================================================
 
-        [HttpGet("{offerId}/get/orders/id")]
+        [HttpGet("search/offers/populars")]
+        public async Task<ActionResult<List<OfferShortPopularResponse>>> GetSearchPopularOffers(
+            [FromQuery] List<int> idList)
+        {
+
+            
+            var result = new List<OfferShortPopularResponse>();
+            foreach (var offerId in idList)
+            {
+                var exists = await _offerService.ExistsEntityAsync(offerId);
+                if (!exists)
+                    return NotFound(new { message = $"offerId {offerId} not found" });
+
+                var offerRez = await _offerService.GetEntityAsync(offerId);
+                var offer =OfferShortPopularResponse.MapToResponse(offerRez, _baseUrl);
+                result.Add(offer);
+            }
+           
+            return Ok(result);
+        }
+
+
+        //===========================================================================================
+        //  получение id заказов связанных с обьявлением
+        //===========================================================================================
+
+        [HttpGet("{offerId}/get/orders")]
         public async Task<ActionResult<List<int>>> GetOrdersIdLinkToOffer(
             int offerId)
         {
@@ -107,8 +153,11 @@ namespace OfferApiService.Controllers
             return Ok(ordersIdList);
         }
 
-            //===========================================================================================
-            [HttpGet("get-offer/{id}")]
+        //===========================================================================================
+        // получение обьявления по id с расчётом цены по параметрам запроса
+        //===========================================================================================
+
+        [HttpGet("get-offer/{id}")]
         public async Task<ActionResult<OfferResponse>> GetOfferById(
             int id,
              [FromQuery] OfferByIdRequest request,
@@ -148,22 +197,20 @@ namespace OfferApiService.Controllers
 
             var discountPercent = userDiscountPercent;
             var discountAmount = orderPrice * discountPercent / 100;
-            var depositAmount = response.DepositPersent.HasValue ? orderPrice * response.DepositPersent.Value / 100 : 0;
-
+          
             // Налог на аренду
             var taxAmount = (response.OrderPrice - discountAmount) * response.Tax / 100;
             response.TaxAmount = (decimal)taxAmount;
             response.GuestCount = request.Guests;
             response.DaysCount = daysCount;
 
-            var totalPrice = orderPrice - discountAmount + depositAmount + taxAmount;
+            var totalPrice = orderPrice - discountAmount  + taxAmount;
 
 
 
             response.OrderPrice = orderPrice;
             response.DiscountPercent = discountPercent;
             response.DiscountAmount = discountAmount;
-            response.DepositAmount = depositAmount;
             response.TaxAmount = taxAmount;
             response.TotalPrice = totalPrice;
 
@@ -172,15 +219,267 @@ namespace OfferApiService.Controllers
         }
 
 
+
         //===========================================================================================
+        // создание обьявления с обьектом оренды с параметрами
+        //===========================================================================================
+
+        [HttpPost("create/offer-with-rentobj-with-param-values")]
+        public async Task<ActionResult<OfferResponse>> CreateOffer(
+         [FromBody] CreateOfferFullRequest createOfferFullRequest
+            )
+        {
+            var offerRequest = createOfferFullRequest.Offer;
+            var rentObjRequest = createOfferFullRequest.RentObj;
+
+            var coords = await GetCoordinatesAsync(rentObjRequest);
+
+            var latitude = coords?.lat ?? 0;
+            var longitude = coords?.lon ?? 0;
+            if (coords == null)
+            {
+                Console.WriteLine("Адрес не найден");
+            }
+
+            rentObjRequest.Latitude = latitude;
+            rentObjRequest.Longitude = longitude;
+            double cityLatitude = rentObjRequest.CityLatitude ?? 0;
+            double cityLongitude = rentObjRequest.CityLongitude ?? 0;
+            rentObjRequest.DistanceToCenter = (int)Helper.CalculateDistanceMeters(latitude, longitude, cityLatitude, cityLongitude);
+
+            if (rentObjRequest.DistanceToCenter < 1000)
+            {
+                rentObjRequest.ParamValues.Add(new RentObjParamValueRequest
+                {
+                    ParamItemId = 26, // "Менше 1 км" 
+                    ValueBool = true
+                });
+            }
+            else if (rentObjRequest.DistanceToCenter < 3000)
+            {
+                rentObjRequest.ParamValues.Add(new RentObjParamValueRequest
+                {
+                    ParamItemId = 27, // "Менше 3 км" 
+                    ValueBool = true
+                });
+            }
+            else if (rentObjRequest.DistanceToCenter < 5000)
+            {
+                rentObjRequest.ParamValues.Add(new RentObjParamValueRequest
+                {
+                    RentObjId = rentObjRequest.id,
+                    ParamItemId = 28, // "Менше 5 км" 
+                    ValueBool = true
+                });
+            }
+
+            rentObjRequest.DistanceToCenter = (int)(rentObjRequest.DistanceToCenter / 1000.0);
+
+
+            var rentObjModel = RentObjRequest.MapToModel(rentObjRequest);
+
+            var idRentObj = await _rentObjService.AddEntityGetIdAsync(rentObjModel);
+
+            if (idRentObj == -1)
+                return StatusCode(500, new { message = "Error creating item" });
+
+            offerRequest.RentObjId = idRentObj;
+            var modelOffer = OfferRequest.MapToModel(offerRequest);
+            var idOffer = await _offerService.AddEntityGetIdAsync(modelOffer);
+            if (idOffer == -1)
+                return StatusCode(500, new { message = "Error creating item" });
+
+            return Ok(new { idOffer });
+        }
+
+        //===========================================================================================
+        // редактирование обьявления с обьектом оренды с параметрами
+        //===========================================================================================
+
+        [HttpPut("update/offer-with-rentobj-with-param-values")]
+        public async Task<ActionResult<OfferResponse>> UpdateOffer(
+         [FromBody] UpdateOfferFullRequest updateOfferFullRequest
+            )
+        {
+            var offerId = updateOfferFullRequest.Offer.id;
+            var rentObjId = updateOfferFullRequest.Offer.RentObjId;
+            var offerRequest = updateOfferFullRequest.Offer;
+            var rentObjRequest = updateOfferFullRequest.RentObj;
+
+
+
+            var existingRentObj = await _rentObjService.GetEntityAsync(rentObjId);
+            if (existingRentObj == null)
+                return NotFound(new { message = "Item not found" });
+
+            var coords = await GetCoordinatesAsync(rentObjRequest);
+
+            var latitude = coords?.lat ?? 0;
+            var longitude = coords?.lon ?? 0;
+            if (coords == null)
+            {
+                Console.WriteLine("Адрес не найден");
+            }
+            rentObjRequest.Latitude = latitude;
+            rentObjRequest.Longitude = longitude;
+
+            double cityLatitude = rentObjRequest.CityLatitude ?? 0;
+            double cityLongitude = rentObjRequest.CityLongitude ?? 0;
+            rentObjRequest.DistanceToCenter = (int)Helper.CalculateDistanceMeters(latitude, longitude, cityLatitude, cityLongitude);
+
+
+            PatchHelper.ApplyPatch<RentObject, RentObjRequest>(
+                 existingRentObj,
+                 rentObjRequest,
+                 nameof(RentObject.id)
+             );
+
+            var success = await _rentObjService.UpdateEntityAsync(existingRentObj);
+            if (!success)
+                return StatusCode(500, new { message = "Error updating item" });
+
+
+
+
+            var existingOffer = await _offerService.GetEntityAsync(offerId);
+            if (existingOffer == null)
+                return NotFound(new { message = "offer not found" });
+
+            PatchHelper.ApplyPatch<Offer, OfferRequest>(
+               existingOffer,
+               offerRequest,
+               nameof(Offer.id),
+               nameof(Offer.OwnerId),
+               nameof(Offer.RentObjId)
+           );
+
+            var offerUpdated = await _offerService.UpdateEntityAsync(existingOffer);
+            if (!offerUpdated)
+                return StatusCode(500, new { message = "Error updating offer" });
+
+            var modelOffer = OfferRequest.MapToModel(offerRequest);
+            return Ok(modelOffer);
+        }
+
+
+        //==========================================================================================
+        //       заблокировать обьявление
+        //==========================================================================================
+
+
+        [HttpPut("block/booking-offer/{offerId}")]
+        public async Task<ActionResult> BlockOffer(int offerId)
+        {
+            var existOffer = await _offerService.ExistsEntityAsync(offerId);
+            if (!existOffer)
+                return NotFound(new { message = "offer not found" });
+
+            var existingOffer = await _offerService.GetEntityAsync(offerId);
+            if (existingOffer == null)
+                return NotFound(new { message = "Item not found in DB" });
+
+            existingOffer.IsBlocked = true;
+            var successOffer = await _offerService.UpdateEntityAsync(existingOffer);
+
+            if (!successOffer)
+                return StatusCode(500, new { message = "Error updating offer" });
+            
+            return Ok(new { message = "Offer blocked successfully" });
+        }
+
+
+        //==========================================================================================
+        //       разблокировать обьявление
+        //==========================================================================================
+
+
+        [HttpPut("unblock/booking-offer/{offerId}")]
+        public async Task<ActionResult> UnBlockOffer(int offerId)
+        {
+            var existOffer = await _offerService.ExistsEntityAsync(offerId);
+            if (!existOffer)
+                return NotFound(new { message = "offer not found" });
+
+            var existingOffer = await _offerService.GetEntityAsync(offerId);
+            if (existingOffer == null)
+                return NotFound(new { message = "Item not found in DB" });
+
+            existingOffer.IsBlocked = false;
+            var successOffer = await _offerService.UpdateEntityAsync(existingOffer);
+
+            if (!successOffer)
+                return StatusCode(500, new { message = "Error updating offer" });
+
+            return Ok(new { message = "Offer blocked successfully" });
+        }
+
+
+
+        //===========================================================================================
+        // редактирование цены обьявления
+        //===========================================================================================
+
+        [HttpPut("update/price/booking-offer/{offerId}")]
+        public async Task<ActionResult<OfferResponse>> UpdateOfferPrice(int offerId,
+         [FromBody] UpdateOfferPriceRequest updateOfferPriceRequest
+            )
+        {
+           
+            var existOffer = await _offerService.ExistsEntityAsync(offerId);
+            if (!existOffer)
+                return NotFound(new { message = "offer not found" });
+
+            var existingOffer = await _offerService.GetEntityAsync(offerId);
+            if (existingOffer == null)
+                return NotFound(new { message = "Item not found in DB" });
+
+            PatchHelper.ApplyPatch(
+               existingOffer,
+               updateOfferPriceRequest,
+               nameof(Offer.id),
+               nameof(Offer.OwnerId),
+               nameof(Offer.RentObjId)
+           );
+
+            var successOffer = await _offerService.UpdateEntityAsync(existingOffer);
+            if (!successOffer)
+                return StatusCode(500, new { message = "Error updating offer" });
+
+
+            return Ok(new { offerId });
+        }
+
+
+        //===========================================================================================
+        //    получение id обьекта оренды по обьявлений
+        //===========================================================================================
+        [HttpGet("get/rentobjid/{offerId}")]
+        public async Task<ActionResult<int>> GetRentObjIdByOfferId(
+        int offerId)
+        {
+            var existOffer = await _offerService.ExistsEntityAsync(offerId);
+            if (!existOffer)
+                return NotFound(new { message = "offer not found" });
+
+            var existingOffer = await _offerService.GetEntityAsync(offerId);
+            if (existingOffer == null)
+                return NotFound(new { message = "offer not found in DB" });
+
+
+            return Ok(existingOffer.RentObjId);
+        }
+
+
+        //===========================================================================================
+        //  получение обьявлений по id владельца
+        //===========================================================================================
+
         [HttpGet("get/offers/{ownerId}")]
         public async Task<ActionResult<OfferResponse>> GetOfferById(
         int ownerId)
         {
 
             var offerList = await _offerService.GetOffersByOwnerIdAsync(ownerId);
-
-
 
             if (offerList.Count() == 0)
                 return NotFound();
@@ -200,6 +499,9 @@ namespace OfferApiService.Controllers
 
 
         //===========================================================================================
+        //  получение обьявлений по id владельца и городу
+        //===========================================================================================
+
         [HttpGet("get/offers/{ownerId}/{cityId}")]
         public async Task<ActionResult<OfferResponse>> GetOfferByIdAndCity(
         int ownerId,
@@ -226,6 +528,9 @@ namespace OfferApiService.Controllers
 
 
         //===========================================================================================
+        //  получение обьявлений по id владельца и стране
+        //===========================================================================================
+
         [HttpGet("get/offers/{ownerId}/{countryId}")]
         public async Task<ActionResult<OfferResponse>> GetOfferByIdAndCountry(
         int ownerId,
@@ -261,6 +566,17 @@ namespace OfferApiService.Controllers
         {
             return OfferResponse.MapToResponse(model,_baseUrl);
 
+        }
+
+        private async Task<(double lat, double lon)?> GetCoordinatesAsync(RentObjRequest request)
+        {
+            return await _geocodingService.GetCoordinatesAsync(
+                request.Street,
+                request.HouseNumber,
+                request.CityTitle,
+                request.Postcode,
+                request.CountryTitle
+            );
         }
 
     }

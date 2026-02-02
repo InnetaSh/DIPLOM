@@ -23,7 +23,7 @@ namespace AttractionApiService.Models
             public int DistrictId { get; set; }
             public int RegionId { get; set; }
             public int CityId { get; set; }
-
+            public string? ImageUrl { get; set; }
             public List<AttractionImage> Images { get; set; }
         }
     }

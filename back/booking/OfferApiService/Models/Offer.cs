@@ -15,6 +15,7 @@ namespace OfferApiService.Models
         // ===== Название и описание объявления =====
 
         //public string Title { get; set; }           // Заглавие объявления (переводимое поле)
+        //public string TitleInfo { get; set; }     // Описание краткая инфа (переводимое поле)
         //public string Description { get; set; }     // Описание объявления (переводимое поле)
 
 
@@ -25,10 +26,10 @@ namespace OfferApiService.Models
         public decimal? PricePerMonth { get; set; } // Цена за месяц (опционально)
 
 
-        // ===== Депозит =====
+        //// ===== Депозит =====
 
-        public decimal? DepositPersent { get; set; }    // Процент депозита
-        public PaymentType PaymentStatus { get; set; }  // Тип депозита — возвращаемый или нет
+        //public decimal? DepositPersent { get; set; }    // Процент депозита
+        //public DepositType DepositStatus { get; set; }  // Тип депозита — возвращаемый или нет
 
 
         // ===== Налоги =====
@@ -47,19 +48,15 @@ namespace OfferApiService.Models
         public int MaxGuests { get; set; }              // Максимальное количество гостей
 
 
-        // ===== Дополнительные сборы =====
 
-        public decimal? CleaningFee { get; set; }       // Стоимость уборки
-        public decimal? AdditionalGuestFee { get; set; } // Доплата за гостя сверх лимита
+        //// ===== Бесплатная отмена бронирования =====
 
+        //public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
+        //public int? FreeCancelUntilHours { get; set; }    // За сколько часов до заезда можно отменить бесплатно
+        //                                                  // Например: 48 → отмена за 48 часов до даты CheckIn
+        //// Предпочтительный способ оплаты
+        //public PaymentMethod? PaymentMethod { get; set; }
 
-        // ===== Бесплатная отмена бронирования =====
-
-        public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
-        public int? FreeCancelUntilHours { get; set; }    // За сколько часов до заезда можно отменить бесплатно
-                                                          // Например: 48 → отмена за 48 часов до даты CheckIn
-        // Предпочтительный способ оплаты
-        public PaymentMethod? PaymentMethod { get; set; }
 
         // ===== Отношения =====
 
@@ -76,10 +73,15 @@ namespace OfferApiService.Models
 
 
 
-        public List<OfferOrderLink> OfferOrderLinks { get; set; } = new();
+        //=============Заблокированость объявления=================
+        public bool IsBlocked { get; set; } = false; // Заблокировано ли объявление
 
-        // ===== Забронированные даты =====
 
-        public List<BookedDate> BookedDates { get; set; } = new List<BookedDate>();  // Список бронирований
+
+        public List<OfferOrderLink> OfferOrderLinks { get; set; } = new(); // список id бронней
+
+        //// ===== Забронированные даты =====
+
+        //public List<BookedDate> BookedDates { get; set; } = new List<BookedDate>();  // Список бронирований
     }
 }

@@ -6,7 +6,7 @@ namespace TranslationApiService.Models.Offer
     {
 
         public string Title { get; set; }
-
+        public string? TitleInfo { get; set; }     //  краткая инфа 
         public string Description { get; set; }
     }
 }

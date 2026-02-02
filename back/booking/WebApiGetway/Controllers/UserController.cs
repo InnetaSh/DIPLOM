@@ -21,20 +21,33 @@ public class UserController : ControllerBase
     }
 
     //===========================================================================================
-    //  GET METHODS (для админа)
+    //  GET METHODS (для админа) - получить всех пользователей
     //===========================================================================================
 
     [HttpGet("get-all")]
     public Task<IActionResult> GetAll() =>
         _gateway.ForwardRequestAsync<object>("UserApiService", "/api/user/get-all", HttpMethod.Get, null);
 
-    [HttpGet("get/{id}")]
-    public Task<IActionResult> GetById(int id) =>
-        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/user/get/{id}", HttpMethod.Get, null);
 
 
     //===========================================================================================
+    //  GET METHODS (для админа) - получить полную информацию о пользователе по Id
+    //===========================================================================================
+    [HttpGet("get/{userId}")]
+    public Task<IActionResult> GetById(int userId) =>
+        _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/user/admin/get/userfullinfo/{userId}", HttpMethod.Get, null);
 
+    // ==========================================================================================
+    // GET METHODS (для админа) - получить полную информацию о пользователе по email
+    // ==========================================================================================
+    [HttpGet("get/{email}")]
+    public Task<IActionResult> GetByEmail(string email) =>
+       _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/user/admin/get/userfullinfo/{email}", HttpMethod.Get, null);
+
+
+    //===========================================================================================
+    //  GET METHODS (для авторизованного пользователя) - получить полную информацию о себе
+    //===========================================================================================
 
     [HttpGet("me/{lang}")]
     [Authorize]
@@ -67,14 +80,16 @@ public class UserController : ControllerBase
     }
 
     //===========================================================================================
-
+    //  AUTH METHODS - login / register
+    //===========================================================================================
 
     [HttpPost("login")]
     public Task<IActionResult> Login([FromBody] object request) =>
         _gateway.ForwardRequestAsync("UserApiService", "/api/auth/login", HttpMethod.Post, request);
 
     //===========================================================================================
-
+    //  REGISTRATION METHODS - register client / register owner
+    //===========================================================================================
 
     [HttpPost("register/client")]
     public Task<IActionResult> RegisterClient([FromBody] object request) =>
@@ -165,10 +180,24 @@ public class UserController : ControllerBase
 
         var offerDictList = BffHelper.ConvertActionResultToDict(okOffer);
 
-
         var offerTranslations = await GetTranslationsAsync(lang, "Offer");
 
         var updateOfferDictList = BffHelper.UpdateListWithTranslations(offerDictList, offerTranslations);
+
+
+        var idList = new List<int>();
+        foreach (var statsOffer in updateOfferDictList)
+        {
+            var id = int.Parse(statsOffer["EntityId"].ToString());
+            idList.Add(id);
+        }
+        //получаем рейтинг
+        var ratingObjResult = await _gateway.ForwardRequestAsync<object>("ReviewApiService", $"/api/review/search/offers/rating", HttpMethod.Post, idList);
+        if (ratingObjResult is not OkObjectResult okRating)
+            return ratingObjResult;
+        var ratingDictList = BffHelper.ConvertActionResultToDict(okRating);
+
+        BffHelper.UpdateOfferListWithRating(updateOfferDictList, ratingDictList);
 
         return Ok(updateOfferDictList);
     }

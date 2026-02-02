@@ -35,7 +35,7 @@ export const Breadcrumbs = ({
       {items.map((item, index) => (
         <div key={index} className={styles.item}>
           {item.to ? (
-            <Link to={item.to} className={styles.link}>
+            <Link to={item.to} className={styles.breadcrumbs_link}>
               {item.label}
             </Link>
           ) : (
@@ -43,7 +43,10 @@ export const Breadcrumbs = ({
           )}
 
           {index < items.length - 1 && (
-            <FiChevronRight className={styles.icon} />
+            // <FiChevronRight className={styles.icon} />
+             <svg className={styles.icon} width="11" height="15">
+            +    <use href="/img/sprite.svg#breadcrumbs_next_icon" />
+            +  </svg>
           )}
         </div>
       ))}

@@ -63,7 +63,6 @@ namespace OfferApiService.Models
                 entity.Property(e => e.id).HasColumnName("id");
             });
 
-
             builder.Entity<ParamsCategory>()
                    .HasMany(c => c.Items)
                    .WithOne(i => i.Category)
@@ -80,6 +79,13 @@ namespace OfferApiService.Models
                     .HasMany(r => r.Images)
                     .WithOne(i => i.RentObj)
                     .HasForeignKey(i => i.RentObjId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<Offer>()
+                    .HasOne(o => o.RentObj)
+                    .WithMany() 
+                    .HasForeignKey(o => o.RentObjId)
                     .OnDelete(DeleteBehavior.Cascade);
 
 

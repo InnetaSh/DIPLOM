@@ -1,0 +1,51 @@
+.main_page_bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+.main_page_bg_container {
+    position: relative;
+    z-index: -100;
+}
+
+.card__imageWrapper {
+    position: absolute;
+    width: 66px;
+    height: 153px;
+}
+
+.card__imageWrapper_left_top {
+    left: 10.51px;
+    top: 116.62px;
+    transform: rotate(35.28deg);
+}
+
+.card__imageWrapper_left_bottom {
+    left: 34.81px;
+    top: 374.36px;
+    transform: rotate(132.16deg);
+}
+
+.card__imageWrapper_right_top {
+    right: 10.49px;
+    top: 116.62px;
+    transform: rotate(-54.72deg);
+}
+
+.card__imageWrapper_right_bottom {
+    right: 29.19px;
+    top: 374.36px;
+    transform: rotate(-137.84deg);
+}
+.card__curveWrapper{
+    width: 100%;
+    height: 151.86px;
+    position: absolute;
+    left: 0;
+    top:872px;
+    display: flex;
+}

@@ -1,0 +1,79 @@
+.gallery {
+  width: 100%;
+  height: 505px;
+}
+
+.gallery__container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 27px 0;
+}
+
+.gallery__columns {
+  display: flex;
+  gap: 20px;
+  height: 100%;
+}
+
+/* правая колонки */
+.gallery__column_container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; 
+  height: 100%;
+  min-height: 0;
+}
+
+.gallery__column_container > * {
+  flex: 1; 
+  min-height: 0; 
+}
+
+.gallery__left_container{
+   flex: 0 0 50%;
+  height: 100%;
+}
+/* Центр */
+.gallery__center_container {
+  flex: 0 0 24%;
+  height: 100%;
+}
+
+.gallery__center_wrapper {
+  height: 100%;
+  overflow: hidden;
+}
+
+
+
+
+.gallery img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 30px;
+}
+
+
+.blurOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
+  width: 258px;
+  height: 70px;
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.2); /* полупрозрачный фон */
+  backdrop-filter: blur(8px); /* размытие фона позади */
+  -webkit-backdrop-filter: blur(8px); /* для Safari */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -11,8 +11,11 @@ import {HotelPage} from './pages/public/HotelPage';
 import {LoginPage} from './pages/public/LoginPage';
 import {RegisterPage} from './pages/public/RegisterPage';
 import { BookingDetailsPage} from './pages/public/BookingDetailsPage'
+import { CityPage } from './pages/public/CityPage';
+import {AttractionPage} from "./pages/public/AttractionPage";
+import {Profile_PastHotelPage} from "./pages/user/Profile_PastHotelPage.jsx";
 
-import ProfilePage from './pages/user/ProfilePage';
+import {ProfilePage} from './pages/user/ProfilePage';
 
 
 // // Админ-панель
@@ -37,6 +40,10 @@ function App() {
             {/* Приватные маршруты */}
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/bookingdetails/:id" element={<BookingDetailsPage />} />
+            <Route path="/profile/trips/past/:tripId" element={<Profile_PastHotelPage />} />
+            <Route path="/city/:citySlug" element={<CityPage />} />
+             <Route path="/attraction/:attractionSlug" element={<AttractionPage />} />
+
              {/*<Route path="/booking/:id" element={<BookingDetailsPage />} />
             <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/settings" element={<SettingsPage />} /> */}
