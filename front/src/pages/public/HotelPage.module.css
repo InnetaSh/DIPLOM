@@ -20,14 +20,27 @@
     gap:50px;
 }
 
-
-.info_card{
-flex: 0 0 68.5%;
+.description_with_map{
+    min-height: 335px;
+    
+}
+.description_card{
+flex:  1;
 }
 .card_map{
-flex: 1; 
-    min-width: 0; 
+ flex: 0 0 724px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+     min-height: 280px;
+     height: 100%;
+     gap: 15px;
 }
+
+
+
+
 .hotelDetails {
     margin-top: 20px;
     padding: 16px;

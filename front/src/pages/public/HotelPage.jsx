@@ -10,7 +10,8 @@ import { HotelDescription } from "../../components/Hotel/Hotel_description.jsx";
 import { HotelParamsList } from "../../components/Hotel/HotelParamsList.jsx";
 import { HotelMap } from "../../components/Hotel/HotelMap.jsx";
 import { Footer } from "../../components/Footer/Footer.jsx";
-import {HotelInfoModal} from "../../components/modals/HotelInfoModal.jsx";
+import { HotelInfoModal } from "../../components/modals/HotelInfoModal.jsx";
+import { Link } from "../../components/UI/Text/Link.jsx";
 
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -141,23 +142,36 @@ export const HotelPage = () => {
           <HotelGallery images={images} />
         </div>
 
-        <HotelDescription text={hotel?.description || hotelDescriptionText} />
-
-        <div className="flex-left btn-w-full" >
-          <HotelParamsList params={dummyParams} />
-        </div>
-        <div id="prices" className="flex-center btn-w-full gap-20 ">
-          <div className={styles.info_card}>
-            <Hotel_info_card hotel={hotel} offer={offer} />
+        <div className={`${styles.description_with_map} flex-center btn-w-full gap-20 btn-h-656 `}>
+          <div className={styles.description}>
+            <HotelDescription text={hotel?.description || hotelDescriptionText} />
           </div>
-
-          <div className={`${styles.card_map} flex-left btn-w-full`} >
+          <div className={`${styles.card_map} flex-left btn-w-full btn-h-full `} >
             {lat && lng ? (
-              <HotelMap lat={lat} lng={lng} hotelName={hotel.name} />
+              <HotelMap
+                lat={lat} lng={lng}
+                hotelName={hotel.name}
+                minHeight="252"
+                showAddress={true}
+              />
             ) : (
               <div className={styles.mapPlaceholder}>Координаты отсутствуют</div>
             )}
           </div>
+        </div>
+
+
+
+        <div className="flex-left btn-w-full">
+          <Link text={t("hotel.info_about_owner")} type="m_600_s_32" />
+        </div>
+        <div className="flex-left btn-w-full" >
+          <HotelParamsList params={dummyParams} />
+        </div>
+        <div id="prices" className="flex-left btn-w-full gap-20 btn-h-656">
+         
+            <Hotel_info_card hotel={hotel} offer={offer} />
+       
         </div>
 
 
@@ -168,7 +182,7 @@ export const HotelPage = () => {
 
       {isModalOpen && (
         <div className="modalOverlay">
-         <HotelInfoModal images={images} setIsModalOpen ={setIsModalOpen}/>
+          <HotelInfoModal images={images} setIsModalOpen={setIsModalOpen} />
         </div>
       )}
     </div>

@@ -19,6 +19,7 @@ export const Hotel_info_card = ({ hotel, offer }) => {
     return (
         <div className={styles.hotel_info_card}>
             <div className={styles.hotel_info_card_container}>
+                <div className={styles.line}></div>
                 <div className={styles.card_wrapper}>
 
                     <div className={styles.card_header}>
@@ -39,14 +40,12 @@ export const Hotel_info_card = ({ hotel, offer }) => {
                     <Hotel_info_card_row hotel={hotel} offer={offer} />
 
                 </div>
-
+                <div className={styles.line}></div>
                 <div className={styles.footerRow}>
                     <div className={styles.footerLink}>
                         <Link text={t("hotel_info.expand")} href="#" type="m_600_s_32" />
                     </div>
-                    <div className={styles.footerBtn}>
-                        <ActionButton__Primary text={t("hotel_info.booking")} className="btn-w-385 btn-h-70 btn-br-r-10" onClick={() => { }} />
-                    </div>
+
                 </div>
             </div>
 

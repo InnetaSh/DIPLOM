@@ -70,6 +70,13 @@ export const Hotel_info_card_row = ({ hotel, offer }) => {
                     </div>
                 </div>
             </div>
+            <div className={`${styles.colApartment} ${styles.colBtn}`}>
+                <div className={styles.col_btn_container}>
+                    <ActionButton__Primary text={t("hotel_info.more_btn")} className={`${styles.light_color_btn} btn-w-385 btn-h-70 btn-br-r-10`} onClick={() => { }} />
+                    <ActionButton__Primary text={t("hotel_info.booking")} className="btn-w-385 btn-h-70 btn-br-r-10" onClick={() => { }} />
+                </div>
+            </div>
+
         </div>
 
 

@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { Text } from "../UI/Text/Text.jsx";
+import { Link } from "../UI/Text/Link.jsx";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -18,7 +18,9 @@ L.Icon.Default.mergeOptions({
 export const HotelMap = ({
   lat,
   lng,
-  hotelName,
+  showAddress = false,
+  hotel_title ="hotel",
+  hotel_address ="address",
   minHeight = 466, 
 }) => {
   if (!lat || !lng) return null;
@@ -28,9 +30,9 @@ export const HotelMap = ({
       className={styles.hotel_map}
       style={{ minHeight: `${minHeight}px`, height: "100%", display: "flex", flexDirection: "column" }}
     >
-      {hotelName && (
+      {showAddress && (
         <div className={styles.mapContainer_adress}>
-          <Text text="adress" type="m_400_s_20" />
+          <Link text={hotel_address} type="m_400_s_20" />
         </div>
       )}
       <div style={{ flex: 1, minHeight: 0 }}>
@@ -45,7 +47,7 @@ export const HotelMap = ({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           <Marker position={[lat, lng]}>
-            <Popup>{hotelName}</Popup>
+            <Popup>{hotel_title}</Popup>
           </Marker>
         </MapContainer>
       </div>
