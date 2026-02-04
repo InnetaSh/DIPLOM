@@ -11,7 +11,7 @@ export const RadioButton = ({ text, active = false, onClick, disabled }) => {
       disabled={disabled}
       title={text}
     >
-      <div className={`circle_btn ${active ? "btn-state--active" : ""}`}></div>
+     <div className={`circle_btn ${active ? "btn-radio--active" : ""}`} />
       <Text text={text} type="m_600_s_48"/>
     </button>
   );

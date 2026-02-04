@@ -1,18 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { useParams, useLocation } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext.jsx";
 import { AuthContext } from "../../contexts/AuthContext";
 
-import { Header } from "../../components/Header/Header.jsx";
+import { Header_Full } from "../../components/Header/Header_Full.jsx";
+import { Footer } from "../../components/Footer/Footer.jsx";
 import { Image } from "../../components/UI/Image/Image.jsx";
 import { Text } from "../../components/UI/Text/Text.jsx"
 import { BookingForm } from "../../components/BookingForm/BookingForm.jsx"
+import { Loader } from "../../components/Loader/Loader.jsx";
 
-import styles from "./BookingDetailsPage.css";
+import styles from "./BookingDetailsPage.module.css";
 
 export const BookingDetailsPage = () => {
   const location = useLocation();
   const { offerApi } = useContext(ApiContext);
+  const { login } = useContext(AuthContext);
+
+  const [bookingStep, setBookingStep] = useState("details");
+
+  const { t } = useTranslation();
 
 
   const initialHotel = location.state?.hotel || null;
@@ -39,6 +47,11 @@ export const BookingDetailsPage = () => {
   console.log("Количество дней:", diffDays);
 
   const mainImg = images[0];
+
+  useEffect(() => {
+    console.log("bookingStep:", bookingStep);
+  }, [bookingStep]);
+
 
   useEffect(() => {
     if (initialOffer) return;
@@ -69,46 +82,34 @@ export const BookingDetailsPage = () => {
   }, [id, offerApi, startDate, endDate, guests]);
 
   return (
-    <div className="booking-details-page">
-      <Header />
-      <main className="booking-details-page__content">
-        <div className="booking-details-page__layout">
-          <div className="offer-details__info">
-            <div className="card__imageWrapper">
-              <Image src={mainImg} alt={offerTitle} type="card" />
-            </div>
-            <Text text="{offerTitle}" type="bold" />
-            {offer && (
-              <>
-                <Text text={hotel.address} type="middle" />
+    <div className={styles.bookingDetailsPage}>
+      <Header_Full
+        title={bookingStep === "details" ? t("Booking.booking_title") : ""}
+        showFilterBtn={false} />
+      <main className={styles.bookingDetailsPage_conteiner}>
 
-                <Text text="Детали вашего бронирования" type="bold" />
-                <div className="time-details">
-                  <div className="checkin-time">
-                    <Text text="Заезд" type="middle" />
-                    <Text text={startDate} type="bold" />
-                    <Text text={offer.checkInTime} type="middle" />
-                  </div>
-                  <div className="checkout-time ">
-                    <Text text="Отъезд" type="middle" />
-                    <Text text={endDate} type="bold" />
-                    <Text text={offer.checkOutTime} type="middle" />
-                  </div>
-                </div>
-              </>
-            )}
-
-            <Text text="Вы выбрали:" type="middle" />
-            <Text text={`${diffDays} дни, ${guests} гостей`} type="bold" />
-            <Text text="Детали цены" type="bold" />
-          </div>
-
+        {bookingStep === "details" && (
           <div className="booking-details__container">
-            <BookingForm />
+            <BookingForm
+              setBookingStep={setBookingStep}
+            />
           </div>
-        </div>
+        )}
+        {bookingStep === "loading" && (
+          <div className={`${styles.loading__container}  btn-h-full btn-w-full`}>
+            <div className={`${styles.loader}`}>
+              <Loader />
+            </div>
+            <Text text={t("Booking.processing")} type="m_500_s_40" />
+          </div>
+
+        )}
+
+        {/* {bookingStep === "success" && <BookingSuccess />}
+{bookingStep === "error" && <BookingError />} */}
 
       </main>
+      <Footer />
     </div >
   );
 };

@@ -39,27 +39,27 @@
     "rooms": "Кімнати",
     "city": "Місто",
     "guests": "Гості",
-    "hotel_number":"Номер",
-    "adults":"Дорослі",
-    "children":"Діти",
-    "from_0_to_17":"від 0 до 17 років",
-    "trip_with_animal":"Ви подорожуєте з тваринами",
-    "searh_btn":"Застовусати",
-    "search_title_modal":"Вкажіть кількість номерів та гостей"
+    "hotel_number": "Номер",
+    "adults": "Дорослі",
+    "children": "Діти",
+    "from_0_to_17": "від 0 до 17 років",
+    "trip_with_animal": "Ви подорожуєте з тваринами",
+    "searh_btn": "Застовусати",
+    "search_title_modal": "Вкажіть кількість номерів та гостей"
   },
   "sort": {
     "sort_btn": "Фільтр"
   },
-  "languageModal":{
-    "currency":"Валюта",
-    "language":"Мова",
-    "Choose_a_language":"Виберіть мову",
-    "Ukrainian_hryvnia_UAH":"Українська гривня",
-    "Pound_GBP":"Фунт стерлінгів",
-    "dollar_USA":" Долар CША",
-    "Euro_EUR":"Євро",
-    "Polish_zloty_PLN":"Польський злотий",
-    "Turkish_lira_TRY":"Турецька ліра"
+  "languageModal": {
+    "currency": "Валюта",
+    "language": "Мова",
+    "Choose_a_language": "Виберіть мову",
+    "Ukrainian_hryvnia_UAH": "Українська гривня",
+    "Pound_GBP": "Фунт стерлінгів",
+    "dollar_USA": " Долар CША",
+    "Euro_EUR": "Євро",
+    "Polish_zloty_PLN": "Польський злотий",
+    "Turkish_lira_TRY": "Турецька ліра"
   },
   "hotel": {
     "popularCities": "Популярні міста",
@@ -70,7 +70,7 @@
     "infoDescriptionRight": "З нами ти можеш не тільки знайти для себе тепле житло, а й подарувати цей затишок іншим людям!\n\nРеєструйся на нашому сайті та відкривай нові, зручні функції. Май змогу спілкуватися з іншими орендодавцями у нашому спеціальному чаті.\n\nМає співпрацю з багатьма надійними партнерами та планує розширюватися, щоб дати вам надійність навіть за кордоном.",
     "more": "Детальніше про нас",
     "register": "Зареєструватися",
-     "info_about_owner": "Інформація про власника",
+    "info_about_owner": "Інформація про власника",
     "moreThan100Tours": "Понад 100 турів в кожній країні",
     "infoLogoBottom": "Oselya розширюється, щоб бути разом з вами навіть за кордоном",
     "sections": {
@@ -84,14 +84,14 @@
     "guestCount": "дорослих",
     "from": "від"
   },
-  "menu":{
-    "menu_title":"Меню",
-    "light_tema":"Світла тема",
-    "dark_tema":"Темна тема",
-    "about_us":"Про нас",
-    "help":"Допомога",
-    "Contacts":"Контакти",
-    "Booking":"Бронювання"
+  "menu": {
+    "menu_title": "Меню",
+    "light_tema": "Світла тема",
+    "dark_tema": "Темна тема",
+    "about_us": "Про нас",
+    "help": "Допомога",
+    "Contacts": "Контакти",
+    "Booking": "Бронювання"
   },
   "footer": {
     "help": {
@@ -330,5 +330,41 @@
         "btn_add_reviews": "Додати відгук"
       }
     }
+  },
+  "Booking": {
+    "booking_title": "Введіть свої данні для бронювання",
+    "guest_data_title": "Данні гостя",
+    "name_label": "Ім'я",
+    "email_label": "Електронна пошта",
+    "phone_label": "Телефон",
+    "country_city_label": "Країна/Місто",
+    "save_data_checkbox": "Зберегти данні для наступних поїздок",
+    "booking_details_title": "Деталі бронювання",
+    "arrival_date_label": "Дата приїзду",
+    "departure_date_label": "Дата виїзду",
+    "adults_count_label": "Кількість дорослих",
+    "children_count_label": "Кількість дітей",
+    "trip_purpose_title": "Мета вашої поїздки",
+    "trip_purpose_vacation": "Відпочинок",
+    "trip_purpose_business": "Бізнес",
+    "wishes_label": "Побажання",
+    "payment_method_title": "Спосіб оплати",
+    "payment_visa_mastercard": "Visa/Mastercard",
+    "payment_paypal": "PayPal",
+    "payment_apple_pay": "Apple Pay",
+    "payment_google_pay": "Google Pay",
+    "payment_on_site": "Оплата на місці",
+    "submit_button": "Забронювати",
+    "booking_language_notice": "Будь ласка, вкажіть данні на англійській мові або на мові країни готелю",
+    "required_fields_note": " Поля обов’язкові для заповнення",
+    "required_email_note": "На цю адресу буде надіслано підтвердження бронювання",
+    "required_phone_note": "Для підтвердження бронювання та можливості зв'язатися з вами за необхідності",
+    "choise_card": "Вибрати карту",
+    "data": "Дата",
+    "CVV": "CVV",
+    "Price": "Ціна",
+    "Choise_btn": "Обрати",
+    "processing": "Оформляємо бронювання..."
+
   }
 }

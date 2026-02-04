@@ -1,0 +1,57 @@
+
+.loader {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  filter: url("#goo");
+}
+
+
+.loader__big_ball {
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  background-color: var(--color--btn-action);
+  filter: url("#goo");
+  animation: bigBallAnim 2.7s ease-in-out infinite;
+}
+
+
+.loader__ball {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  left: 50%;
+  top: 50%;
+  margin-left: -18px;
+  margin-top: -18px;
+  border-radius: 50%;
+  background-color: var(--color--btn-action);
+  filter: url("#goo");
+}
+
+
+.loader__ball:nth-child(1) { transform: rotate(45deg) translateY(-120px); }
+.loader__ball:nth-child(2) { transform: rotate(90deg) translateY(-120px); }
+.loader__ball:nth-child(3) { transform: rotate(135deg) translateY(-120px); }
+.loader__ball:nth-child(4) { transform: rotate(180deg) translateY(-120px); }
+.loader__ball:nth-child(5) { transform: rotate(225deg) translateY(-120px); }
+.loader__ball:nth-child(6) { transform: rotate(270deg) translateY(-120px); }
+.loader__ball:nth-child(7) { transform: rotate(315deg) translateY(-120px); }
+.loader__ball:nth-child(8) { transform: rotate(360deg) translateY(-120px); }
+
+/* Анимация большого шарика по кругу */
+@keyframes bigBallAnim {
+  0%   { transform: rotate(0deg) translateY(-120px); }
+  12.5% { transform: rotate(45deg) translateY(-120px); }
+  25%  { transform: rotate(90deg) translateY(-120px); }
+  37.5% { transform: rotate(135deg) translateY(-120px); }
+  50%  { transform: rotate(180deg) translateY(-120px); }
+  62.5% { transform: rotate(225deg) translateY(-120px); }
+  75%  { transform: rotate(270deg) translateY(-120px); }
+  87.5% { transform: rotate(315deg) translateY(-120px); }
+  100% { transform: rotate(360deg) translateY(-120px); }
+}

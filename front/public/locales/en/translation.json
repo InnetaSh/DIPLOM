@@ -251,7 +251,7 @@
     "sale_promotion": "Вигідний початок року",
     "expand": "Розгорнути",
     "booking": "Забронювати",
-     "more_btn": "Детальніше",
+    "more_btn": "Детальніше",
     "deskr": "Покращенний двомісний номер з одним ліжком"
   },
   "reviews": {
@@ -330,5 +330,40 @@
         "btn_add_reviews": "Додати відгук"
       }
     }
+  },
+  "Booking": {
+    "booking_title": "Введіть свої данні для бронювання",
+    "guest_data_title": "Данні гостя",
+    "name_label": "Ім'я",
+    "email_label": "Електронна пошта",
+    "phone_label": "Телефон",
+    "country_city_label": "Країна/Місто",
+    "save_data_checkbox": "Зберегти данні для наступних поїздок",
+    "booking_details_title": "Деталі бронювання",
+    "arrival_date_label": "Дата приїзду",
+    "departure_date_label": "Дата виїзду",
+    "adults_count_label": "Кількість дорослих",
+    "children_count_label": "Кількість дітей",
+    "trip_purpose_title": "Мета вашої поїздки",
+    "trip_purpose_vacation": "Відпочинок",
+    "trip_purpose_business": "Бізнес",
+    "wishes_label": "Побажання",
+    "payment_method_title": "Спосіб оплати",
+    "payment_visa_mastercard": "Visa/Mastercard",
+    "payment_paypal": "PayPal",
+    "payment_apple_pay": "Apple Pay",
+    "payment_google_pay": "Google Pay",
+    "payment_on_site": "Оплата на місці",
+    "submit_button": "Забронювати",
+    "booking_language_notice": "Будь ласка, вкажіть данні на англійській мові або на мові країни готелю",
+    "required_fields_note": " Поля обов’язкові для заповнення",
+    "required_email_note": "На цю адресу буде надіслано підтвердження бронювання",
+    "required_phone_note": "Для підтвердження бронювання та можливості зв'язатися з вами за необхідності",
+    "choise_card": "Вибрати карту",
+    "data": "Дата",
+    "CVV": "CVV",
+    "Price": "Ціна",
+    "Choise_btn": "Обрати",
+     "processing": "Оформляємо бронювання..."
   }
 }

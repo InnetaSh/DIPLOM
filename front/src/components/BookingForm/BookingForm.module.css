@@ -1,0 +1,313 @@
+.bookingForm {
+    width: 1161px;
+    height: fit-content;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.bookingForm {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 30px;
+
+}
+
+
+.input_container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 20px;
+}
+
+.input_container__grid_2 {
+    width: 100%;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 20px;
+}
+
+.input_container__grid_3 {
+    width: 100%;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+justify-items: start;
+    gap: 20px 20px;
+}
+
+.bookingForm_label {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1px;
+}
+
+
+.form_title__legend {
+    padding-left: 10px;
+    margin-bottom: 4px;
+}
+
+.form__legend {
+    padding-left: 20px;
+}
+
+.input {
+    width: 100%;
+    background-color: transparent;
+    border: 3px solid var(--color-input-border);
+}
+
+fieldset {
+    width: 100%;
+     display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    gap: 30px;
+}
+
+.language_notice,
+.required_fields {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+}
+
+.language_notice {
+    border: 1px solid red;
+}
+
+.input,
+.textarea,
+.phoneNumber {
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 29px;
+  color: var(--color-text); 
+}
+
+
+.required_fields {
+    border: none;
+}
+
+.actionButton__wrapper {
+    margin-top: 109px;
+}
+
+.numberInput {
+  position: relative;
+  width: 100%;
+}
+
+.numberInput input {
+  padding-right: 56px; 
+}
+
+
+.spinButtons {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.numberInput {
+  position: relative;
+  width: 100%;
+}
+
+
+.input_number {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+
+.spinButton {
+  all: unset;
+  position: absolute;
+  top: 20px;
+
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 28px;
+  color: var(--color-input-border);
+  border-radius: 50%;
+  border: none;
+  z-index: 2;
+}
+
+.spinButton {
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.spinButton:hover {
+      border: none;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.spinButton:active {
+  transform: scale(0.9);
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+
+.left {
+  left: 20px;
+}
+
+.right {
+  right: 20px;
+}
+
+
+.phoneInput {
+  display: flex;
+  position: relative;
+  width: 100%;
+}
+
+
+.phonePrefixWrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-right: 1px solid var(--color-input-border);
+  border-radius: 20px 0 0 20px;
+  padding: 0 10px;
+  background-color: transparent;
+}
+
+
+.phonePrefix {
+  all: unset;
+  width: 100%;
+  cursor: pointer;
+}
+
+
+.selectArrow {
+  pointer-events: none; 
+  font-size: 12px;
+  color: var(--color-input-border);
+}
+
+
+.phoneNumber {
+  flex: 1;
+  padding-left: 130px; 
+}
+
+.cardInfo__container{
+  width: 100%;
+  height: 323px;
+  background-color: var( --color--hotel-info-bg);
+border-radius: 20px;
+padding: 20px 35px;
+}
+.input_card_container{
+      width: 100%;
+    height: 171px;
+    display: grid;
+     grid-template-columns: 58% 19% 19% ;
+    gap: 2%;
+}
+.cardForm_label{
+   width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1px;
+}
+
+.price__container{
+width: 360px;
+height: 60px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 10px 20px;
+border-radius: 20px;
+background-color: var(--color-bg);
+border: none;
+}
+.cardForm_wrapper{
+position: relative;
+
+}
+.input_card{
+  background-color: var( --color--hotel-info-bg);
+    z-index: 1;
+    padding-right: 60px;
+}
+.card_num_wrapper{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+  gap:100px;
+  top: 35%;
+  left: 0;
+  height: 73px;
+  width: 100%;
+  background-color: var(--color-bg__2);
+  border-radius: 0 0 20px 20px ;
+   box-shadow: 0 0 0 0.5px var(--color-text);
+  z-index: 0;
+}
+.card_num_wrapper {
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.2s ease;
+}
+
+.cardForm_wrapper:focus-within .card_num_wrapper {
+  opacity: 1;
+  visibility: visible;
+}
+
+
+.input_with_icon {
+  position: relative;
+  width: 100%;
+  z-index: 5;
+}
+
+.input_icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+

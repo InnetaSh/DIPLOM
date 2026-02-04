@@ -9,6 +9,7 @@
 /* * {
   outline: 1px solid red;
 } */
+ 
 
 body {
   box-sizing: border-box;
@@ -86,6 +87,13 @@ body {
   color: var(--color-btn-text-dark);
   font-size: 20px;
   height: 60px;
+}
+
+.btn.light_color_btn{
+    background-color: var( --color-secondary) !important;
+}
+.btn.light_color_btn_2{
+    background-color: var( --color--btn-icon) !important;
 }
 
 /* ===================================================
@@ -313,20 +321,37 @@ body {
   align-items: center;
   background-color: transparent;
 }
-
-.btn-radio--active {
-  background-color: var(--color-text);
+.btn-radio:hover{
+  border: none
 }
 
 .circle_btn {
-  display: inline-block;
-  background-color: transparent;
-  box-sizing: border-box;
+  position: relative;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   border: 2px solid var(--color-text);
+  box-sizing: border-box;
 }
+
+
+.circle_btn::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  background-color: var(--color-text);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.2s ease;
+}
+
+.btn-radio--active::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
 
 @media (max-width: 1024px) {
   .circle_btn {

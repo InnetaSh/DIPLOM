@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Text } from "../UI/Text/Text.jsx";
 import { Link } from "../UI/Text/Link.jsx";
 import { ActionButton__Primary } from "../UI/Button/ActionButton_Primary.jsx";
@@ -14,6 +15,7 @@ const paramList = [
 ];
 export const Hotel_info_card_row = ({ hotel, offer }) => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
     if (!hotel || !offer) return null;
 
     return (
@@ -72,8 +74,11 @@ export const Hotel_info_card_row = ({ hotel, offer }) => {
             </div>
             <div className={`${styles.colApartment} ${styles.colBtn}`}>
                 <div className={styles.col_btn_container}>
-                    <ActionButton__Primary text={t("hotel_info.more_btn")} className={`${styles.light_color_btn} btn-w-385 btn-h-70 btn-br-r-10`} onClick={() => { }} />
-                    <ActionButton__Primary text={t("hotel_info.booking")} className="btn-w-385 btn-h-70 btn-br-r-10" onClick={() => { }} />
+                    <ActionButton__Primary text={t("hotel_info.more_btn")} className={`light_color_btn btn-w-385 btn-h-70 btn-br-r-10`} onClick={() => { }} />
+                    <ActionButton__Primary 
+                    text={t("hotel_info.booking")}
+                     className="btn-w-385 btn-h-70 btn-br-r-10"
+                          onClick={() => navigate("/booking")} />
                 </div>
             </div>
 
