@@ -52,6 +52,30 @@ export const BookingDetailsPage = () => {
     console.log("bookingStep:", bookingStep);
   }, [bookingStep]);
 
+  useEffect(() => {
+    if (bookingStep === "loading") {
+      const timer = setTimeout(() => setBookingStep("success"), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [bookingStep]);
+
+  useEffect(() => {
+    if (bookingStep === "success") {
+      const timer = setTimeout(() => setBookingStep("confirm"), 700); 
+      return () => clearTimeout(timer);
+    }
+  }, [bookingStep]);
+
+
+
+  // await api.book();
+
+  // setBookingStep("success");
+
+  // setTimeout(() => {
+  //   setBookingStep("confirm");
+  // }, 900);
+
 
   useEffect(() => {
     if (initialOffer) return;
@@ -95,15 +119,24 @@ export const BookingDetailsPage = () => {
             />
           </div>
         )}
-        {bookingStep === "loading" && (
-          <div className={`${styles.loading__container}  btn-h-full btn-w-full`}>
-            <div className={`${styles.loader}`}>
-              <Loader />
+        {(bookingStep === "loading" ||
+          bookingStep === "success" ||
+          bookingStep === "confirm") && (
+            <div className={styles.loading__container}>
+              <Loader status={bookingStep} />
+              {bookingStep !== "confirm" && (
+                <Text
+                  text={
+                    bookingStep === "loading"
+                      ? t("Booking.processing")
+                      : t("Booking.success")
+                  }
+                  type="m_500_s_40"
+                />
+              )}
             </div>
-            <Text text={t("Booking.processing")} type="m_500_s_40" />
-          </div>
+          )}
 
-        )}
 
         {/* {bookingStep === "success" && <BookingSuccess />}
 {bookingStep === "error" && <BookingError />} */}

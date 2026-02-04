@@ -2,17 +2,8 @@ import { useParams } from 'react-router-dom';
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Header_Full } from "../../components/Header/Header_Full.jsx";
-import { BunnerHotel } from "../../components/Bunner/Bunner_hotel.jsx";
-import { LoginModal } from "../../components/modals/LoginModal.jsx";
-import { RegisterModal } from "../../components/modals/RegisterModal.jsx";
 import { Footer } from "../../components/Footer/Footer.jsx";
-import { TwoColumnInfoSection } from "../../components/Info_Components/TwoColumnInfoSection.jsx";
-import { MoreOffersSection } from "../../components/Info_Components/MoreOffersSection.jsx";
-import { SearchBar_Main } from "../../components/SearchBar/SearchBar_Main.jsx";
 import { PlaceCard_carousel } from "../../components/PlacesCard/PlaceCard_carousel.jsx"
-import { HotelCardList_Recomented } from "../../components/HotelCard/HotelCardList_Recomented.jsx";
-import { More_tour } from "../../components/Info_Components/More_tour";
-import { MainPageBg } from "../../components/MainPage_bg/MainPage_bg.jsx";
 
 import { ApiContext } from "../../contexts/ApiContext.jsx";
 import { useLanguage } from "../../contexts/LanguageContext";

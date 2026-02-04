@@ -23,14 +23,48 @@
   padding: 42px 4% 0 4%;
     pointer-events: auto;
      position: relative; 
-  z-index: 10;    
+  z-index: 10;  
+  
+  
 }
 .headerMain__container_small{
  padding: 44px 4% 33px 4%; 
 }
 .headerMain_Logo__container{
   width: 100%;
+  display: flex;
+  align-items: center;
 }
+
+@media screen and (max-width: 1700px) {
+ .headerMain_full {
+  height: 292px;
+ 
+}
+
+  .headerMain_Logo__container {
+    flex-wrap: wrap;
+    height: fit-content;
+    row-gap: 20px;
+  }
+
+  .headerMain__logo {
+    order: 1;
+  }
+
+  .headerMain__logo__actions_container {
+    order: 2;
+  }
+
+  .searchBar {
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
+
+
 .headerMain_breadcrumbs__container{
    width: 100%;
    padding: 0 60px ;
@@ -58,11 +92,11 @@
 
 .headerMain_sortBtn__dropdown {
   position: absolute;
-  top: calc(100% + 29px);
-  left: 100%;
-  transform: translateX(-100%);
+  top: 100%;
+  right: 4%;
   z-index: 1000;
 }
+
 
 
 

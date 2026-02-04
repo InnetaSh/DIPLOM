@@ -18,6 +18,8 @@ import {BookingDetailsPage} from "./pages/user/BookingDetailsPage.jsx";
 
 import {ProfilePage} from './pages/user/ProfilePage';
 
+import {HostDashboard} from './pages/host/HostDashboard';
+
 
 // // Админ-панель
 // import AdminDashboard from './pages/admin/AdminDashboard';
@@ -49,8 +51,8 @@ function App() {
             <Route path="/settings" element={<SettingsPage />} /> */}
 
             {/* Host (владельцы жилья) */}
-            {/* <Route path="/host" element={<HostDashboard />} />
-            <Route path="/host/listings" element={<HostListings />} />
+            <Route path="/host" element={<HostDashboard />} />
+            {/* <Route path="/host/listings" element={<HostListings />} />
             <Route path="/host/listings/new" element={<NewListing />} />
             <Route path="/host/listings/:id/edit" element={<EditListing />} />
             <Route path="/host/bookings" element={<HostBookings />} /> */}

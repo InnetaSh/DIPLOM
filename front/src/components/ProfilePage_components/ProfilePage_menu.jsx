@@ -10,20 +10,60 @@ import { PaymentInfoPanel } from "./PaymentInfoPanel.jsx"
 import { HelpPanel } from "./HelpPanel.jsx"
 import { PrivacyPanel } from "./PrivacyPanel.jsx"
 import {MessagePanel} from "./MessagePanel.jsx";
+import {HousingPanel} from "./HousingPanel.jsx";
 import styles from './ProfilePage_menu.module.css';
 
 
-export const ProfilePageMenu = () => {
+export const ProfilePageMenu = ({account  = "user"}) => {
   const { t } = useTranslation();
 
-  const buttons = [
-    { key: "account", icon: "menu_btn_account", text: t("Prrofile.menu_btn_account") },
-    { key: "travels", icon: "menu_btn_my_travels", text: t("Prrofile.menu_btn_my_travels") },
-    { key: "payment", icon: "menu_btn_payment_info", text: t("Prrofile.menu_btn_payment_info") },
-    { key: "help", icon: "menu_btn_help", text: t("Prrofile.menu_btn_help") },
-    { key: "privacy", icon: "menu_btn_privacy", text: t("Prrofile.menu_btn_privacy") },
-     { key: "message", icon: "menu_btn_message", text: t("Prrofile.menu_btn_message") },
+  const baseButtons = [
+    {
+      key: "account",
+      icon: "menu_btn_account",
+      text: t("Prrofile.menu_btn_account"), // Управління акаунтом
+    },
+    {
+      key: "travels",
+      icon: "menu_btn_my_travels",
+      text: t("Prrofile.menu_btn_my_travels"), // Мої подорожі
+    },
+     { key: "payment", icon: "menu_btn_payment_info", text: t("Prrofile.menu_btn_payment_info") },
   ];
+
+  const hostOnlyButtons = [
+    {
+      key: "housing",
+      icon: "menu_btn_housing",
+      text: t("Prrofile.menu_btn_my_housing"), // Моє житло
+    },
+  ];
+
+  const commonBottomButtons = [
+    {
+      key: "help",
+      icon: "menu_btn_help",
+      text: t("Prrofile.menu_btn_help"), // Допомога
+    },
+    {
+      key: "privacy",
+      icon: "menu_btn_privacy",
+      text: t("Prrofile.menu_btn_privacy"), // Конфіденційність
+    },
+    {
+      key: "logout",
+      icon: "menu_btn_logout",
+      text: t("Prrofile.menu_btn_logout"), // Вихід
+    },
+  ];
+
+  const buttons = [
+    ...baseButtons,
+    ...(account === "host" ? hostOnlyButtons : []),
+    ...commonBottomButtons,
+  ];
+
+
   const renderRightPanel = (activeKey) => {
     switch (activeKey) {
       case "account":
@@ -37,6 +77,9 @@ export const ProfilePageMenu = () => {
 
       case "help":
         return <HelpPanel />;
+
+        case "housing":
+          return <HousingPanel />;
 
       case "privacy":
         return <PrivacyPanel />;

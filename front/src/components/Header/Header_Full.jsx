@@ -57,10 +57,16 @@ export const Header_Full = ({
   return (
     <div className={`${styles.headerMain} ${styles.headerMain_full} flex-center`}>
       <div className={`${styles.headerMain__container} flex-stretch-column`} >
+        {openMenu && (
+              <div className={styles.headerMain_sortBtn__dropdown}>
+                <MenuModal setIsModalOpen={setOpenMenu} />
+              </div>
+            )}
         <div className={`${styles.headerMain_Logo__container}   flex-between`} >
           <div className={`${styles.headerMain__logo}`}>
             <Logo_Oselya />
           </div>
+          <div  className = {`${styles.searchBar} `}>
           <SearchBar
             onSearch={handleSearchResults}
             defaultCity={city}
@@ -68,7 +74,15 @@ export const Header_Full = ({
             defaultStartDate={startDate}
             defaultEndDate={endDate}
           />
-          <div className={`${styles.headerMain__logo__actions_container} btn-w-190 flex-center `}>
+          </div>
+          <div className={`${styles.headerMain__logo__actions_container} flex-center gap-20`}>
+             <IconButton__50
+                         icon_name="user-home"
+                         onClick={() => setIsLoginModalOpen(prev => !prev)}
+                         title="User"
+                       />
+           
+           
             <IconButton__50
               icon_name="user-male"
               onClick={() => {
@@ -87,11 +101,7 @@ export const Header_Full = ({
               title="User"
               onClick={handleMenuToggle}
             />
-            {openMenu && (
-              <div className={styles.headerMain_sortBtn__dropdown}>
-                <MenuModal setIsModalOpen ={setOpenMenu}/>
-              </div>
-            )}
+          
 
             {isModalLanguageOpen && (
               <div className="modalOverlay">

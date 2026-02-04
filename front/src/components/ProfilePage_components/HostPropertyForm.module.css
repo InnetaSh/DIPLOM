@@ -1,0 +1,151 @@
+.container {
+  background: transparent;
+  padding: 24px;
+display: flex;
+flex-direction: column;
+justify-content: start;
+align-items: stretch;
+ 
+}
+
+.title {
+  padding-bottom: 37px;
+}
+.required_fields {
+    border: none;
+    color: red;
+}
+
+
+.block {
+  margin-bottom: 20px;
+}
+
+.blockGrid {
+  display: grid;
+    grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.block_title{
+  width: 100%;  
+}
+.label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+.fieldset{
+    width: 100%;
+    padding: 10px 0;
+    gap: 0;
+}
+.input,
+.textarea {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--color-text);
+  border-radius: 20px;
+
+  height: 59px;
+  padding: 0 28px;
+}
+
+.textarea {
+  height: 267px;
+  resize: vertical;
+}
+
+.previewCard {
+  border-radius: 20px;
+   height: 267px;
+   overflow: hidden;
+  border-radius: 12px;
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  border-radius: 12px;
+  display: block;
+}
+
+.previewTitle {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.photos {
+  display: grid;
+  height: 295px;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.photoMain {
+  height: 295px;
+  border:1px solid var(--color-text);
+  border-radius: 20px;
+}
+
+.photoGrid {
+  display: grid;
+  grid-template-rows: 1.5fr 1fr;
+  gap: 8px;
+}
+
+.photoGrid div {
+  border:1px solid var(--color-text);
+  border-radius: 20px;
+}
+
+.btn_add_photo {
+  width: 295px;
+  height: 38px;
+
+  cursor: pointer;
+}
+
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8%;
+}
+
+.checkbox {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.checkboxInput {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-text); 
+  flex-shrink: 0;        
+}
+
+.checkboxLabel {
+  display: inline-block;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr  1fr;
+  margin-top: 30px;
+}
+
+@media screen and (max-width: 1780px) {
+  .actions {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    
+     gap: 20px; 
+  }
+}

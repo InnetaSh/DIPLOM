@@ -13,7 +13,7 @@
 .hotelCardList__columns {
   width: 100%;
   display: flex;
-  gap: 0 105px;
+  justify-content: space-between;
 }
 
 .hotelCardList__cardsColumn {
@@ -32,14 +32,14 @@
 
 
 
-@media (max-width: 1920px) {
+@media (max-width: 1440px) {
   .hotelCardList {
     width: 80%;
   }
 
   .hotelCardList__cardsColumn {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(416px, 1fr));
+    grid-template-columns:  1fr;
     gap: 27px 30px;
   }
 }

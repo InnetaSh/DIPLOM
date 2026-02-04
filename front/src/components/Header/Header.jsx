@@ -38,12 +38,25 @@ export const Header = ({ isLoginModalOpen = false, setIsLoginModalOpen }) => {
   return (
     <div className={`${styles.headerMain} ${styles.headerMain_small} flex-center`}>
       <div className={`${styles.headerMain__container} ${styles.headerMain__container_small} p-t-24 flex-between`}>
+         {openMenu && (
+              <div className={styles.headerMain_sortBtn__dropdown}>
+                <MenuModal setIsModalOpen={setOpenMenu} />
+              </div>
+            )}
         <div className={`${styles.headerMain_Logo__container} flex-between`}>
           <div className={styles.headerMain__logo}>
             <Logo_Oselya />
           </div>
           <Text text={t("header.subtitle_header_main")} type="m_400_s_32" />
           <div className={`${styles.headerMain__logo__actions_container} flex-center gap-20`}>
+            
+              <IconButton__50
+              icon_name="user-home"
+              onClick={() => setIsLoginModalOpen(prev => !prev)}
+              title="User"
+            />
+
+
             <IconButton__50
               icon_name="user-male"
               onClick={() => setIsLoginModalOpen(prev => !prev)}
@@ -61,11 +74,7 @@ export const Header = ({ isLoginModalOpen = false, setIsLoginModalOpen }) => {
               title="Menu"
                onClick={handleMenuToggle}
             />
-            {openMenu && (
-              <div className={styles.headerMain_sortBtn__dropdown}>
-                <MenuModal setIsModalOpen={setOpenMenu} />
-              </div>
-            )}
+           
 
             {isModalLanguageOpen && (
               <div className="modalOverlay">

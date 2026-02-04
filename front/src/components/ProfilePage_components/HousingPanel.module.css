@@ -1,0 +1,39 @@
+.myTravelPanel{
+    /* min-width: 1020px; */
+    width: 100%;
+    min-height: 624px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 20px;
+    background-color: var(--color-bg);
+}
+.myTravelPanel__container{
+    width: 100%;
+    height: 100%;
+    padding: 41px 47px 0 47px;
+}
+.container_btn{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    width: 100%;
+    height: fit-content;
+    margin-bottom: 40px;
+}
+.cardList__container{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  gap: 30px; 
+   max-height: 600px;     
+  overflow-y: auto;    
+}
+@media screen and (max-width: 1440px) {
+  .cardList__container {
+    grid-template-columns: 1fr;
+     gap: 20px; 
+  }
+}

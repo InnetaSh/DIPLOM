@@ -14,6 +14,7 @@ export const SearchBar = ({
   onSearch,
   classNameWidth = "btn-w-960",
   classNameHeight = "btn-h-50",
+  className
 }) => {
   const { t } = useTranslation();
 
@@ -78,7 +79,7 @@ export const SearchBar = ({
 
   return (
     <div
-      className={`${styles.searchBar} ${styles.searchBar_bg_color_dark} flex-between btn-br-r-20 ${classNameWidth} ${classNameHeight}`}
+      className={`${styles.searchBar} ${styles.searchBar_bg_color_dark} ${className} flex-between btn-br-r-20 ${classNameWidth} ${classNameHeight}`}
     >
       <div className={`${styles.searchBar__container} gap-20 flex-center`}>
         <div

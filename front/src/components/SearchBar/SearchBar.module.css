@@ -31,6 +31,7 @@
   width: calc((100% - 132px) / 3);
 }
 
+
 .input_date_title {
   position: relative;
   display: inline-block;
@@ -79,7 +80,7 @@
 }
 
 .input_guest {
-  border: none;
+  border: none !important;
   background-color: transparent;
   width: 100%;
 
