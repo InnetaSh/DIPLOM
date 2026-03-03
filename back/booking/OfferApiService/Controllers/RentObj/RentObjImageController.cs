@@ -16,7 +16,8 @@ namespace OfferApiService.Controllers.RentObj
              : base(rentObjImageService, mqService)
         {
             _imageService = rentObjImageService;
-            _baseUrl = configuration["AppSettings:BaseUrl"];
+            //_baseUrl = configuration["AppSettings:BaseUrl"];
+            _baseUrl = $"{configuration["HostUrl"] ?? "http://localhost"}:5003";
         }
 
 

@@ -10,6 +10,7 @@ namespace OfferApiService.View.RentObj
         public int id { get; set; }
         public int RentObjId { get; set; }
         public int ParamItemId { get; set; }
+        public string? IconName { get; set; } = null;
 
         public string Title { get; set; }  
         public bool? ValueBool { get; set; }
@@ -29,7 +30,8 @@ namespace OfferApiService.View.RentObj
                 ParamItemId = model.ParamItemId,
                 ValueBool = model.ValueBool,
                 ValueInt = model.ValueInt,
-                ValueString = model.ValueString
+                ValueString = model.ValueString,
+                IconName = model.IconName,
             };
 
         }

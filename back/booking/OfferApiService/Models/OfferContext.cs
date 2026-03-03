@@ -8,7 +8,6 @@ namespace OfferApiService.Models
     public class OfferContext : ContextBase<Offer>
     {
         public DbSet<Offer> Offers { get; set; }
-        public DbSet<BookedDate> BookedDates { get; set; }
         public DbSet<ParamsCategory> ParamsCategories { get; set; }
         public DbSet<ParamItem> ParamItems { get; set; }
         public DbSet<RentObjImage> RentObjImages { get; set; }
@@ -26,12 +25,7 @@ namespace OfferApiService.Models
                 entity.HasKey(e => e.id);
                 entity.Property(e => e.id).HasColumnName("id");
             });
-            builder.Entity<BookedDate>(entity =>
-            {
-                entity.ToTable("bookeddates");
-                entity.HasKey(e => e.id);
-                entity.Property(e => e.id).HasColumnName("id");
-            });
+           
             builder.Entity<RentObject>(entity =>
             {
                 entity.ToTable("rentobjects");
@@ -83,10 +77,10 @@ namespace OfferApiService.Models
 
 
             builder.Entity<Offer>()
-                    .HasOne(o => o.RentObj)
-                    .WithMany() 
-                    .HasForeignKey(o => o.RentObjId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                 .HasOne(o => o.RentObj)
+                 .WithOne(r => r.Offer)
+                 .HasForeignKey<RentObject>(r => r.OfferId)
+                 .OnDelete(DeleteBehavior.Cascade);
 
 
             // OfferOrderLink

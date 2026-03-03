@@ -1,6 +1,7 @@
 ﻿using Globals.Controllers;
 using OfferApiService.Models;
 using OfferApiService.Models.Enum;
+using OfferApiService.View.RentObj;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
@@ -44,29 +45,12 @@ namespace OfferApiService.View
         public TimeSpan? CheckInTime { get; set; } = TimeSpan.Parse("11:00:00");
         public TimeSpan? CheckOutTime { get; set; } = TimeSpan.Parse("15:00:00");
 
-
-
-
         public int OwnerId { get; set; }
-        public int RentObjId { get; set; }
+        public RentObjRequest RentObj { get; set; }
 
-        public static Offer MapToModel(OfferRequest request)
+
+        public static Offer MapToModel(OfferRequest request, string baseUrl)
         {
-            //if (!Enum.TryParse<DepositType>(
-            //request.DepositStatus,
-            //ignoreCase: true,
-            //out var depositStatus))
-            //{
-            //    throw new ArgumentException(
-            //        $"Invalid DepositStatus value: {request.DepositStatus}");
-            //}
-
-          
-            //Enum.TryParse<PaymentMethod>(
-            //    request.PaymentMethodCode,
-            //    ignoreCase: true,
-            //    out var paymentMethod);
-
 
             return new Offer
             {
@@ -97,7 +81,9 @@ namespace OfferApiService.View
                 CheckOutTime = request.CheckOutTime,
 
                 OwnerId = request.OwnerId,
-                RentObjId = request.RentObjId
+                RentObj = request.RentObj != null
+                    ? RentObjRequest.MapToModel(request.RentObj)
+                    : null,
 
             };
         }

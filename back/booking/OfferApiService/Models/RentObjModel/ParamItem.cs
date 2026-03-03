@@ -9,6 +9,7 @@ namespace OfferApiService.Models.RentObjModel
 
         public int CategoryId { get; set; }
         public ParamsCategory Category { get; set; }
+        public string? IconName { get; set; } = null;
 
         public bool IsFilterable { get; set; } = true;  // Можно ли использовать этот параметр в фильтрах поиска
 

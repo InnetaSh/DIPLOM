@@ -25,7 +25,8 @@ namespace OfferApiService.Controllers.RentObj
         )
             : base(rentObjService, mqService)
         {
-            _baseUrl = configuration["AppSettings:BaseUrl"];
+            // _baseUrl = configuration["AppSettings:BaseUrl"];
+            _baseUrl = $"{configuration["HostUrl"] ?? "http://localhost"}:5003";
             _geocodingService = geocodingService;
         }
 

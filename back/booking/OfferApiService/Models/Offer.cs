@@ -62,7 +62,6 @@ namespace OfferApiService.Models
 
         public int OwnerId { get; set; }                // ID владельца объявления
 
-        public int RentObjId { get; set; }              // ID объекта недвижимости
         public RentObject RentObj { get; set; } // Связь с объектом недвижимости
 
 

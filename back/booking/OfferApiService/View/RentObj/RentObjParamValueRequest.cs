@@ -14,6 +14,7 @@ namespace OfferApiService.View.RentObj
         public int? ValueInt { get; set; }
         public string? ValueString { get; set; }
 
+        public string? IconName { get; set; } = null;
 
         public static RentObjParamValue MapToModel(RentObjParamValueRequest request)
         {
@@ -24,7 +25,8 @@ namespace OfferApiService.View.RentObj
                 ParamItemId = request.ParamItemId,
                 ValueBool = request.ValueBool,
                 ValueInt = request.ValueInt,
-                ValueString = request.ValueString
+                ValueString = request.ValueString,
+                IconName = request.IconName,
             };
         }
     }

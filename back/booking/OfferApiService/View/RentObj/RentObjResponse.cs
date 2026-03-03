@@ -12,7 +12,7 @@ namespace OfferApiService.View.RentObj
     public class RentObjResponse : IBaseResponse
     {
         public int id { get; set; }
-
+        public int OfferId { get; set; }
         public int CountryId { get; set; }
         public int DistrictId { get; set; }
         public int RegionId { get; set; }
@@ -58,6 +58,7 @@ namespace OfferApiService.View.RentObj
             return new RentObjResponse
             {
                 id = model.id,
+                OfferId = model.OfferId,
                 CountryId = model.CountryId,
                 RegionId = model.RegionId,
                 CityId = model.CityId,

@@ -17,7 +17,9 @@
             set => _endDate = DateTime.SpecifyKind(value, DateTimeKind.Utc);
         }
 
-        public int Guests { get; set; }
+        public int Adults { get; set; }
+        public int Children { get; set; }
+
     }
 
 }

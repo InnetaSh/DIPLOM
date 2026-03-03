@@ -22,7 +22,14 @@ namespace OfferApiService.View
         public int DistanceToCenter { get; set; } // расстояние до центра
 
         public int GuestCount { get; set; }
+        public int? Adults { get; set; }
+        public int? Children { get; set; }
+
+       
         public int DaysCount { get; set; }
+
+        public string? StartDate { get; set; }
+        public string? EndDate { get; set; }
 
 
         public decimal? OrderPrice { get; set; } // цена для текущего заказа (по количеству дней расчет)
@@ -55,10 +62,6 @@ namespace OfferApiService.View
         public int OwnerId { get; set; }
         //public int RentObjId { get; set; }
         public RentObjResponse? RentObj { get; set; }
-
-        public IEnumerable<BookedDateResponse> BookedDates { get; set; } = new List<BookedDateResponse>();
-
-
 
         public double Rating { get; set; }
 

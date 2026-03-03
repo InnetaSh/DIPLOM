@@ -7,6 +7,8 @@ namespace OfferApiService.Models.RentObjModel
     public class RentObject : EntityBase
     {
         
+        public int OfferId { get; set; }
+        public Offer Offer { get; set; }
 
         //=====расположение==================
         public int CountryId { get; set; }

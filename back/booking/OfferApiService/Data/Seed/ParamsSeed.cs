@@ -29,52 +29,51 @@ namespace OfferApiService.Data.Seed
             modelBuilder.Entity<ParamItem>().HasData(
                 // Тип розміщення / Type of accommodation
                 new ParamItem { id = 1, CategoryId = 1 },
-                new ParamItem {id = 2, CategoryId = 1 },
-                new ParamItem {id = 3, CategoryId = 1 },
-                new ParamItem {id = 4, CategoryId = 1 },
-                new ParamItem {id = 5, CategoryId = 1 },
+                new ParamItem {id = 2, CategoryId = 1 }, 
+                new ParamItem {id = 3, CategoryId = 1 }, 
+                new ParamItem {id = 4, CategoryId = 1 }, 
+                new ParamItem {id = 5, CategoryId = 1 }, 
                 new ParamItem { id = 6, CategoryId = 1 },
-                new ParamItem { id = 7, CategoryId = 1 },
-
-                // Зручності / Amenities
-                new ParamItem {id = 8, CategoryId = 3 },
-                new ParamItem { id = 9, CategoryId = 3 },
-                new ParamItem { id = 10, CategoryId = 3 },
-                new ParamItem { id = 11, CategoryId = 3 },
-                new ParamItem { id = 12, CategoryId = 3 },
-                new ParamItem { id = 13, CategoryId = 3 },
-                new ParamItem { id = 14, CategoryId = 3 },
-                new ParamItem { id = 15, CategoryId = 3 },
-                new ParamItem { id = 16, CategoryId = 3 },
-
-                 //Житло з/Housing with
-                new ParamItem {id = 17, CategoryId = 4 },
-                new ParamItem {id = 18, CategoryId = 4 },
-                new ParamItem {id = 19, CategoryId = 4 },
-                new ParamItem {id = 20, CategoryId = 4 },
-                new ParamItem {id = 21, CategoryId = 4 },
+                                                      
+                // Зручності / Amenities             
+                new ParamItem {id = 8, CategoryId = 3, IconName = "Wi-Fi" },
+                new ParamItem { id = 9, CategoryId = 3, IconName = "AirConditioning" },
+                new ParamItem { id = 10, CategoryId = 3, IconName= "TV" },
+                new ParamItem { id = 11, CategoryId = 3, IconName= "WorkDesk" },
+                new ParamItem { id = 12, CategoryId = 3, IconName= "PetsAllowed" },
+                new ParamItem { id = 13, CategoryId = 3, IconName= "FreeParking" },
+                new ParamItem { id = 14, CategoryId = 3, IconName= "WashingMachine" },
+                new ParamItem { id = 15, CategoryId = 3, IconName= "Iron" },
+                new ParamItem { id = 16, CategoryId = 3, IconName= "ElectricKettle" },
+                                                      
+                 //Житло з/Housing with              
+                new ParamItem {id = 17, CategoryId = 4 , IconName= "Balcony" },
+                new ParamItem {id = 18, CategoryId = 4 , IconName= "Terrace" },
+                new ParamItem {id = 19, CategoryId = 4 , IconName= "Kitchen" },
+                new ParamItem {id = 20, CategoryId = 4 , IconName= "SingleBed" },
+                new ParamItem {id = 21, CategoryId = 4, IconName = "DoubleBed" },
 
 
                 // "Оцінка об'єкту / Object evaluation
 
                 new ParamItem {id = 22, CategoryId = 5 },
-                new ParamItem {id = 23, CategoryId = 5 },
-                new ParamItem {id = 24, CategoryId = 5 },
+                new ParamItem {id = 23, CategoryId = 5  },
+                new ParamItem {id = 24, CategoryId = 5  },
                 new ParamItem {id = 25, CategoryId = 5 },
 
 
                 // Відстань від центра / Distance from center
 
-                new ParamItem {id = 26, CategoryId = 6 },
+                new ParamItem {id = 26, CategoryId = 6  },
                 new ParamItem {id = 27, CategoryId = 6 },
                 new ParamItem {id = 28, CategoryId = 6 },
 
 
                 //Правила бронювання / Booking rules
 
-                new ParamItem {id = 29, CategoryId = 7 },
-                new ParamItem {id = 30, CategoryId = 7 },
-                new ParamItem {id = 31, CategoryId = 7 },
+                new ParamItem {id = 29, CategoryId = 7  },
+                new ParamItem {id = 30, CategoryId = 7  },
+                new ParamItem {id = 31, CategoryId = 7  },
                 new ParamItem {id = 32, CategoryId = 7 },
 
 

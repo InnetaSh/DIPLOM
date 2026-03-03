@@ -26,12 +26,15 @@ namespace OfferApiService.Services.Interfaces.RentObj
                 throw new ArgumentException("Файл пустой", nameof(file));
 
             string folder = Path.Combine(_env.WebRootPath, "images", "rentobj", rentObjId.ToString());
-            Directory.CreateDirectory(folder);
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
 
             string fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
             string fullPath = Path.Combine(folder, fileName);
 
-           
+            if (File.Exists(fullPath))
+                File.Delete(fullPath);
+
             await using (var fs = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 await file.CopyToAsync(fs);

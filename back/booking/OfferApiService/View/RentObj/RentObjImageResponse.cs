@@ -16,7 +16,7 @@ namespace OfferApiService.View.RentObj
             return new RentObjImageResponse
             {
                 id = model.id,
-                Url = $"{baseUrl}{model.Url}",
+                Url = $"{baseUrl}/images/rentobj/{model.RentObjId}/{Path.GetFileName(model.Url)}",
                 RentObjId = model.RentObjId
             };
         }

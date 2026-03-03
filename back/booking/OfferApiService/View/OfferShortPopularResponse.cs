@@ -10,7 +10,7 @@ namespace OfferApiService.Models.View
         public string? Title { get; set; } 
       
         public RentObjShortPopularResponse RentObj { get; set; }
-        public double? OverallRating;
+        public double? OverallRating { get; set; }
 
 
         public static OfferShortPopularResponse MapToResponse(Offer model, string baseUrl)

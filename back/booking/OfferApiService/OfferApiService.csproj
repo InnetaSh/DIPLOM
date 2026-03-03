@@ -19,13 +19,13 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Globals\Globals.csproj" />
+    <Folder Include="wwwroot\images\rentobj\1\" />
+    <Folder Include="wwwroot\images\rentobj\2\" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\rentobj\1\" />
-    <Folder Include="wwwroot\images\rentobj\2\" />
+    <ProjectReference Include="..\Globals\Globals.csproj" />
   </ItemGroup>
 
 </Project>

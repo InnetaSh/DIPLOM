@@ -6,6 +6,6 @@ namespace OfferApiService.Services.Interfaces.RentObj
 {
         public interface IRentObjService : IServiceBase<RentObject>
         {
-       
+       Task<int> AddRentObjWithParamValuesAsync(RentObject rentObj);
     }
 }
