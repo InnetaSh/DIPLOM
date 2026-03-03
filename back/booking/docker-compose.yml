@@ -2,13 +2,14 @@ services:
   webapigetway:
     image: ${DOCKER_REGISTRY-}webapigetway
     build:
-      context: ./WebApiGetway
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: WebApiGetway/Dockerfile
     ports:
       - "5000:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - UserApiServiceUrl=http://userapiservice
+      - HostUrl=http://localhost
     depends_on:
       - userapiservice
       # - rentobjectapiservice
@@ -22,12 +23,13 @@ services:
 
   locationapiservice:
     build:
-      context: ./LocationApiService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: LocationApiService/Dockerfile
     ports:
       - "5001:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - HostUrl=http://localhost
       # Connection string for Postgres service (adjust values in code if needed)
       #- ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=userdb;Username=postgres;Password=postgrespw
     depends_on:
@@ -37,12 +39,13 @@ services:
 
   userapiservice:
     build:
-      context: ./UserApiService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: UserApiService/Dockerfile
     ports:
       - "5002:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - HostUrl=http://localhost
       # Connection string for Postgres service (adjust values in code if needed)
       #- ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=userdb;Username=postgres;Password=postgrespw
     depends_on:
@@ -53,12 +56,13 @@ services:
 
   offerapiservice:
     build:
-      context: ./OfferApiService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: OfferApiService/Dockerfile
     ports:
       - "5003:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - HostUrl=http://localhost
       # Connection string for Postgres service (adjust values in code if needed)
       #- ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=userdb;Username=postgres;Password=postgrespw
     depends_on:
@@ -70,12 +74,13 @@ services:
 
   orderapiservice:
     build:
-      context: ./OrderApiService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: OrderApiService/Dockerfile
     ports:
       - "5004:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - HostUrl=http://localhost
       # Connection string for Postgres service (adjust values in code if needed)
       #- ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=userdb;Username=postgres;Password=postgrespw
     depends_on:
@@ -87,12 +92,13 @@ services:
 
   reviewapiservice:
     build:
-      context: ./ReviewApiService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ReviewApiService/Dockerfile
     ports:
       - "5005:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - HostUrl=http://localhost
       # Connection string for Postgres service (adjust values in code if needed)
       #- ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=userdb;Username=postgres;Password=postgrespw
     depends_on:
@@ -105,12 +111,13 @@ services:
 
   translationapiservice:
     build:
-      context: ./TranslationApiService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: TranslationApiService/Dockerfile
     ports:
       - "5006:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - HostUrl=http://localhost
       # Connection string for Postgres service (adjust values in code if needed)
       #- ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=userdb;Username=postgres;Password=postgrespw
     depends_on:
@@ -121,12 +128,13 @@ services:
 
   attractionapiservice:
     build:
-      context: ./AttractionApiService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: AttractionApiService/Dockerfile
     ports:
       - "5007:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - HostUrl=http://localhost
       # Connection string for Postgres service (adjust values in code if needed)
       #- ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=userdb;Username=postgres;Password=postgrespw
     depends_on:
@@ -137,12 +145,13 @@ services:
 
   statisticapiservice:
     build:
-      context: ./StatisticApiService
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: StatisticApiService/Dockerfile
     ports:
       - "5008:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - HostUrl=http://localhost
       # Connection string for Postgres service (adjust values in code if needed)
       #- ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=userdb;Username=postgres;Password=postgrespw
     depends_on:
