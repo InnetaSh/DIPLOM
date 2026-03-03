@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
+import { useLanguage } from "../../contexts/LanguageContext";
 
 import { Text } from "../UI/Text/Text.jsx";
 import { ImageSvg } from "../UI/Image/ImageSvg.jsx";
@@ -18,9 +18,16 @@ export const LanguageModal = (
   }) => {
   const { t } = useTranslation();
   const [activeKey, setActiveKey] = useState("1");
-  const [activeLanguage, setActiveLanguage] = useState("1");
+  const [activeLanguage, setActiveLanguage] = useState(null);
   const [activeCurrency, setActiveCurrency] = useState("1");
+const { language } = useLanguage();
 
+useEffect(() => {
+  const currentLang = LanguageList.find(lang => lang.name === language);
+  if (currentLang) {
+    setActiveLanguage(currentLang.id);
+  }
+}, [language]);
 
 
   const LanguageList = [

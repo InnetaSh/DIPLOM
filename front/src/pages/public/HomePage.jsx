@@ -9,7 +9,7 @@ import { SearchBar_Main } from "../../components/SearchBar/SearchBar_Main.jsx";
 import { CityCard_carousel } from "../../components/CityCard/CityCard_carousel.jsx"
 import { HotelCardList_Recomented } from "../../components/HotelCard/HotelCardList_Recomented.jsx";
 import { More_tour } from "../../components/Info_Components/More_tour";
-import {MoreTourWrapper} from "../../components/Info_Components/MoreTourWrapper.jsx";
+import { MoreTourWrapper } from "../../components/Info_Components/MoreTourWrapper.jsx";
 import { MainPageBg } from "../../components/MainPage_bg/MainPage_bg.jsx";
 
 import { ApiContext } from "../../contexts/ApiContext.jsx";
@@ -177,11 +177,11 @@ const mockHotels = [
 
 
 export const HomePage = () => {
-  const { paramsCategoryApi } = useContext(ApiContext);
+  const { paramsCategoryApi, offerApi } = useContext(ApiContext);
   const { language } = useLanguage();
   const navigate = useNavigate();
 
-  const [hotels, setHotels] = useState(mockHotels);
+  const [hotels, setHotels] = useState([]);
   const [city, setCity] = useState("");
   const [guests, setGuests] = useState(1);
   const [startDate, setStartDate] = useState("");
@@ -204,18 +204,34 @@ export const HomePage = () => {
     if (savedStart) setStartDate(savedStart);
     if (savedEnd) setEndDate(savedEnd);
     // if (savedHotels) setHotels(JSON.parse(savedHotels));
-    if (savedHotels) setHotels(mockHotels);
+
   }, []);
 
 
   useEffect(() => {
-    paramsCategoryApi.getAll(language)
+    paramsCategoryApi.getAllCategories(language)
       .then((res) => setFiltersData(res.data))
       .catch(() => {
         console.warn("API недоступен, используется mock");
         setFiltersData(mockFiltersData);
       });
   }, [paramsCategoryApi, language]);
+
+  useEffect(() => {
+    const loadOffers = async () => {
+      try {
+        const res = await offerApi.getPopularOffers("week", 4, language);
+        setHotels(res.data);
+        console.log("Ответ PopularOffers:", res.data);
+        console.log("Данные:", res.data);
+      } catch (error) {
+        console.warn("API недоступен, используется mock");
+        setHotels(mockHotels);
+      }
+    };
+
+    loadOffers();
+  }, [language]);
 
 
   const handleFilterChange = (category, option) => {
@@ -244,7 +260,7 @@ export const HomePage = () => {
         <BunnerHotel />
         <div className="btn-w-full p-t-24 flex-center mb-30">
           <SearchBar_Main
-            onSearch={handleSearchResults}
+            // onSearch={handleSearchResults}
             defaultCity={city}
             defaultGuests={guests}
             defaultStartDate={startDate}
@@ -252,7 +268,7 @@ export const HomePage = () => {
           />
         </div>
 
-        <CityCard_carousel />
+        <CityCard_carousel  />
         <MoreOffersSection />
         <HotelCardList_Recomented
           hotels={hotels}
@@ -262,7 +278,7 @@ export const HomePage = () => {
         <TwoColumnInfoSection />
         {/* < More_tour /> */}
 
-        <MoreTourWrapper/>
+        <MoreTourWrapper />
       </main>
       <Footer />
     </div>

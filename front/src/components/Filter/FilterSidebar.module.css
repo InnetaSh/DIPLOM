@@ -1,5 +1,6 @@
 .filterSidebar {
  width: 424px;;
+ height: fit-content;
   border-radius: 20px;
   padding: 20px 15px 20px 22px;
   background-color: var(--color-bg__2);
@@ -27,7 +28,7 @@
   height: 4px;
   max-width: 304px;
   width:70%;
-  background-color: var(--color-btn-text);
+  background-color: var(--color--line);
   position: relative;
 }
 
@@ -36,7 +37,7 @@
   top: 50%;
   width: 20px;
   height: 20px;
-  background-color: var(--color-btn-text);
+  background-color: var(--color--line);
   border-radius: 50%;
   transform: translateY(-50%);
 }

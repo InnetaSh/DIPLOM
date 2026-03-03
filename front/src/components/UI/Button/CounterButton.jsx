@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Text } from "../Text/Text";
 
-export const CounterButton = () => {
-  const [value, setValue] = useState(1);
+export const CounterButton = ({ value, onChange, min = 0 }) => {
 
   const decrement = () => {
-    setValue(v => Math.max(1, v - 1));
+    const newValue = Math.max(min, value - 1);
+    onChange(newValue);
   };
 
   const increment = () => {
-    setValue(v => v + 1);
+    onChange(value + 1);
   };
 
   return (

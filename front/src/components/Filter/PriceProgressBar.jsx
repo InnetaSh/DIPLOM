@@ -9,7 +9,6 @@ export const PriceProgressBar = ({ min, max, value, onChange }) => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (!rangeRef.current) return;
     const percent = ((value - min) / (max - min)) * 100;
     setProgressWidth(percent);
   }, [value, min, max]);
@@ -31,12 +30,17 @@ export const PriceProgressBar = ({ min, max, value, onChange }) => {
           className={styles.slider}
         />
       </div>
+
       <div className={styles.priceLabels}>
-        <Text text = {`${t("filters.price.from")} ${min} UAH`} type="m_400_s_14" />
-        <Text text = {`${t("filters.price.to")} ${max} UAH`}t ype="m_400_s_14" />
+        <Text
+          text={`${t("filters.price.from")} ${min} UAH`}
+          type="m_400_s_14"
+        />
+        <Text
+          text={`${t("filters.price.to")} ${value} UAH`}
+          type="m_400_s_14"
+        />
       </div>
     </div>
   );
 };
-
-export default PriceProgressBar;

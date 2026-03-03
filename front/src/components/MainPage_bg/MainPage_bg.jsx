@@ -37,10 +37,10 @@ const keySrc = darkMode
             <div className={`${styles.card__imageWrapper_right_bottom} ${styles.card__imageWrapper}`}>
             <Image src={keySrc} alt="key"  />
           </div>
-            <div className={`${styles.card__curveWrapper}`}>
+            {/* <div className={`${styles.card__curveWrapper}`}>
             <Image src="/img/main_page/curve.svg" alt="key"  />
              <Image src="/img/main_page/curve.svg" alt="key"  />
-          </div>
+          </div> */}
       </div>
     </div>
   );

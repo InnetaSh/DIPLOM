@@ -35,7 +35,7 @@ export const HotelCardList_Recomented = ({
   const trackRef = useRef(null);
   const CARD_WIDTH = 370;
   const GAP = 30;
-  const SLIDE_WIDTH = CARD_WIDTH * 2 + GAP; // 770
+  const SLIDE_WIDTH = CARD_WIDTH * 2 + GAP;
 
   const scrollLeft = () => {
     trackRef.current?.scrollBy({
@@ -76,9 +76,14 @@ export const HotelCardList_Recomented = ({
         <div className={styles.hotelCardList__columns}>
 
           <div className={styles.sliderViewport}>
-            {/* track */}
             <div className={styles.sliderTrack} ref={trackRef}>
-              <div className={styles.hotelCardList__cardsColumn}>
+              <div
+                className={
+                  hotels.length < 3
+                    ? styles.hotelCardList__cardsColumn
+                    : styles.hotelCardList__cardGrid
+                }
+              >
 
                 {hotels.slice(0, 4).map((hotel) => (
                   <HotelCard_Recomented
@@ -86,9 +91,13 @@ export const HotelCardList_Recomented = ({
                     id={hotel.id}
                     title={hotel.title}
                     image={hotel.rentObj?.[0]?.mainImageUrl || '-image.jpg'}
-                    city={hotel.city}
+                    city={hotel.rentObj?.[0]?.cityTitle}
                     country={hotel.country}
-                    rating={hotel.rating}
+                    rating={
+                      hotel.overallRating != null
+                        ? hotel.overallRating.toFixed(2)
+                        : "7.10"
+                    }
                     endDate={endDate}
                     onClick={() => onCardClick && onCardClick(hotel.id)}
                     onCheckAvailability={() =>

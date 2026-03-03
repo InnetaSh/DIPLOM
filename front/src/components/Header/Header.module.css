@@ -98,6 +98,19 @@
 }
 
 
+.admin_logo{
+  background-color: #378A48;
+  width: 60px;
+  height: 60px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: #F5F3EE;
+}
+
+
 
 
 

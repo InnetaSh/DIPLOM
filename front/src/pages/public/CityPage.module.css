@@ -38,3 +38,28 @@
     border-radius: 8px;
     background-color: #f9f9f9;
 }
+
+.city_img_main {
+  height: 505px;
+  object-fit: cover;
+}
+
+p{
+font-family: 'Montserrat Alternates';
+font-style: normal;
+font-weight: 400;
+font-size: 20px;
+line-height: 24px;
+
+color: var( --color-text);
+  margin: 15px 0;
+}
+
+.city_img_small {
+  /* height: 150px; */
+  object-fit: cover;
+}
+.btn_search{
+    width: 80%;
+}
+

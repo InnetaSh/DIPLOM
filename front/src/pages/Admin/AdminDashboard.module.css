@@ -1,0 +1,94 @@
+.adminDashboard {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.adminDashboard main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+ flex: 1;
+    width: 100%;
+    /* max-width: 1920px;      */
+    padding: 0 4%;
+    box-sizing: border-box;
+    gap: 74px;
+}
+
+.adminDashboard__container {
+    width: 100%;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    gap: 20px;
+      display: flex;            
+    flex-direction: column;
+}
+
+
+
+.adminDashboard__columns {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 18px;
+
+}
+
+.adminDashboard__column_left {
+    flex: 0 0 425px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 40px;
+    border-radius: 20px;
+    background-color: var(--color--menu-bg);
+    padding-bottom: 36px;
+}
+
+.adminDashboard__column_right {
+    flex: 1;
+    width: 100%;
+    min-height: 640px;
+    overflow-y: auto;
+    background-color: var(--color--right-column-bg);
+    border-radius: 20px;
+}
+
+
+.adminDashboard__column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.menu_btn {
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
+
+
+.info_card {
+    flex: 0 0 68.5%;
+}
+
+.card_map {
+    flex: 1;
+    min-width: 0;
+}
+
+.hotelDetails {
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}

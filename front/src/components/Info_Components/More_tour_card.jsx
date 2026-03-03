@@ -18,13 +18,10 @@ export const More_tour_card = ({
   const { t } = useTranslation();
 
   return (
-    // 1️⃣ Позиционирование на карте
     <div className={`${styles.more_tour_card} ${className_Container ?? ""}`}>
       
-      {/* 2️⃣ Якорь */}
       <div className={`${styles.more_tour_card_container} ${className_Rotation ?? ""}`}>
         
-        {/* 3️⃣ Вращаем ВСЁ содержимое */}
         <div className={`${styles.container_wrapper} `}>
           
           <div className={styles.card__imageWrapper}>

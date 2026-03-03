@@ -5,14 +5,14 @@ import {ImageSvg} from "../UI/Image/ImageSvg.jsx";
 
 import { useNavigate } from "react-router-dom";
 
-export const MyTravelsPanel_card_empty = () => {
+export const MyTravelsPanel_card_empty = ({text}) => {
    const { t } = useTranslation();
 
   return (
     <div className={styles.hotelCard_empty}>
       <ImageSvg name="no_photo" sizeX={198}  sizeY={198}/>
       
-        <Text text={t("Prrofile.no_travel")} type=" m_500_s_14" />
+        <Text text={text} type=" m_500_s_14" />
      
     </div>
   );

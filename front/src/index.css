@@ -19,8 +19,15 @@
 
 /* Светлая тема по умолчанию */
 :root {
+  /*------------------background-----------------------*/
   --color-bg: #F5F3EE;                 /* 01*/
   --color-bg__2: #EDE5D1;                 /* l-tema_2 */
+
+  --color-card-bg: #F5F3EE;                 /* 01*/
+
+--color--bg-img:#EDE5D1;
+  
+    /*------------------btn-----------------------*/
   --color-primary: #F5F3EE;            /* 01 */
   --color-secondary: #FFEDC3;          /* 05 */
   --color--selected: #FFDB8A;          /* 06 */
@@ -43,63 +50,133 @@
   --color--btn-state-onclick: #FFDB8A;     /* 06 */
   --color--btn-state-border: #0D2D4A;       /* 02 */
    --color--btn-state-border-hover: #FFDB8A;     /* 06 */
+--color-btn-state-text:  #0D2D4A;                   /* 02 */
+
+ /*------------------btn-counter-----------------------*/
+
+
+--color--line: #0D2D4A;                   /* 02 */
+    --color--filter-btn: #EDE5D1;                 /* l-tema_2 */
+
+  /*------------------btn-counter-----------------------*/
 
   --color--btn-counter:#FFFFFF;            
   --color--btn-counter-border: #1D3F5E;   
   
+  /*------------------btn-icon-----------------------*/
+
   --color--btn-icon: #FFDB8A;               /* 06 */
+  --color--btn-icon-hover: #FF9839;          /* 03 */
+
+  --color--svg-icon:#0D2D4A;            /* 02 */
  
+  /*------------------btn-text-----------------------*/
+
   --color-text: #0D2D4A;               /* 02 */
+  --color-text-title: #0D2D4A;               /* 02 */
+  --color-text-breadcrumbs: #0D2D4A;               /* 02 */
+     --color-text-input: #0D2D4A;               /* 02 */
   --color-text-secondary: #FF9839;     /* 03 */
 
+  /*------------------btn-link-----------------------*/
+
  --color-link: #0D2D4A; 
+
+ /*------------------btn-input-----------------------*/
+
 
   --color-input-form-bg: #EDE5D1;        /* l-tema_2 */
   --color-input-bg: #EDE5D1;                 /* l-tema_2 */
   --color-input-border: #0D2D4A;            /* 02 */
 
+ /*------------------btn-sort-----------------------*/
+
   --color-sort-modal-bg: #EDE5D1;        /* l-tema_2 */
  --color--sort-modal-btn-hover: #FFDB8A;               /* 06 */
 
-  /*-----------------------------------*/
+ /*------------------icon-----------------------*/
+
+ --color-icon-close: #0D2D4A;               /* 02 */
+
+ --color-icon-next: #0D2D4A;               /* 02 */
+
+  /*------------------modal-------------------------*/
   --color-menu-modal-bg: #EDE5D1;        /* l-tema_2 */
  --color-menu-modal-icon:#FFDB8A;               /* 06 */
 
-  /*-----------------------------------*/
-  --color-search-bg: #0D2D4A;          /* 02 */
+  --color-modal-border: #0D2D4A;               /* 02 */
+
+  /*-------------------search----------------------*/
+
+  --color-search-bg: #0E1E2C;           /* t-tema_1 */
   --color-search-input-bg:  #F5F3EE;            /* 01 */
+    --color-city-modal-bg:  #F5F3EE;            /* 01 */
+
   --color--btn-search:#FF9839;               /* 03 */ 
   --color--btn-orange:#FF9839;               /* 03 */ 
 
+  /*-------------------hotel-info-params----------------------*/
+
   --color--btn-hotel-info-params: #EDE5D1;        /* l-tema_2 */
+  --color--btn-hotel-info-border: #0D2D4A;        /* 02 */
 
-  --color-btn-arrow: #0D2D4A;               /* 02 */
+   --color--icon-filter-btn: #F5F3EE;   /* 01 */
 
-  /*-----------------------------------*/
+   --color--hotel-info-params-border:#0E1E2C;           /* t-tema_1 */
+ /*-------------------btn-arrow----------------------*/
+
+
+  --color-btn-arrow-hover: #0D2D4A;               /* 02 */
+--color-btn-arrow-border: #0D2D4A;   /* 02 */
+
+  /*------------------hotel-info---------------------*/
   --color--hotel-info-border: #FFDB8A;               /* 06 */
     --color--hotel-info-title-bg:#EDE5D1;        /* l-tema_2 */
         --color--hotel-info-bg:#EDE9DF;                 /* l-tema_1 */
     --color--hotel-info-btn: #FFDB8A;               /* 06 */
 
- /*-----------------------------------*/
+--color--mapContainer_adress: #FFEDC3;          /* 05 */
+ /*--------------------hotel-review------------------*/
 
   --color--hotel-review-btn:#EDE5D1;        /* l-tema_2 */
  --color--hotel-review-bg: #EDE9DF;;        /* l-tema_1 */
  --color--hotel-review-text: #F5F3EE;            /* 01 */
- /*-----------------------------------*/
+
+ /*--------------------hotel-review-modal------------------*/
+   --color--modal-review-dg:#EDE5D1;        /* l-tema_2 */
+
+  /*------------------host-housing-card-----------------------*/
+
+  --color-host-housing-card-bg: #EDE9DF;                 /* l-tema_1 */
+
+ 
+/*--------------------booking-------------------*/
+--color--booking-card-bg:#EDE9DF;                 /* l-tema
+
+
+ /*-------------------progressBar-border----------------*/
 
   --color--progressBar-border: #0D2D4A;   
  --color--progressBar-bg: #FFDB8A;               /* 06 */
 
-  --color--bunner-text: #F5F3EE;            /* 01 */
 
+  /*-------------------bunner-text----------------*/
+
+
+  --color--bunner-text: #F5F3EE;            /* 01 */
   --color--card-lisr-recmd-bg: #F5F3EE;            /* 01 */
 
 
 
+  /*--------------------admin------------------*/
+  --color--menu-bg:#EDE9DF;               /* l-tema_1 */
+   --color--right-column-bg:#EDE5D1;               /* l-tema_2 */
+   --color--input-border: #0D2D4A; 
+   
+  --color--white-btn: #F5F3EE;            /* 01 */ 
+   /*-------------------bunner-text----------------*/
 
-  --color-booling-success-text: #F5F3EE;                 /* 01*/
-
+  /* --color-booling-success-text: #F5F3EE;              
   --color-primary-rgb: 52, 152, 219;
   --color-primary-dark: #005b9a;
   --color-on-primary: #ffffff;
@@ -108,46 +185,158 @@
   --color-secondary-light-rgb: 100, 150, 200;
   --color-border: #4a4949;
   --color-border-rgb: 128, 128, 128;
-  --color-form-border: #db7500;
+  --color-form-border: #db7500; */
 }
 
 /* Тёмная тема */
 [data-theme="dark"] {
-  --color-bg: #0E1E2C;                 /* d-tema_ */
-  --color-primary: #0D2D4A;            /* 02 */
-  --color-secondary: #0D2D4A;          /* 02 */
-  --color--selected: #FFDB8A;          /* 06 */  
+    /*------------------background-----------------------*/
+    --color-bg: #0D2D4A;                 /* 02*/
+  --color-bg__2: #0E1E2C;                 /* d-tema_ */
+  
+    --color-card-bg: #0E1E2C;                 /* d-tema_ */
 
-  --color--btn-action:#FF9839;               /* 03 */ 
-  --color--btn-action-hover: #FF9839;        /* 03 */ 
-  --color--btn-action-onclick: #FF9839;      /* 03 */ 
-   --color--btn-state-border: #FFDB8A;     /* 06 */
+    --color--bg-img: #0E1E2C;                 /* d-tema_ */
+    /*------------------btn-----------------------*/
+  --color-primary: #F5F3EE;            /* 01 */
+  --color-secondary: #FFEDC3;          /* 05 */
+  --color--selected: #FFDB8A;          /* 06 */
 
-  --color--btn-state:#0D2D4A;            /* 02 */
+  --color--btn-action:#FF9839;                /* 03 */
+  --color--btn-action-hover:#FF9839;          /* 03 */
+  --color--btn-action-onclick:#FF9839;        /* 03 */
+
+   --color-btn-text-dark: #0D2D4A;               /* 02 не менять оттенок в другой теме**/
+  --color-btn-text-light: #F5F3EE;               /* 01 не менять оттенок в другой теме*/
+   --color-btn-text: #0D2D4A;                   /* 02 */
+  --color-btn-text-secondary: #F5F3EE;          /* 01 */
+
+   --color--btn-action-secondary: #FFDB8A;            /* 06 */
+  --color--btn-action-secondary-hover: #FFDB8A;       /* 06 */
+  --color--btn-action-secondary-onclick: #FFDB8A;     /* 06 */
+
+  --color--btn-state: #0D2D4A;                   /* 02 */
   --color--btn-state-hover: #FFEDC3;       /* 05 */
   --color--btn-state-onclick: #FFDB8A;     /* 06 */
-  --color--btn-state-border: #FFDB8A;     /* 06 */
+  --color--btn-state-border:  #F5F3EE;            /* 01 */
+   --color--btn-state-border-hover: #FFDB8A;     /* 06 */
+--color-btn-state-text:  #F5F3EE;            /* 01 */
+   
+ /*------------------btn-counter-----------------------*/
 
-  --color--btn-search:#FF9839;               /* 03 */ 
 
-  --color-text: #F5F3EE;               /* 02 */
+--color--line: #F5F3EE;               /* 01 */
+    --color--filter-btn: #EDE5D1;                 /* l-tema_2 */
+
+
+  /*------------------btn-counter-----------------------*/
+
+  --color--btn-counter:#FFFFFF;            
+  --color--btn-counter-border: #1D3F5E;   
+  
+  /*------------------btn-icon-----------------------*/
+
+  --color--btn-icon: #FFDB8A;               /* 06 */
+ --color--btn-icon-hover: #FF9839;          /* 03 */
+  
+  --color--svg-icon:#F5F3EE;               /* 01 */
+ /*------------------btn-text-----------------------*/
+
+  --color-text: #F5F3EE;               /* 01 */
+  --color-text-title: #F5F3EE;               /* 01 */
+  --color-text-breadcrumbs: #F5F3EE;               /* 01 */
+   --color-text-input: #F5F3EE;               /* 01 */
   --color-text-secondary: #FF9839;     /* 03 */
 
+  /*------------------btn-link-----------------------*/
+
+ --color-link: #F5F3EE;            /* 01 */
+
+ /*------------------btn-input-----------------------*/
 
 
+  --color-input-form-bg: #0D2D4A;        /* 02 */
+  --color-input-bg: #0D2D4A;                 /* 02 */
+  --color-input-border: #F5F3EE;            /* 01 */
+
+ /*------------------btn-sort-----------------------*/
+
+  --color-sort-modal-bg: #0E1E2C;           /* t-tema_1 */
+ --color--sort-modal-btn-hover: #FFDB8A;               /* 06 */
 
 
-  --color-primary-rgb: 52, 152, 219;
-  --color-primary-dark: #0f5fae;
-  --color-on-primary: #ffffff;
+ /*------------------icon-----------------------*/
 
-  --color-secondary-light: #3c3c3c;
-  --color-secondary-light-rgb: 100, 150, 200;
-  --color-text: #e0e0e0;
+ --color-icon-close:#F5F3EE;            /* 01 */
+ --color-icon-next: #F5F3EE;            /* 01 */
 
-  --color-border: #4a4949;
-  --color-border-rgb: 128, 128, 128;
-  --color-form-border: #db7500;
+  /*------------------modal-------------------------*/
+  --color-menu-modal-bg: #0E1E2C;                 /* t-tema_1 */
+ --color-menu-modal-icon:#FFDB8A;               /* 06 */
+
+  --color-modal-border: #113E67;               /* 02 */
+
+  
+  /*-------------------search----------------------*/
+  --color-search-bg: #0E1E2C;           /* t-tema_1 */
+  --color-search-input-bg:  #F5F3EE;            /* 01 */
+    --color-city-modal-bg: #0E1E2C;           /* t-tema_1 */
+  --color--btn-search:#FF9839;               /* 03 */ 
+  --color--btn-orange:#FF9839;               /* 03 */ 
+
+  /*-------------------hotel-info-params----------------------*/
+
+  --color--btn-hotel-info-params: #113E67;        /* t-tema_2 */
+  --color--btn-hotel-info-border: #F5F3EE;        /* 01 */
+
+  --color--icon-filter-btn: #0D2D4A;   /* 02 */
+
+   --color--hotel-info-params-border: #F5F3EE;        /* 01 */
+ /*-------------------btn-arrow----------------------*/
+
+
+  --color-btn-arrow-hover: #F5F3EE;               /* 01 */
+--color-btn-arrow-border: #F5F3EE;               /* 01 */
+
+  /*------------------hotel-info---------------------*/
+  --color--hotel-info-border: #FFDB8A;               /* 06 */
+    --color--hotel-info-title-bg: #0E1E2C;           /* t-tema_1 */
+        --color--hotel-info-bg: #113E67;        /* t-tema_2 */
+    --color--hotel-info-btn: #FFDB8A;               /* 06 */
+
+--color--mapContainer_adress: #113E67;          /* t-tema_2 */
+ /*--------------------hotel-review------------------*/
+
+  --color--hotel-review-btn: #113E67;        /* t-tema_2 */
+ --color--hotel-review-bg:  #0E1E2C;           /* t-tema_1 */
+ --color--hotel-review-text: #F5F3EE;            /* 01 */
+
+ /*--------------------hotel-review-modal------------------*/
+   --color--modal-review-dg: #0E1E2C;                 /* t-tema_1 */
+   
+ 
+ /*------------------host-housing-card-----------------------*/
+
+  --color-host-housing-card-bg: #0E1E2C;           /* t-tema_1 */
+
+ 
+ /*--------------------booking-------------------*/
+--color--booking-card-bg:#0E1E2C;           /* t-tema_1 */
+
+ 
+ /*-------------------progressBar-border----------------*/
+
+ --color--progressBar-border:#F5F3EE;               /* 01 */
+ --color--progressBar-bg: #FFDB8A;               /* 06 */
+
+
+  /*-------------------bunner-text----------------*/
+
+
+  --color--bunner-text: #F5F3EE;            /* 01 */
+  --color--card-lisr-recmd-bg: #0D2D4A;            /* 02 */
+
+
 }
 
 
@@ -265,6 +454,7 @@ code {
 .btn-w-72 { width:72px;}
 .btn-w-68 {  width:  68px;}
 .btn-w-50 {  width:  50px;}
+.btn-w-44 {  width:  44px;}
 .btn-w-35 {  width:  35px;}
 .btn-w-full {  width: 100%;}
 .btn-w-fit-content {  width: fit-content;}

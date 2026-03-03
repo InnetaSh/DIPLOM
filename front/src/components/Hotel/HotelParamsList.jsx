@@ -16,6 +16,7 @@ export const HotelParamsList = ({ params }) => {
                     <HotelParamsItem
                         key={param.id}
                         title={param.title}
+                        iconName ={param.iconName}
                         icon={hotelParamsIcons[param.id]}
                     />
                 ))}

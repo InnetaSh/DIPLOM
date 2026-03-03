@@ -1,19 +1,20 @@
 .container {
   background: transparent;
   padding: 24px;
-display: flex;
-flex-direction: column;
-justify-content: start;
-align-items: stretch;
- 
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: stretch;
+
 }
 
 .title {
   padding-bottom: 37px;
 }
+
 .required_fields {
-    border: none;
-    color: red;
+  border: none;
+  color: red;
 }
 
 
@@ -23,25 +24,28 @@ align-items: stretch;
 
 .blockGrid {
   display: grid;
-    grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
   margin-bottom: 20px;
 }
 
-.block_title{
-  width: 100%;  
+.block_title {
+  width: 100%;
 }
+
 .label {
   display: block;
   font-size: 14px;
   margin-bottom: 6px;
   opacity: 0.8;
 }
-.fieldset{
-    width: 100%;
-    padding: 10px 0;
-    gap: 0;
+
+.fieldset {
+  width: 100%;
+  padding: 10px 0;
+  gap: 0;
 }
+
 .input,
 .textarea {
   width: 100%;
@@ -51,84 +55,191 @@ align-items: stretch;
 
   height: 59px;
   padding: 0 28px;
+
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
 }
+
+.input_address {
+  padding: 0;
+}
+
+.input_street {
+  background: transparent;
+  height: 59px;
+  flex: 0 0 80%;
+  border: none;
+  border-right: 1px solid var(--color-text);
+  border-radius: 20px 0 0 20px;
+  padding-left: 28px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+}
+
+.input_house {
+  background: transparent;
+  height: 59px;
+  flex: 1;
+  width: 100%;
+  border: none;
+  padding-left: 28px;
+  border-radius: 0 20px 20px 0;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 29px;
+}
+
 
 .textarea {
   height: 267px;
   resize: vertical;
 }
 
-.previewCard {
-  border-radius: 20px;
-   height: 267px;
-   overflow: hidden;
-  border-radius: 12px;
+/*=====================================================*/
+.carousel {
   width: 100%;
+  max-width: 100%; 
+  overflow: hidden; 
+  padding: 0 0 36px 0;
+  position: relative;
+  box-sizing: border-box;
   display: flex;
-  align-items: stretch;
-  justify-content: stretch;
+  flex-direction: column;
+  gap:35px;
 }
+
+.photosViewport {
+  overflow: hidden !important; 
+  max-width: 100% !important;
+max-width: 0;
+}
+
+.photos__container {
+  display:flex; 
+  flex-wrap: nowrap; 
+  gap: 20px;
+  transition: transform 0.5s ease;
+  max-width: 100%;
+  min-width: 0;
+  height: 300px;
+  flex-shrink: 0;
+}
+
+.previewWrapper {
+  flex: 0 0 32%; 
+  min-width: 0;    
+  height: 270px;
+  position: relative;
+}
+
 .previewImage {
   width: 100%;
   height: 100%;
   object-fit: cover; 
   border-radius: 12px;
-  display: block;
 }
 
-.previewTitle {
-  font-size: 14px;
-  opacity: 0.7;
+
+
+
+.btn_close{
+  width: 30px;
+  height: 30px;
+  box-sizing:content-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--color-text);
+  border-radius: 5px;
+  background-color:  rgba(171, 170, 170, 0.8);
+}
+.btn_close:hover{
+   border: 1px solid red;
 }
 
-.photos {
-  display: grid;
-  height: 295px;
-  grid-template-columns: 1fr 2fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
+.emptyImages {
+  width: 300px;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 3px solid var(--color-text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.photoMain {
-  height: 295px;
-  border:1px solid var(--color-text);
-  border-radius: 20px;
+.btn_delete{
+  position: absolute;
+  right: 5px;
+  top:5px
 }
 
-.photoGrid {
-  display: grid;
-  grid-template-rows: 1.5fr 1fr;
-  gap: 8px;
+.btn_container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 47px;
+  width: 100%;
+  height: 62px;
 }
 
-.photoGrid div {
-  border:1px solid var(--color-text);
-  border-radius: 20px;
+.btn_container :first-child {
+  flex-shrink: 0;
+}
+
+.btn_container :last-child {
+  flex-shrink: 0;
+}
+
+.btn__wrapper {
+  display: flex;
+  justify-content: center;
 }
 
 .btn_add_photo {
   width: 295px;
-  height: 38px;
-
+  height: 59px;
+  flex-shrink: 0;
   cursor: pointer;
+}
+
+/*=====================================================*/
+.checkbox__container{
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: stretch;
+  gap: 10px;
+  padding-bottom: 20px;
 }
 
 .checkboxGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8%;
+  gap: 8px 70px;
+  
 }
 
 .checkbox {
-  display: flex;
+  display: flex !important;
+  flex-direction: row;
   justify-content: space-between;
   gap: 8px;
 }
+
 .checkboxInput {
   width: 20px;
   height: 20px;
-  accent-color: var(--color-text); 
-  flex-shrink: 0;        
+  accent-color: var(--color-text);
+  flex-shrink: 0;
 }
 
 .checkboxLabel {
@@ -136,8 +247,8 @@ align-items: stretch;
 }
 
 .actions {
-  display: grid;
-  grid-template-columns: 1fr  1fr;
+  display: flex;
+  justify-content: right;
   margin-top: 30px;
 }
 
@@ -145,7 +256,62 @@ align-items: stretch;
   .actions {
     grid-template-columns: 1fr;
     justify-items: center;
-    
-     gap: 20px; 
+
+    gap: 20px;
   }
+}
+
+
+/*=====================================================*/
+
+.block_with_border{
+  width: 100%;
+  border: 3px solid var(--color-text);
+  border-radius: 20px;
+  padding: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap:40px;
+}
+.block_with_title{
+  text-align: center;
+}
+.block_with_border__row{
+  width: 100%;
+  display: flex;
+  justify-content:space-between;
+}
+.block_price{
+  width: 100%;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap:40px;
+}
+.block_price__row{
+ width: 100%;
+  border: none;
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+}
+
+.input_price{
+   max-width: 428px;
+   width: 60%;
+  height: 60px;
+  border-radius: 20px;
+  text-align: center;
+  font-family: 'Montserrat Alternates';
+font-style: normal;
+font-weight: 500;
+font-size: 24px;
+line-height: 29px;
+}
+.block_price_title > *{
+  text-align: left;
 }

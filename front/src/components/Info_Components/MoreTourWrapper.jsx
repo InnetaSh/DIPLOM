@@ -21,7 +21,7 @@ export const MoreTourWrapper = () => {
     <div
       className={styles.more_tour_outer}
       style={{
-        height: `${BASE_HEIGHT * scale}px`, // layout учитывает растяжение
+        height: `${BASE_HEIGHT * scale}px`, 
       }}
     >
       <div

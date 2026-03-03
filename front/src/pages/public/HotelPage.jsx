@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useLanguage } from "../../contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { ApiContext } from "../../contexts/ApiContext.jsx";
+import { useLanguage } from "../../contexts/LanguageContext.jsx"
+import { Spinner } from "../../components/UI/Spinner.jsx";
 import { useParams, useLocation } from "react-router-dom";
 
 import { Header_Full } from "../../components/Header/Header_Full.jsx";
-import { ApiContext } from "../../contexts/ApiContext.jsx";
 import { HotelReviews } from "../../components/Hotel/HotelReviews.jsx";
 import { HotelGallery } from "../../components/Hotel/HotelGallery.jsx";
 import { Hotel_info_card } from "../../components/Hotel/Hotel_info_card.jsx";
@@ -12,11 +15,7 @@ import { HotelParamsList } from "../../components/Hotel/HotelParamsList.jsx";
 import { HotelMap } from "../../components/Hotel/HotelMap.jsx";
 import { Footer } from "../../components/Footer/Footer.jsx";
 import { HotelInfoModal } from "../../components/modals/HotelInfoModal.jsx";
-
 import { Link } from "../../components/UI/Text/Link.jsx";
-
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 
 import styles from "./HotelPage.module.css";
 
@@ -44,9 +43,10 @@ export const HotelPage = () => {
   const navigate = useNavigate();
   const { language } = useLanguage();
   const { t } = useTranslation();
+  const [loading, setLoading] = useState(false);
 
   const handleClickBooking = () => {
-    navigate(`/bookingdetails/${id}?checkin=${startDate}&checkout=${endDate}&guests=${guests}`, {
+    navigate(`/bookingdetails/${id}?checkin=${startDate}&checkout=${endDate}&adults=${adults}&children=${children}`, {
       state: {
         hotel,
         offer
@@ -68,14 +68,14 @@ export const HotelPage = () => {
 Зручності: Гості можуть користуватися безкоштовним Wi-Fi у громадських зонах, платним трансфером та цілодобовою стійкою реєстрації. Для тих, хто воліє дослідити місто на двох колесах, передбачено велосипедне паркування.
 Местные достопримечательности: В окрестностях есть каток, который обеспечивает развлечения для посетителей.`;
 
+  const location = useLocation();
 
   const { id } = useParams();
-  const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-
   const startDate = queryParams.get("checkin");
   const endDate = queryParams.get("checkout");
-  const guests = queryParams.get("guests");
+  const adults = queryParams.get("adults");
+  const children = queryParams.get("children");
   const cityId = queryParams.get("cityId");
 
   const { offerApi } = useContext(ApiContext);
@@ -85,6 +85,11 @@ export const HotelPage = () => {
   const [images, setImages] = useState([]);
   const [paramValues, setParamValues] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  useEffect(() => {
+    console.log({ hotelId: id })
+  });
 
   const reviews = [
     { id: 1, title: "reviews.overall_rating", grade: "9.1" },
@@ -107,32 +112,44 @@ export const HotelPage = () => {
 
 
   useEffect(() => {
-    if (!offerApi) return;
-    if (!id) return;
+    if (!offerApi || !id) return;
 
-    offerApi
-      .searchId({
-        id,
-        lang: language,
-        startDate: new Date(startDate).toISOString(),
-        endDate: new Date(endDate).toISOString(),
-        guests,
-        userDiscountPercent: 0,
-      })
-      .then((res) => {
+    const fetchOffer = async () => {
+      setLoading(true);
+      document.body.style.cursor = "wait";
+      try {
+        const res = await offerApi.searchId({
+          id,
+          lang: language,
+          startDate: new Date(startDate).toISOString(),
+          endDate: new Date(endDate).toISOString(),
+          adults,
+          children,
+          userDiscountPercent: 0,
+        });
+
         const data = res.data[0];
+
         setOffer(data);
-        setHotel(data.rentObj[0]);
-        setImages(data.rentObj[0]?.imagesUrl || []);
-        setParamValues(data.rentObj[0]?.paramValues || []);
-        console.log("Loaded offer data:", res.data[0]);
-        console.log("Loaded offer rentObj:",
-          res.data[0].rentObj[0]);
-        console.log("Loaded img rentObj:", res.data[0].rentObj[0].imagesUrl);
-        console.log("Loaded param rentObj:", res.data[0].rentObj[0].paramValues);
-      })
-      .catch((err) => console.error("Error loading offer:", err));
-  }, [id, offerApi, startDate, endDate, guests, language]);
+        setHotel(data?.rentObj?.[0]);
+        setImages(data?.rentObj?.[0]?.imagesUrl || []);
+        setParamValues(data?.rentObj?.[0]?.paramValues || []);
+
+        console.log("Loaded offer data:", data);
+        console.log("Loaded offer rentObj:", data?.rentObj?.[0]);
+        console.log("Loaded img rentObj:", data?.rentObj?.[0]?.imagesUrl);
+        console.log("Loaded param rentObj:", data?.rentObj?.[0]?.paramValues);
+
+      } catch (err) {
+        console.error("Error loading offer:", err);
+      } finally {
+        setLoading(false);
+        document.body.style.cursor = "default";
+      }
+    };
+
+    fetchOffer();
+  }, [id, offerApi, startDate, endDate, adults, children, language]);
 
 
 
@@ -143,47 +160,63 @@ export const HotelPage = () => {
     <div className={styles.hotelPage}>
       <Header_Full title={offer.title} showFilterBtn={false} />
       <main className={styles.hotel_page__content}>
+        {loading ? (
+          <Spinner loading={true} />
+        ) : (
+          <>
+            <div className="flex-center btn-w-full">
+              <HotelGallery images={images} />
+            </div>
 
-        <div className="flex-center btn-w-full">
-          <HotelGallery images={images} />
-        </div>
+            <div className={`${styles.description_with_map} flex-center btn-w-full gap-20 btn-h-656`}>
+              <div className={styles.description}>
+                <HotelDescription text={offer?.description || hotelDescriptionText} />
+              </div>
 
-        <div className={`${styles.description_with_map} flex-center btn-w-full gap-20 btn-h-656 `}>
-          <div className={styles.description}>
-            <HotelDescription text={offer?.description || hotelDescriptionText} />
-          </div>
-          <div className={`${styles.card_map} flex-left btn-w-full btn-h-full `} >
-            {hotel.latitude && hotel.longitude ? (
-              <HotelMap
-                lat={hotel.latitude} lng={hotel.longitude}
-                hotelName={offer.title}
-                minHeight="252"
-                showAddress={true}
+              <div className={`${styles.card_map} flex-left btn-w-full btn-h-full`}>
+                {hotel?.latitude && hotel?.longitude ? (
+                  <HotelMap
+                    lat={hotel.latitude}
+                    lng={hotel.longitude}
+                    hotelName={offer?.title}
+                    hotel_address={`${offer?.countryTitle}, ${offer?.cityTitle}, ${hotel?.street} ${hotel?.houseNumber}`}
+                    minHeight="252"
+                    showAddress={true}
+                  />
+                ) : (
+                  <div className={styles.mapPlaceholder}>Координаты отсутствуют</div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex-left btn-w-full">
+              <Link text={t("hotel.info_about_owner")} type="m_600_s_32" />
+            </div>
+
+            <div className="flex-left btn-w-full">
+              <HotelParamsList params={paramValues} />
+            </div>
+
+            <div id="prices" className="flex-left btn-w-full gap-20 btn-h-656">
+              <Hotel_info_card
+                hotel={hotel}
+                offer={offer}
+                startDate={startDate}
+                endDate={endDate}
+                adults={adults}
+                children={children}
               />
-            ) : (
-              <div className={styles.mapPlaceholder}>Координаты отсутствуют</div>
-            )}
-          </div>
-        </div>
+            </div>
 
-
-
-        <div className="flex-left btn-w-full">
-          <Link text={t("hotel.info_about_owner")} type="m_600_s_32" />
-        </div>
-        <div className="flex-left btn-w-full" >
-          <HotelParamsList params={paramValues} />
-        </div>
-        <div id="prices" className="flex-left btn-w-full gap-20 btn-h-656">
-
-          <Hotel_info_card hotel={hotel} offer={offer} />
-
-        </div>
-
-
-        <HotelReviews reviews={reviews} comments={comments} />
-
+            <HotelReviews
+              showBtn={false}
+              orderId={hotel.id}
+              offerId={offer.id}
+            />
+          </>
+        )}
       </main>
+
       <Footer />
 
       {isModalOpen && (

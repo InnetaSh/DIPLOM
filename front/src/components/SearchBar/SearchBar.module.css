@@ -1,6 +1,47 @@
 .searchBar {
   position: relative;
+
 }
+
+.searchBar_txt,
+.input_city_txt,
+.input_guest_txt,
+.input_date_title_txt {
+  font-size: 16px;
+  line-height: 20px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 400;
+}
+
+
+.searchBar_Main_txt,
+.input_city_Main_txt,
+.input_guest_Main_txt,
+.input_date_title_Main_txt {
+  font-size: 32px;
+  line-height: 39px;
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 400;
+}
+
+
+@media (max-width: 1900px) {
+
+  .searchBar_Main_txt,
+  .input_city_Main_txt,
+  .input_guest_Main_txt,
+  .input_date_title_Main_txt {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    font-family: 'Montserrat Alternates';
+    font-style: normal;
+  }
+}
+
+
 
 .searchBar_bg_color_dark {
   background-color: var(--color-search-bg);
@@ -35,14 +76,21 @@
 .input_date_title {
   position: relative;
   display: inline-block;
-  left: 30%;
+  left: 47%;
   transform: translateX(-50%);
   text-align: center;
   white-space: nowrap;
-
 }
 
 
+@media (max-width: 1670px) {
+  .input_date_title {
+    display: block;
+    white-space: normal;      
+    word-break: break-word;    
+    text-align: center;
+}
+}
 
 .input_wrapper {
   width: 100% !important;
@@ -58,17 +106,14 @@
   width: 100%;
   height: 100%;
   text-align: center;
-
-  font-size: 14px;
   box-sizing: border-box;
+  color: var(--color-btn-text-dark) !important;
 }
 
 .input_city::placeholder {
-  color: #999;
   opacity: 1;
-  font-size: 14px;
   line-height: normal;
-  color: var(--color-text);
+  color: var(--color-btn-text-dark) !important;
 }
 
 .input_icon {
@@ -83,7 +128,6 @@
   border: none !important;
   background-color: transparent;
   width: 100%;
-
 }
 
 .suggestions_wrapper {
@@ -91,9 +135,10 @@
   top: 100%;
   left: 0;
   right: 0;
-  margin: 0;
+  margin: 2px;
   padding: 0;
+  border-radius: 0 0 10px 10px;
   list-style: none;
   z-index: 1000;
-  background: var(--color-secondary);
+  background: var(--color-city-modal-bg);
 }

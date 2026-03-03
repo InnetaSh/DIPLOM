@@ -12,14 +12,15 @@ export const MyTravelsPanel_active_card = ({ title, date, price, imgSrc, onClick
       <div className={styles.container_left}>
         <Text text={title} type="m_700_s_32" />
         <Text text={date} type="m_400_s_24" />
-        <div className="flex-between btn-w-full">
+        <div  className={styles.container_btn}>
           <div className={styles.container_price}>
-            <Text text={price} type=" m_700_s_20" />
+            <Text text={`UAH  ${price}`} type="m_700_s_20" />
           </div>
           <StateButton_Profile
             text={t("Prrofile.Reservation_management")}
+            type ="m_500_s_20"
             icon_name=""
-            className="btn-w-fit-content btn_brdr_1 btn-h-60 btn-br-r-20"
+            className={` ${styles.hotelCard_btn}  btn-br-r-20`}
             onClick={() => console.log("Управління  бронюванням")}
           />
         </div>

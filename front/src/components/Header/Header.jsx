@@ -24,7 +24,7 @@ export const Header = () => {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   const { t } = useTranslation();
-  const { language, setLanguage } = useLanguage(); // Контекст языка
+  const { language, setLanguage } = useLanguage();
   const [currency, setCurrency] = useState("");
 
   const handleLanguageToggle = () => {
@@ -49,7 +49,11 @@ export const Header = () => {
           </div>
         )}
         <div className={`${styles.headerMain_Logo__container} flex-between`}>
-          <div className={styles.headerMain__logo}>
+          <div
+            className={`${styles.headerMain__logo} ${styles.headerMain__logo_order}`}
+            onClick={() => navigate("/")}
+            style={{ cursor: "pointer" }}
+          >
             <Logo_Oselya />
           </div>
           <Text text={t("header.subtitle_header_main")} type="m_400_s_32" />

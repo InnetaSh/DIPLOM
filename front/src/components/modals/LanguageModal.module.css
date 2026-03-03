@@ -76,6 +76,8 @@
   border-radius: 20px;
   padding: 15px;
   border: 1px solid transparent;
+  color: var(--color--text);
+  cursor: pointer;
 }
 
 .container_language__icon {
@@ -101,6 +103,8 @@
   border-radius: 20px;
   padding: 5px 20px;
   border: 1px solid transparent;
+  color: var(--color--text);
+  cursor: pointer;
 }
 
 button:hover {
@@ -109,4 +113,5 @@ button:hover {
 
 .btn_active {
   background-color: var(--color-menu-modal-icon) !important;
+    color: var(--color-btn-text-dark) !important;
 }

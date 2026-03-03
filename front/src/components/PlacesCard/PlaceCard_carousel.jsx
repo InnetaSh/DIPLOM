@@ -16,6 +16,8 @@ export const PlaceCard_carousel = ({ list }) => {
   const [index, setIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(3);
   const [withTransition, setWithTransition] = useState(true);
+  const [attractionId, setAttractionId] = useState(null);
+  const [slug, setSlug] = useState("");
 
 
   useEffect(() => {
@@ -28,7 +30,7 @@ export const PlaceCard_carousel = ({ list }) => {
       } else if (width < CARD_WIDTH_ACTIVE + 2 * (CARD_WIDTH + GAP)) {
         setVisibleCount(3);
       } else {
-        const maxCount = Math.floor((width + CARD_WIDTH/2) / (CARD_WIDTH + GAP));
+        const maxCount = Math.floor((width + CARD_WIDTH / 2) / (CARD_WIDTH + GAP));
         setVisibleCount(Math.max(maxCount, 3));
       }
 
@@ -59,7 +61,7 @@ export const PlaceCard_carousel = ({ list }) => {
       }, 400);
     }
   }, [index, list.length]);
- 
+
   useEffect(() => {
     const interval = setInterval(() => setIndex(prev => prev + 1), 15000);
     return () => clearInterval(interval);
@@ -67,7 +69,7 @@ export const PlaceCard_carousel = ({ list }) => {
 
 
   const getOffset = () => {
-    const centerIndex = index + visibleCount; // индекс в extendedList
+    const centerIndex = index + visibleCount;
     const viewportWidth = viewportRef.current?.offsetWidth || 0;
     const leftPadding = viewportWidth / 2 - CARD_WIDTH_ACTIVE / 2;
     return centerIndex * (CARD_WIDTH + GAP) - leftPadding;
@@ -91,7 +93,11 @@ export const PlaceCard_carousel = ({ list }) => {
             return (
               <Link
                 key={`${item.id}-${i}`}
-                to={`/attraction/${item.slug}`}
+                to={
+                  item.slug
+                    ? `/attractionDetail/${item.id}-${item.slug.toLowerCase()}`
+                    : "#"
+                }
                 className={`${styles.card} ${isActive ? styles.active : ''}`}
                 style={{
                   width: isActive ? CARD_WIDTH_ACTIVE : CARD_WIDTH,
@@ -100,12 +106,13 @@ export const PlaceCard_carousel = ({ list }) => {
                 }}
               >
                 <PlaceCard__Popular
-                  imageSrc={item.imageSrc}
+                  imageSrc={item.imageUrl_Main}
                   title={item.title}
                   variant={isActive ? 'large' : 'default'}
                 />
               </Link>
             );
+
           })}
         </div>
       </div>

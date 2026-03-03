@@ -63,7 +63,7 @@
   padding: 0;
 }
 
-/* Ползунок - черный круг диаметром ~15px с белой обводкой */
+
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;

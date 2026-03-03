@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {Text} from "../UI/Text/Text.jsx";
+import { Text } from "../UI/Text/Text.jsx";
 import styles from "./Loader.module.css";
 
-type LoaderProps = {
-    status: "loading" | "success" | "confirm ";
-};
 
 
-export const Loader = ({ status }: LoaderProps) => {
-      const { t } = useTranslation();
+export const Loader = ({ status }) => {
+    const { t } = useTranslation();
     const [showCheck, setShowCheck] = useState(false);
     const [showConfirmImage, setShowConfirmImage] = useState(false);
 
@@ -70,10 +67,10 @@ export const Loader = ({ status }: LoaderProps) => {
             >
                 <div className={styles.overlay} />
                 <div className={styles.confirmText}>
-                
+
                     <div className={`${styles.success_msg}`}>
-                              <Text text={t("Booking.success_message")} type="m_400_s_24"/>
-                        </div>
+                        <Text text={t("Booking.success_message")} type="m_400_s_24" />
+                    </div>
                 </div>
             </div>
 
@@ -93,17 +90,13 @@ export const Loader = ({ status }: LoaderProps) => {
                             className={styles.loader__ball}
                             style={{
                                 animation:
-
                                     status === "success"
-                                        ? `${styles[`flyIn${i + 1}`]} 1.0s forwards ease-in-out`
+                                        ? `${styles[`flyIn${i + 1}`]} 1.0s forwards ease-in-out ${i * 60}ms`
                                         : status === "confirm"
-                                            ? "translate(0,0) scale(0.03)"
+                                            ? `translate(0,0) scale(0.03)`
                                             : "none",
-                                animationDelay:
-                                    status === "success" || status === "confirm"
-                                        ? `${i * 60}ms`
-                                        : "0ms",
                             }}
+
                         />
                     ))}
                     <div
@@ -138,7 +131,7 @@ export const Loader = ({ status }: LoaderProps) => {
                     //     <path d="M14 27 L22 35 L38 18" />
                     // </svg>
                     <div className={styles.check}>
-                        
+
                     </div>
                 )}
             </div>

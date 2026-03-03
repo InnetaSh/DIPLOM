@@ -260,7 +260,9 @@
   left: 50%;
 width: 100%;
 height: 100%;
-min-height: 725px;
+width: 1462px;
+min-height: 723px;
+max-height: 725px;
   background-image: url('../../../public/img/success.svg');
   background-size:cover;
   background-repeat: no-repeat;
@@ -288,7 +290,7 @@ min-height: 725px;
   text-align: left;
   color: var(--color-booling-success-text) !important;
 position: absolute;
-right: 108px;
+right: 90px;
 top: 440px;
 
 }

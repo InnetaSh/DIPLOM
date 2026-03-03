@@ -2,11 +2,11 @@ import {IconSvg} from "../Image/IconSvg.jsx";
 import "../../../styles/globals.css";
 
 export const IconButton_Search = ({
-  icon_name,
+icon_name="search",
   icon_src,
   size = 20,
   onClick,
-  classTitle ="btn-br-r-10 btn-h-35 btn-w-35",
+  classTitle ="btn-br-r-10 btn-w-44 btn-h-35",
   disabled,
   title = null,
 }) => {

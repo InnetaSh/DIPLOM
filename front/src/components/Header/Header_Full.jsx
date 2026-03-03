@@ -23,16 +23,22 @@ import styles from './Header.module.css';
 
 export const Header_Full = ({
   showLogBtn = true,
-  city = "Львів",
+  city = "",
+  region = "",
+  country = "",
   title = "",
   titleBtn,
-  guests,
+  adults,
+  children,
+  rooms,
   startDate,
   endDate,
+  params,
   showFilterBtn = true,
   openFilterMenu = true,
-  setOpenFilterMenu,
-  handleSearchResults
+  setOpenFilterMenu = false,
+  handleSearchResults,
+  handleSortChange
 }) => {
   const navigate = useNavigate();
 
@@ -40,8 +46,8 @@ export const Header_Full = ({
   const [openMenu, setOpenMenu] = useState(false);
   const [openSortMenu, setOpenSortMenu] = useState(false);
   const [isModalLanguageOpen, setIsModalLanguageOpen] = useState(false);
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [currency, setCurrency] = useState("");
 
   const { t } = useTranslation();
@@ -49,11 +55,16 @@ export const Header_Full = ({
 
   const handleLanguageToggle = () => {
     setIsModalLanguageOpen(true);
+    setOpenSortMenu(false);
+    setIsLoginModalOpen(false);
+    setOpenFilterMenu(false);
   };
 
   const handleMenuToggle = () => {
     setOpenMenu(true);
   };
+
+
 
 
   return (
@@ -65,22 +76,25 @@ export const Header_Full = ({
           </div>
         )}
         <div className={`${styles.headerMain_Logo__container}   flex-between`} >
-          <div className={`${styles.headerMain__logo} ${styles.headerMain__logo_order}`}>
+          <div
+            className={`${styles.headerMain__logo} ${styles.headerMain__logo_order}`}
+            onClick={() => navigate("/")}
+            style={{ cursor: "pointer" }}
+          >
             <Logo_Oselya />
           </div>
           <div className={`${styles.searchBar} ${styles.searchBar_order}`}>
             <SearchBar
+              city={city}
+
+              params={params}
               onSearch={handleSearchResults}
-              defaultCity={city}
-              defaultGuests={guests}
-              defaultStartDate={startDate}
-              defaultEndDate={endDate}
             />
           </div>
           <div className={`${styles.headerMain__logo__actions_container} ${styles.headerMain__logo__actions_container_order} flex-center gap-20`}>
             <IconButton__50
               icon_name="user-home"
-                onClick={() => navigate("/")}
+              onClick={() => navigate("/")}
               title="User"
             />
 
@@ -93,6 +107,9 @@ export const Header_Full = ({
                   navigate("/profile");
                 } else {
                   setIsLoginModalOpen(true);
+                  setOpenSortMenu(false);
+                  setOpenFilterMenu(false);
+                  setIsModalLanguageOpen(false);
                 }
               }}
             />
@@ -121,10 +138,22 @@ export const Header_Full = ({
                 />
               </div>
             )}
+            {isLoginModalOpen && (
+              <div className="modalOverlay">
+                <LoginModal
+                  setIsModalOpen={setIsLoginModalOpen}
+                  setIsRegisterModalOpen={setIsRegisterModalOpen} />
+              </div>
+            )}
+            {isRegisterModalOpen && (
+              <div className="modalOverlay">
+                <RegisterModal setIsModalOpen={setIsRegisterModalOpen} />
+              </div>
+            )}
           </div>
         </div>
         <div className={`${styles.headerMain_breadcrumbs__container} flex-left`} >
-          <Breadcrumbs city={city} hotelTitle  ={title }/>
+          <Breadcrumbs city={city} region={region} country={country} hotelTitle={title} />
         </div>
         <div className={`${styles.headerMain_cityTitle__container} flex-center`} >
           <Text text={title} type="m_700_s_40" />
@@ -136,26 +165,14 @@ export const Header_Full = ({
                 onClick={() => {
                   setOpenSortMenu((prev) => !prev);
                   setOpenFilterMenu(false);
+                  setIsModalLanguageOpen(false);
                 }}
               />
               {openSortMenu && (
                 <div className={styles.headerMain_sortBtn__dropdown}>
-                  <SortMenuModal />
+                  <SortMenuModal onSortChange={handleSortChange} />
                 </div>
               )}
-              {isLoginModalOpen && (
-                <div className="modalOverlay">
-                  <LoginModal
-                    setIsModalOpen={setIsLoginModalOpen}
-                    setIsRegisterModalOpen={setIsRegisterModalOpen} />
-                </div>
-              )}
-              {isRegisterModalOpen && (
-                <div className="modalOverlay">
-                  <RegisterModal setIsModalOpen={setIsRegisterModalOpen} />
-                </div>
-              )}
-
 
               <ActionButton__Primary
                 text={titleBtn || t('sort.sort_btn')}
@@ -163,6 +180,7 @@ export const Header_Full = ({
                 onClick={() => {
                   setOpenFilterMenu((prev) => !prev);
                   setOpenSortMenu(false);
+                  setIsModalLanguageOpen(false);
                 }}
               />
 

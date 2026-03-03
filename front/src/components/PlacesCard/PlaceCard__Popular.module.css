@@ -21,22 +21,22 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block; /* Чтобы убрать лишние отступы у img */
+  display: block; 
 }
 
 .blurOverlay {
   position: absolute;
   bottom: 0;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0%);
   
   width: 100%;
   height: 82px;
   border-radius:  0 0 20px 20 px;
 
-  background: rgba(255, 255, 255, 0.2); /* полупрозрачный фон */
-  backdrop-filter: blur(8px); /* размытие фона позади */
-  -webkit-backdrop-filter: blur(8px); /* для Safari */
+  background: rgba(255, 255, 255, 0.2); 
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px); 
 
   display: flex;
   justify-content: center;

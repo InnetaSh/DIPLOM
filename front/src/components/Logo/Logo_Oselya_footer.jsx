@@ -1,11 +1,14 @@
-import {Text} from "../UI/Text/Text.jsx";
+import {ImageSvg} from "../UI/Image/ImageSvg";
 
 
 export const Logo_Oselya__footer = () => {
   return (
     <div 
-     className={`footer__logo_Oselya flex-center btn-w-112_aspect`}>
-      <Text text = "Oselya" type="cagliostro_400_s_30"/>
+     className={`footer__logo_Oselya flex-center `}>
+      <ImageSvg 
+      src="/img/icon_logo/logo_footer.svg"
+      sizeX="79"
+      sizeY="74"/>
     </div>
   );
 };

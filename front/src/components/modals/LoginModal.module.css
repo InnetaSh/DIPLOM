@@ -1,55 +1,148 @@
 .loginPage {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 1449px;
-    min-height: 1037px;
-    height: 1037px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1449px;
+  max-height: 90vh;
+  height: min(1037px, 90vh);
 
-    max-height: 90vh;
-    overflow-y: auto;
-    border-radius: 20px;
-    background-color: var(--color-input-form-bg);
+  overflow: hidden;
+  border-radius: 20px;
+  background-color: var(--color-input-form-bg);
+z-index: 100;
 }
 
+
+
 .loginPage__content {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+    overflow-y: auto;
+  scrollbar-gutter: stable;
 }
 
 .loginPage__form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+
 .input {
-    background-color: transparent;
-    border: 3px solid var(--color-input-border);
+  background-color: transparent;
+  border: 3px solid var(--color-input-border);
+  font-family: 'Montserrat Alternates';
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 120px;
+  padding-left: 25px;
+  color: var( --color-text-input);
+  padding-top: 0;
+  padding-bottom: 0;
+  width: 1165px;
+}
+
+
+
+.input[name="password"] {
+  font-size: 40px;
+  letter-spacing: 2px;
+  line-height: 120px;
 }
 
 .googleButton__wrapper {
-    display: inline-flex;
-    width: 100%;
+  display: inline-flex;
+ width: 1165px;
+  
 }
 
 
 .actionButton__wrapper {
-    width: 100%;
-    display: inline-flex;
+  display: inline-flex;
+  width: 1165px;
+}
+
+@media (max-width: 1920px) {
+  .loginPage {
+      max-width: 1449px;
+  width: 80%;
+  }
+  .input {
+      max-width: 1165px;
+  width: 80%;
+}
+.googleButton__wrapper {
+ max-width: 1165px;
+  width: 80%;
+  
+}
+.actionButton__wrapper {
+  max-width: 1165px;
+  width: 80%;
+}
 }
 
 /* placeholder */
 .input::placeholder {
-    color: var(--color-text);
-    font-family: 'Montserrat Alternates', sans-serif;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 29px;
-    margin-left: 20px;
+  color: var( --color-text-input);
+  font-family: 'Montserrat Alternates', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 29px;
+  margin-left: 20px;
+}
+
+/* ===================================================== */
+.line_wrapper {
+  display: flex;
+  align-items: center;
+  width: 80%;
+}
+
+.line {
+  flex-grow: 1;
+  height: 4px;
+  width: 25%;
+  background-color:  var( --color-text-input);
+  position: relative;
+}
+
+.line .circle {
+  position: absolute;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background-color:  var( --color-text-input);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.line.left .circle {
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.line.right .circle {
+  right: 0;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 1024px) {
+  .line .circle {
+    width: 17px;
+    height: 17px;
+  }
+}
+
+@media (max-width: 768px) {
+  .line .circle {
+    width: 14px;
+    height: 14px;
+  }
 }

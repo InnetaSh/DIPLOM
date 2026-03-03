@@ -1,4 +1,4 @@
-import {IconSvg} from "../Image/IconSvg.jsx";
+import {ImageSvg} from "../Image/ImageSvg.jsx";
 import "../../../styles/globals.css";
 
 export const IconButtonClose = ({
@@ -17,10 +17,11 @@ export const IconButtonClose = ({
       disabled={disabled}
       title={title}
     >
-      <IconSvg
+      <ImageSvg
         name={icon_name}
         src={icon_src}
-        size={size}
+        sizeX={size}
+        sizeY={size}
         alt={title}
       />
     </button>

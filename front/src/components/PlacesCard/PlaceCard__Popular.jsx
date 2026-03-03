@@ -5,11 +5,8 @@ import { Image } from "../UI/Image/Image.jsx";
 import styles from "./PlaceCard__Popular.module.css";
 
 export const PlaceCard__Popular = ({
-    id,
     title,
-    onClick,
     imageSrc,
-    onCheckAvailability,
 }) => {
     const { t } = useTranslation();
 
@@ -23,7 +20,7 @@ export const PlaceCard__Popular = ({
             onClick={handleClick}
             role="button"
             tabIndex={0}
-            onKeyPress={(e) => {
+            onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") handleClick();
             }}>
             <div className={styles.card_container} >

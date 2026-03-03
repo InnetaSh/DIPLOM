@@ -1,6 +1,6 @@
 .addGuestModal {
-  background: var(--color-bg);
-  border: 3px solid var(--color-text);
+  background: var(--color-menu-modal-bg);
+  border: 3px solid var(  --color-modal-border);
   border-radius: 20px;
   padding: 10px 30px 30px 30px;
 

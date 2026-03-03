@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { RadioButton } from "./RadioButton";
 import { useTranslation } from "react-i18next";
 
-export const RadioGroup = () => {
+export const RadioGroup = ({activeButton,setActiveButton}) => {
   const { t } = useTranslation();
 
-  const [activeButton, setActiveButton] = useState("owner");
+  
 
   return (
     <div className="radioButton_wrapper">

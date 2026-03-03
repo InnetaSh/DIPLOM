@@ -10,6 +10,7 @@ export const Link = ({ text, to,type }) => {
     m_500: styles.text_m_500,
     m_500_s_40: styles.text_m_500_s_40,
     m_600: styles.text_m_600,
+   m_600_s_20: styles.text_m_600_s_20,
      m_600_s_32: styles.text_m_600_s_32,
     m_600_s_48: styles.text_m_600_s_48,
     m_700: styles.text_m_700,

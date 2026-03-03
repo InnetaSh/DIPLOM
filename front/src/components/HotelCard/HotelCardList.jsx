@@ -4,14 +4,17 @@ import styles from "./HotelCardList.module.css";
 
 export const HotelCardList = ({
   hotels = [],
-  guests = "1",
+  adults = "1",
+  children="0",
   startDate = "2026-01-22",
   endDate = "2026-01-24",
   onCardClick,
   onCheckAvailability,
+  myHistoryIdList,
   cardWidth = 424,
   gap = 20,
   openFilterMenu = false, 
+  showHeart
 }) => {
   const containerRef = useRef(null);
   const [columns, setColumns] = useState(1);
@@ -31,11 +34,14 @@ export const HotelCardList = ({
     return () => window.removeEventListener("resize", updateColumns);
   }, [cardWidth, gap]);
 
+useEffect(()=>{
+  console.log({hotelList: hotels})
+}, [hotels]);
 
   useEffect(() => {
     updateColumns();
   }, [openFilterMenu]);
-
+console.log({ hotels });
   return (
     <div
       ref={containerRef}
@@ -52,20 +58,26 @@ export const HotelCardList = ({
           id={hotel.id}
           title={hotel.title}
           image={hotel.rentObj?.[0]?.mainImageUrl || "-image.jpg"}
-          city={hotel.city}
-          cityId={hotel.cityId}
+          city={hotel.rentObj[0].cityTitle}
+          cityId={hotel.rentObj?.[0]?.cityId}
           country={hotel.country}
           distance={hotel.distanceToCenter}
-          rating={hotel.rating}
+          rating={
+                      hotel.overallRating != null
+                        ? hotel.overallRating.toFixed(2)
+                        : "7.10"
+                    }
           reviews={hotel.reviews}
-          price={hotel.totalPrice}
-          guests={guests}
+          price={hotel.pricePerDay ?? hotel.totalPrice}
+           adults ={adults}
+              children={children}
           startDate={startDate}
           endDate={endDate}
-          onClick={() => onCardClick && onCardClick(hotel.id)}
-          onCheckAvailability={() =>
-            onCheckAvailability && onCheckAvailability(hotel.id)
-          }
+          myHistoryIdList={myHistoryIdList}
+          showHeart = {showHeart}
+          onClick={() => {
+            console.log ({id: hotel.id})
+          }}
         />
       ))}
     </div>

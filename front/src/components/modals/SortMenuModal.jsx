@@ -3,28 +3,33 @@ import { useTranslation } from "react-i18next";
 import styles from "./SortMenu.module.css";
 import { SortMenuItem } from "./SortMenuItem";
 
-const optionsIds = [
-  "recommended",
-  "distance",
-  "priceAsc",
-  "priceDesc",
-  "ratingAsc",
-  "ratingDesc",
-];
 
-export const SortMenuModal = () => {
-  const { t } = useTranslation("SortMenu"); 
-  const [activeId, setActiveId] = useState(optionsIds[0]);
+export const SortMenuModal = ({ onSortChange }) => {
+  const { t } = useTranslation();
+
+  const options = [
+    { id: "recommended", label: t("SortMenu.recommended") },
+    { id: "distance", label: t("SortMenu.distance") },
+    { id: "priceAsc", label: t("SortMenu.priceAsc") },
+    { id: "priceDesc", label: t("SortMenu.priceDesc") },
+    { id: "ratingAsc", label: t("SortMenu.ratingAsc") },
+    { id: "ratingDesc", label: t("SortMenu.ratingDesc") },
+  ];
+
+  const [activeId, setActiveId] = useState(options[0].id);
 
   return (
     <div className={styles.container}>
       <div className={styles.menuList}>
-       {optionsIds.map((id, index) => (  
+        {options.map((option) => (
           <SortMenuItem
-            key={id}
-            label={t(id)}
-            active={id === activeId}
-            onClick={() => setActiveId(id)}
+            key={option.id}
+            label={option.label}
+            active={option.id === activeId}
+            onClick={() => {
+              setActiveId(option.id);
+              onSortChange(option.id);
+            }}
           />
         ))}
       </div>

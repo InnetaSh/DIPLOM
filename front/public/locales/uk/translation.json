@@ -8,14 +8,15 @@
       "welcome_new": "Вітаємо! Спершу створіть акаунт.",
       "google": "Вхід через Google",
       "or": "Або",
-      "name": "Ваше призвіще та ім’я",
+      "name": "Ваше ім’я",
       "country": "Країна",
       "email": "E-mail",
+      "birthDate": "День народження",
       "phone": "Номер телефону",
       "owner": "Власник житла",
       "client": "Користувач",
       "password": "Пароль",
-      "confirmPassword": "Підтвердіть пароль",
+      "confirm_password": "Підтвердіть пароль",
       "registerButton": "Зареєструватись"
     },
     "login": {
@@ -30,7 +31,8 @@
     }
   },
   "header": {
-    "subtitle_header_main": "Знайди свій затишок разом з нами"
+    "subtitle_header_main": "Знайди свій затишок разом з нами",
+    "popular_cities": "Популярні міста"
   },
   "DateRangeInput": {
     "date": "Дата"
@@ -118,6 +120,7 @@
   },
   "filters": {
     "filterTitle": "Фільтр",
+    "filterBtn": "Застосувати",
     "accommodation_type": {
       "title": "Тип розміщення",
       "hotel": "Готель",
@@ -280,20 +283,26 @@
     "menu_btn_help": "Допомога",
     "menu_btn_logout": "Вихід",
     "menu_btn_privacy": "Конфеденційність",
+    "menu_btn_history": "Збережене",
     "menu_btn_message": "Повідомлення",
     "my_travel": {
       "active": "Активні",
       "past": "Минулі",
       "cancelled": "Скасовані"
     },
+    "my_history": {
+      "all": "Усі готелі",
+      "favorites": "Обране"
+    },
     "AccountPanel": {
       "name": "Ім’я",
+      "lastname": "Прізвище",
       "birthday": "Дата народження",
       "email": "Електронна пошта",
       "phone": "Номер телефону",
       "country": "Країна/Територія",
-     "select_country": "Виберіть країну/територію",
-       "btn_continue": "Продовжити",
+      "select_country": "Виберіть країну/територію",
+      "btn_continue": "Зберегти",
       "myself_info": "Особисті данні",
       "Security_settings": "Налаштування безпеки"
     },
@@ -316,7 +325,9 @@
       "menu_btn_add_housing": "Додати своє житло"
     },
     "Reservation_management": "Управління  бронюванням",
-    "no_travel": "У вас немає скасованих поїздок",
+    "no_active_travel": "У вас немає активних поїздок",
+    "no_past_travel": "У вас немає минулих поїздок",
+    "no_cancelled_travel": "У вас немає скасованих поїздок",
     "PastHotel": {
       "title_page": "Реалізовано",
       "price": "Ціна",
@@ -343,6 +354,7 @@
     "booking_title": "Введіть свої данні для бронювання",
     "guest_data_title": "Данні гостя",
     "name_label": "Ім'я",
+    "surname_label": "Прізвище",
     "email_label": "Електронна пошта",
     "phone_label": "Телефон",
     "country_city_label": "Країна/Місто",
@@ -374,47 +386,105 @@
     "Choise_btn": "Обрати",
     "processing": "Оформляємо бронювання...",
     "success": "Бронювання підтверджено!",
-    "success": "Бронювання підтверджено!",
     "success_title": "Успіх!",
     "success_message": "Підтвердження бронювання ми надіслали на вашу електронну пошту."
   },
   "Host": {
     "propertyForm": {
-      "title": "Введіть свої данні",
-      "owner": {
-        "label": "Власник",
-        "name": "Ім’я",
-        "photo": "Фото",
-        "description": "Опис власника(ці)",
-        "btn": "Редагувати"
-      }
+      "title": "Введіть свої данні"
     },
     "aboutHousing": {
       "title": "Інформація про житло",
       "housing": {
         "name": "Назва",
+        "country": "Країна",
+        "region": "Область/регіон",
+        "city": "Місто",
+        "district": "Район",
+        "Postcode": "Поштовий код",
         "address": "Адреса",
+        "street": "Вулиця",
+        "number": "номер",
         "description": "Опис",
         "photo": "Фото житла*"
       }
     },
+    "dataHousing": {
+      "title": "Данні житла",
+      "guestCount": "Кількість гостей",
+      "roomCount": "Кількість кімнат",
+      "singleBedsCount": "Односпальне ліжко",
+      "doubleBedsCount": "Двоспальне ліжко",
+      "pricePerDay": "Ціна/ніч",
+      "pricePerWeek": "Знижка/від 3ночей"
+    },
     "amenities": {
       "title": "Зручності",
       "wifi": "WI-FI",
-      "bath": "Ванна",
-      "kitchen": "Кухня/міні-кухня",
       "ac": "Кондиціонер",
+      "workDesk": "Робочий стіл",
       "tv": "Телевізор",
+      "windowView": "Вид з вікна",
+      "bath": "Власна ванна",
+      "": "Туалетний папір",
+      "kitchen": "Кухня/міні-кухня",
       "washingMachine": "Пральна машина",
       "iron": "Праска",
       "electricKettle": "Електричний чайник",
-      "windowView": "Вид з вікна",
       "coffeeTea": "Кава/чай",
-      "workDesk": "Робочий стіл",
       "petsAllowed": "Можна з тваринами",
       "addYourOwn": "Додати своє"
     },
-    "btn_add":"Додати кімнату/номер",
-    "btn_save":"Зберегти"
+    "btn_add": "Додати кімнату/номер",
+    "btn_save": "Зберегти",
+    "my_housing": {
+      "menu_btn_edit": "Редагувати",
+      "menu_btn_read_reviews": "Відгуки",
+      "menu_btn_booking": "Бронювання"
+    },
+    "booking": {
+      "apartment": "Апартаменти / квартира",
+      "user": "Гості",
+      "Status": "Статус замовлення",
+      "Date": "Дата замовлення",
+      "confirm_order": "Підтвердити",
+      "Pending": "Очікує підтвердження",
+      "Confirmed": "Підтверджено власником",
+      "Paid": "Оплачено",
+      "Cancelled": "Скасовано користувачем",
+      "Rejected": "Відхилено власником",
+      "Completed": "Оренду завершено"
+    }
+  },
+  "admin": {
+    "title": "Привіт, адмін",
+    "menu": {
+      "users": "Користувачі",
+      "offers": "Об’яви",
+      "reviews": "Відгуки",
+      "settings": "Налаштування",
+      "tools": "Інструменти",
+      "contacts": "Контакти"
+    },
+    "input_label": "Введіть e-mail або номер телефону",
+    "sort_btn": "Сортувати",
+    "write": "написати",
+    "blocked": "заблокувати"
+  },
+  "attraction": {
+    "title": "Визначні пам’ятки"
+  },
+  "reviews_modal": {
+    "leave_review": "Залишіть свій відгук",
+    "your_rating":"Ваша оцінка",
+    "staff": "Персонал",
+    "cleanliness": "Чистота",
+    "comfort": "Комфорт",
+    "facilities": "Зручності",
+    "value_for_money": "Ціна/якість",
+    "location": "Місце розташування",
+    "text": "Текст",
+    "submit": "Відправити",
+    "no_reviews": "Немає відгуків для цього готелю"
   }
 }

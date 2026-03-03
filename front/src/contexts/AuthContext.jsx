@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
             id: decoded.sub,
             email: decoded.email,
             name: decoded.name,
-            role: decoded.role,
+            role: storedToken.role,
           });
 
           setToken(storedToken);
@@ -36,9 +36,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
 
-  const login = async (username, password) => {
+  const login = async (login, password) => {
     try {
-      const response = await http.post("/User/login", { username, password });
+      const response = await http.post("/User/login", { login, password });
       const jwt = response.data.token;
       console.log("JWT token:", jwt);
 
@@ -55,44 +55,49 @@ export const AuthProvider = ({ children }) => {
       setToken(jwt);
       setUser(userData);
 
-      return { success: true };
+      return { success: true,  response };
     } catch (error) {
       return { success: false, message: 'Неверные данные' };
     }
   };
 
 
-  const register = async (username, email, password, phoneNumber, roleName) => {
+  const register = async ({ username, countryId, email, birthDate, password, phoneNumber, roleName }) => {
     try {
-      const response = await http.post("/User/register", {
+      // type = "Client" или "Owner"
+      const url = roleName === "Client" ? "/User/register/client" : "/User/register/owner";
+
+      const response = await http.post(url, {
         username,
+        countryId,
         email,
+        birthDate,
         password,
         phoneNumber,
         roleName
       });
 
       const jwt = response.data.token;
-
       const decoded = jwtDecode(jwt);
 
       const userData = {
         id: decoded.sub,
         email: decoded.email,
         name: decoded.username,
-        role: decoded.roleName,
+        role: response.data.roleName,
       };
 
       localStorage.setItem("token", jwt);
       setToken(jwt);
       setUser(userData);
 
-      return { success: true };
+      return { success: true, response };
     } catch (error) {
       console.error("Register error:", error);
       return { success: false, message: "Ошибка регистрации" };
     }
   };
+
 
 
   const logout = () => {
@@ -102,29 +107,29 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getMe = async (lang) => {
-  try {
-    const response = await userApi.getMe(lang);
-    setUser(response.data);
-    console.log(user);
-    return response.data;
-  } catch (error) {
-    logout();
-    return null;
-  }
-};
+    try {
+      const response = await userApi.getMe(lang);
+      setUser(response.data);
+      console.log(user);
+      return response.data;
+    } catch (error) {
+      logout();
+      return null;
+    }
+  };
 
- const updateMe = async (updatedData) => {
+  const updateMe = async (updatedData) => {
     if (!token) return { success: false, message: "Нет токена" };
 
     try {
-    
+
       if (updatedData.birthDate) {
         updatedData.birthDate = new Date(updatedData.birthDate).toISOString();
       }
 
       const response = await userApi.updateMe(updatedData);
-      
-     
+
+
       setUser(response.data);
 
       return { success: true, data: response.data };
@@ -133,8 +138,47 @@ export const AuthProvider = ({ children }) => {
       return { success: false, message: "Не удалось обновить данные" };
     }
   };
+
+
+  const googleAuth = async (idToken) => {
+    try {
+      console.log("Api");
+      const response =
+        await http.post(
+          "/User/google",
+          { idToken },
+          {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
+        )
+      console.log(response.data);
+
+      const jwt = response.data.token;
+      const decoded = jwtDecode(jwt);
+
+      const userData = {
+        id: decoded.sub,
+        email: decoded.email,
+        name: decoded.username,
+        role: response.data.roleName,
+      };
+
+      localStorage.setItem("token", jwt);
+      setToken(jwt);
+      setUser(userData);
+
+
+      return { success: true, data: response.data };
+    } catch (error) {
+      console.error("Ошибка updateMe:", error);
+      return { success: false, message: "Не удалось обновить данные" };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout,getMe,updateMe  }}>
+    <AuthContext.Provider value={{ user, token, login, register, logout, getMe, updateMe, googleAuth }}>
       {children}
     </AuthContext.Provider>
   );

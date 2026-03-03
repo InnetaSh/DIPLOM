@@ -12,7 +12,7 @@ export const ImageSvg = ({
       <svg
         width={sizeX}
         height={sizeY}
-        className={className}
+        className={`${className} svg-icon`}
         fill="currentColor"
         aria-hidden={!alt}
         role="img"

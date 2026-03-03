@@ -11,30 +11,27 @@ export const AttractionGallery = ({ images = [] }) => {
   return (
     <div className={styles.gallery}>
       <div className={styles.gallery__container}>
-        {images.length >= 5 && (
+        {images.length >=4 && (
           <div className={styles.gallery__columns}>
 
-            {/* Левая колонка */}
             <div className={styles.gallery__left_container}>
               <div className={styles.gallery__center_wrapper}>
                 <img src={images[0]} alt="" />
               </div>
             </div>
 
-            {/* Центр */}
             <div className={styles.gallery__center_container}>
               <div className={styles.gallery__center_wrapper}>
-                <img src={images[0]} alt="" />
+                <img src={images[1]} alt="" />
               </div>
             </div>
 
-            {/* Правая колонка */}
             <div className={styles.gallery__column_container}>
               <div className={styles.gallery__columnItem_first}>
-                <img src={images[3]} alt="" />
+                <img src={images[2]} alt="" />
               </div>
               <div className={styles.gallery__columnItem_second}>
-                <img src={images[4]} alt="" />
+                <img src={images[3]} alt="" />
               </div>
             </div>
 

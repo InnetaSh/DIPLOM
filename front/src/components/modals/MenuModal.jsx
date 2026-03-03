@@ -3,13 +3,13 @@ import { useTranslation } from "react-i18next";
 import { Text } from "../UI/Text/Text.jsx";
 import { ImageSvg } from "../UI/Image/ImageSvg.jsx";
 import { IconButtonClose } from "../UI/Button/IconButton_close.jsx";
-import { ThemeContext } from "../../contexts/ThemeContext.jsx"; // подключаем контекст
+import { ThemeContext } from "../../contexts/ThemeContext.jsx"; 
 
 import styles from "./Menu.module.css";
 
 export const MenuModal = ({ setIsModalOpen }) => {
   const { t } = useTranslation();
-  const { darkMode, toggleTheme } = useContext(ThemeContext); // достаём текущую тему и функцию переключения
+  const { darkMode, toggleTheme } = useContext(ThemeContext); 
 
   const btnList = [
     { id: "1", imgName: "menu_color_tema", theme: "light", title: t("menu.light_tema"), sizeX: "40", sizeY: "40" },
@@ -31,7 +31,7 @@ export const MenuModal = ({ setIsModalOpen }) => {
       </div>
       <div className={styles.menuList}>
         {btnList.map(btn => {
-          // скрываем кнопку текущей темы
+      
           if (btn.theme === "dark" && darkMode) return null;
           if (btn.theme === "light" && !darkMode) return null;
 
@@ -40,7 +40,7 @@ export const MenuModal = ({ setIsModalOpen }) => {
               key={btn.id}
               className={styles.menulist_btn}
               onClick={() => {
-                if (btn.theme) toggleTheme(); // переключаем тему
+                if (btn.theme) toggleTheme(); 
                 setIsModalOpen(false);
               }}
             >

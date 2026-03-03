@@ -9,11 +9,12 @@ export const MoreOffersSection_card = ({
   title,
   showText = true,
   text,
+  onClick,
 }) => {
   const { t } = useTranslation();
 
   return (
-    <div className={`${styles.moreOffersSection_card} flex-left`}>
+    <div className={`${styles.moreOffersSection_card}  flex-left`}>
       <div
         className={`${styles.moreOffersSection_card__container} ${className}`}
       >
@@ -31,6 +32,7 @@ export const MoreOffersSection_card = ({
               <ActionButton__Primary
                 text={t("moreOffersSection.btn")}
                 className="btn-br-r-20 btn-w-full btn-h-59"
+                onClick={onClick}
               />
             </div>
           </>

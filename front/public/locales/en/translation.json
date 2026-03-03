@@ -4,22 +4,23 @@
   "menu_home": "Home",
   "Auth": {
     "register": {
-      "title": "Create an account",
-      "welcome_new": "Welcome! Please create an account to get started.",
+      "title": "Sign Up",
+      "welcome_new": "Welcome! Let’s create your account first.",
       "google": "Sign in with Google",
       "or": "Or",
-      "name": "Your first and last name",
+      "name": "Your name",
       "country": "Country",
       "email": "Email",
+      "birthDate": "Date of birth",
       "phone": "Phone number",
       "owner": "Property owner",
-      "client": "User",
+      "client": "Guest",
       "password": "Password",
-      "confirmPassword": "Confirm password",
-      "registerButton": "Sign up"
+      "confirm_password": "Confirm password",
+      "registerButton": "Sign Up"
     },
     "login": {
-      "title": "Sign in to your account",
+      "title": "Log in to your account",
       "welcome_back": "Welcome back!",
       "google": "Sign in with Google",
       "signUp": "Enter your phone number",
@@ -30,400 +31,460 @@
     }
   },
   "header": {
-    "subtitle_header_main": "Find your cozy place with us"
+    "subtitle_header_main": "Find your perfect stay with us",
+    "popular_cities": "Popular cities"
   },
   "DateRangeInput": {
     "date": "Date"
   },
   "Search": {
-    "rooms": "Кімнати",
-    "city": "Місто",
-    "guests": "Гості",
-    "hotel_number": "Номер",
-    "adults": "Дорослі",
-    "children": "Діти",
-    "from_0_to_17": "від 0 до 17 років",
-    "trip_with_animal": "Ви подорожуєте з тваринами",
-    "searh_btn": "Застовусати",
-    "search_title_modal": "Вкажіть кількість номерів та гостей"
+    "rooms": "Rooms",
+    "city": "City",
+    "guests": "Guests",
+    "hotel_number": "Room number",
+    "adults": "Adults",
+    "children": "Children",
+    "from_0_to_17": "Ages 0–17",
+    "trip_with_animal": "Traveling with pets?",
+    "searh_btn": "Apply",
+    "search_title_modal": "Please specify the number of rooms and guests"
   },
   "sort": {
     "sort_btn": "Filter"
   },
   "languageModal": {
-    "currency": "Валюта",
-    "language": "Мова",
-    "Choose_a_language": "Виберіть мову",
-    "Ukrainian hryvnia UAH": "Українська гривня",
-    "Pound GBP": "Фунт стерлінгів",
-    "dollar USA": " Долар CША",
-    "Euro EUR": "Євро",
-    "Polish zloty PLN": "Польський злотий",
-    "Turkish lira TRY": "Турецька ліра"
+    "currency": "Currency",
+    "language": "Language",
+    "Choose_a_language": "Choose a language",
+    "Ukrainian_hryvnia_UAH": "Ukrainian Hryvnia",
+    "Pound_GBP": "British Pound",
+    "dollar_USA": "US Dollar",
+    "Euro_EUR": "Euro",
+    "Polish_zloty_PLN": "Polish Zloty",
+    "Turkish_lira_TRY": "Turkish Lira"
   },
   "hotel": {
     "popularCities": "Popular cities",
-    "additionalOffers": "We also offer",
+    "additionalOffers": "Also offers",
     "popularHotels": "Recommended hotels",
-    "infoLogo": "We will give you a warm place all over Ukraine",
-    "infoDescriptionLeft": "Oselya is a Ukrainian accommodation booking website. It specializes in offering hotels, hostels, private houses, apartments, studios, and rooms across Ukraine.",
-    "infoDescriptionRight": "With us, you can not only find a warm and cozy place for yourself but also give this comfort to others!\n\nRegister on our website and unlock new convenient features. Get the opportunity to communicate with other landlords in our special chat.\n\nOselya cooperates with many reliable partners and plans to expand to provide you with reliability even abroad.",
+    "infoLogo": "We bring you a cozy corner across Ukraine",
+    "infoDescriptionLeft": "Oselya is a Ukrainian accommodation booking website. It specializes in providing a choice of hotels, hostels, private houses, apartments, studios, and rooms in Ukraine.",
+    "infoDescriptionRight": "With us, you can not only find a cozy place for yourself, but also share this comfort with others!\n\nSign up on our website to unlock new, convenient features. You can communicate with other hosts in our dedicated chat.\n\nWe cooperate with many reliable partners and plan to expand, ensuring you can rely on us even abroad.",
     "more": "Learn more about us",
-    "register": "Sign up",
-    "info_about_owner": "Інформація про власника",
-    "moreThan100Tours": "Over 100 tours in every country",
+    "register": "Register",
+    "info_about_owner": "Owner information",
+    "moreThan100Tours": "Over 100 tours in each country",
     "infoLogoBottom": "Oselya is expanding to stay with you even abroad",
     "sections": {
       "overview": "Overview",
-      "prices": "Pricing Information",
-      "services": "Amenities and Services",
-      "conditions": "Accommodation Conditions",
-      "important": "Good to Know",
+      "prices": "Pricing information",
+      "services": "Amenities & services",
+      "conditions": "Accommodation conditions",
+      "important": "Important information",
       "reviews": "Reviews"
     },
-    "guestCount": "дорослих",
-    "from": "від"
+    "guestCount": "adults",
+    "from": "from"
   },
   "menu": {
-    "menu_title": "Меню",
-    "light_tema": "Світла тема",
-    "dark_tema": "Темна тема",
-    "about_us": "Про нас",
-    "help": "Допомога",
-    "Contacts": "Контакти",
-    "Booking": "Бронювання"
+    "menu_title": "Menu",
+    "light_tema": "Light theme",
+    "dark_tema": "Dark theme",
+    "about_us": "About us",
+    "help": "Help",
+    "Contacts": "Contacts",
+    "Booking": "Booking"
   },
   "footer": {
     "help": {
       "title": "Help",
       "terms": "Terms of Use",
-      "privacy": "Privacy Policy",
+      "privacy": "Privacy",
       "faq": "FAQ",
-      "cookies": "Cookie Settings"
+      "cookies": "Cookie settings"
     },
     "about": {
-      "title": "About Us",
-      "aboutUs": "Information about us",
-      "userInfo": "Information for users",
-      "ownerInfo": "Information for property owners"
+      "title": "About us",
+      "aboutUs": "About us",
+      "userInfo": "User information",
+      "ownerInfo": "Owner information"
     },
     "app": {
-      "title": "Our App",
-      "android": "For Android",
-      "ios": "For iOS"
+      "title": "Our app",
+      "android": "for Android",
+      "ios": "for iOS"
     },
     "contacts": {
       "title": "Contacts"
     }
   },
   "filters": {
-    "filterTitle": "Фільтр",
+    "filterTitle": "Filter",
+    "filterBtn": "Apply",
     "accommodation_type": {
-      "title": "Тип розміщення",
-      "hotel": "Готель",
-      "hostel": "Хостел",
-      "studio": "Студія",
-      "apartment": "Апартаменти / квартира",
-      "house": "Приватний будинок",
-      "room": "Кімната"
+      "title": "Accommodation type",
+      "hotel": "Hotel",
+      "hostel": "Hostel",
+      "studio": "Studio",
+      "apartment": "Apartment",
+      "house": "Private house",
+      "room": "Room"
     },
     "price": {
-      "title": "Ціни",
-      "from": "від",
-      "to": "до"
+      "title": "Prices",
+      "from": "from",
+      "to": "to"
     },
     "amenities": {
-      "title": "Зручності",
-      "wifi": "WI-FI",
-      "air_conditioner": "Кондиціонер",
-      "tv": "Телевізор",
-      "workspace": "Робочий стіл",
-      "pets": "Можна з тваринами",
-      "parking": "Безкоштовна парковка",
-      "washer": "Пральна машина",
-      "iron": "Праска",
-      "kettle": "Електричний чайник"
+      "title": "Amenities",
+      "wifi": "Wi-Fi",
+      "air_conditioner": "Air conditioner",
+      "tv": "TV",
+      "workspace": "Workspace",
+      "pets": "Pets allowed",
+      "parking": "Free parking",
+      "washer": "Washing machine",
+      "iron": "Iron",
+      "kettle": "Electric kettle"
     },
     "housing_features": {
-      "title": "Житло з",
-      "balcony": "Балкон",
-      "terrace": "Тераса",
-      "kitchen": "Кухня",
-      "single_bed": "Односпальне ліжко",
-      "double_bed": "Двоспальне ліжко"
+      "title": "Housing with",
+      "balcony": "Balcony",
+      "terrace": "Terrace",
+      "kitchen": "Kitchen",
+      "single_bed": "Single bed",
+      "double_bed": "Double bed"
     },
     "rating": {
-      "title": "Оцінка об’єкта",
-      "5": "Досить добре 5+",
-      "7": "Добре 7+",
-      "8": "Дуже добре 8+",
-      "9": "Чудово 9+"
+      "title": "Property rating",
+      "5": "Fairly good 5+",
+      "7": "Good 7+",
+      "8": "Very good 8+",
+      "9": "Excellent 9+"
     },
     "distance_center": {
-      "title": ": Відстань від центру",
-      "<1km": "Менше 1 км",
-      "<3km": "Менше 3 км",
-      "<5km": "Менше 5 км"
+      "title": "Lviv: Distance from city center",
+      "<1km": "Less than 1 km",
+      "<3km": "Less than 3 km",
+      "<5km": "Less than 5 km"
     },
     "booking_rules": {
-      "title": "Правила бронювання",
-      "free_cancel": "Безкоштовне скасування",
-      "pay_now": "Оплата зараз",
-      "pay_before": "Оплата помешканню перед приїздом",
-      "pay_on_place": "Оплата на місці"
+      "title": "Booking rules",
+      "free_cancel": "Free cancellation",
+      "pay_now": "Pay now",
+      "pay_before": "Pay to property before arrival",
+      "pay_on_place": "Pay on-site"
     },
     "district": {
-      "title": "Район",
-      "center": "Центр Львова",
-      "favorite": "Улюблений район",
-      "market_square": "Ринкова площа",
-      "svobody_avenue": "Проспект Свободи"
+      "title": "District",
+      "center": "Lviv city center",
+      "favorite": "Favorite district",
+      "market_square": "Market Square",
+      "svobody_avenue": "Svobody Avenue"
     }
   },
   "SortMenu": {
-    "recommended": "Наші рекомендації",
-    "distance": "Ближче до центра міста",
-    "priceAsc": "Ціна (спочатку найнижча)",
-    "priceDesc": "Ціна (спочатку найвища)",
-    "ratingAsc": "Оцінка (за зростанням)",
-    "ratingDesc": "Оцінка (за спаданням)"
+    "recommended": "Our recommendations",
+    "distance": "Closer to city center",
+    "priceAsc": "Price (lowest first)",
+    "priceDesc": "Price (highest first)",
+    "ratingAsc": "Rating (ascending)",
+    "ratingDesc": "Rating (descending)"
   },
   "bunner": {
-    "room": "Кімнати",
-    "hotel": "Готелі",
-    "guestHouse": "Гостьові будинки"
+    "room": "Rooms",
+    "hotel": "Hotels",
+    "guestHouse": "Guest houses"
   },
   "infoSection": {
-    "title": "Подаруємо вам теплий куток по всій Україні",
+    "title": "We will give you a warm corner across Ukraine",
     "left_column": {
       "icon": "Oselya will give you warmth",
-      "text": "Oselya - це український сайт по бронюванню житла. Спеціалізується на наданні вибору готелів, хостелів, приватних будинків, квартир, студій та кімнат в Україні.\n\n Має співпрацю з багатьма надійними партнерами та планує розширюватися, щоб дати вам надійність навіть за кордоном.",
-      "btn": "Детальніше про нас"
+      "text": "Oselya is a Ukrainian property booking website. It specializes in providing a selection of hotels, hostels, private houses, apartments, studios, and rooms in Ukraine.\n\nIt collaborates with many reliable partners and plans to expand to give you reliability even abroad.",
+      "btn": "Learn more about us"
     },
     "right_column": {
       "icon": "Share your warmth with others",
-      "text": "З нами ти можеш не тільки знайти для себе тепле житло, а й подарувати цей затишок іншим людям!\n\nРеєструйся на нашому сайті та відкривай нові, зручні функції. Май змогу спілкуватися з іншими орендодавцями у нашому спеціальному чаті.",
-      "btn": "Зареєструватися"
+      "text": "With us, you can not only find a warm place for yourself but also share this comfort with others!\n\nRegister on our website and unlock new convenient features. You will also be able to communicate with other landlords in our dedicated chat.",
+      "btn": "Register"
     }
   },
   "moreOffersSection": {
-    "title": "Ми також пропонуємо",
-    "btn": "Детальніше",
+    "title": "We also offer",
+    "btn": "Learn more",
     "left_column": {
-      "title": "Визначні пам’ятки",
-      "text": "Відкривай для себе нові незабутні локації! Пізнавай разом з нами багату історію України та своїми очами переконайся в красі цієї країни! Ми допоможемо вам вибрати найближче житло до визначних пам’яток "
+      "title": "Landmarks",
+      "text": "Discover new unforgettable locations! Explore the rich history of Ukraine with us and see the beauty of this country with your own eyes! We will help you choose the closest accommodation to the landmarks."
     },
     "right_column": {
-      "title": "Трансфер",
-      "text": "Ми з вами від початку вашої подорожі до самого кінця. Допоможемо дістатіся вашої цілі з комфортом. Обирай зручний тобі транспорт, який швидко та безпесно відвезе в будь-яку точку країни. "
-    },
-    "hotel-recomented": {
-      "title": "Рекомендації готелей",
-      "badgeText": "Пропозицій"
+      "title": "Transfer",
+      "text": "We are with you from the start of your journey to the very end. We will help you reach your destination comfortably. Choose the transport that is convenient for you, which will quickly and safely take you anywhere in the country."
     }
   },
+  "hotel-recomented": {
+    "title": "Hotel recommendations",
+    "badgeText": "Offers"
+  },
   "more_tour": {
-    "title": "розширюється, щоб бути разом з вами навіть за кордоном",
-    "spain": "Іспанія",
-    "poland": "Польща",
-    "france": "Франція",
-    "italy": "Італія",
-    "czech_republic": "Чехія",
-    "germany": "Німеччина",
-    "note": "Понад 100 турів в кожній країні"
+    "title": "expands to be with you even abroad",
+    "spain": "Spain",
+    "poland": "Poland",
+    "france": "France",
+    "italy": "Italy",
+    "czech_republic": "Czech Republic",
+    "germany": "Germany",
+    "note": "Over 100 tours in each country"
   },
   "hotel_gallery": {
-    "all_photos": "Усі фото",
-    "no photos": "Немає фотографій"
+    "all_photos": "All photos",
+    "no photos": "No photos"
   },
   "hotel_description": {
-    "info_about_hotel": "Інформація про цей готель"
+    "info_about_hotel": "Information about this hotel"
   },
   "hotel_params": {
-    "params": "Зручності"
+    "params": "Amenities"
   },
   "hotel_info": {
-    "type_apartment": "Тип номеру",
-    "max_guest": "Кіл. гостей",
-    "price": "Ціна",
-    "apartment": "Номер",
-    "tax": "+ податок і збори",
-    "sale_promotion": "Вигідний початок року",
-    "expand": "Розгорнути",
-    "booking": "Забронювати",
-    "more_btn": "Детальніше",
-    "deskr": "Покращенний двомісний номер з одним ліжком"
+    "type_apartment": "Room type",
+    "max_guest": "Number of guests",
+    "price": "Price",
+    "apartment": "Room",
+    "tax": "+ taxes and fees",
+    "sale_promotion": "Great start of the year",
+    "expand": "Expand",
+    "booking": "Book",
+    "more_btn": "Learn more",
+    "deskr": "Improved double room with one bed"
   },
   "reviews": {
-    "title": "Відгуки",
-    "cleanliness": "Чистота",
-    "amenities": "Зручності",
-    "comfort": "Комфорт",
-    "location": "місце розташування",
-    "staff": "Персонал",
-    "value_for_money": "Співвідношення ціна/якість",
-    "btn": "Детальніше"
+    "overall_rating": "Reviews",
+    "cleanliness": "Cleanliness",
+    "amenities": "Amenities",
+    "comfort": "Comfort",
+    "location": "Location",
+    "staff": "Staff",
+    "value_for_money": "Value for money",
+    "btn": "Learn more"
   },
   "Modal": {
-    "chooseBtn": "Обрати",
-    "all_photos": "Усі фото"
+    "chooseBtn": "Select",
+    "all_photos": "All photos"
   },
   "Attraction": {
-    "find_housing": "Знайти житло "
+    "find_housing": "Find housing"
   },
   "Prrofile": {
-    "title": "Мій профіль",
-    "menu_btn_account": "Управління акаунтом",
-    "menu_btn_my_travels": "Мої подорожі",
-    "menu_btn_my_housing":"Моє житло",
-    "menu_btn_payment_info": "Платіжна інформація",
-    "menu_btn_help": "Допомога",
-      "menu_btn_logout": "Вихід",
-    "menu_btn_privacy": "Конфеденційність",
-    "menu_btn_message": "Повідомлення",
+    "title": "My profile",
+    "menu_btn_account": "Account management",
+    "menu_btn_my_travels": "My travels",
+    "menu_btn_my_housing": "My housing",
+    "menu_btn_payment_info": "Payment information",
+    "menu_btn_help": "Help",
+    "menu_btn_logout": "Logout",
+    "menu_btn_privacy": "Privacy",
+    "menu_btn_history": "Saved",
+    "menu_btn_message": "Messages",
     "my_travel": {
-      "active": "Активні",
-      "past": "Минулі",
-      "cancelled": "Скасовані"
+      "active": "Active",
+      "past": "Past",
+      "cancelled": "Cancelled"
+    },
+    "my_history": {
+      "all": "All hotels",
+      "favorites": "Favorites"
     },
     "AccountPanel": {
-      "name": "Ім’я",
-      "birthday": "Дата народження",
-      "email": "Електронна пошта",
-      "phone": "Номер телефону",
-      "country": "Країна/Територія",
-      "select_country": "Виберіть країну/територію",
-      "btn_continue": "Продовжити",
-      "myself_info": "Особисті данні",
-      "Security_settings": "Налаштування безпеки"
+      "name": "Name",
+      "lastname": "Last name",
+      "birthday": "Date of birth",
+      "email": "Email",
+      "phone": "Phone number",
+      "country": "Country/Territory",
+      "select_country": "Select country/territory",
+      "btn_continue": "Save",
+      "myself_info": "Personal information",
+      "Security_settings": "Security settings"
     },
     "PaymentInfoPanel": {
-      "Method_of_payment": "Спосіб оплати",
-      "Transactions": "Транкзакції",
-      "Add_card_for_payment": "Додайте карту для оплати",
-      "Your_card": "Ваша карта",
-      "Add_card": "Додайти карту",
-      "Select_Method_of_payment": "Оберіть спосіб оплати",
-      "Number_card": "Номер карти",
+      "Method_of_payment": "Payment method",
+      "Transactions": "Transactions",
+      "Add_card_for_payment": "Add a card for payment",
+      "Your_card": "Your card",
+      "Add_card": "Add card",
+      "Select_Method_of_payment": "Select payment method",
+      "Number_card": "Card number",
       "Cw": "CW",
-      "DataTime": "Дата",
-      "Save": "Зберегти",
-      "SaveCardInfo": "Зберегти інформацію карти"
+      "DataTime": "Date",
+      "Save": "Save",
+      "SaveCardInfo": "Save card information"
     },
     "HousingPanel": {
-      "menu_btn_my_housing": "Моє житло",
-      "menu_btn_settings": "Налаштування",
-      "menu_btn_add_housing": "Додати своє житло"
+      "menu_btn_my_housing": "My housing",
+      "menu_btn_settings": "Settings",
+      "menu_btn_add_housing": "Add your housing"
     },
-    "Reservation_management": "Управління  бронюванням",
-    "no_travel": "У вас немає скасованих поїздок",
+    "Reservation_management": "Reservation management",
+    "no_active_travel": "You have no active trips",
+    "no_past_travel": "You have no past trips",
+    "no_cancelled_travel": "You have no cancelled trips",
     "PastHotel": {
-      "title_page": "Реалізовано",
-      "price": "Ціна",
+      "title_page": "Completed",
+      "price": "Price",
       "hotel_description": {
-        "info_about_hotel": "Інформація про цей готель"
+        "info_about_hotel": "Information about this hotel"
       },
       "hotel_params": {
-        "params": "Зручності"
+        "params": "Amenities"
       },
       "reviews": {
-        "title": "Відгуки",
-        "cleanliness": "Чистота",
-        "amenities": "Зручності",
-        "comfort": "Комфорт",
-        "location": "місце розташування",
-        "staff": "Персонал",
-        "value_for_money": "Співвідношення ціна/якість",
-        "btn": "Детальніше",
-        "btn_add_reviews": "Додати відгук"
+        "title": "Reviews",
+        "cleanliness": "Cleanliness",
+        "amenities": "Amenities",
+        "comfort": "Comfort",
+        "location": "Location",
+        "staff": "Staff",
+        "value_for_money": "Value for money",
+        "btn": "Learn more",
+        "btn_add_reviews": "Add review"
       }
     }
   },
   "Booking": {
-    "booking_title": "Введіть свої данні для бронювання",
-    "guest_data_title": "Данні гостя",
-    "name_label": "Ім'я",
-    "email_label": "Електронна пошта",
-    "phone_label": "Телефон",
-    "country_city_label": "Країна/Місто",
-    "save_data_checkbox": "Зберегти данні для наступних поїздок",
-    "booking_details_title": "Деталі бронювання",
-    "arrival_date_label": "Дата приїзду",
-    "departure_date_label": "Дата виїзду",
-    "adults_count_label": "Кількість дорослих",
-    "children_count_label": "Кількість дітей",
-    "trip_purpose_title": "Мета вашої поїздки",
-    "trip_purpose_vacation": "Відпочинок",
-    "trip_purpose_business": "Бізнес",
-    "wishes_label": "Побажання",
-    "payment_method_title": "Спосіб оплати",
+    "booking_title": "Enter your booking details",
+    "guest_data_title": "Guest information",
+    "name_label": "First name",
+    "surname_label": "Last name",
+    "email_label": "Email",
+    "phone_label": "Phone",
+    "country_city_label": "Country/City",
+    "save_data_checkbox": "Save information for future trips",
+    "booking_details_title": "Booking details",
+    "arrival_date_label": "Arrival date",
+    "departure_date_label": "Departure date",
+    "adults_count_label": "Number of adults",
+    "children_count_label": "Number of children",
+    "trip_purpose_title": "Purpose of your trip",
+    "trip_purpose_vacation": "Vacation",
+    "trip_purpose_business": "Business",
+    "wishes_label": "Special requests",
+    "payment_method_title": "Payment method",
     "payment_visa_mastercard": "Visa/Mastercard",
     "payment_paypal": "PayPal",
     "payment_apple_pay": "Apple Pay",
     "payment_google_pay": "Google Pay",
-    "payment_on_site": "Оплата на місці",
-    "submit_button": "Забронювати",
-    "booking_language_notice": "Будь ласка, вкажіть данні на англійській мові або на мові країни готелю",
-    "required_fields_note": " Поля обов’язкові для заповнення",
-    "required_email_note": "На цю адресу буде надіслано підтвердження бронювання",
-    "required_phone_note": "Для підтвердження бронювання та можливості зв'язатися з вами за необхідності",
-    "choise_card": "Вибрати карту",
-    "data": "Дата",
+    "payment_on_site": "Pay on-site",
+    "submit_button": "Book",
+    "booking_language_notice": "Please enter your details in English or the hotel’s local language",
+    "required_fields_note": "Required fields",
+    "required_email_note": "A booking confirmation will be sent to this email",
+    "required_phone_note": "To confirm the booking and contact you if necessary",
+    "choise_card": "Select card",
+    "data": "Date",
     "CVV": "CVV",
-    "Price": "Ціна",
-    "Choise_btn": "Обрати",
-     "processing": "Оформляємо бронювання...",
-     "success": "Бронювання підтверджено!",
-   "success_title": "Успіх!",
-"success_message": "Підтвердження бронювання ми надіслали на вашу електронну пошту."
-
+    "Price": "Price",
+    "Choise_btn": "Select",
+    "processing": "Processing booking...",
+    "success": "Booking confirmed!",
+    "success_title": "Success!",
+    "success_message": "We have sent the booking confirmation to your email."
   },
   "Host": {
     "propertyForm": {
-      "title": "…",
-      "owner": {
-        "label": "…",
-        "placeholder": "…"
-      }
-    }
-  },
-  "Host": {
-    "propertyForm": {
-      "title": "Введіть свої данні",
-      "owner": {
-        "label": "Власник",
-        "name": "Ім’я",
-        "photo": "Фото",
-        "description": "Опис власника(ці)",
-        "btn": "Редагувати"
-      }
+      "title": "Enter your details"
     },
     "aboutHousing": {
-      "title": "Інформація про житло",
+      "title": "Housing information",
       "housing": {
-        "name": "Назва",
-        "address": "Адреса",
-        "description": "Опис",
-        "photo": "Фото житла*"
+        "name": "Name",
+        "country": "Country",
+        "region": "Region/Province",
+        "city": "City",
+        "district": "District",
+        "Postcode": "Postal code",
+        "address": "Address",
+        "street": "Street",
+        "number": "Number",
+        "description": "Description",
+        "photo": "Property photo*"
       }
     },
-    "amenities": {
-      "title": "Зручності",
-      "wifi": "WI-FI",
-      "bath": "Ванна",
-      "kitchen": "Кухня/міні-кухня",
-      "ac": "Кондиціонер",
-      "tv": "Телевізор",
-      "washingMachine": "Пральна машина",
-      "iron": "Праска",
-      "electricKettle": "Електричний чайник",
-      "windowView": "Вид з вікна",
-      "coffeeTea": "Кава/чай",
-      "workDesk": "Робочий стіл",
-      "petsAllowed": "Можна з тваринами",
-      "addYourOwn": "Додати своє"
+    "dataHousing": {
+      "title": "Housing details",
+      "guestCount": "Number of guests",
+      "roomCount": "Number of rooms",
+      "singleBedsCount": "Single bed",
+      "doubleBedsCount": "Double bed",
+      "pricePerDay": "Price/night",
+      "pricePerWeek": "Discount/from 3 nights"
     },
-    "btn_add":"Додати кімнату/номер",
-    "btn_save":"Зберегти"
+    "amenities": {
+      "title": "Amenities",
+      "wifi": "Wi-Fi",
+      "ac": "Air conditioner",
+      "workDesk": "Work desk",
+      "tv": "TV",
+      "windowView": "Window view",
+      "bath": "Private bathroom",
+      "": "Toilet paper",
+      "kitchen": "Kitchen / kitchenette",
+      "washingMachine": "Washing machine",
+      "iron": "Iron",
+      "electricKettle": "Electric kettle",
+      "coffeeTea": "Coffee / tea",
+      "petsAllowed": "Pets allowed",
+      "addYourOwn": "Add your own"
+    },
+    "btn_add": "Add room/unit",
+    "btn_save": "Save",
+    "my_housing": {
+      "menu_btn_edit": "Edit",
+      "menu_btn_read_reviews": "Reviews",
+      "menu_btn_booking": "Booking"
+    },
+    "booking": {
+      "apartment": "Apartment",
+      "user": "Guest",
+      "Status": "Order status",
+      "Date": "Order data",
+      "confirm_order": "Confirm order",
+      "Pending": "Pending confirmation",
+      "Confirmed": "Confirmed by owner",
+      "Paid": "Paid",
+      "Cancelled": "Cancelled by user",
+      "Rejected": "Rejected by owner",
+      "Completed": "Rental completed"
+    }
+  },
+    "admin": {
+      "title": "Hello, Admin",
+      "menu": {
+        "users": "Users",
+        "offers": "Listings",
+        "reviews": "Reviews",
+        "settings": "Settings",
+        "tools": "Tools",
+        "contacts": "Contacts"
+      },
+      "input_label": "Enter email or phone number",
+      "sort_btn": "Sort",
+      "write": "Write",
+      "blocked": "Block"
+    },
+    "attraction": {
+      "title": "Attractions"
+    },
+  "reviews_modal": {
+    "leave_review": "Leave a review",
+    "your_rating": "Your rating",
+    "staff": "Staff",
+    "cleanliness": "Cleanliness",
+    "comfort": "Comfort",
+    "facilities": "Facilities",
+    "value_for_money": "Value for money",
+    "location": "Location",
+    "text": "Text",
+    "submit": "Submit",
+    "no_reviews": "No reviews for this hotel"
   }
 }

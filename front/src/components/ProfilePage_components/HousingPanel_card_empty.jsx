@@ -5,17 +5,20 @@ import { ActionButton__Secondary } from "../UI/Button/ActionButton_Secondary.jsx
 
 import { useNavigate } from "react-router-dom";
 
-export const HousingPanel_card_empty = () => {
+export const HousingPanel_card_empty = ({onClick}) => {
   const { t } = useTranslation();
 
   return (
-    <div className={`${styles.hotelCard}`}>
+    <div
+      onClick={onClick}
+      className={`${styles.hotelCard}`
+      }>
       <div className={`${styles.hotelCard_empty} flex-center`}>
 
         <ActionButton__Secondary
           className="btn-br-r-10"
           text={t("Prrofile.HousingPanel.menu_btn_add_housing")}
-        type ="m_500"
+          type="m_500"
         />
       </div>
 

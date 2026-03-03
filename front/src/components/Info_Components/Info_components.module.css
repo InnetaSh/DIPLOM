@@ -6,6 +6,26 @@
   margin-bottom: 0;
 }
 
+
+.infoSection::before {
+  content: "";
+  position: absolute;
+  top: 143px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: var(--color-bg__2);
+  z-index: -1;
+  border-radius: 20px;
+}
+
+.logo{
+  position: absolute;
+  top: 97px;
+  left: 153px;
+}
+
+
 .infoSection__svg {
   width: 100%;
   min-width: 1920px;
@@ -87,7 +107,7 @@
   }
 
   .infoSection__columns {
-    background-color: var(--color-bg__2);
+    /* background-color: var(--color-bg__2); */
     border-radius: 10px;
   }
 }
@@ -127,8 +147,8 @@
   width: 302px;
   aspect-ratio: 302 / 240;
   border-radius: 20px;
-  background-color: var(--color-primary);
-  color: var(--color-text);
+  background-color: var( --color-btn-text-light);
+  color: var( --color-btn-text-dark);
 }
 
 .infoSection_card__container {
@@ -210,14 +230,22 @@
 
 .moreOffersSection__grid {
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 70px 78px;
-
+  display: flex;
+     flex-direction: column;
+  width: 100%; 
+  gap: 70px ;
   justify-content: start;
   align-items: start;
 }
-
+.moreOffersSection__row_top,
+.moreOffersSection__row_bottom{
+    width: 100%;
+  display: flex;
+  justify-content: center;
+  border-radius: 20px;
+  overflow: hidden;
+  gap: 78px;
+}
 
 
 .sliderViewport {
@@ -241,6 +269,98 @@
 }
 
 @media (max-width: 1400px) {
+.moreOffersSection__grid > * {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.moreOffersSection__row_top,
+.moreOffersSection__row_bottom{
+  display: flex;
+  justify-content: center;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.moreOffersSection__row_top > :first-child::after {
+  border-radius: 20px 0 0 20px !important;
+  background: linear-gradient(
+    to right,
+    rgb(from var(--color-card-bg) r g b / 0) 0%,
+  rgb(from var(--color-card-bg) r g b / 0.45) 15%,
+  rgb(from var(--color-card-bg) r g b / 0.85) 30%,
+  var(--color-card-bg) 50%
+  );
+  content: "";            
+  position: absolute;       
+  inset: 0;                 
+  pointer-events: none;     
+  z-index: 1;               
+}
+
+.moreOffersSection__row_top> :last-child {
+  flex: 0 0 60%;
+  z-index: 10;
+}
+
+.moreOffersSection__row_bottom > :last-child::after {
+  border-radius: 20px 0 0 20px !important;
+background: linear-gradient(
+  to left,
+  rgb(from var(--color-card-bg) r g b / 0) 0%,
+  rgb(from var(--color-card-bg) r g b / 0.45) 15%,
+  rgb(from var(--color-card-bg) r g b / 0.85) 30%,
+  var(--color-card-bg) 50%
+);
+  content: "";              
+  position: absolute;      
+  inset: 0;                 
+  pointer-events: none;     
+  z-index: 1;               
+}
+
+.moreOffersSection__row_bottom> :first-child {
+  flex: 0 0 60%;
+  z-index: 10;
+}
+
+
+
+
+/* .moreOffersSection__grid > :nth-child(1),
+.moreOffersSection__grid > :nth-child(3) {
+  border-radius: 20px 0 0 20px !important;
+}
+.moreOffersSection__grid > :nth-child(2),
+.moreOffersSection__grid > :nth-child(4) {
+  border-radius: 0 20px 20px 0 !important;
+}
+.moreOffersSection__grid > :nth-child(2),
+.moreOffersSection__grid > :nth-child(3) {
+ z-index: 10 !important;
+} */
+
+/* .moreOffersSection__grid > :nth-child(1)::after {
+  background: linear-gradient(
+    to right,
+    rgba(247, 244, 239, 0) 0%,
+    rgba(247, 244, 239, 0.45) 45%,
+    rgba(247, 244, 239, 0.85) 70%,
+    #f7f4ef 100%
+  );
+}
+
+.moreOffersSection__grid > :nth-child(4)::after {
+  background: linear-gradient(
+    to left,
+    rgba(247, 244, 239, 0) 0%,
+    rgba(247, 244, 239, 0.45) 45%,
+    rgba(247, 244, 239, 0.85) 70%,
+    #f7f4ef 100%
+  );
+} */
+
   .sliderTrack {
     overflow-x: auto;
   }
@@ -271,7 +391,7 @@
   width: 100%;
   height: 333px;
   border-radius: 20px;
-  background-color: var(--color-primary);
+  background-color: var( --color-card-bg);
   color: var(--color-text);
 }
 

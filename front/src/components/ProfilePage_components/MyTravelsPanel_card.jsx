@@ -3,11 +3,12 @@ import { Text } from "../UI/Text/Text.jsx";
 
 import { useNavigate } from "react-router-dom";
 
-export const MyTravelsPanel_card = ({ imgSrc, title, tripId }) => {
+export const MyTravelsPanel_card = ({ imgSrc, title, offerId, orderId }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
-    navigate(`/profile/trips/past/${tripId}`);
+    navigate(`/profile/trips/past/${offerId}/${orderId}`);
+    
   };
 
   return (

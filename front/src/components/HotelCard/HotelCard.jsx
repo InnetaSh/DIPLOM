@@ -6,6 +6,7 @@ import { Text } from "../UI/Text/Text.jsx";
 import { Link } from "../UI/Text/Link.jsx";
 import { StarIcon } from "./StarIcon.jsx";
 import { Image } from "../UI/Image/Image.jsx";
+import { IconButton_isFavoritest } from "../UI/Button/IconButton_isFavoritest.jsx";
 
 
 export const HotelCard = ({
@@ -21,17 +22,18 @@ export const HotelCard = ({
     price,
     startDate,
     endDate,
-    guests,
-    onClick,
-    onCheckAvailability,
+    adults,
+    myHistoryIdList,
+    showHeart = true,
+    children
 }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/hotel/${id}?cityId=${cityId}&checkin=${startDate}&checkout=${endDate}&guests=${guests}`);
+        navigate(`/hotel/${id}?cityId=${cityId}&checkin=${startDate}&checkout=${endDate}&adults=${adults}&children=${children}`);
     };
-  const { t } = useTranslation();
-  
+    const { t } = useTranslation();
+
 
     return (
         <div
@@ -43,6 +45,9 @@ export const HotelCard = ({
                 if (e.key === 'Enter' || e.key === ' ') handleClick();
             }}
         >
+            {showHeart &&
+                <IconButton_isFavoritest hotelId={id} myHistoryIdList={myHistoryIdList} />
+            }
 
             <div className={`${styles.card__imageWrapper} btn-br-r-20 `}>
                 <Image src={image} alt={title} type="card" />
@@ -67,7 +72,7 @@ export const HotelCard = ({
                             </div>
 
                             <StarIcon className={styles.star} />
-                            <Text text={`${reviews} відгуків`} type="m_400_s_14" />
+                            {/* <Text text={`${reviews} відгуків`} type="m_400_s_14" /> */}
                         </div>
 
 
@@ -75,7 +80,7 @@ export const HotelCard = ({
 
                     </div>
                     <div className={styles.card__details_column}>
-                        <Text text={`${guests} ${t("hotel.guestCount")}`} type="m_400_s_14" />
+                        <Text text={`${adults + children} ${t("hotel.guestCount")}`} type="m_400_s_14" />
                         <div className="flex-left">
                             <div className={styles.right_margin}>
                                 <Text text={t("hotel.from")} type="m_400_s_14" />

@@ -1,39 +1,67 @@
-.accountPanel{
-       /* min-width: 1020px; */
-    width: 100%;
-    height: 771px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 20px;
-    background-color: var(--color-bg);
-}
-.accountPanel__container{
-    width: 100%;
-    height: 100%;
-    padding: 26px 154px 12px 101px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-}
-.accountPanel_btn{
+.accountPanel {
+  /* min-width: 1020px; */
   width: 100%;
+  height: 820px;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  border-radius: 20px;
+  background-color: var(--color-bg);
 }
+
+.accountPanel__container {
+  width: 100%;
+  height: 100%;
+  padding: 26px 154px 12px 101px;
+  display: flex;
+  flex-direction: column;
+  /* gap: 32px; */
+  gap: 2px;
+}
+@media (max-width: 1900px) {
+  .accountPanel__container {
+    padding: 26px 40px 12px 40px; 
+  }
+}
+
+.accountPanel_btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+@media (max-width: 1500px) {
+  .accountPanel_btn {
+    padding: 6px 40px 2px 0; 
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: start;
+  }
+  
+}
+
 .accountPanel__form {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: start;
-gap: 10px;
+  gap: 10px;
 
 }
 
 .input {
-    min-width: 695px;
-    width: 100%;
+  width: 100%;
   background-color: transparent;
   border: 3px solid var(--color-input-border);
+
+  font-family: 'Montserrat Alternates';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 29px;
+  color: var(--color-text);
 }
 
 .googleButton__wrapper {
@@ -45,6 +73,8 @@ gap: 10px;
 .actionButton__wrapper {
   width: 100%;
   display: inline-flex;
+  
+  margin-top: 25px;
 }
 
 /* placeholder */

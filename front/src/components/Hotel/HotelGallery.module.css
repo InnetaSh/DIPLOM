@@ -14,6 +14,7 @@
 .gallery__columns {
   display: flex;
   gap: 20px;
+   width: 100%;
   height: 100%;
 }
 
@@ -30,6 +31,10 @@
 /* Центр */
 .gallery__center_container {
   flex: 0 0 45%;
+  height: 100%;
+}
+.gallery__only_center_container {
+  flex: 1;
   height: 100%;
 }
 

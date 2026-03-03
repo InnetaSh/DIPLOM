@@ -1,0 +1,11 @@
+.starRating {
+  position: relative;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  height: fit-content;
+
+  overflow: hidden;
+ gap: 20px;
+ color: var( --color--text);
+}

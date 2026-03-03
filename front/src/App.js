@@ -14,12 +14,13 @@ import { CityPage } from './pages/public/CityPage';
 import {AttractionPage} from "./pages/public/AttractionPage";
 import {Profile_PastHotelPage} from "./pages/user/Profile_PastHotelPage.jsx";
 import {BookingDetailsPage} from "./pages/user/BookingDetailsPage.jsx";
-
+import {AttractionCarouselPage} from "./pages/public/AttractionCarouselPage.jsx";
+import {AttractionPageDetail} from "./pages/public/AttractionPageDetail.jsx";
 
 import {ProfilePage} from './pages/user/ProfilePage';
 
 import {HostDashboard} from './pages/host/HostDashboard';
-
+import {AdminDashboard} from "./pages/Admin/AdminDashboard.jsx";
 
 // // Админ-панель
 // import AdminDashboard from './pages/admin/AdminDashboard';
@@ -42,11 +43,13 @@ function App() {
 
             {/* Приватные маршруты */}
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/profile/trips/past/:tripId" element={<Profile_PastHotelPage />} />
+            <Route path="/profile/trips/past/:offerId/:orderId" element={<Profile_PastHotelPage />} />
             <Route path="/city/:citySlug" element={<CityPage />} />
-             <Route path="/attraction/:attractionSlug" element={<AttractionPage />} />
+            <Route path="/attraction" element={<AttractionPage />} />
+            <Route path="/attractionByCity/:citySlug" element={<AttractionCarouselPage />} />
+            <Route path="/attractionDetail/:attractionSlug" element={<AttractionPageDetail />} />
 
-             <Route path="/booking" element={<BookingDetailsPage />} />
+             <Route path="/booking/:offerId" element={<BookingDetailsPage />} />
             {/* <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/settings" element={<SettingsPage />} /> */}
 
@@ -58,8 +61,8 @@ function App() {
             <Route path="/host/bookings" element={<HostBookings />} /> */}
 
             {/* Admin */}
-            {/* <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/users" element={<UsersAdmin />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            {/* <Route path="/admin/users" element={<UsersAdmin />} />
             <Route path="/admin/hotels" element={<HotelsAdmin />} />
             <Route path="/admin/bookings" element={<BookingsAdmin />} /> */}
 

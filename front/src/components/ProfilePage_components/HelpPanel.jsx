@@ -1,44 +1,30 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
-
-import { AccountPanel_card } from "./AccountPanel_card.jsx";
-import { Text } from "../UI/Text/Text.jsx"
-import { StateButton_Profile } from "../UI/Button/StateButton_Profile.jsx";
-
-import styles from './AccountPanel.module.css';
-
+import styles from './HelpPanel.module.css';
 
 export const HelpPanel = () => {
   const { t } = useTranslation();
 
-  const hotels = [
-    { id: "1", imgSrc: "/img/hotel_info/hotel_1.jpg", title: "Jam Hotel Hnatyuka" },
-    { id: "2", imgSrc: "/img/hotel_info/hotel_2.jpg", title: "Нота Бене Лофт" },
-    { id: "3", imgSrc: "/img/hotel_info/hotel_3.jpg", title: "Urban Hotel" },
-    { id: "4", imgSrc: "/img/hotel_info/hotel_4.jpg", title: "Atmosfera Hotel" },
-    { id: "5", imgSrc: "/img/hotel_info/hotel_5.jpg", title: "DREAM Hostel Lviv" },
-    { id: "6", imgSrc: "/img/hotel_info/hotel_6.jpg", title: "AUSTRIAN APART HOTEL" }
-
+  const helpItems = [
+    { id: 1, title: "Как забронировать жильё", description: "Пошаговое руководство по бронированию." },
+    { id: 2, title: "Оплата и возвраты", description: "Информация о способах оплаты и возвратах." },
+    { id: 3, title: "Связь с поддержкой", description: "Как связаться с нашей службой поддержки." },
   ];
 
-
   return (
-    <div className={styles.accountPanel}>
-      <div className={styles.accountPanel__container}>
+    <div className={styles.helpPanel}>
+      <div className={styles.helpPanel__container}>
         <div className={styles.container_btn}>
-
-
+         
         </div>
         <div className={styles.container_card}>
-          {hotels.map(ht => (
-            <AccountPanel_card
-              key={ht.id}
-              title={ht.title}
-              imgSrc={ht.imgSrc}
-
-              onClick={() => console.log(ht.title)}
-
-            />
+          {helpItems.map(item => (
+            <div key={item.id} className={styles.helpCard}>
+              <div className={styles.helpCard_icon}>❓</div>
+              <div className={styles.helpCard_content}>
+                <h4 className={styles.helpCard_title}>{item.title}</h4>
+                <p className={styles.helpCard_desc}>{item.description}</p>
+              </div>
+            </div>
           ))}
         </div>
       </div>

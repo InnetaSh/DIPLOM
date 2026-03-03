@@ -10,21 +10,26 @@ import styles from "./AddGuestModal.module.css";
 export const AddGuestModal = ({ guests, setGuests, setIsModalOpen }) => {
   const { t } = useTranslation();
 
-  const updateGuest = (key, value) => {
-    setGuests(prev => {
-      const updatedGuests = {
-        ...prev,
-        [key]: value,
-      };
+ const updateGuest = (key, value) => {
+  setGuests(prev => {
+    const updatedGuests = {
+      ...prev,
+      [key]: value,
+    };
 
-      return {
-        ...updatedGuests,
-        totalGuests:
-          (updatedGuests.adults || 0) +
-          (updatedGuests.children || 0),
-      };
-    });
-  };
+    const result = {
+      ...updatedGuests,
+      totalGuests:
+        (updatedGuests.adults || 0) +
+        (updatedGuests.children || 0),
+    };
+
+    console.log("Updated guests:", result); 
+
+    return result;
+  });
+};
+
 
   return (
     <div className={styles.addGuestModal}>
@@ -69,12 +74,12 @@ export const AddGuestModal = ({ guests, setGuests, setIsModalOpen }) => {
         </div>
       </div>
 
-      <div className={styles.modal__container}>
+      {/* <div className={styles.modal__container}>
         <Text
           text={t("Search.trip_with_animal")}
           type="m_700_s_20"
         />
-      </div>
+      </div> */}
 
       <ActionButton__Primary
         className="btn-w-276 btn-h-44 btn-br-r-20"

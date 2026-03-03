@@ -1,5 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { ThemeContext } from "../../contexts/ThemeContext";
 
 import { Logo_Oselya_128 } from "../Logo/Logo_Oselya_128.jsx";
 import { Text } from "../UI/Text/Text.jsx"
@@ -10,10 +13,17 @@ import styles from './Info_components.module.css';
 
 export const TwoColumnInfoSection = () => {
   const { t } = useTranslation();
+const navigate = useNavigate();
+   const { darkMode } = useContext(ThemeContext);
+  
+    const img_bg = darkMode
+      ? "bg_img__dark"
+      : "bg_img__light";
 
   return (
-    <div className={styles.infoSection}>
-      <svg
+    <div className={`${styles.infoSection} ${img_bg}`}>
+       <div className={styles.logo}><Logo_Oselya_128 /></div>
+      {/* <svg
         className={styles.infoSection__svg}
         viewBox="0 0 1920 687"
         preserveAspectRatio="xMidYMid meet"
@@ -29,7 +39,7 @@ export const TwoColumnInfoSection = () => {
             </div>
           </foreignObject>
         </g>
-      </svg>
+      </svg> */}
       <div className={styles.infoSection__content}>
         <div className={styles.infoSection__title}>
           <Text text={t("infoSection.title")} type="m_700_s_40" />
@@ -53,7 +63,10 @@ export const TwoColumnInfoSection = () => {
                 <Text text={t("infoSection.right_column.text")} type="m_400_s_20" />
               </div>
               <div className={styles.infoSection__btn}>
-                <ActionButton__Primary text={t("infoSection.left_column.btn")} className="btn-br-r-10 btn-w-full btn-h-full " />
+                <ActionButton__Primary 
+                text={t("infoSection.left_column.btn")}
+                 className="btn-br-r-10 btn-w-full btn-h-full "
+                 />
               </div>
             </div>
           </div>

@@ -6,6 +6,10 @@ height: 370px;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+ 
+}
+.container button{
+ color: var(  --color-text) !important;
 }
 
 .header {
@@ -48,4 +52,8 @@ height: 370px;
   background-color: var(--color--sort-modal-btn-hover);
   font-weight: bold;
   border-radius: 8px 8px 0 0;
+}
+
+.menuItemActive div{
+  color: var(--color-btn-text-dark);
 }

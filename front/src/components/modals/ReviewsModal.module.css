@@ -1,0 +1,145 @@
+.reviev_modal {
+    width: 100%;
+    height: 1010px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.reviev_modal__container {
+    width: 1084px;
+    height: 1010px;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    background-color: var(--color--modal-review-dg);
+    gap: 50px;
+    padding: 70px 100px;
+    border-radius: 20px;
+}
+
+.container__stars {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 65px 70px;
+}
+
+.container__stars_item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+}
+
+label {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1px;
+}
+
+.textarea {
+    width: 100%;
+    background-color: transparent;
+    border: 3px solid var(--color-input-border);
+    border-radius: 20px;
+
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 29px;
+    color: var(--color-text);
+}
+
+
+
+
+.grade_list__container {
+    display: flex;
+    gap: 20px;
+}
+
+.comment_list__container {
+    width: 100%;
+    height: 553px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 43px 174px;
+    padding: 44px 150px 31px 150px;
+    background-color: var(--color--hotel-review-bg);
+    border-radius: 20px;
+    margin-top: 13px;
+}
+
+.comment_list__btn {
+    grid-column: 1 / -1;
+    justify-self: center;
+}
+
+/* ============grade_card==================*/
+.grade_card {
+    width: 277px;
+    height: 128px;
+    background-color: var(--color--hotel-review-btn);
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.grade_card_container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ============comment_card==================*/
+.comment_card {
+    width: 100%;
+    height: 164px;
+    padding: 44 px 144px 31px 44px;
+    border-radius: 20px;
+    background-color: var(--color--hotel-review-bg);
+}
+
+.comment_card_comment {
+    text-align: justify;
+    text-align-last: left;
+
+    margin: 0 auto;
+    white-space: pre-line;
+    hyphens: auto;
+
+
+}
+
+.comment_card_comment p {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4em;
+    max-height: calc(1.4em * 4);
+    margin: 0;
+}
+
+.comment_card__title_icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color--hotel-review-text);
+}

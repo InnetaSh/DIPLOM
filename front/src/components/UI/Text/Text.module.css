@@ -5,9 +5,10 @@
   align-items: flex-end;
   text-align: center;
   flex: none;
-  order: 0;
-  flex-grow: 0;
-   max-width: none;
+  flex-wrap: wrap;          
+  word-wrap: break-word;   
+  overflow-wrap: break-word;
+  max-width: 100%;        
 }
 
 .link {
@@ -284,6 +285,7 @@
   font-weight: 700;
   font-size:  64px;
   line-height:  78px;
+  color: var(--color-text-title) !important;
 }
 
 
@@ -350,7 +352,7 @@
 }
 
 .breadcrumbs_link {
-  color: var(--color-text-secondary);
+  color: var(--color-text-breadcrumbs);
   font-family: 'Montserrat Alternates', sans-serif;
   font-weight: 500;
   font-size: clamp(16px, 2vw, 20px);
@@ -363,11 +365,16 @@
 }
 
 .disabled {
-  color: #8a8a8a;
+   color: var(--color-text-secondary);
+  font-family: 'Montserrat Alternates', sans-serif;
   font-weight: 500;
+  font-size: clamp(16px, 2vw, 20px);
+  line-height: clamp(20px, 2.5vw, 24px);
 }
 
 .icon {
   font-size: clamp(12px, 1vw, 16px);
-  color: #999;
+    width: 11px;
+  height: 15px;
+  color: var(--color-icon-next);
 }

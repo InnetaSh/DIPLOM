@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
+import Select from "react-select";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useParams, useLocation, useSearchParams  } from "react-router-dom";
+import { useLanguage } from "../../contexts/LanguageContext.jsx";
 import { AuthContext } from "../../contexts/AuthContext.jsx";
+import { ApiContext } from "../../contexts/ApiContext.jsx";
 import { Text } from "../UI/Text/Text.jsx";
 import { ImageSvg } from "../UI/Image/ImageSvg.jsx";
 import { RadioButton } from "../UI/Button/RadioButton.jsx";
@@ -8,11 +13,39 @@ import { ActionButton__Primary } from "../UI/Button/ActionButton_Primary.jsx";
 import styles from "./BookingForm.module.css";
 
 export const BookingForm = ({
-  price = "7 568",
+  // price = "7 568",
   setBookingStep
 }) => {
-  const { user } = useContext(AuthContext);
+  const { token, getMe } = useContext(AuthContext);
   const { t } = useTranslation();
+  const { locationApi, orderApi } = useContext(ApiContext);
+  const navigate = useNavigate();
+  const { language } = useLanguage();
+
+
+  
+   const { offerId } = useParams();
+    // query-параметры (?startDate=...&endDate=...)
+    const [searchParams] = useSearchParams();
+  
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
+    const adults = Number(searchParams.get("adults"));
+    const children = Number(searchParams.get("children"));
+    const price = Number(searchParams.get("price"));
+
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    if (!token) return;
+
+    const fetchUser = async () => {
+      const data = await getMe(language);
+      setUser(data);
+      console.log("Полученные данные пользователя:", data);
+    };
+
+    fetchUser();
+  }, [language, token]);
 
   const paymentMethods = [
     { key: "visa", label: t("Booking.payment_visa_mastercard") },
@@ -32,37 +65,83 @@ export const BookingForm = ({
   const [showCardInfo, setShowCardInfo] = useState(false);
   const [isOpenCardNum, setIsOpenCardNum] = React.useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
-
+  const [countries, setCountries] = useState([]);
+  const [phonePrefix, setPhonePrefix] = useState([]);
 
 
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    offerId: offerId,
     adults: 1,
     children: 0,
     email: "",
-    country: "Украина",
-    phonePrefix: "UA +380",
+    countryId: 0,
+    phonePrefix: "",
     phoneNumber: "",
-    sendConfirmation: false,
-    saveData: false,
-    mainGuest: "me",
+    arrivalDate: "",
+    departureDate: "",
+    clientNote: "",
     cardNum: "",
-    businessTravel: "no",
-    wishes: ""
+    businessTravel: false,
+    saveData: false
   });
 
 
   useEffect(() => {
-    if (user) {
-      setFormData((prev) => ({
-        ...prev,
-        firstName: user.name || "",
-        email: user.email || "",
-        phoneNumber: user.phoneNumber || "",
-      }));
-    }
-  }, [user]);
+    if (!user || !Array.isArray(countries) || !countries.length) return;
+
+    const country = countries.find(c => c.id === user.countryId);
+    console.log(offerId);
+    setFormData(prev => ({
+      ...prev,
+      firstName: user.username || "",
+      lastName: user.lastName || "",
+      offerId: offerId > 0 ? offerId : 0,
+      email: user.email || "",
+      countryId: user.countryId || 0,
+      countryTitle: user.countryTitle || "",
+      arrivalDate: toInputDate(startDate),
+      departureDate: toInputDate(endDate),
+
+      adults: adults,
+      children: children,
+      clientNote: "",
+      phonePrefix: country?.phonePrefix || "",
+      phoneNumber: user.phoneNumber || "",
+    }));
+  }, [user, countries, startDate, endDate, adults, children]);
+
+
+
+  useEffect(() => {
+    console.log(language)
+    locationApi.getAllCountries(language)
+      .then(res => {
+        setCountries(res.data)
+        console.log(res.data)
+      })
+      .catch(err => console.error("Error loading countries:", err));
+  }, [language]);
+
+
+
+  // useEffect(() => {
+  //   if (user) {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       firstName: user.username || "",
+  //       email: user.email || "",
+  //       phoneNumber: user.phoneNumber || "",
+  //     }));
+  //   }
+  // }, [user]);
+
+  const toInputDate = (date) => {
+    if (!date) return "";
+    return new Date(date).toISOString().split("T")[0];
+  };
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -72,11 +151,57 @@ export const BookingForm = ({
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-     setBookingStep("loading");
-    console.log("Отправка формы:", formData);
+
+
+const buildOfferBooking = () => {
+  return {
+    OfferId: formData.offerId > 0 ? formData.offerId : 0,
+    Guests: (formData.adults ?? 0) + (formData.children ?? 0),
+    Adults: formData.adults ?? 0,
+    Children: formData.children ?? 0,
+    MainGuestFirstName: formData.firstName ?? "",
+    MainGuestLastName: formData.lastName ?? "",
+    StartDate: formData.arrivalDate ?? "",
+    EndDate: formData.departureDate ?? "",
+    ClientNote: formData.clientNote || "",
+    isBusinessTrip: formData.businessTravel ?? false,
+    PaymentMethod: activePaymentButton || ""
   };
+};
+
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setBookingStep("loading");
+
+  try {
+   
+    const booking = buildOfferBooking();
+    console.log("Попытка отправки данных на бек:", JSON.stringify(booking, null, 2));
+
+   
+    const result = await orderApi.createOrder({
+      formData: booking,
+      lang: language
+    });
+
+    console.log("Ответ от сервера:", result.data);
+    console.log("Ответ от сервера  result:", result);
+    
+    if (result.statusText == "OK") {
+      setBookingStep("success");
+    } else {
+      setBookingStep("error");
+      alert(result?.data?.message || "Ошибка при бронировании");
+    }
+
+  } catch (err) {
+    console.error("Ошибка при создании заказа:", err);
+    setBookingStep("error");
+    alert("Произошла ошибка при отправке формы");
+  }
+};
+
 
   const phonePrefixes = ["UA +380", "RU +7", "US +1", "DE +49"];
 
@@ -98,6 +223,11 @@ export const BookingForm = ({
     setIsOpenCardNum(false);
   };
 
+  const countryOptions = countries.map(country => ({
+  value: country.id,
+  label: country.title,
+  phonePrefix: country.phonePrefix, 
+}));
 
   return (
     <form onSubmit={handleSubmit} className={styles.bookingForm} noValidate>
@@ -105,11 +235,11 @@ export const BookingForm = ({
 
       <div className={styles.infoBox}>
         <div className="flex-left gap-5">
-          <span className={styles.language_notice}>!</span>.
+          <span className={styles.language_notice}>!</span>
           <Text text={t("Booking.booking_language_notice")} type="m_400_s_14" />
         </div>
         <div className="flex-left gap-5">
-          <span className={styles.required_fields}>*</span>.
+          <span className={styles.required_fields}>*</span>
           <Text text={t("Booking.required_fields_note")} type="m_400_s_14" />
         </div>
 
@@ -141,7 +271,7 @@ export const BookingForm = ({
 
             <label className={styles.bookingForm_label} >
               <legend className={styles.form__legend} >
-                <Text text={t("Booking.name_label")} type="m_400_s_20" />
+                <Text text={t("Booking.surname_label")} type="m_400_s_20" />
               </legend>
               <input
                 type="text"
@@ -154,7 +284,7 @@ export const BookingForm = ({
               />
             </label>
 
-
+            {/* 
             <label className={styles.bookingForm_label} >
               <legend className={styles.form__legend} >
                 <Text text={t("Booking.country_city_label")} type="m_400_s_20" />
@@ -171,28 +301,34 @@ export const BookingForm = ({
                 <option value="США">США</option>
                 <option value="Германия">Германия</option>
               </select>
-            </label>
+            </label> */}
 
 
-
-            <label className={styles.bookingForm_label} >
-              <legend className={styles.form__legend} >
-                <Text text={t("Booking.country_city_label")} type="m_400_s_20" />
-              </legend>
-              <select
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                className={`${styles.input} btn-h-59  btn-br-r-20 p-10`}
-                required
-              >
-                <option value="Украина">Украина</option>
-                <option value="Россия">Россия</option>
-                <option value="США">США</option>
-                <option value="Германия">Германия</option>
-              </select>
-            </label>
           </div>
+          <label className={styles.bookingForm_label} >
+            <legend className={styles.form__legend} >
+              <Text text={t("Booking.country_city_label")} type="m_400_s_20" />
+            </legend>
+           <Select
+  name="countryId"
+  options={countryOptions}
+  value={countryOptions.find(c => c.value === formData.countryId) || null}
+  onChange={(selected) => {
+    setFormData(prev => ({
+      ...prev,
+      countryId: selected?.value || null,
+      phonePrefix: selected?.phonePrefix || "",
+    }));
+  }}
+  className={`${styles.input} btn-h-59 btn-br-r-20 p-10`}
+  classNamePrefix="countrySelect"
+  placeholder={t("Prrofile.AccountPanel.select_country")}
+  isSearchable={false} 
+/>
+
+
+          </label>
+
 
 
 
@@ -209,7 +345,7 @@ export const BookingForm = ({
               className={`${styles.input} btn-h-59  btn-br-r-20 p-10`}
             />
             <div className="flex-left gap-5">
-              <span className={styles.required_fields}>*</span>.
+              <span className={styles.required_fields}>*</span>
               <Text text={t("Booking.required_email_note")} type="m_400_s_14" />
             </div>
           </label>
@@ -220,22 +356,19 @@ export const BookingForm = ({
               <Text text={t("Booking.phone_label")} type="m_400_s_20 " />
             </legend>
             <div className={styles.phoneInput}>
-              <div className={styles.phonePrefixWrapper}>
+              {/* <div className={styles.phonePrefixWrapper}>
                 <select
                   name="phonePrefix"
                   value={formData.phonePrefix}
-                  onChange={handleChange}
                   className={styles.phonePrefix}
-                  required
+                  disabled
                 >
-                  {phonePrefixes.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
-                  ))}
+                  <option value={formData.phonePrefix}>
+                    {formData.phonePrefix}
+                  </option>
                 </select>
                 <span className={styles.selectArrow}>▼</span>
-              </div>
+              </div> */}
 
               <input
                 type="tel"
@@ -243,7 +376,7 @@ export const BookingForm = ({
                 value={formData.phoneNumber}
                 onChange={handleChange}
                 placeholder="095 123 4567"
-                className={`${styles.input} ${styles.phoneNumber} btn-h-59  btn-br-r-20 p-10`}
+                className={`${styles.input}  btn-h-59  btn-br-r-20 p-10`}
                 required
               />
             </div>
@@ -252,7 +385,7 @@ export const BookingForm = ({
 
 
             <div className="flex-left gap-5">
-              <span className={styles.required_fields}>*</span>.
+              <span className={styles.required_fields}>*</span>
               <Text text={t("Booking.required_phone_note")} type="m_400_s_14" />
             </div>
           </label>
@@ -281,14 +414,14 @@ export const BookingForm = ({
               <Text text={t("Booking.arrival_date_label")} type="m_400_s_16" />
             </legend>
             <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
+              type="date"
+              name="arrivalDate"
+              value={formData.arrivalDate || ""}
               onChange={handleChange}
-              placeholder=""
-              className={`${styles.input} btn-h-59  btn-br-r-20 p-10`}
+              className={`${styles.input} btn-h-59 btn-br-r-20 p-10`}
               required
             />
+
           </label>
 
           <label className={styles.bookingForm_label} >
@@ -296,14 +429,14 @@ export const BookingForm = ({
               <Text text={t("Booking.departure_date_label")} type="m_400_s_16" />
             </legend>
             <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
+              type="date"
+              name="departureDate"
+              value={formData.departureDate || ""}
               onChange={handleChange}
+              className={`${styles.input} btn-h-59 btn-br-r-20 p-10`}
               required
-              placeholder=""
-              className={`${styles.input} btn-h-59  btn-br-r-20 p-10`}
             />
+
           </label>
 
 
@@ -389,17 +522,25 @@ export const BookingForm = ({
 
           <RadioButton
             text={t("Booking.trip_purpose_vacation")}
-            active={activeTripPurposeButton === "travel"}
-            onClick={() => setActiveTripPurposeButton("travel")}
+            active={formData.businessTravel === false}
+            onClick={() =>
+              setFormData(prev => ({
+                ...prev,
+                businessTravel: false
+              }))
+            }
           />
+
           <RadioButton
             text={t("Booking.trip_purpose_business")}
-            active={activeTripPurposeButton === "business"}
-            onClick={() => setActiveTripPurposeButton("business")}
+            active={formData.businessTravel === true}
+            onClick={() =>
+              setFormData(prev => ({
+                ...prev,
+                businessTravel: true
+              }))
+            }
           />
-
-
-
 
         </div>
         <label className={styles.bookingForm_label} >
@@ -407,8 +548,8 @@ export const BookingForm = ({
             <Text text={t("Booking.wishes_label")} type="m_400_s_24 " />
           </legend>
           <textarea
-            name="wishes"
-            value={formData.wishes}
+            name="clientNote"
+            value={formData.clientNote}
             onChange={handleChange}
             placeholder=""
             className={`${styles.input} ${styles.textarea} btn-br-r-20 p-10`}
@@ -445,17 +586,6 @@ export const BookingForm = ({
                 <legend className={styles.form__legend} >
                   <Text text={t("Booking.choise_card")} type="m_400_s_20" />
                 </legend>
-                {/* <input
-                  type="text"
-                  name="cardNum"
-                  value={formData.cardNum}
-                  onChange={handleChange}
-                  onFocus={() => setIsOpenCardNum(true)}
-                  placeholder=""
-                  className={`${styles.input} ${styles.input_card} btn-h-59 btn-br-r-20 p-10`}
-                  required
-                /> */}
-
                 <div className={styles.input_with_icon}>
                   <input
                     type="text"

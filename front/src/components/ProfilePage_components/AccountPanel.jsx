@@ -30,13 +30,13 @@ export const AccountPanel = ({ user }) => {
 
 
     const [formData, setFormData] = useState({
-        id: 0,              // обязательно
+        id: 0,
         username: "",
         password: "",
         email: "",
         phoneNumber: "",
         birthDate: null,
-        countryId: 0,        // обязательно
+        countryId: 0,
         discount: 0,
         roleName: "",
         token: ""
@@ -63,7 +63,8 @@ export const AccountPanel = ({ user }) => {
         setFormData({
             id: user.id,
             username: user.username || "",
-            password: "",               // если не меняем пароль
+            lastname: user.lastname || "",
+            password: "",
             email: user.email || "",
             phoneNumber: user.phoneNumber || "",
             birthDate: user.birthDate ? new Date(user.birthDate).toISOString() : null,
@@ -133,12 +134,10 @@ export const AccountPanel = ({ user }) => {
 
                         onClick={() => console.log("2www")}
                     />
-                    <Text text={t("Prrofile.AccountPanel.Security_settings")} type="m_500_s_24" />
+                    {/* <Text text={t("Prrofile.AccountPanel.Security_settings")} type="m_500_s_24" /> */}
                 </div>
 
                 <form className={`${styles.accountPanel__form} gap-30 mt-10`} onSubmit={handleSubmit}>
-
-
                     {/* Username */}
                     <Text text={t("Prrofile.AccountPanel.name")} type="m_400_s_16" />
                     <input
@@ -150,14 +149,28 @@ export const AccountPanel = ({ user }) => {
                         className={`${styles.input} btn-h-59  btn-br-r-20 p-10`}
                         required
                     />
+                      <Text text={t("Prrofile.AccountPanel.lastname")} type="m_400_s_16" />
+                    <input
+                        type="text"
+                        name="lastname"
+                        value={formData.lastname}
+                        onChange={handleChange}
+                        placeholder=""
+                        className={`${styles.input} btn-h-59  btn-br-r-20 p-10`}
+                        required
+                    />
                     {/* birthday */}
                     <Text text={t("Prrofile.AccountPanel.birthday")} type="m_400_s_16" />
                     <input
-                        type="text"
-                        name="birthday"
-                        value={formData.birthday}
-                        onChange={handleChange}
-                        placeholder=""
+                        type="date"
+                        name="birthDate"
+                        value={formData.birthDate ? formData.birthDate.split("T")[0] : ""}
+                        onChange={e =>
+                            setFormData(prev => ({
+                                ...prev,
+                                birthDate: e.target.value
+                            }))
+                        }
                         className={`${styles.input} btn-h-59  btn-br-r-20 p-10`}
                         required
                     />
@@ -211,7 +224,10 @@ export const AccountPanel = ({ user }) => {
 
 
                     <span className={`${styles.actionButton__wrapper} flex-center mb-30`}>
-                        <ActionButton__Primary type="submit" text={t("Prrofile.AccountPanel.btn_continue")} className="btn-w-447 btn-h-59 btn-br-r-20" />
+                        <ActionButton__Primary
+                            type="m_700_s_24"
+                            text={t("Prrofile.AccountPanel.btn_continue")}
+                            className="btn-w-447 btn-h-59 btn-br-r-20" />
                     </span>
 
                 </form>

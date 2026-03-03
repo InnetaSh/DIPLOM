@@ -1,41 +1,58 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { FilterOption } from "./FilterOption";
-import {PriceProgressBar} from "./PriceProgressBar.jsx";
+import { PriceProgressBar } from "./PriceProgressBar.jsx";
 import { Text } from "../UI/Text/Text.jsx";
 
 import styles from './FilterCategory.module.css';
 
-export const FilterCategory = ({ category, selectedFilters, onFilterChange }) => {
-  const selected = selectedFilters[category.title] || [];
+
+
+export const FilterCategory = ({
+  city,
+  category,
+  selectedParams,
+  onFilterChange }) => {
   const { t } = useTranslation();
 
-  const isDistanceCenter = category.id === "distance_center";
-  const isPrice = category.id === "price";
+  const isDistanceCenter = category.id === 6;
+  const isPrice = category.id === 2;
+  const isLocation = category.id === 8;
 
-
-   const [priceValue, setPriceValue] = React.useState(10000);
+  const [priceValue, setPriceValue] = React.useState(10000);
 
   const handlePriceChange = (e) => {
-    const newValue = e.target.value;
+    const newValue = Number(e.target.value);
+    const min = 1000;
+
     setPriceValue(newValue);
-    onFilterChange(category.title, newValue);
+
+    const minItemId = category.items[0]?.id;
+    const maxItemId = category.items[1]?.id;
+
+    if (minItemId) {
+      onFilterChange(minItemId, min, false);
+    }
+
+    if (maxItemId) {
+      onFilterChange(maxItemId, newValue, false);
+    }
   };
 
-
+if (isLocation) return null;
   return (
     <div className={styles.filterSidebar__category}>
-     <div className={`${styles.FilterCategory_title} flex-center`}>
+      <div className={`${styles.FilterCategory_title} flex-center`}>
         <Text
           text={
             isDistanceCenter
-              ? `${t("Львів")} ${t(category.title)}`
+              ? `${city}: ${t(category.title)}`
               : t(category.title)
           }
           type="m_700_s_20"
         />
       </div>
-       <div className={styles.filterCategory__params}>
+      <div className={styles.filterCategory__params}>
         {isPrice ? (
           <PriceProgressBar
             min={1000}
@@ -48,12 +65,13 @@ export const FilterCategory = ({ category, selectedFilters, onFilterChange }) =>
             <FilterOption
               key={item.id}
               option={item}
-              isSelected={selected.includes(item.title)}
-              onClick={() => onFilterChange(category.title, item.title)}
+              isSelected={!!selectedParams[item.id]}
+              onClick={() => onFilterChange(item.id, true)}
             />
           ))
         )}
       </div>
+
     </div>
   );
 };
