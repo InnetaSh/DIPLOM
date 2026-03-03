@@ -2,6 +2,7 @@
 using AttractionApiService.Service.Interfaces;
 using AttractionApiService.View;
 using Globals.Sevices;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AttractionApiService.Service
@@ -9,7 +10,53 @@ namespace AttractionApiService.Service
     public class AttractionService : TableServiceBase<Attraction, AttractionContext>, IAttractionService
     {
 
+        //==================================================================================================================
+        public async Task<List<Attraction>> GetAttractionByCityId([FromQuery] int cityId)
+        {
+            try
+            {
+                using var db = new AttractionContext();
 
+                var attractions = await db.Attractions
+                    .Include(a => a.Images) 
+                    .Where(a => a.CityId == cityId)
+                    .ToListAsync();
+
+                return (attractions);
+                  
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception message: " + ex.Message);
+                Console.WriteLine("Stack trace: " + ex.StackTrace);
+                throw;
+            }
+        }
+
+
+        //==================================================================================================================
+
+
+        public async Task<List<Attraction>> GetAttractionById([FromQuery] int id)
+        {
+            try
+            {
+                using var db = new AttractionContext();
+
+                var attractions = await db.Attractions
+                    .Where(a => a.id == id)
+                    .ToListAsync();
+
+                return attractions;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception message: " + ex.Message);
+                Console.WriteLine("Stack trace: " + ex.StackTrace);
+                throw;
+            }
+        }
+        //==================================================================================================================
 
         public async Task<List<AttractionResponse>> GetAttractionsByDistanceAsync(decimal latitude, decimal longitude, decimal distance)
         {
