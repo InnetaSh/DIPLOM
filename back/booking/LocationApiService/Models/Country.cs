@@ -8,6 +8,8 @@ namespace LocationApiService.Models
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
 
+        public string CountryCode { get; set; }
+
         public ICollection<Region> Regions { get; set; } = new List<Region>();
     }
 }

@@ -10,14 +10,29 @@ namespace LocationApiService.Controllers
     public class CountryController : EntityControllerBase<Country, CountryResponse, CountryRequest>
     {
         private readonly string _baseUrl;
+        private ICountryService _countryService;
         public CountryController(
             ICountryService countryService,
             IRabbitMqService mqService,
            IConfiguration configuration)
             : base(countryService, mqService)
         {
-            _baseUrl = configuration["AppSettings:BaseUrl"];
+            //_baseUrl = configuration["AppSettings:BaseUrl"];
+            _baseUrl = $"{configuration["HostUrl"] ?? "http://localhost"}:5001";
+            _countryService = countryService;
         }
+
+        [HttpGet("get-all-with-code")]
+        public async Task<ActionResult<CountryResponse>> GetAllWithCode()
+        {
+            var items = await _countryService.GetEntitiesWithCodeAsync();
+            if (items == null || !items.Any())
+                return NotFound(new { message = "No items found" });
+
+            var responseList = items.Select(item => MapToResponse(item)).ToList();
+            return Ok(responseList);
+        }
+
 
         [HttpGet("get-countries-by-district/{id}")]
         public async Task<ActionResult<CountryResponse>> GetByDistrictId(int id)

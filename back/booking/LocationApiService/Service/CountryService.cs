@@ -14,10 +14,19 @@ namespace LocationApiService.Services
                 return await db.Countries
                     .Include(c => c.Regions)
                         .ThenInclude(r => r.Cities)
-                            .ThenInclude(ci => ci.Districts)
+                            //.ThenInclude(ci => ci.Districts)
                     .ToListAsync();
             }
         }
+        public  async Task<List<Country>> GetEntitiesWithCodeAsync(params string[] includeProperties)
+        {
+            using (var db = (LocationContext)Activator.CreateInstance(typeof(LocationContext)))
+            {
+                return await db.Countries
+                    .ToListAsync();
+            }
+        }
+
 
         public override async Task<Country> GetEntityAsync(int id, params string[] includeProperties)
         {

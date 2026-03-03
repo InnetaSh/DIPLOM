@@ -18,28 +18,30 @@ namespace LocationApiService.Controllers
             : base(cityService, mqService)
         {
             _cityService = cityService;
-            _baseUrl = configuration["AppSettings:BaseUrl"];
+            //_baseUrl = configuration["AppSettings:BaseUrl"];
+
+            _baseUrl = $"{configuration["HostUrl"] ?? "http://localhost"}:5001";
         }
 
         //===========================================================================================
         //  получение городов для списка популярных 
         //===========================================================================================
 
-        [HttpGet("search/cities/populars")]
-        public async Task<ActionResult<List<CityResponse>>> GetSearchPopularCities(
-            [FromQuery] List<int> idList)
+        [HttpPost("search/cities/populars")]
+        public async Task<ActionResult<List<CityResponseForPupularList>>> GetSearchPopularCities(
+          [FromBody] List<int> idList)
         {
 
 
-            var result = new List<CityResponse>();
+            var result = new List<CityResponseForPupularList>();
             foreach (var cityId in idList)
             {
                 var exists = await _cityService.ExistsEntityAsync(cityId);
                 if (!exists)
-                    return NotFound(new { message = $"offerId {cityId} not found" });
+                    continue;
 
                 var cityRez = await _cityService.GetEntityAsync(cityId);
-                var city = CityResponse.MapToResponse(cityRez, _baseUrl);
+                var city = CityResponseForPupularList.MapToResponse(cityRez, _baseUrl);
                 result.Add(city);
             }
 

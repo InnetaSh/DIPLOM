@@ -9,7 +9,7 @@ namespace LocationApiService.View
         public int id { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
-
+        public string CountryCode { get; set; }
         public List<RegionRequest> Regions { get; set; } = new();
 
         public static Country MapToModel(CountryRequest request)
@@ -19,6 +19,7 @@ namespace LocationApiService.View
                 id = request.id,
                 Latitude = request.Latitude,
                 Longitude = request.Longitude,
+                CountryCode = request.CountryCode,
 
                 Regions = request.Regions?
                     .Select(RegionRequest.MapToModel)

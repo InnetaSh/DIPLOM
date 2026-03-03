@@ -9,6 +9,7 @@ namespace LocationApiService.View
         public string? Title { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
+        public int CountryId { get; set; }
 
         public List<CityResponse> Cities { get; set; } = new();
 
@@ -19,6 +20,7 @@ namespace LocationApiService.View
                 id = model.id,
                 Latitude = model.Latitude,
                 Longitude = model.Longitude,
+                CountryId = model.CountryId,
 
                 Cities = model.Cities?
                     .Select(city => CityResponse.MapToResponse(city, baseUrl))

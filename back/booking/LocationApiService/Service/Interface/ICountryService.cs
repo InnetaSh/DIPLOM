@@ -6,5 +6,6 @@ namespace LocationApiService.Service.Interfaces
 {
     public interface ICountryService : IServiceBase<Country>
     {
+        Task<List<Country>> GetEntitiesWithCodeAsync(params string[] includeProperties);
     }
 }
