@@ -38,6 +38,7 @@ namespace ReviewApiService.View
                 id = model.id,
                 OrderId = model.OrderId,
                 UserId = model.UserId,
+                OfferId = model.OfferId,
                 Staff = model.Staff,
                 Facilities = model.Facilities,
                 Cleanliness = model.Cleanliness,

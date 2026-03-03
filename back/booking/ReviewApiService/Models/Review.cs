@@ -33,6 +33,7 @@ namespace ReviewApiService.Models
             }
         }
 
+
         // Дата создания и обновления
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

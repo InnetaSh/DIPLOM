@@ -17,6 +17,7 @@ namespace ReviewApiService.View
         public double ValueForMoney { get; set; }
         public double Location { get; set; }
 
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         // Опционально: статус модерации

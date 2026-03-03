@@ -43,6 +43,22 @@ namespace ReviewApiService.Service
             return fitReviews.Average(r => r.OverallRating);
         }
 
+        public async Task<Dictionary<int, double>> GetRatingsByOfferIds(List<int> offerIds)
+        {
+            if (offerIds == null || offerIds.Count == 0)
+        return new Dictionary<int, double>();
+
+    using var db = new ReviewContext();
+
+    return await db.Reviews
+        .Where(r => r.IsApproved && offerIds.Contains(r.OfferId))
+        .GroupBy(r => r.OfferId)
+        .ToDictionaryAsync(
+            g => g.Key,
+            g => g.Average(r => r.OverallRating)
+        );
+        }
+
         //public async Task<Dictionary<int, OfferReviewStats>> GetOfferReviewStatsAsync(IEnumerable<int> offerIds)
         //{
         //    using var db = new ReviewContext();
