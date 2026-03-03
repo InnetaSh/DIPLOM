@@ -43,7 +43,7 @@ namespace StatisticApiService.Services
         //        })
         //        .ToListAsync();
 
-           
+
         //    db.EntityStatsAggregates.AddRange(aggregates);
 
         //    await db.SaveChangesAsync();
@@ -60,21 +60,21 @@ namespace StatisticApiService.Services
             using var db = new StatisticDbContext();
 
             var query = db.EntityStatEvents
-              .Where(a => a.EntityType == type);
+              .Where(a => a.EntityType == type).ToList();
 
             if (startDate.HasValue)
             {
-                var start = startDate.Value.ToDateTime(TimeOnly.MinValue);
-                query = query.Where(e => e.CreatedAt >= start);
+                var start = startDate.Value.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+                query = query.Where(e => e.CreatedAt >= start).ToList();
             }
 
             if (endDate.HasValue)
             {
-                var end = endDate.Value.ToDateTime(TimeOnly.MaxValue);
-                query = query.Where(e => e.CreatedAt <= end);
+                var end = endDate.Value.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
+                query = query.Where(e => e.CreatedAt <= end).ToList();
             }
 
-            return await query
+            var r = query
                 .GroupBy(a => a.EntityId)
                 .Select(g => new PopularEntityResponse
                 {
@@ -85,10 +85,22 @@ namespace StatisticApiService.Services
                         g.Count(e => e.ActionType == ActionType.Booking) * 5
                 })
                 .OrderByDescending(x => x.Score)
-                .Take(limit)
-                .ToListAsync();
+                .Take(limit).ToList();
+            return r;
+            //return await query
+            //    .GroupBy(a => a.EntityId)
+            //    .Select(g => new PopularEntityResponse
+            //    {
+            //        EntityId = g.Key,
+            //        Score =
+            //            g.Count(e => e.ActionType == ActionType.Search) * 1 +
+            //            g.Count(e => e.ActionType == ActionType.View) * 2 +
+            //            g.Count(e => e.ActionType == ActionType.Booking) * 5
+            //    })
+            //    .OrderByDescending(x => x.Score)
+            //    .Take(limit)
+            //    .ToListAsync();
         }
-
     }
 }
 

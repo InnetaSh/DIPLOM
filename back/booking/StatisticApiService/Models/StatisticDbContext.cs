@@ -7,7 +7,7 @@ namespace StatisticApiService.Models
     {
         public DbSet<PopularEntity> PopularEntities { get; set; }
         public DbSet<EntityStatEvent> EntityStatEvents { get; set; }
-        public DbSet<EntityStatsAggregate> EntityStatsAggregates { get; set; }
+        //public DbSet<EntityStatsAggregate> EntityStatsAggregates { get; set; }
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
             builder.Entity<PopularEntity>(entity =>
@@ -24,12 +24,12 @@ namespace StatisticApiService.Models
                 entity.Property(e => e.id).HasColumnName("id");
             });
 
-            builder.Entity<EntityStatsAggregate>(entity =>
-            {
-                entity.ToTable("entityStatsAggregate");
-                entity.HasKey(e => e.id);
-                entity.Property(e => e.id).HasColumnName("id");
-            });
+            //builder.Entity<EntityStatsAggregate>(entity =>
+            //{
+            //    entity.ToTable("entityStatsAggregate");
+            //    entity.HasKey(e => e.id);
+            //    entity.Property(e => e.id).HasColumnName("id");
+            //});
         }
     }
 }
