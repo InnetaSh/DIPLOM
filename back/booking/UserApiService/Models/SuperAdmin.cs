@@ -4,7 +4,7 @@ namespace UserApiService.Models
 {
     public class SuperAdmin : User
     {
-        public new UserRole RoleName { get; set; } = UserRole.SuperAdmin;
+        public override UserRole RoleName { get; set; } = UserRole.SuperAdmin;
 
     }
 }

@@ -4,10 +4,9 @@ using UserApiService.Models.Enums;
 
 namespace UserApiService.Models
 {
-
-    using UserApiService.Models.Enums;
     public class Owner : User
     {
+        public override UserRole RoleName { get; set; } = UserRole.Owner;
         public List<OwnerOfferLink> OwnerOfferLinks { get; set; } = new();
     }
 }

@@ -19,5 +19,7 @@ namespace UserApiService.Services.Interfaces
 
        Task<bool> ValidOfferIdByOwner(int userId, int offerId);
         Task<bool> ValidAdminById(int userId);
+
+        Task<List<HistoryOfferLink>> GetOffersToClientHistory(int userId);
     }
 }

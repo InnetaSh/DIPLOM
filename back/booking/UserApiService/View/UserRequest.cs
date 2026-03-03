@@ -9,6 +9,7 @@ namespace UserApiService.View
     {
         public int id { get; set; }
         public string Username { get; set; } = string.Empty;
+        public string? Lastname { get; set; }
         public string Password { get; set; } = string.Empty;
         public string? Email { get; set; }
         public string? PhoneNumber { get; set; }
@@ -18,7 +19,7 @@ namespace UserApiService.View
         public string RoleName { get; set; } = string.Empty;
         public string? Token { get; set; }
 
-
+        public bool IsBlocked { get; set; } = false;
 
         public static User MapToModel(UserRequest request)
         {
@@ -28,11 +29,13 @@ namespace UserApiService.View
             {
                 id = request.id,
                 Username = request.Username,
+                Lastname = request.Lastname,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
                 BirthDate = request.BirthDate,
                 CountryId = request.CountryId,
                 Discount = request.Discount,
+                IsBlocked = request.IsBlocked,
                 RoleName = Enum.TryParse<UserRole>(request.RoleName, true, out var role)
                     ? role
                     : UserRole.Client

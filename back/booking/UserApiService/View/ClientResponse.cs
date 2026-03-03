@@ -5,8 +5,10 @@
 
         public int id { get; set; }
         public string Username { get; set; } = string.Empty;
+        public string? Lastname { get; set; }
         public string Email { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; }
+        public DateTime? BirthDate { get; set; }
         public int CountryId { get; set; }
         public string? CountryTitle { get; set; }
         public string RoleName { get; set; } = string.Empty;

@@ -4,6 +4,7 @@ namespace UserApiService.Services.Interfaces
 {
     public interface IAuthService
     {
+        Task<LoginResponse> GoogleLoginAsync(string email, string name);
         Task<LoginResponse> LoginAsync(LoginRequest request);
         Task<RegisterResponse> RegisterAsync(RegisterRequest request);
         Task<bool> DeleteUserAsync(int id);

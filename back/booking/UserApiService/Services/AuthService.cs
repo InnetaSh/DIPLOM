@@ -21,9 +21,43 @@ namespace UserApiService.Services
             _passwordHasher = passwordHasher;
         }
 
+        public async Task<LoginResponse> GoogleLoginAsync(string email, string name)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                user = new Client
+                {
+                    Email = email,
+                    Username = name,
+                    RoleName = UserRole.Client
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+            }
+
+            var token = _tokenService.GenerateJwtToken(user);
+
+            return new LoginResponse
+            {
+                Username = user.Username,
+                Token = token,
+                RoleName = user.RoleName.ToString()
+            };
+        }
+
+
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            //var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            var normalizedPhone = NormalizePhone(request.Login);
+
+            var user =  _context.Users.FirstOrDefault(u =>
+                u.Email == request.Login ||
+                u.PhoneNumber == normalizedPhone);
+
             if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash, user.PasswordSalt))
                 throw new UnauthorizedAccessException("Неверное имя пользователя или пароль");
 
@@ -41,6 +75,8 @@ namespace UserApiService.Services
 
         public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
         {
+            var normalizedPhone = NormalizePhone(request.PhoneNumber);
+
             _passwordHasher.CreatePasswordHash(request.Password, out byte[] hash, out byte[] salt);
 
             var role = Enum.TryParse<UserRole>(request.RoleName, true, out var parsedRole)
@@ -57,10 +93,11 @@ namespace UserApiService.Services
             };
 
             newUser.Username = request.Username;
+            newUser.BirthDate = request.BirthDate;
             newUser.PasswordHash = hash;
             newUser.PasswordSalt = salt;
             newUser.Email = request.Email;
-            newUser.PhoneNumber = request.PhoneNumber;
+            newUser.PhoneNumber = normalizedPhone;
             newUser.CountryId = request.CountryId;
             newUser.RoleName = role;
 
@@ -97,6 +134,18 @@ namespace UserApiService.Services
         {
             return await _context.Users.AnyAsync(u => u.Username == name);
         }
+
+
+        private string NormalizePhone(string phone)
+        {
+            if (string.IsNullOrWhiteSpace(phone))
+                return phone;
+
+            // убираем всё кроме цифр
+            return new string(phone.Where(char.IsDigit).ToArray());
+        }
+
+
         //private void CreatePasswordHash(string password, out byte[] hash, out byte[] salt)
         //{
         //    using var hmac = new HMACSHA512();

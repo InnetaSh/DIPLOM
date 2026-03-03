@@ -4,7 +4,7 @@ namespace UserApiService.View
 {
     public class LoginRequest : IBaseRequest
     {
-        public string Username { get; set; }
+        public string Login { get; set; }   // email или телефон
         public string Password { get; set; }
     }
 }

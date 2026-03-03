@@ -77,7 +77,7 @@ namespace UserApiService.Services
         {
             await using var db = new UserContext();
 
-            var client = await db.Clients
+            var client = await db.Users
                 .FirstOrDefaultAsync(x => x.id == userId);
 
             if (client == null)
@@ -104,7 +104,25 @@ namespace UserApiService.Services
             return true;
         }
 
+        // =====================================================================
+        // CLIENT →получить все заказы из истории и  избранное
+        // =====================================================================
+        public async Task<List<HistoryOfferLink>> GetOffersToClientHistory(int userId)
+        {
+            await using var db = new UserContext();
 
+            var client = await db.Users
+                .FirstOrDefaultAsync(x => x.id == userId);
+
+            if (client == null)
+                return null;
+
+            var historyOffers = await db.HistoryOfferLinks
+                .Where(x => x.ClientId == client.id)
+                .ToListAsync();
+
+            return historyOffers; 
+        }
 
         // =====================================================================
         // OWNER → добавить объявление
@@ -174,6 +192,8 @@ namespace UserApiService.Services
                 {
                     id = c.id,
                     Username = c.Username,
+                    Lastname = c.Lastname,
+                    BirthDate = c.BirthDate,
                     Email = c.Email,
                     PhoneNumber = c.PhoneNumber,
                     RoleName = "Client",
@@ -216,15 +236,13 @@ namespace UserApiService.Services
                 .Where(o => o.id == userId)
                 .Select(o => new OwnerResponse
                 {
-                   
-                    id = o.id,
                     Username = o.Username,
+                    Lastname = o.Lastname,
+                    BirthDate = o.BirthDate,
                     Email = o.Email,
                     PhoneNumber = o.PhoneNumber,
-                    RoleName = "Owner",
-
-                 
                     CountryId = o.CountryId,
+                    RoleName = "Owner",
                     Discount = o.Discount,
 
                     // ===== OwnerOfferLinks =====

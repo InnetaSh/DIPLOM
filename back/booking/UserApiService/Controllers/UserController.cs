@@ -87,6 +87,22 @@ namespace UserApiService.Controllers
             return Ok(new { message = "Обьявление добавлено" });
         }
 
+        // =====================================================================
+        // CLIENT: получить все заказы из истории и из избранное
+        // =====================================================================
+        [Authorize]
+        [HttpGet("me/history/get/offers")]
+        public async Task<IActionResult> GetOffersToClientHistory()
+        {
+            var userId = GetUserId();
+            if (userId == null)
+                return Unauthorized();
+
+            var result = await _userService.GetOffersToClientHistory(userId.Value);
+
+            return Ok(result ?? new List<HistoryOfferLink>());
+        }
+
 
         // =====================================================================
         // OWNER: добавить объявление
@@ -243,10 +259,12 @@ namespace UserApiService.Controllers
 
            
             user.Username = request.Username ?? user.Username;
+            user.Lastname = request.Lastname ?? user.Lastname;
             user.Email = request.Email ?? user.Email;
             user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
             user.Discount = request.Discount;
             user.CountryId = request.CountryId;
+            user.BirthDate = request.BirthDate ?? user.BirthDate;
 
             await _userService.UpdateEntityAsync(user);
 
