@@ -9,8 +9,17 @@ namespace WebApiGetway.View
         public int OfferId { get; set; }
         public int ClientId { get; set; }
 
+        public int OwnerId { get; set; }
+
+        public string? ClientEmail { get; set; }
+        public string? ClientPhoneNumber { get; set; }
+
         // Количество гостей
-        public int Guests { get; set; }
+        public int Adults { get; set; }
+        public int Children { get; set; }
+
+        public string? MainGuestFirstName { get; set; }
+        public string? MainGuestLastName { get; set; }
 
         // Даты проживания
         public DateTime StartDate { get; set; }
@@ -37,6 +46,8 @@ namespace WebApiGetway.View
         public string? ClientNote { get; set; }
         // ===== Статус заказа =====
         public OrderStatus Status { get; set; }          // Текущий статус заказа (новый, подтверждён, отменён и т.д.)
+        public bool? isBusinessTrip { get; set; } = false;
+
         public string PaymentMethod { get; set; }
 
 
@@ -44,7 +55,11 @@ namespace WebApiGetway.View
         public static OrderDto MapToOrderDto(
               CreateOrderRequest request,
               Dictionary<string, object> offer,
-              int userId)
+              int userId,
+              int ownerId,
+              string ClientPhoneNumber,
+              string ClientEmail
+            )
         {
             //int freeCancelUntilHours = int.Parse(offer["freeCancelUntilHours"].ToString());
             //var paidAt = request.StartDate.AddHours(-freeCancelUntilHours);
@@ -53,15 +68,27 @@ namespace WebApiGetway.View
             {
                 OfferId = request.OfferId,
                 ClientId = userId,
-                Guests = request.Guests,
+                OwnerId = ownerId,
+                ClientEmail = ClientEmail,
+                ClientPhoneNumber = ClientPhoneNumber,
+
+                Adults = request.Adults,
+                Children = request.Children,
+
+                MainGuestFirstName = request.MainGuestFirstName,
+                MainGuestLastName = request.MainGuestLastName,
+
+
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
+                isBusinessTrip = request.isBusinessTrip,
+                PaymentMethod = request.PaymentMethod,
 
                 OrderPrice = decimal.Parse(offer["orderPrice"].ToString()),
                 DiscountPercent = decimal.Parse(offer["discountPercent"].ToString()),
                 DiscountAmount = decimal.Parse(offer["discountAmount"].ToString()),
                // DepositAmount = decimal.Parse(offer["depositAmount"].ToString()),
-                TaxAmount = decimal.Parse(offer["taxAmount"].ToString()),
+               // TaxAmount = decimal.Parse(offer["taxAmount"].ToString()),
                 TotalPrice = decimal.Parse(offer["totalPrice"].ToString()),
                 //FreeCancelEnabled = bool.Parse(offer["freeCancelEnabled"].ToString()),
                // PaidAt = paidAt,
@@ -70,7 +97,8 @@ namespace WebApiGetway.View
 
                 ClientNote = request.ClientNote,
                 Status = 0,
-                //PaymentMethod = offer["paymentMethod"].ToString(),
+             
+
             };
         }
     }

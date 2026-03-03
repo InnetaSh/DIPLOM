@@ -57,6 +57,16 @@ namespace WebApiGetway.Controllers
                 var obj = JsonSerializer.Deserialize<Dictionary<string, object>>(element.GetRawText());
                 if (obj != null) dictList.Add(obj);
             }
+            else if(element.ValueKind == JsonValueKind.Number)
+            {
+                if (Double.TryParse(element.GetRawText(), out var num))
+                {
+                    var d = new Dictionary<string, object>();
+                    d["number"] = num;
+                    dictList.Add(d);
+                    return dictList;
+                }
+            }
             else
                 return new List<Dictionary<string, object>>();
 
@@ -100,12 +110,132 @@ namespace WebApiGetway.Controllers
                 {
                     CopyIfExists(item, translation, "title");
                     CopyIfExists(item, translation, "description");
+                    CopyIfExists(item, translation, "history");
                     CopyIfExists(item, translation, "titleInfo");
                     CopyIfExists(item, translation, "street");
                 }
             }
             return list;
         }
+
+
+        public static List<Dictionary<string, object>> UpdateParamListWithTranslations(List<Dictionary<string, object>> list, List<Dictionary<string, object>> translations,
+  string idFieldName = "paramItemId",
+  string translationIdFieldName = "entityId")
+        {
+            foreach (var item in list)
+            {
+                if (!item.TryGetValue(idFieldName, out var idObj)) continue;
+                if (!int.TryParse(idObj.ToString(), out int id)) continue;
+
+
+                var translation = translations.FirstOrDefault(t =>
+                    t.TryGetValue(translationIdFieldName, out var eid) &&
+                    int.TryParse(eid.ToString(), out int eidInt) &&
+                    eidInt == id
+                );
+
+                if (translation != null)
+                {
+                    CopyIfExists(item, translation, "title");
+                }
+            }
+            return list;
+        }
+
+
+
+        public static List<Dictionary<string, object>> UpdateAttractionsListWithTranslations(List<Dictionary<string, object>> list, List<Dictionary<string, object>> translations,
+          string idFieldName = "id",
+          string translationIdFieldName = "entityId")
+        {
+            foreach (var item in list)
+            {
+                if (!item.TryGetValue(idFieldName, out var idObj)) continue;
+                if (!int.TryParse(idObj.ToString(), out int id)) continue;
+
+
+                var translation = translations.FirstOrDefault(t =>
+                    t.TryGetValue(translationIdFieldName, out var eid) &&
+                    int.TryParse(eid.ToString(), out int eidInt) &&
+                    eidInt == id
+                );
+
+                if (translation != null)
+                {
+                    CopyIfExists(item, translation, "title");
+                    CopyIfExists(item, translation, "description");
+                    CopyIfExists(item, translation, "address");
+                }
+            }
+            return list;
+        }
+
+        public static List<Dictionary<string, object>> UpdateListWithCityTranslations(List<Dictionary<string, object>> list, List<Dictionary<string, object>> translations,
+         string idFieldName = "id",
+         string translationIdFieldName = "entityId")
+        {
+            foreach (var item in list)
+            {
+                if (!item.TryGetValue(idFieldName, out var idObj)) continue;
+                if (!int.TryParse(idObj.ToString(), out int id)) continue;
+
+
+                var translation = translations.FirstOrDefault(t =>
+                    t.TryGetValue(translationIdFieldName, out var eid) &&
+                    int.TryParse(eid.ToString(), out int eidInt) &&
+                    eidInt == id
+                );
+
+                if (translation != null)
+                {
+                    CopyIfExists(item, translation, "title");
+                    CopyIfExists(item, translation, "description");
+                    CopyIfExists(item, translation, "titleInfo");
+                    CopyIfExists(item, translation, "street");
+                }
+            }
+            return list;
+        }
+
+        public static void UpdateCityTitlesInOffers(
+            List<Dictionary<string, object>> statisticOfferDictList,
+            List<Dictionary<string, object>> translations)
+        {
+           
+            var translationLookup = translations
+                .Where(t => t.ContainsKey("entityId") && t.ContainsKey("title"))
+                .ToDictionary(
+                    t => int.Parse(t["entityId"].ToString()),
+                    t => t["title"]
+                );
+
+            foreach (var offer in statisticOfferDictList)
+            {
+                if (!offer.TryGetValue("rentObj", out var rentObjRaw))
+                    continue;
+
+                var rentList = rentObjRaw as List<Dictionary<string, object>>;
+                if (rentList == null || rentList.Count == 0)
+                    continue;
+
+                foreach (var rentObj in rentList)
+                {
+                    if (!rentObj.TryGetValue("cityId", out var cityIdRaw))
+                        continue;
+
+                    if (!int.TryParse(cityIdRaw?.ToString(), out int cityId))
+                        continue;
+
+                    if (translationLookup.TryGetValue(cityId, out var title))
+                    {
+                        rentObj["cityTitle"] = title;
+                    }
+                }
+            }
+        }
+
+
 
 
         public static List<Dictionary<string, object>> UpdateOfferListWithRating(List<Dictionary<string, object>> list, List<Dictionary<string, object>> ratings,

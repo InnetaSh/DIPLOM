@@ -12,6 +12,7 @@ export const DateRangeInput = ({
     classTitle = "btn-h-35 btn-w-276",
      setDateRange }) => {
     const { t } = useTranslation();
+    
 
     return (
         <div className={`${styles.searchBar__wrapper} ${classTitle} btn-br-r-10 `}>

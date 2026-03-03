@@ -13,6 +13,7 @@ export const HotelCard = ({
     title,
     image,
     city,
+    cityId,
     country,
     distance,
     rating,
@@ -27,9 +28,10 @@ export const HotelCard = ({
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/hotel/${id}?checkin=${startDate}&checkout=${endDate}&guests=${guests}`);
+        navigate(`/hotel/${id}?cityId=${cityId}&checkin=${startDate}&checkout=${endDate}&guests=${guests}`);
     };
   const { t } = useTranslation();
+  
 
     return (
         <div

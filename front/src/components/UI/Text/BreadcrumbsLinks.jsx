@@ -4,11 +4,11 @@ import styles from "./Text.module.css";
 import { useState } from "react";
 
 export const Breadcrumbs = ({ 
-  last_path = "Результаты поиска", 
-  country = "", 
-  region = "", 
-  city = "", 
-  district = "" 
+   country="Украина",
+  region="Львовская область",
+  city={city} ,  // передаём state из Header
+  hotelTitle,
+  last_path="Результаты поиска"
 }) => {
 
   
@@ -16,7 +16,7 @@ export const Breadcrumbs = ({
     country && { label: country, to: `/country/${encodeURIComponent(country)}` },
     region && { label: region, to: `/region/${encodeURIComponent(region)}` },
     city && { label: city, to: `/city/${encodeURIComponent(city)}` },
-    district && { label: district, to: `/district/${encodeURIComponent(district)}` }
+    // district && { label: district, to: `/district/${encodeURIComponent(district)}` }
   ].filter(Boolean); 
 
 

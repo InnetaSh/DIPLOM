@@ -15,6 +15,8 @@ import { SortMenuModal } from "../../components/modals/SortMenuModal.jsx";
 import { MenuModal } from "../../components/modals/MenuModal.jsx";
 import { LanguageModal } from "../modals/LanguageModal.jsx";
 
+import { LoginModal } from "../../components/modals/LoginModal.jsx";
+import { RegisterModal } from "../../components/modals/RegisterModal.jsx";
 
 import styles from './Header.module.css';
 
@@ -22,7 +24,7 @@ import styles from './Header.module.css';
 export const Header_Full = ({
   showLogBtn = true,
   city = "Львів",
-  title = "Львів",
+  title = "",
   titleBtn,
   guests,
   startDate,
@@ -30,8 +32,6 @@ export const Header_Full = ({
   showFilterBtn = true,
   openFilterMenu = true,
   setOpenFilterMenu,
-  isLoginModalOpen = false,
-  setIsLoginModalOpen,
   handleSearchResults
 }) => {
   const navigate = useNavigate();
@@ -40,6 +40,8 @@ export const Header_Full = ({
   const [openMenu, setOpenMenu] = useState(false);
   const [openSortMenu, setOpenSortMenu] = useState(false);
   const [isModalLanguageOpen, setIsModalLanguageOpen] = useState(false);
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [currency, setCurrency] = useState("");
 
   const { t } = useTranslation();
@@ -58,37 +60,41 @@ export const Header_Full = ({
     <div className={`${styles.headerMain} ${styles.headerMain_full} flex-center`}>
       <div className={`${styles.headerMain__container} flex-stretch-column`} >
         {openMenu && (
-              <div className={styles.headerMain_sortBtn__dropdown}>
-                <MenuModal setIsModalOpen={setOpenMenu} />
-              </div>
-            )}
+          <div className={styles.headerMain_sortBtn__dropdown}>
+            <MenuModal setIsModalOpen={setOpenMenu} />
+          </div>
+        )}
         <div className={`${styles.headerMain_Logo__container}   flex-between`} >
-          <div className={`${styles.headerMain__logo}`}>
+          <div className={`${styles.headerMain__logo} ${styles.headerMain__logo_order}`}>
             <Logo_Oselya />
           </div>
-          <div  className = {`${styles.searchBar} `}>
-          <SearchBar
-            onSearch={handleSearchResults}
-            defaultCity={city}
-            defaultGuests={guests}
-            defaultStartDate={startDate}
-            defaultEndDate={endDate}
-          />
+          <div className={`${styles.searchBar} ${styles.searchBar_order}`}>
+            <SearchBar
+              onSearch={handleSearchResults}
+              defaultCity={city}
+              defaultGuests={guests}
+              defaultStartDate={startDate}
+              defaultEndDate={endDate}
+            />
           </div>
-          <div className={`${styles.headerMain__logo__actions_container} flex-center gap-20`}>
-             <IconButton__50
-                         icon_name="user-home"
-                         onClick={() => setIsLoginModalOpen(prev => !prev)}
-                         title="User"
-                       />
-           
-           
+          <div className={`${styles.headerMain__logo__actions_container} ${styles.headerMain__logo__actions_container_order} flex-center gap-20`}>
+            <IconButton__50
+              icon_name="user-home"
+                onClick={() => navigate("/")}
+              title="User"
+            />
+
+
             <IconButton__50
               icon_name="user-male"
-              onClick={() => {
-                setIsLoginModalOpen((prev) => !prev);
-              }}
               title="User"
+              onClick={() => {
+                if (user) {
+                  navigate("/profile");
+                } else {
+                  setIsLoginModalOpen(true);
+                }
+              }}
             />
 
             <IconButton__50
@@ -101,7 +107,7 @@ export const Header_Full = ({
               title="User"
               onClick={handleMenuToggle}
             />
-          
+
 
             {isModalLanguageOpen && (
               <div className="modalOverlay">
@@ -118,7 +124,7 @@ export const Header_Full = ({
           </div>
         </div>
         <div className={`${styles.headerMain_breadcrumbs__container} flex-left`} >
-          <Breadcrumbs />
+          <Breadcrumbs city={city} hotelTitle  ={title }/>
         </div>
         <div className={`${styles.headerMain_cityTitle__container} flex-center`} >
           <Text text={title} type="m_700_s_40" />
@@ -137,7 +143,18 @@ export const Header_Full = ({
                   <SortMenuModal />
                 </div>
               )}
-
+              {isLoginModalOpen && (
+                <div className="modalOverlay">
+                  <LoginModal
+                    setIsModalOpen={setIsLoginModalOpen}
+                    setIsRegisterModalOpen={setIsRegisterModalOpen} />
+                </div>
+              )}
+              {isRegisterModalOpen && (
+                <div className="modalOverlay">
+                  <RegisterModal setIsModalOpen={setIsRegisterModalOpen} />
+                </div>
+              )}
 
 
               <ActionButton__Primary

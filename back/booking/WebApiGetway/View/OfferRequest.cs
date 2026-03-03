@@ -45,7 +45,7 @@ namespace WebApiGetway.View
 
 
         public int? OwnerId { get; set; }
-        public int RentObjId { get; set; }
+        public RentObjRequest RentObj { get; set; }
 
 
     }

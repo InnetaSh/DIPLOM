@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ApiContext } from "../../contexts/ApiContext.jsx";
-import {IconSvg} from "../UI/Image/IconSvg.jsx";
+import { useLanguage } from "../../contexts/LanguageContext.jsx";
+
+import { IconSvg } from "../UI/Image/IconSvg.jsx";
 
 import styles from "./SearchBar.module.css";
 
-const CitySelector = ({ 
+export const CitySelector = ({
   value,
   onChange,
   classTitle = "btn-h-35 btn-w-276",
@@ -12,24 +14,30 @@ const CitySelector = ({
   icon_title = "city",
   icon_size = "18",
   placeholder
- }) => {
+}) => {
   const { locationApi } = useContext(ApiContext);
+  const { language } = useLanguage();
   const [cities, setCities] = useState([]);
   const [search, setSearch] = useState(value || ""); // используем value
   const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
-    locationApi.getAllCities("en")
+    locationApi.getAllCities(language)
       .then((res) => {
-        setCities(res.data.value);
-        console.log("cities loaded:", res.data.value);
+        setCities(res.data || []);
+        console.log("cities loaded:", res.data);
       })
       .catch((err) => {
         console.error("Error loading cities:", err);
       });
   }, []);
 
+  useEffect(() => {
+    if (!value || cities.length === 0) return;
 
+    const selectedCity = cities.find(c => c.entityId === value);
+    if (selectedCity) setSearch(selectedCity.title);
+  }, [value, cities]);
 
   useEffect(() => {
     setSearch(value || "");
@@ -37,14 +45,13 @@ const CitySelector = ({
 
 
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setSearch(value);
+ const handleChange = (e) => {
+    const val = e.target.value;
+    setSearch(val);
 
-
-    if (value.length > 0) {
-      const filtered = cities.filter((city) =>
-        city.title.toLowerCase().startsWith(value.toLowerCase())
+    if (val.length > 0) {
+      const filtered = cities.filter(city =>
+        city.title.toLowerCase().startsWith(val.toLowerCase())
       );
       setSuggestions(filtered);
     } else {
@@ -52,6 +59,7 @@ const CitySelector = ({
     }
   };
 
+  
   const handleSelect = (city) => {
     setSearch(city.title);
     setSuggestions([]);
@@ -65,10 +73,10 @@ const CitySelector = ({
         size={icon_size}
         className={styles.input_icon}
       />
-      <input 
+      <input
         type="text"
         placeholder={placeholder}
-        className={`${styles.input_city } ${input_classTitle} btn-h-35`}
+        className={`${styles.input_city} ${input_classTitle} btn-h-35`}
         value={search}
         onChange={handleChange}
       />
@@ -89,4 +97,4 @@ const CitySelector = ({
   );
 };
 
-export default CitySelector;
+

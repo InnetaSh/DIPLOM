@@ -10,13 +10,18 @@ import { IconButton__50 } from "../UI/Button/IconButton_50.jsx";
 import { MenuModal } from "../../components/modals/MenuModal.jsx";
 import { LanguageModal } from "../modals/LanguageModal.jsx";
 
+import { LoginModal } from "../../components/modals/LoginModal.jsx";
+import { RegisterModal } from "../../components/modals/RegisterModal.jsx";
+
 import styles from './Header.module.css';
 
-export const Header = ({ isLoginModalOpen = false, setIsLoginModalOpen }) => {
+export const Header = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [openMenu, setOpenMenu] = useState(false);
   const [isModalLanguageOpen, setIsModalLanguageOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   const { t } = useTranslation();
   const { language, setLanguage } = useLanguage(); // Контекст языка
@@ -26,7 +31,7 @@ export const Header = ({ isLoginModalOpen = false, setIsLoginModalOpen }) => {
     setIsModalLanguageOpen(true);
   };
 
-    const handleMenuToggle = () => {
+  const handleMenuToggle = () => {
     setOpenMenu(true);
   };
 
@@ -38,29 +43,35 @@ export const Header = ({ isLoginModalOpen = false, setIsLoginModalOpen }) => {
   return (
     <div className={`${styles.headerMain} ${styles.headerMain_small} flex-center`}>
       <div className={`${styles.headerMain__container} ${styles.headerMain__container_small} p-t-24 flex-between`}>
-         {openMenu && (
-              <div className={styles.headerMain_sortBtn__dropdown}>
-                <MenuModal setIsModalOpen={setOpenMenu} />
-              </div>
-            )}
+        {openMenu && (
+          <div className={styles.headerMain_sortBtn__dropdown}>
+            <MenuModal setIsModalOpen={setOpenMenu} />
+          </div>
+        )}
         <div className={`${styles.headerMain_Logo__container} flex-between`}>
           <div className={styles.headerMain__logo}>
             <Logo_Oselya />
           </div>
           <Text text={t("header.subtitle_header_main")} type="m_400_s_32" />
           <div className={`${styles.headerMain__logo__actions_container} flex-center gap-20`}>
-            
-              <IconButton__50
+
+            <IconButton__50
               icon_name="user-home"
-              onClick={() => setIsLoginModalOpen(prev => !prev)}
+              onClick={() => navigate("/")}
               title="User"
             />
 
 
             <IconButton__50
               icon_name="user-male"
-              onClick={() => setIsLoginModalOpen(prev => !prev)}
               title="User"
+              onClick={() => {
+                if (user) {
+                  navigate("/profile");
+                } else {
+                  setIsLoginModalOpen(true);
+                }
+              }}
             />
 
             <IconButton__50
@@ -72,9 +83,9 @@ export const Header = ({ isLoginModalOpen = false, setIsLoginModalOpen }) => {
             <IconButton__50
               icon_name="menu"
               title="Menu"
-               onClick={handleMenuToggle}
+              onClick={handleMenuToggle}
             />
-           
+
 
             {isModalLanguageOpen && (
               <div className="modalOverlay">
@@ -86,6 +97,18 @@ export const Header = ({ isLoginModalOpen = false, setIsLoginModalOpen }) => {
                   }}
                   setCurrency={setCurrency}
                 />
+              </div>
+            )}
+            {isLoginModalOpen && (
+              <div className="modalOverlay">
+                <LoginModal
+                  setIsModalOpen={setIsLoginModalOpen}
+                  setIsRegisterModalOpen={setIsRegisterModalOpen} />
+              </div>
+            )}
+            {isRegisterModalOpen && (
+              <div className="modalOverlay">
+                <RegisterModal setIsModalOpen={setIsRegisterModalOpen} />
               </div>
             )}
           </div>

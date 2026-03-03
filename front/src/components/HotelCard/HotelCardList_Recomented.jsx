@@ -1,12 +1,15 @@
-import React from "react";
+
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { useRef } from 'react';
 import { ThemeContext } from "../../contexts/ThemeContext";
-
+import { IconButtonArrow } from '../UI/Button/IconButton_arrow.jsx';
 import { HotelCard_Recomented } from "./HotelCard_Recomented";
 import { Text } from "../../components/UI/Text/Text.jsx";
 
 import styles from "./HotelCardList_Recomented.module.css";
+
+const scrollAmount = 320;
 
 
 export const HotelCardList_Recomented = ({
@@ -21,36 +24,84 @@ export const HotelCardList_Recomented = ({
   const { darkMode } = useContext(ThemeContext);
   const { t } = useTranslation();
 
+  const classNameArrowLeft = darkMode
+    ? "btn_arrow_left_dark"
+    : "btn_arrow_left_light";
+
+  const classNameArrowRight = darkMode
+    ? "btn_arrow_right_dark"
+    : "btn_arrow_right_light";
+
+  const trackRef = useRef(null);
+  const CARD_WIDTH = 370;
+  const GAP = 30;
+  const SLIDE_WIDTH = CARD_WIDTH * 2 + GAP; // 770
+
+  const scrollLeft = () => {
+    trackRef.current?.scrollBy({
+      left: -SLIDE_WIDTH,
+      behavior: 'smooth',
+    });
+  };
+
+  const scrollRight = () => {
+    trackRef.current?.scrollBy({
+      left: SLIDE_WIDTH,
+      behavior: 'smooth',
+    });
+  };
+
+
   const imageSrc = darkMode
     ? "/img/main_page/hotel_recomented_dark.svg"
     : "/img/main_page/hotel_recomented_light.svg";
 
   return (
     <div className={styles.hotelCardList}>
-       <div className="flex-center btn-w-full p-20 mb-30 ">
-              <Text text={t("hotel-recomented.title")} type="title" />
-            </div>
+
+      <div className={styles.btn_container}>
+        <IconButtonArrow
+          onClick={() => scrollLeft()}
+          className={classNameArrowLeft}
+        />
+        <div className="flex-center btn-w-full  mb-30 ">
+          <Text text={t("hotel-recomented.title")} type="title" />
+        </div>
+        <IconButtonArrow
+          onClick={() => scrollRight()}
+          className={classNameArrowRight}
+        />
+      </div>
       <div className={styles.hotelCardList__container}>
         <div className={styles.hotelCardList__columns}>
-          <div className={styles.hotelCardList__cardsColumn}>
 
-            {hotels.slice(0, 4).map((hotel) => (
-              <HotelCard_Recomented
-                key={hotel.id}
-                id={hotel.id}
-                title={hotel.title}
-                image={hotel.rentObj?.[0]?.mainImageUrl || '-image.jpg'}
-                city={hotel.city}
-                country={hotel.country}
-                rating={hotel.rating}
-                endDate={endDate}
-                onClick={() => onCardClick && onCardClick(hotel.id)}
-                onCheckAvailability={() =>
-                  onCheckAvailability && onCheckAvailability(hotel.id)
-                }
-              />
-            ))}
+          <div className={styles.sliderViewport}>
+            {/* track */}
+            <div className={styles.sliderTrack} ref={trackRef}>
+              <div className={styles.hotelCardList__cardsColumn}>
+
+                {hotels.slice(0, 4).map((hotel) => (
+                  <HotelCard_Recomented
+                    key={hotel.id}
+                    id={hotel.id}
+                    title={hotel.title}
+                    image={hotel.rentObj?.[0]?.mainImageUrl || '-image.jpg'}
+                    city={hotel.city}
+                    country={hotel.country}
+                    rating={hotel.rating}
+                    endDate={endDate}
+                    onClick={() => onCardClick && onCardClick(hotel.id)}
+                    onCheckAvailability={() =>
+                      onCheckAvailability && onCheckAvailability(hotel.id)
+                    }
+                  />
+                ))}
+
+
+              </div>
+            </div>
           </div>
+
           <div className={styles.hotelCardList__imgColumn}>
             <div className={styles.imageCard}>
 

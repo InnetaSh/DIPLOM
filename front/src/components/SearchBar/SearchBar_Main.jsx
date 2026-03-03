@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import CitySelector from "./CitySelector.jsx";
+import React, { useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { PrimaryButton } from "../UI/Button/PrimaryButton.jsx";
+import { useLanguage } from "../../contexts/LanguageContext.jsx";
+import { CitySelector } from "./CitySelector.jsx";
+
 import { AddGuestModal } from "../modals/AddGuestModal.jsx";
-import { offerApi } from "../../api/offer.js";
+import { ApiContext } from "../../contexts/ApiContext.jsx";
 import { DateRangeInput } from "./DateRangeInput.jsx";
 import { IconSvg } from "../UI/Image/IconSvg.jsx";
 import { IconButton_Search } from "../UI/Button/IconButton_Search.jsx";
@@ -12,64 +13,78 @@ import styles from "./SearchBar.module.css";
 import { Text } from "../UI/Text/Text.jsx";
 
 export const SearchBar_Main = ({ onSearch, text }) => {
+
+  const { t } = useTranslation();
+  const { offerApi } = useContext(ApiContext);
+  const { language } = useLanguage();
   const [location, setLocation] = useState("");
   const [locationId, setLocationId] = useState(null);
   const [hotels, setHotels] = useState([]);
   const [dateRange, setDateRange] = useState({ start: "", end: "" });
-  const [guests, setGuests] = useState({ adults: 1, children: 0, rooms: 1 });
-  const [guestsCount, setGuestsCount] = useState(1);
+
+  const [guests, setGuests] = useState({
+    rooms: 1,
+    adults: 2,
+    children: 0,
+  });
+
   const [isGuestOpen, setIsGuestOpen] = useState(false);
 
-  // const handleSearch = async () => {
-  //   if (!locationId) return alert("Пожалуйста, выберите город");
-  //   if (!dateRange.start || !dateRange.end) return alert("Пожалуйста, выберите даты");
-  //   console.log("Initiating search with parameters:", {
-  //     locationId,
-  //     dateRange,
-  //     guests,
-  //   });
-  //   try {
-  //     const response = await offerApi.searchMain({
-  //       startDate: dateRange.start,
-  //       endDate: dateRange.end,
-  //       guests: guests.adults + guests.children,
-  //       userDiscountPercent: 5,
-  //     });
 
-  //     const foundHotels = response.data;
-  //     setGuestsCount(guests.adults + guests.children);
-  //     setHotels(foundHotels);
 
-  //     if (onSearch) {
-  //       onSearch(foundHotels, location, guestsCount, dateRange.start, dateRange.end);
-  //     }
+ const handleSearch = async () => {
+  if (!locationId) return alert("Пожалуйста, выберите город");
+  if (!dateRange.start || !dateRange.end)
+    return alert("Пожалуйста, выберите даты");
 
-  //     console.log("Результаты поиска:", foundHotels);
-  //   } catch (error) {
-  //     console.error("Ошибка поиска предложений:", error);
-  //   }
-  // };
-  const handleSearch = () => {
-    // if (!locationId) return alert("Выберите город");
-    // if (!dateRange.start || !dateRange.end) return alert("Выберите даты");
+  const totalGuests = guests.adults + guests.children;
 
-    onSearch({
-      city: location,
-      cityId: locationId,
-      guests: guests.adults + guests.children,
-      startDate: dateRange.start,
-      endDate: dateRange.end,
-    });
+  // Формируем объект параметров поиска
+  const searchParams = {
+    city: location,
+    locationId,
+    guests: totalGuests,
+    startDate: dateRange.start,
+    endDate: dateRange.end,
   };
+
+  // Сохраняем в localStorage
+  localStorage.setItem("city", searchParams.city);
+  localStorage.setItem("locationId", searchParams.locationId);
+  localStorage.setItem("guests", searchParams.guests);
+  localStorage.setItem("startDate", searchParams.startDate.toISOString());
+  localStorage.setItem("endDate", searchParams.endDate.toISOString());
+
+  try {
+    // Отправляем запрос к API
+    const response = await offerApi.searchOffers({
+      startDate: dateRange.start.toISOString(),
+      endDate: dateRange.end.toISOString(),
+      guests: totalGuests,
+      userDiscountPercent: 5,
+      lang: language,
+      cityId: locationId,
+      paramItemFilters: {},
+    });
+
+    const foundHotels = response.data;
+    setHotels(foundHotels);
+
+    // Передаем результаты на SearchPage через callback
+    if (onSearch) onSearch(searchParams);
+
+    console.log("Результаты поиска:", foundHotels);
+  } catch (error) {
+    console.error("Ошибка поиска предложений:", error);
+  }
+};
 
 
   const setLocationInfo = (cityName, cityId) => {
     setLocation(cityName);
     setLocationId(cityId);
-    console.log("City ID set to:", cityId);
-    console.log("Selected city:", cityName, "with ID:", locationId);
   };
-  const { t } = useTranslation();
+
   return (
     <div className={`${styles.searchBar} ${styles.searchBar_bg_color_dark} flex-left btn-w-1451 btn-h-106 btn-br-r-20 gap-20 `}>
       <div className={`${styles.searchBar__container} ${styles.searchBar__container_main} gap-20 `}>

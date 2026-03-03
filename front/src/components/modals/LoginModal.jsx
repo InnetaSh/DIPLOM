@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from "../../contexts/AuthContext.jsx";
 
+
 import { Text } from "../UI/Text/Text.jsx";
 import { ActionButton__Primary } from "../UI/Button/ActionButton_Primary.jsx";
 import { TextButton } from "../UI/Button/TextButton.jsx";
@@ -46,7 +47,7 @@ export const LoginModal = ({
         const result = await login(formData.username, formData.password);
 
         if (result.success) {
-            navigate("/"); // переходим на главную
+           setIsModalOpen(false); 
         } else {
             alert(result.message);
         }

@@ -12,10 +12,19 @@ namespace WebApiGetway.View
         public int ClientId { get; set; }
         public int Guests { get; set; }
 
+        public int? Adults { get; set; }
+        public int? Children { get; set; }
+        public string? MainGuestFirstName { get; set; }
+        public string? MainGuestLastName { get; set; }
+
+
         public string Title { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
-        public string Address { get; set; }
+
+        public string Street { get; set; }
+        public string HouseNumber { get; set; }
+        public string Postcode { get; set; }
 
         // Даты проживания
         public DateTime StartDate { get; set; }
@@ -36,8 +45,7 @@ namespace WebApiGetway.View
 
         // Оплата
         public string PaymentStatus { get; set; }
-        //public string PaymentMethod { get; set; }
-       // public DateTime? PaidAt { get; set; }
+
 
         // Время заезда/выезда
         public TimeSpan? CheckInTime { get; set; }
@@ -45,6 +53,10 @@ namespace WebApiGetway.View
 
         // Примечание
         public string? ClientNote { get; set; }
+
+        public bool? isBusinessTrip { get; set; } = false;
+
+        public string? PaymentMethod { get; set; }
 
         // Статус заказа
         public string? Status { get; set; }
@@ -58,7 +70,9 @@ namespace WebApiGetway.View
          string titleOffer,
          string countryTitle,
          string cityTitle,
-         object address)
+         string Street,
+         string HouseNumber,
+         string Postcode)
         {
            // int freeCancelUntilHours = int.Parse(offer["freeCancelUntilHours"].ToString());
            // var paidAt = request.StartDate.AddHours(-freeCancelUntilHours);
@@ -68,10 +82,16 @@ namespace WebApiGetway.View
                 OfferId = request.OfferId,
                 ClientId = userId,
                 Guests = request.Guests,
+                Adults = request.Adults,
+                Children = request.Children,
+                MainGuestFirstName = request.MainGuestFirstName,
+                MainGuestLastName = request.MainGuestLastName,
                 Title = titleOffer,
                 Country = countryTitle,
                 City = cityTitle,
-                Address = address.ToString(),
+                Street = Street,
+                HouseNumber = HouseNumber,
+                Postcode = Postcode,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
 
@@ -79,13 +99,15 @@ namespace WebApiGetway.View
                 DiscountPercent = decimal.Parse(offer["discountPercent"].ToString()),
                 DiscountAmount = decimal.Parse(offer["discountAmount"].ToString()),
                 //DepositAmount = decimal.Parse(offer["depositAmount"].ToString()),
-                TaxAmount = decimal.Parse(offer["taxAmount"].ToString()),
+                //TaxAmount = decimal.Parse(offer["taxAmount"].ToString()),
                 TotalPrice = decimal.Parse(offer["totalPrice"].ToString()),
                 //FreeCancelEnabled = bool.Parse(offer["freeCancelEnabled"].ToString()),
                 //PaidAt = paidAt,
                 CheckInTime = TimeSpan.Parse(offer["checkInTime"].ToString()),
                 CheckOutTime = TimeSpan.Parse(offer["checkOutTime"].ToString()),
                 ClientNote = request.ClientNote,
+                isBusinessTrip = request.isBusinessTrip,
+                PaymentMethod = request.PaymentMethod,
                 Status = "Pending",
                 //PaymentStatus = offer["paymentStatus"].ToString(),
                 //PaymentMethod = offer["paymentMethod"].ToString(),

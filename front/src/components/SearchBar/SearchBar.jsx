@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useTranslation } from "react-i18next";
-
+import { ApiContext } from "../../contexts/ApiContext.jsx";
+import { useLanguage } from "../../contexts/LanguageContext.jsx";
 import { AddGuestModal } from "../modals/AddGuestModal.jsx";
-import CitySelector from "./CitySelector.jsx";
-import { offerApi } from "../../api/offer.js";
+import { CitySelector } from "./CitySelector.jsx";
 import { DateRangeInput } from "./DateRangeInput";
 import { IconSvg } from "../UI/Image/IconSvg.jsx";
 import { IconButton_Search } from "../UI/Button/IconButton_Search.jsx";
@@ -17,7 +17,8 @@ export const SearchBar = ({
   className
 }) => {
   const { t } = useTranslation();
-
+  const { offerApi } = useContext(ApiContext);
+  const { language } = useLanguage();
   const [location, setLocation] = useState("");
   const [locationId, setLocationId] = useState(null);
   const [hotels, setHotels] = useState([]);
@@ -43,14 +44,19 @@ export const SearchBar = ({
       dateRange,
       guests,
       totalGuests,
+      language,
+    paramItemFilters: {}
     });
 
     try {
-      const response = await offerApi.searchMain({
-        startDate: dateRange.start,
-        endDate: dateRange.end,
+      const response = await offerApi.searchOffers({
+       startDate: dateRange.start.toISOString(),
+    endDate: dateRange.end.toISOString(),
         guests: totalGuests,
         userDiscountPercent: 5,
+        lang: language,
+        cityId: locationId,
+        paramItemFilters: {} // пустой объект фильтров
       });
 
       const foundHotels = response.data;

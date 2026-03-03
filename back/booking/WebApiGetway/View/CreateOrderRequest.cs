@@ -8,13 +8,19 @@ namespace WebApiGetway.View
         public int OfferId { get; set; }
     
         public int Guests { get; set; }
+        public int Adults { get; set; }
+        public int Children { get; set; }
+        public string? MainGuestFirstName { get; set; }
+        public string? MainGuestLastName { get; set; }
+
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
      
         public string? ClientNote { get; set; }
-       // public PaymentMethod? PaymentMethod { get; set; }
+        public bool? isBusinessTrip { get; set; } = false;
 
-      
-        //public decimal UserDiscountPercent { get; set; }
+        public string? PaymentMethod { get; set; }
+
+  
     }
 }

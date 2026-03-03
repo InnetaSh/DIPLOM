@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Header_Full } from "../../components/Header/Header_Full.jsx";
+import { useLanguage } from "../../contexts/LanguageContext";
 import { useParams, useLocation } from "react-router-dom";
 
+import { Header_Full } from "../../components/Header/Header_Full.jsx";
 import { ApiContext } from "../../contexts/ApiContext.jsx";
 import { HotelReviews } from "../../components/Hotel/HotelReviews.jsx";
 import { HotelGallery } from "../../components/Hotel/HotelGallery.jsx";
@@ -11,6 +12,7 @@ import { HotelParamsList } from "../../components/Hotel/HotelParamsList.jsx";
 import { HotelMap } from "../../components/Hotel/HotelMap.jsx";
 import { Footer } from "../../components/Footer/Footer.jsx";
 import { HotelInfoModal } from "../../components/modals/HotelInfoModal.jsx";
+
 import { Link } from "../../components/UI/Text/Link.jsx";
 
 import { useNavigate } from "react-router-dom";
@@ -40,6 +42,7 @@ const dummyParams = [
 
 export const HotelPage = () => {
   const navigate = useNavigate();
+  const { language } = useLanguage();
   const { t } = useTranslation();
 
   const handleClickBooking = () => {
@@ -73,12 +76,13 @@ export const HotelPage = () => {
   const startDate = queryParams.get("checkin");
   const endDate = queryParams.get("checkout");
   const guests = queryParams.get("guests");
+  const cityId = queryParams.get("cityId");
 
   const { offerApi } = useContext(ApiContext);
 
   const [hotel, setHotel] = useState({});
   const [offer, setOffer] = useState({});
-  const [images, setImages] = useState(imagesList);
+  const [images, setImages] = useState([]);
   const [paramValues, setParamValues] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -105,14 +109,15 @@ export const HotelPage = () => {
   useEffect(() => {
     if (!offerApi) return;
     if (!id) return;
+
     offerApi
       .searchId({
         id,
-        cityId: id,
-        startDate,
-        endDate,
+        lang: language,
+        startDate: new Date(startDate).toISOString(),
+        endDate: new Date(endDate).toISOString(),
         guests,
-        userDiscountPercent: 5,
+        userDiscountPercent: 0,
       })
       .then((res) => {
         const data = res.data[0];
@@ -127,7 +132,8 @@ export const HotelPage = () => {
         console.log("Loaded param rentObj:", res.data[0].rentObj[0].paramValues);
       })
       .catch((err) => console.error("Error loading offer:", err));
-  }, [id, offerApi, startDate, endDate, guests]);
+  }, [id, offerApi, startDate, endDate, guests, language]);
+
 
 
   const lat = 48.8566;
@@ -135,7 +141,7 @@ export const HotelPage = () => {
 
   return (
     <div className={styles.hotelPage}>
-      <Header_Full title="hotel" showFilterBtn={false} />
+      <Header_Full title={offer.title} showFilterBtn={false} />
       <main className={styles.hotel_page__content}>
 
         <div className="flex-center btn-w-full">
@@ -144,13 +150,13 @@ export const HotelPage = () => {
 
         <div className={`${styles.description_with_map} flex-center btn-w-full gap-20 btn-h-656 `}>
           <div className={styles.description}>
-            <HotelDescription text={hotel?.description || hotelDescriptionText} />
+            <HotelDescription text={offer?.description || hotelDescriptionText} />
           </div>
           <div className={`${styles.card_map} flex-left btn-w-full btn-h-full `} >
-            {lat && lng ? (
+            {hotel.latitude && hotel.longitude ? (
               <HotelMap
-                lat={lat} lng={lng}
-                hotelName={hotel.name}
+                lat={hotel.latitude} lng={hotel.longitude}
+                hotelName={offer.title}
                 minHeight="252"
                 showAddress={true}
               />
@@ -166,12 +172,12 @@ export const HotelPage = () => {
           <Link text={t("hotel.info_about_owner")} type="m_600_s_32" />
         </div>
         <div className="flex-left btn-w-full" >
-          <HotelParamsList params={dummyParams} />
+          <HotelParamsList params={paramValues} />
         </div>
         <div id="prices" className="flex-left btn-w-full gap-20 btn-h-656">
-         
-            <Hotel_info_card hotel={hotel} offer={offer} />
-       
+
+          <Hotel_info_card hotel={hotel} offer={offer} />
+
         </div>
 
 

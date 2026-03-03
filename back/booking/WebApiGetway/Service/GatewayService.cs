@@ -32,8 +32,6 @@ namespace WebApiGetway.Service
             where TRequest : class
         {
             var client = _clientFactory.CreateClient(serviceName);
-
-            // Прокидываем JWT из входящего запроса, если есть
             var authHeader = _httpContextAccessor.HttpContext?
                 .Request.Headers["Authorization"]
                 .FirstOrDefault();
@@ -76,12 +74,11 @@ namespace WebApiGetway.Service
                 route,
                 response.StatusCode);
 
-            // ⬇️ ВАЖНАЯ ЧАСТЬ
             if (response.IsSuccessStatusCode)
             {
                 object? content = null;
 
-                // если тело реально есть
+                
                 if (response.Content.Headers.ContentLength > 0)
                 {
                     content = await response.Content.ReadFromJsonAsync<object>();
@@ -93,14 +90,13 @@ namespace WebApiGetway.Service
                         StatusCode = (int)response.StatusCode
                     };
 
-                // возвращаем ТОТ ЖЕ статус, что пришёл из сервиса
+              
                 return new ObjectResult(content)
                 {
                     StatusCode = (int)response.StatusCode
                 };
             }
 
-            // ошибки пробрасываем как есть
             return new ObjectResult(await response.Content.ReadAsStringAsync())
             {
                 StatusCode = (int)response.StatusCode
@@ -114,6 +110,7 @@ namespace WebApiGetway.Service
             IFormFile file)
         {
             var client = _clientFactory.CreateClient(serviceName);
+
 
             using var content = new MultipartFormDataContent();
             var streamContent = new StreamContent(file.OpenReadStream());

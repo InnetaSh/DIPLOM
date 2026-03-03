@@ -27,7 +27,7 @@
         public bool IsApproved { get; set; } = true;
 
 
-        public static ReviewDto MapToDto(CreateReviewRequest request, int orderId, int userId)
+        public static ReviewDto MapToDto(CreateReviewRequest request, int orderId, int userId, int OfferId)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -35,6 +35,7 @@
             {
                 OrderId = orderId,
                 UserId = userId,
+                OfferId = OfferId,
                 Staff = request.Staff,
                 Facilities = request.Facilities,
                 Cleanliness = request.Cleanliness,

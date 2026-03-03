@@ -9,7 +9,7 @@ export const HotelGallery = ({ images = [] }) => {
   return (
     <div className={styles.gallery}>
       <div className={styles.gallery__container}>
-        {images.length >= 5 && (
+        {images.length >= 1 && (
           <div className={styles.gallery__columns}>
 
             {/* Левая колонка */}

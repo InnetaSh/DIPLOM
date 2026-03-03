@@ -181,40 +181,46 @@ export const SearchPage = () => {
   const { paramsCategoryApi } = useContext(ApiContext);
   const { language } = useLanguage();
   const { state } = useLocation();
-  const [openFilterMenu, setOpenFilterMenu] = useState(false);
 
+  const [openFilterMenu, setOpenFilterMenu] = useState(false);
   const [hotels, setHotels] = useState(mockHotels);
   const [city, setCity] = useState("");
   const [guests, setGuests] = useState(1);
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(null); // хранить как Date для DatePicker
+  const [endDate, setEndDate] = useState(null);
   const [filtersData, setFiltersData] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState({});
+  const [locationId, setLocationId] = useState(null);
 
 
-  // useEffect(() => {
-  //   const savedCity = localStorage.getItem("city");
-  //   const savedGuests = localStorage.getItem("guests");
-  //   const savedStart = localStorage.getItem("startDate");
-  //   const savedEnd = localStorage.getItem("endDate");
-  //   const savedHotels = localStorage.getItem("hotels");
+  useEffect(() => {
+    const savedCity = localStorage.getItem("city");
+    const savedGuests = localStorage.getItem("guests");
+    const savedStart = localStorage.getItem("startDate");
+    const savedEnd = localStorage.getItem("endDate");
+    const savedHotels = localStorage.getItem("hotels");
 
-  //   if (savedCity) setCity(savedCity);
-  //   if (savedGuests) setGuests(Number(savedGuests));
-  //   if (savedStart) setStartDate(savedStart);
-  //   if (savedEnd) setEndDate(savedEnd);
-  //   // if (savedHotels) setHotels(JSON.parse(savedHotels));
-  //        if (savedHotels) setHotels(mockHotels);
-  // }, []);
+    if (savedCity) setCity(savedCity);
+    if (savedGuests) setGuests(Number(savedGuests));
+    if (savedStart) setStartDate(new Date(savedStart));
+    if (savedEnd) setEndDate(new Date(savedEnd));
+    if (savedHotels) setHotels(JSON.parse(savedHotels));
+  }, []);
+
   useEffect(() => {
     if (!state) return;
 
-    offerApi.searchMain({
-      startDate: state.startDate,
-      endDate: state.endDate,
-      guests: state.guests,
-      userDiscountPercent: 5,
-    }).then(res => setHotels(res.data));
+    setCity(state.city || "");
+    setLocationId(state.locationId || null);
+    setGuests(state.guests || 1);
+    setStartDate(state.startDate ? new Date(state.startDate) : null);
+    setEndDate(state.endDate ? new Date(state.endDate) : null);
+
+
+    localStorage.setItem("city", state.city || "");
+    localStorage.setItem("guests", state.guests || 1);
+    if (state.startDate) localStorage.setItem("startDate", new Date(state.startDate).toISOString());
+    if (state.endDate) localStorage.setItem("endDate", new Date(state.endDate).toISOString());
   }, [state]);
 
 
@@ -229,22 +235,44 @@ export const SearchPage = () => {
 
 
   const handleFilterChange = (category, option) => {
-    setSelectedFilters((prev) => {
+    setSelectedFilters(prev => {
       const selected = prev[category] || [];
       if (selected.includes(option)) {
-        return { ...prev, [category]: selected.filter((v) => v !== option) };
+        return { ...prev, [category]: selected.filter(v => v !== option) };
       } else {
         return { ...prev, [category]: [...selected, option] };
       }
     });
   };
 
-  const handleSearchResults = (foundHotels, onSearchCity, guestCount, start, end) => {
+  // Поиск при переходе со страницы с state
+  useEffect(() => {
+    if (!state || !state.startDate || !state.endDate || !locationId) return;
+
+    const startIso = new Date(state.startDate).toISOString();
+    const endIso = new Date(state.endDate).toISOString();
+
+    offerApi.searchOffers({
+      startDate: startIso,
+      endDate: endIso,
+      guests: state.guests,
+      userDiscountPercent: 5,
+      lang: language,
+      cityId: locationId,
+      paramItemFilters: {}
+    }).then(res => setHotels(res.data))
+      .catch(err => console.error("Ошибка поиска предложений:", err));
+  }, [state, locationId, language]);
+
+
+
+  const handleSearchResults = (foundHotels, onSearchCity, guestCount, start, end, locId) => {
     setCity(onSearchCity);
     setHotels(foundHotels);
     setGuests(guestCount);
-    setStartDate(start);
-    setEndDate(end);
+    setStartDate(new Date(start));
+    setEndDate(new Date(end));
+    setLocationId(locId);
 
     localStorage.setItem("city", onSearchCity);
     localStorage.setItem("guests", guestCount);
@@ -257,12 +285,21 @@ export const SearchPage = () => {
 
   return (
     <div className={styles.searchPage}>
-      <Header_Full openFilterMenu={openFilterMenu} setOpenFilterMenu={setOpenFilterMenu} />
 
+      <Header_Full
+        city={city}
+        title={city}
+        guests={guests}
+        startDate={startDate}
+        endDate={endDate}
+        openFilterMenu={openFilterMenu}
+        setOpenFilterMenu={setOpenFilterMenu}
 
-      <main >
+        handleSearchResults={handleSearchResults}
+      />
+
+      <main>
         <div className={styles.searchPage__container}>
-
           <div
             className={styles.searchPage__container__list}
             style={{
@@ -270,7 +307,6 @@ export const SearchPage = () => {
               transition: "width 0.2s ease",
             }}
           >
-
             <HotelCardList
               hotels={hotels}
               guests={guests}
@@ -278,6 +314,7 @@ export const SearchPage = () => {
               endDate={endDate}
             />
           </div>
+
           {openFilterMenu && (
             <aside className={styles.searchPage__filters}>
               <FilterSidebar
@@ -288,7 +325,6 @@ export const SearchPage = () => {
             </aside>
           )}
         </div>
-
       </main>
 
       <Footer />

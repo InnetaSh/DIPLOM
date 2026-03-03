@@ -31,17 +31,70 @@
 }
 
 
+.hotelSlider {
+  width: 100%;
+}
 
-@media (max-width: 1440px) {
-  .hotelCardList {
-    width: 80%;
-  }
+.sliderViewport {
+  overflow: hidden;
+  width: 100%;
+  min-width: 600px;
+}
 
+.sliderTrack {
+  display: flex;
+  gap: 40px;
+  scroll-behavior: smooth;
+}
+@media (max-width: 1560px) {
+ 
+}
+@media (max-width: 1375px) {
   .hotelCardList__cardsColumn {
     display: grid;
-    grid-template-columns:  1fr;
+    grid-template-columns: repeat(2, 370px);
     gap: 27px 30px;
+    margin-top: 33px;
+    width: calc(370px * 2 + 30px);
+    /* 770px */
+    flex-shrink: 0;
   }
+.sliderViewport {
+  
+  min-width: 370px;
+}
+  .hotelCardList__cardsColumn>* {
+    min-width: 370px;
+  }
+
+  .sliderTrack {
+    overflow-x: auto;
+  }
+
+  .sliderTrack::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollControls {
+    display: flex;
+    z-index: 10;
+  }
+  .btn_container button {
+  display: flex !important;
+  }
+}
+
+.btn_container {
+   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 47px;
+  width: 100%;
+  padding: 0 4%;
+}
+.btn_container button {
+   display: none;
+   flex:0 0 62px;
 }
 
 /*======================================================*/
@@ -55,7 +108,7 @@
   display: block;
 }
 
- .badge {
+.badge {
   color: var(--color--text);
   padding: 8px 12px;
   border-radius: 10px;
@@ -65,7 +118,8 @@
   top: 65px;
   transform: rotate(5.5deg);
 }
-.line{
+
+.line {
   width: 210px;
   height: 1px;
   background-color: var(--color-text);

@@ -16,17 +16,19 @@
             set => _endDate = DateTime.SpecifyKind(value, DateTimeKind.Utc);
         }
 
-        public int Guests { get; set; }
+        public int Adults { get; set; }
+        public int Children { get; set; }
 
 
-        public static OfferByDataAndCountGuestRequest MapToResponse(DateTime startDate, DateTime endDate, int guests)
+        public static OfferByDataAndCountGuestRequest MapToResponse(DateTime startDate, DateTime endDate, int adults, int children)
         {
 
             return new OfferByDataAndCountGuestRequest
             {
                 StartDate = startDate,
                 EndDate = endDate,
-                Guests = guests
+                Adults = adults,
+                Children = children
             };         
         }
     }

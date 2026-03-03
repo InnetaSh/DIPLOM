@@ -1,7 +1,8 @@
 import http from "./http";
 
 export const locationApi = {
-  getAllCities: (lang = "en") => http.get(`/bff/city/get-all-translations/${lang}`),
+  getAllCities: (lang ) => http.get(`/Translation/city/get-all-translations/${lang}`),
+  getAllCountries: (lang ) => http.get(`/Translation/country/get-all-translations/${lang}`),
 
 
   getCountryTitle: (id) => http.get(`/Location/get-country-title/${id}`),

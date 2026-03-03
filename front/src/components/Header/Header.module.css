@@ -48,15 +48,15 @@
     row-gap: 20px;
   }
 
-  .headerMain__logo {
+  .headerMain__logo_order {
     order: 1;
   }
 
-  .headerMain__logo__actions_container {
+  .headerMain__logo__actions_container_order {
     order: 2;
   }
 
-  .searchBar {
+  .searchBar_order {
     order: 3;
     width: 100%;
     display: flex;

@@ -53,6 +53,7 @@ export const HotelCardList = ({
           title={hotel.title}
           image={hotel.rentObj?.[0]?.mainImageUrl || "-image.jpg"}
           city={hotel.city}
+          cityId={hotel.cityId}
           country={hotel.country}
           distance={hotel.distanceToCenter}
           rating={hotel.rating}
