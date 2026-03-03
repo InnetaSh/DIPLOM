@@ -11,7 +11,16 @@ namespace OrderApiService.View
 
         public int OfferId { get; set; }
         public int ClientId { get; set; }
+        public int OwnerId { get; set; }
+
+        public string? ClientEmail { get; set; }
+        public string? ClientPhoneNumber { get; set; }
         public int Guests { get; set; }
+
+        public int? Adults { get; set; }
+        public int? Children { get; set; }
+        public string? MainGuestFirstName { get; set; }
+        public string? MainGuestLastName { get; set; }
 
         // Даты проживания
         public DateTime StartDate { get; set; }
@@ -43,6 +52,11 @@ namespace OrderApiService.View
         //public string? PaymentMethod { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        public bool? isBusinessTrip { get; set; } = false;
+
+        public string? PaymentMethod { get; set; }
+
+
         // ===== Метод маппинга =====
         public static OrderResponse MapToResponse(Order model)
         {
@@ -57,8 +71,15 @@ namespace OrderApiService.View
                 // ===== Основные данные =====
                 OfferId = model.OfferId,
                 ClientId = model.ClientId,
+                OwnerId = model.OwnerId,
+                ClientEmail = model.ClientEmail,
+                ClientPhoneNumber = model.ClientPhoneNumber,
                 Guests = model.Guests,
+                Adults = model.Adults,
+                Children = model.Children,
 
+                MainGuestFirstName=model.MainGuestFirstName,
+                MainGuestLastName=model.MainGuestLastName,
                 // ===== Даты проживания =====
                 StartDate = model.StartDate,
                 EndDate = model.EndDate,
@@ -82,9 +103,10 @@ namespace OrderApiService.View
                 // ===== Примечание =====
                 ClientNote = model.ClientNote,
 
+                isBusinessTrip = model.isBusinessTrip,
                 // ===== Статус и оплата =====
                 Status = model.Status.ToString(),
-                //PaymentMethod = model.PaymentMethod,
+                PaymentMethod = model.PaymentMethod,
 
                 // ===== Системные поля =====
                 CreatedAt = model.CreatedAt

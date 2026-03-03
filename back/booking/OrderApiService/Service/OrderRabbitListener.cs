@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace OrderApiService.Services
 {
-    public class OrderRabbitListener: RabbitMqListenerBase
+    public class OrderRabbitListener : RabbitMqListenerBase
     {
 
 
@@ -15,17 +15,17 @@ namespace OrderApiService.Services
             _logger = logger;
 
         }
-        
+
         public override void HandleMessage(RabbitMQMessageBase msgObj)
         {
             if (msgObj.Sender == "GatewayController")
-    {
+            {
                 _logger.LogInformation("→ Обработка сообщения от GatewayController");
-    }
-    else if (msgObj.Sender == "AuthController")
-    {
+            }
+            else if (msgObj.Sender == "AuthController")
+            {
                 _logger.LogInformation("→ Обработка сообщения от AuthController");
-    }
+            }
             //base.HandleMessage(message);
         }
     }

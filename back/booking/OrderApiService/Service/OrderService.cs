@@ -1,6 +1,7 @@
 ﻿using Globals.Abstractions;
 using Globals.Sevices;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OrderApiService.Models;
 using OrderApiService.Models.Enum;
 using OrderApiService.Service.Interface;
@@ -20,13 +21,13 @@ namespace OrderApiService.Services
             try
             {
                 order.TotalPrice = order.OrderPrice + order.TaxAmount;
-      
+
                 order.Status = OrderStatus.Pending;
                 order.CreatedAt = DateTime.UtcNow;
                 await base.AddEntityAsync(order);
 
                 return true;
-                
+
             }
             catch (Exception ex) { }
             return false;
@@ -67,7 +68,7 @@ namespace OrderApiService.Services
                 if (order == null)
                     return -1;
 
-              
+
 
                 order.Status = status;
 
@@ -79,22 +80,38 @@ namespace OrderApiService.Services
                 return -1;
             }
         }
-     
+
 
 
 
         //===========================================================================================
 
-        public async Task<bool> HasDateConflict(int orderId, int offerId,  DateTime start, DateTime end)
+        public async Task<bool> HasDateConflict(int orderId, int offerId, DateTime start, DateTime end)
         {
             using var db = new OrderContext();
-            return await db.Orders.AnyAsync(o =>
-                o.id == orderId &&
-                o.OfferId == offerId &&
-                o.Status != OrderStatus.Cancelled &&
-                o.StartDate < end &&
-                o.EndDate > start
-            );
+
+            var fitOrders = db.Orders.Where(o => o.id == orderId && o.OfferId == offerId).ToList();
+            var flag = false;
+            foreach (var order in fitOrders)
+            {
+                if (order.StartDate >= start && order.StartDate < end ) 
+                {
+                    flag= true;
+                    break;
+                }
+                else if(order.EndDate > start && order.EndDate <= end)
+                {
+                    flag = true;
+                    break;
+                }
+            }
+            return flag;
+
+            //return await db.Orders.AnyAsync(o =>
+            //    o.id == orderId &&
+            //    o.OfferId == offerId &&
+            //    ((o.StartDate >= start && o.StartDate <= end) || (o.EndDate >= start && o.EndDate <= end))
+            //);
         }
 
         //===========================================================================================
@@ -110,6 +127,41 @@ namespace OrderApiService.Services
                 .ToList();
             return orderResponses;
         }
+
+        //===========================================================================================
+
+        public async Task<List<OrderResponse>> GetOrdersByOfferIdAsync(int offerId)
+        {
+            using var db = new OrderContext();
+            var orders = await db.Orders
+                .Where(o => o.OfferId == offerId)
+                .ToListAsync();
+            var orderResponses = orders
+                .Select(o => OrderResponse.MapToResponse(o))
+                .ToList();
+            return orderResponses;
+        }
+
+        //===========================================================================================
+
+        public async Task<List<int>> GetPendingOfferIdsAsync(int ownerId)
+        {
+            using var db = new OrderContext();
+
+            return await db.Orders
+                .Where(o => o.OwnerId == ownerId && o.Status == OrderStatus.Pending)
+                .Select(o => o.OfferId)
+                .Distinct()         
+                .ToListAsync();
+        }
+
+        //public async Task<bool> HasPendingOrderAsync(int ownerId)
+        //{
+        //    using var db = new OrderContext();
+
+        //    return await db.Orders
+        //        .AnyAsync(o => o.OwnerId == ownerId && o.Status == OrderStatus.Pending);
+        //}
 
 
 

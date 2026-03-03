@@ -43,8 +43,8 @@ namespace OrderApiService.Controllers
             }
             catch (Exception ex)
             {
-                // _logger.LogError(ex, "Ошибка при создании заказа");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Внутренняя ошибка сервера");
+                Console.WriteLine(ex.ToString());
+                throw;
             }
         }
 
@@ -53,16 +53,22 @@ namespace OrderApiService.Controllers
 
         [HttpPost("update/status/{orderId}")]
         public async Task<IActionResult> UpdateOrderStatus(
-        int orderId,
-        [FromQuery] OrderStatus orderState) 
+             int orderId,
+         [FromQuery] string orderState) 
         {
+            if (!Enum.TryParse<OrderStatus>(orderState, true, out var statusEnum))
+            {
+                return BadRequest($"Неверный статус: {orderState}");
+            }
 
-            var result = await _orderService.UpdateOrderStatus(orderId, orderState);
+            var result = await _orderService.UpdateOrderStatus(orderId, statusEnum);
+
             if (result == -1)
                 return BadRequest("Не удалось изменить заказ");
 
             return Ok(result);
         }
+
 
         //===========================================================================================
 
@@ -95,6 +101,34 @@ namespace OrderApiService.Controllers
         }
 
         //===========================================================================================
+
+        [HttpGet("get/byOfferId/{offerId}")]
+        public async Task<ActionResult<List<OrderResponse>>> GetOrdersByOfferIdAsync(
+        int offerId)
+        {
+
+            var orders = await _orderService.GetOrdersByOfferIdAsync(offerId);
+
+            if (orders == null)
+                return NotFound();
+
+            return Ok(orders);
+        }
+
+
+
+
+        //===========================================================================================
+
+        [HttpGet("has-pending/{ownerId}")]
+        public async Task<ActionResult<List<int>>> GetPendingOfferIds(int ownerId)
+        {
+            var offerIds = await _orderService.GetPendingOfferIdsAsync(ownerId);
+
+            return Ok(offerIds);
+        }
+
+        //===========================================================================================
         [HttpPost("{offerId}/valid/date-time")]
         public async Task<ActionResult<bool>> HasDateConflict(
            int offerId,
@@ -105,8 +139,8 @@ namespace OrderApiService.Controllers
             var end = request.End;
             foreach (var orderId in ordersIdList)
             {
-                var result = await _orderService.HasDateConflict(orderId, offerId, start, end);
-                if (result)
+                var isExist = await _orderService.HasDateConflict(orderId, offerId, start, end);
+                if (!isExist)
                     return false;
             }
             return true;
