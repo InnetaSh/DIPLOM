@@ -1,18 +1,11 @@
 ﻿using Globals.EventBus;
 using Microsoft.Extensions.Logging;
 
-namespace OfferApiService.Services
+namespace LocationApiService.Services
 {
     public class LocationRabbitListener : RabbitMqListenerBase
     {
-        //private readonly ILogger<OfferRabbitListener> _logger;
-
-
-        //public OfferRabbitListener(ILogger<OfferRabbitListener> logger)
-        //{
-        //    _logger = logger;
-
-        //}
+       
 
         public override void HandleMessage(RabbitMQMessageBase msgObj)
         {

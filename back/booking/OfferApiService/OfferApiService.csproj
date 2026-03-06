@@ -25,6 +25,7 @@
 
 
   <ItemGroup>
+    <ProjectReference Include="..\..\OfferContracts\OfferContracts.csproj" />
     <ProjectReference Include="..\Globals\Globals.csproj" />
   </ItemGroup>
 

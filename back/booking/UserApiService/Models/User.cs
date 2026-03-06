@@ -1,6 +1,6 @@
 ﻿using Globals.Models;
-using UserApiService.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using UserContracts.Enums;
 namespace UserApiService.Models
 {
     public class User : EntityBase

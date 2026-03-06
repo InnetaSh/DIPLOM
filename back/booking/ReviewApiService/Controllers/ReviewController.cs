@@ -1,10 +1,11 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using ReviewApiService.Mappers;
 using ReviewApiService.Models;
 using ReviewApiService.Service;
 using ReviewApiService.Service.Interface;
-using ReviewApiService.View;
+using ReviewContracts;
 
 
 namespace ReviewApiService.Controllers
@@ -95,13 +96,13 @@ namespace ReviewApiService.Controllers
 
         protected override Review MapToModel(ReviewRequest request)
         {
-            return ReviewRequest.MapToModel(request);
+            return ReviewMapper.MapToModel(request);
         }
 
 
         protected override ReviewResponse MapToResponse(Review model)
         {
-            return ReviewResponse.MapToResponse(model);
+            return ReviewMapper.MapToResponse(model);
         }
 
     }

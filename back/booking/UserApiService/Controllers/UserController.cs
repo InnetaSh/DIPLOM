@@ -5,10 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using UserApiService.Mappers;
 using UserApiService.Models;
-using UserApiService.Models.Enums;
+//using UserApiService.Models.Enums;
 using UserApiService.Services.Interfaces;
-using UserApiService.View;
+using UserContracts;
+using UserContracts.Enums;
+//using UserApiService.View;
 
 namespace UserApiService.Controllers
 {
@@ -236,7 +239,7 @@ namespace UserApiService.Controllers
 
             user.Discount += discountCount;
             await _userService.UpdateEntityAsync(user);
-            var userDto = UserResponse.MapToResponse(user);
+            var userDto = MapToResponse(user);
 
             return Ok(userDto);
         }
@@ -269,7 +272,7 @@ namespace UserApiService.Controllers
             await _userService.UpdateEntityAsync(user);
 
             
-            var userDto = UserResponse.MapToResponse(user);
+            var userDto = MapToResponse(user);
       
             return Ok(userDto);
         }
@@ -335,7 +338,7 @@ namespace UserApiService.Controllers
 
             await _userService.UpdateEntityAsync(user);
 
-            var userDto = UserResponse.MapToResponse(user);
+            var userDto = MapToResponse(user);
             return Ok(userDto);
         }
 
@@ -373,9 +376,9 @@ namespace UserApiService.Controllers
 
         // =====================================================================
         protected override User MapToModel(UserRequest request)
-            => UserRequest.MapToModel(request);
+            => UserMapper.MapToModel(request);
 
         protected override UserResponse MapToResponse(User model)
-            => UserResponse.MapToResponse(model);
+            => UserMapper.MapToResponse(model);
     }
 }

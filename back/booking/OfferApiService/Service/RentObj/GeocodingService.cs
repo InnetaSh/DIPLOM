@@ -1,5 +1,6 @@
 ﻿
-using OfferApiService.View.RentObj;
+
+using OfferContracts.RentObj;
 using System.Net.Http;
 using System.Text.Json;
 

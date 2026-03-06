@@ -1,11 +1,11 @@
 ﻿using Globals.Abstractions;
 using StatisticApiService.Models;
 using StatisticApiService.Models.Enum;
-using StatisticApiService.View;
+using StatisticContracts;
 
 namespace StatisticApiService.Services.Interface
 {
-    public interface IEntityStatsService : IServiceBase<PopularEntity>
+    public interface IEntityStatsService : IServiceBaseNew<PopularEntity>
     {
         Task<bool> AddEventAsync(EntityStatEvent entityStatEvent);
         //Task AggregateDayAsync(DateOnly date);

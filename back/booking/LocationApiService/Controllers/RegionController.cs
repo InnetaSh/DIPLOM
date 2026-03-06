@@ -1,8 +1,11 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
+using LocationApiService.Mappers;
 using LocationApiService.Models;
 using LocationApiService.Service.Interfaces;
-using LocationApiService.View;
+using LocationContracts;
+
+//using LocationApiService.View;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocationApiService.Controllers
@@ -23,13 +26,13 @@ namespace LocationApiService.Controllers
 
         protected override Region MapToModel(RegionRequest request)
         {
-            return RegionRequest.MapToModel(request);
+            return RegionMapper.MapToModel(request);
         }
 
 
         protected override RegionResponse MapToResponse(Region model)
         {
-            return RegionResponse.MapToResponse(model, _baseUrl);
+            return RegionMapper.MapToResponse(model, _baseUrl);
 
         }
     }

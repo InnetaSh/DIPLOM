@@ -8,6 +8,10 @@ namespace StatisticApiService.Models
         public DbSet<PopularEntity> PopularEntities { get; set; }
         public DbSet<EntityStatEvent> EntityStatEvents { get; set; }
         //public DbSet<EntityStatsAggregate> EntityStatsAggregates { get; set; }
+
+        public StatisticDbContext(DbContextOptions<StatisticDbContext> options) : base(options)
+        {
+        }
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
             builder.Entity<PopularEntity>(entity =>

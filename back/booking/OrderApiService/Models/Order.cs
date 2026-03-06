@@ -1,5 +1,5 @@
 ﻿using Globals.Models;
-using OrderApiService.Models.Enum;
+using OrderContracts.Enum;
 
 namespace OrderApiService.Models
 {
@@ -24,7 +24,7 @@ namespace OrderApiService.Models
         public string? MainGuestLastName { get; set; }
 
         // ===== Даты проживания =====
-        public DateTime StartDate { get => _startDate; set => _startDate  = value.ToUniversalTime(); }   // Дата заезда
+        public DateTime StartDate { get => _startDate; set => _startDate = value.ToUniversalTime(); }   // Дата заезда
         public DateTime EndDate { get => _endDate; set => _endDate = value.ToUniversalTime(); }     // Дата выезда
 
         // ===== Финансовая информация =====
@@ -32,11 +32,11 @@ namespace OrderApiService.Models
         public decimal OrderPrice { get; set; }        // Цена без скидок и налогов
         public decimal DiscountPercent { get; set; }  // Процент скидки
         public decimal DiscountAmount { get; set; }   // Сумма скидки в валюте
-       // public decimal? DepositAmount { get; set; }   // Сумма депозита (если есть)
+                                                        // public decimal? DepositAmount { get; set; }   // Сумма депозита (если есть)
         public decimal TaxAmount { get; set; }        // Налог в валюте
         public decimal TotalPrice { get; set; }       // Итоговая стоимость с учётом всех скидок и налогов
 
-       // public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
+        // public bool FreeCancelEnabled { get; set; }       // Доступна ли бесплатная отмена
         // ===== Оплата до=====
         //public DateTime? PaidAt { get; set; }            // Дата и время оплаты (если есть)
 
@@ -54,8 +54,9 @@ namespace OrderApiService.Models
 
         // ===== Статус заказа =====
         public OrderStatus Status { get; set; }          // Текущий статус заказа (новый, подтверждён, отменён и т.д.)
-       // public string PaymentMethod { get; set; }
-        // ===== Дата создания заказа =====
+                                                            // public string PaymentMethod { get; set; }
+                                                            // ===== Дата создания заказа =====
         public DateTime CreatedAt { get => _createdAt; set => _createdAt = value.ToUniversalTime(); } // Дата создания записи
     }
+    
 }

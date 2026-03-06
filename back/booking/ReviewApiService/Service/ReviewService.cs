@@ -2,67 +2,90 @@
 using Microsoft.EntityFrameworkCore;
 using ReviewApiService.Models;
 using ReviewApiService.Service.Interface;
-using ReviewApiService.View;
+
 
 namespace ReviewApiService.Service
 {
    
-    public class ReviewService : TableServiceBase<Review, ReviewContext>, IReviewService
+    public class ReviewService : TableServiceBaseNew<Review, ReviewContext>, IReviewService
     {
+        public ReviewService(ReviewContext context, ILogger<ReviewService> logger) : base(context, logger)
+        {
+        }
 
         public async Task<List<Review>> GetReviewsByOfferId(int offerId)
         {
-            using var db = new ReviewContext();
-            var fitReviews = await db.Reviews
-            .Where(r => r.OfferId == offerId && r.IsApproved)
-            .ToListAsync();
-            return fitReviews;
+            _logger.LogInformation("Getting reviews for OfferId {OfferId}", offerId);
+
+            var reviews = await _context.Reviews
+                .AsNoTracking()
+                .Where(r => r.OfferId == offerId && r.IsApproved)
+                .ToListAsync();
+
+            _logger.LogInformation("Retrieved {Count} reviews for OfferId {OfferId}", reviews.Count, offerId);
+
+            return reviews;
         }
 
         public async Task<List<Review>> GetReviewsByUserId(int userId)
         {
-            using var db = new ReviewContext();
-            var fitReviews = await db.Reviews
-            .Where(r => r.UserId == userId && r.IsApproved)
-            .ToListAsync();
-            return fitReviews;
+            _logger.LogInformation("Getting reviews for UserId {UserId}", userId);
+
+            var reviews = await _context.Reviews
+                 .AsNoTracking()
+                .Where(r => r.UserId == userId && r.IsApproved)
+                .ToListAsync();
+
+            _logger.LogInformation("Retrieved {Count} reviews for UserId {UserId}", reviews.Count, userId);
+
+            return reviews;
         }
 
 
         public async Task<double> GetRatingByOfferId(int offerId)
         {
-            using var db = new ReviewContext();
+            _logger.LogInformation("Calculating rating for OfferId {OfferId}", offerId);
 
-            var fitReviews = await db.Reviews
+            var rating = await _context.Reviews
+                 .AsNoTracking()
                 .Where(r => r.OfferId == offerId && r.IsApproved)
-                .ToListAsync();
+                .AverageAsync(r => (double?)r.OverallRating);
 
-            if (!fitReviews.Any())
-                return 0; 
+            var result = rating ?? 0;
 
-            return fitReviews.Average(r => r.OverallRating);
+            _logger.LogInformation("Rating for OfferId {OfferId} = {Rating}", offerId, result);
+
+            return result;
         }
 
         public async Task<Dictionary<int, double>> GetRatingsByOfferIds(List<int> offerIds)
         {
             if (offerIds == null || offerIds.Count == 0)
-        return new Dictionary<int, double>();
+            {
+                _logger.LogWarning("GetRatingsByOfferIds called with empty offerIds");
+                return new Dictionary<int, double>();
+            }
 
-    using var db = new ReviewContext();
+            _logger.LogInformation("Calculating ratings for {Count} offers", offerIds.Count);
 
-    return await db.Reviews
-        .Where(r => r.IsApproved && offerIds.Contains(r.OfferId))
-        .GroupBy(r => r.OfferId)
-        .ToDictionaryAsync(
-            g => g.Key,
-            g => g.Average(r => r.OverallRating)
-        );
+            var ratings = await _context.Reviews
+                 .AsNoTracking()
+                .Where(r => r.IsApproved && offerIds.Contains(r.OfferId))
+                .GroupBy(r => r.OfferId)
+                .ToDictionaryAsync(
+                    g => g.Key,
+                    g => g.Average(r => r.OverallRating)
+                );
+
+            _logger.LogInformation("Calculated ratings for {Count} offers", ratings.Count);
+
+            return ratings;
         }
 
         //public async Task<Dictionary<int, OfferReviewStats>> GetOfferReviewStatsAsync(IEnumerable<int> offerIds)
         //{
-        //    using var db = new ReviewContext();
-        //    var reviews = await db.Reviews
+        //   
+        //    var reviews = await _context.Reviews
         //        .Where(r => offerIds.Contains(r.OfferId) && r.IsApproved)
         //        .ToListAsync();
 

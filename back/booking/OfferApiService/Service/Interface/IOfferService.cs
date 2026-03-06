@@ -1,11 +1,11 @@
 ﻿using Globals.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 using OfferApiService.Models;
-using OfferApiService.View;
+using OfferContracts;
 
 namespace OfferApiService.Service.Interface
 {
-    public interface IOfferService : IServiceBase<Offer>
+    public interface IOfferService : IServiceBaseNew<Offer>
     {
         Task<Offer> GetOnlyOfferAsync(int id, params string[] includeProperties);
 

@@ -1,5 +1,6 @@
 using Globals.Abstractions;
 using Globals.EventBus;
+using Globals.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -161,6 +162,8 @@ builder.Services.AddHttpContextAccessor();
 
 
 var app = builder.Build();
+app.UseMiddleware<ExceptionMiddleware>();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

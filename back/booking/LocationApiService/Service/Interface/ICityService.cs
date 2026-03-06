@@ -3,7 +3,7 @@ using LocationApiService.Models;
 
 namespace LocationApiService.Service.Interfaces
 {
-    public interface ICityService : IServiceBase<City>
+    public interface ICityService : IServiceBaseNew<City>
     {
     }
 }

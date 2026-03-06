@@ -1,12 +1,13 @@
 ﻿using Globals.Abstractions;
 using Microsoft.AspNetCore.Identity.Data;
 using UserApiService.Models;
-using UserApiService.Models.Enums;
-using UserApiService.View;
+using UserContracts;
+//using UserApiService.Models.Enums;
+//using UserApiService.View;
 
 namespace UserApiService.Services.Interfaces
 {
-    public interface IUserService : IServiceBase<User>
+    public interface IUserService : IServiceBaseNew<User>
     {
         Task<bool> AddOrderToClient(int userId, int orderId);
         Task<bool> AddOfferToOwner(int userId, int offerId);

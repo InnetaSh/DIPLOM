@@ -2,7 +2,7 @@
 using Globals.Controllers;
 using TranslationApiService.Models.Attraction;
 using TranslationApiService.Service.Attraction.Interface;
-using TranslationApiService.View;
+using TranslationContracts;
 
 
 namespace TranslationApiService.Controllers

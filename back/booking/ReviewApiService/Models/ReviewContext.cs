@@ -7,6 +7,10 @@ namespace ReviewApiService.Models
     {
         public DbSet<Review> Reviews { get; set; }
 
+        public ReviewContext(DbContextOptions<ReviewContext> options) : base(options)
+        {
+        }
+
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
             builder.Entity<Review>(entity =>

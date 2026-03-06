@@ -5,9 +5,11 @@ using OfferApiService.Models.RentObjModel;
 
 namespace OfferApiService.Services.Interfaces.RentObj
 {
-    public class RentObjParamValueService : TableServiceBase<RentObjParamValue, OfferContext>, IRentObjParamValueService
+    public class RentObjParamValueService : TableServiceBaseNew<RentObjParamValue, OfferContext>, IRentObjParamValueService
     {
+        public RentObjParamValueService(OfferContext context, ILogger<RentObjParamValueService> logger) : base(context, logger)
+        {
+        }
 
-        
     }
 }

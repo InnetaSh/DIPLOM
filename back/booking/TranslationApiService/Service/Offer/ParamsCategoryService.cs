@@ -8,6 +8,8 @@ namespace TranslationApiService.Service.Offer
 {
     public class ParamsCategoryService : TranslationServiceBase<ParamsCategoryTranslation, TranslationContext>, IParamsCategoryService
     {
-
+        public ParamsCategoryService(TranslationContext context, ILogger<ParamsCategoryService> logger) : base(context, logger)
+        {
+        }
     }
 }

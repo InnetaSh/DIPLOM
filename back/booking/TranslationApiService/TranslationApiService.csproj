@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\TranslationContracts\TranslationContracts.csproj" />
     <ProjectReference Include="..\Globals\Globals.csproj" />
   </ItemGroup>
 

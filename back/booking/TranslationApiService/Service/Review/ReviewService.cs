@@ -9,6 +9,8 @@ namespace TranslationApiService.Service.Review
    
     public class ReviewService : TranslationServiceBase<ReviewTranslation, TranslationContext>, IReviewService
     {
-
+        public ReviewService(TranslationContext context, ILogger<ReviewService> logger) : base(context, logger)
+        {
+        }
     }
 }

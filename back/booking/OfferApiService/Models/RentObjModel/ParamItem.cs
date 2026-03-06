@@ -1,5 +1,5 @@
 ﻿using Globals.Models;
-using OfferApiService.Models.RentObjModel.Enums;
+using OfferContracts.RentObj.Enums;
 
 
 namespace OfferApiService.Models.RentObjModel

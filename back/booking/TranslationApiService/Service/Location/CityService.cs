@@ -8,6 +8,8 @@ namespace TranslationApiService.Service.Location
 {
     public class CityService : TranslationServiceBase<CityTranslation, TranslationContext>, ICityService
     {
-        
+        public CityService(TranslationContext context, ILogger<CityService> logger) : base(context, logger)
+        {
+        }
     }
 }

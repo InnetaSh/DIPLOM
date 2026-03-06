@@ -2,11 +2,11 @@
 using Globals.Controllers;
 using Globals.Helpers;
 using Microsoft.AspNetCore.Mvc;
+using OfferApiService.Mappers;
 using OfferApiService.Models.RentObjModel;
 using OfferApiService.Service;
 using OfferApiService.Services.Interfaces.RentObj;
-using OfferApiService.View.RentObj;
-using System.Diagnostics.CodeAnalysis;
+using OfferContracts.RentObj;
 
 namespace OfferApiService.Controllers.RentObj
 {
@@ -50,7 +50,7 @@ namespace OfferApiService.Controllers.RentObj
             double cityLongitude = request.CityLongitude ?? 0;
             request.DistanceToCenter = (int)Helper.CalculateDistanceMeters(latitude, longitude, cityLatitude, cityLongitude);
 
-            var model = RentObjRequest.MapToModel(request);
+            var model = RentObjMapper.MapToModel(request);
 
             var result = await _service.AddEntityGetIdAsync(model);
 
@@ -116,7 +116,7 @@ namespace OfferApiService.Controllers.RentObj
 
             PublishMqEvent("Updated", existingRentObj);
 
-            var rentObjResponse = RentObjResponse.MapToResponse(existingRentObj, _baseUrl);
+            var rentObjResponse = RentObjMapper.MapToResponse(existingRentObj, _baseUrl);
             if (rentObjResponse == null)
                 return NotFound(new { message = "Item not found after update" });
 
@@ -127,7 +127,7 @@ namespace OfferApiService.Controllers.RentObj
       
         protected override RentObject MapToModel(RentObjRequest request)
         {
-            var rentObject = RentObjRequest.MapToModel(
+            var rentObject = RentObjMapper.MapToModel(
                 request
             );
             return rentObject;
@@ -137,7 +137,7 @@ namespace OfferApiService.Controllers.RentObj
 
         protected override RentObjResponse MapToResponse(RentObject model)
         {
-            return RentObjResponse.MapToResponse(model, _baseUrl);
+            return RentObjMapper.MapToResponse(model, _baseUrl);
         }
 
 

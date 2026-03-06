@@ -3,19 +3,27 @@ using Microsoft.EntityFrameworkCore;
 using StatisticApiService.Models;
 using StatisticApiService.Models.Enum;
 using StatisticApiService.Services.Interface;
-using StatisticApiService.View;
+using StatisticContracts;
 
 namespace StatisticApiService.Services
 {
-    public class EntityStatsService : TableServiceBase<PopularEntity, StatisticDbContext>, IEntityStatsService
+    public class EntityStatsService : TableServiceBaseNew<PopularEntity, StatisticDbContext>, IEntityStatsService
     {
-
+        public EntityStatsService(StatisticDbContext context, ILogger<EntityStatsService> logger) : base(context, logger)
+        {
+        }
         public async Task<bool> AddEventAsync(EntityStatEvent entityStatEvent)
         {
-            using var db = new StatisticDbContext();
-            db.EntityStatEvents.Add(entityStatEvent);
+            _logger.LogInformation(
+                    "Adding stat event: EntityType {EntityType}, EntityId {EntityId}, Action {ActionType}",
+                    entityStatEvent.EntityType,
+                    entityStatEvent.EntityId,
+                    entityStatEvent.ActionType);
 
-            var result = await db.SaveChangesAsync();
+            _context.EntityStatEvents.Add(entityStatEvent);
+
+            var result = await _context.SaveChangesAsync();
+
             return result > 0;
         }
 
@@ -57,24 +65,27 @@ namespace StatisticApiService.Services
              DateOnly? startDate = null,
              DateOnly? endDate = null)
         {
-            using var db = new StatisticDbContext();
+            _logger.LogInformation(
+         "Getting popular entities for type {EntityType}, limit {Limit}",
+         type, limit);
 
-            var query = db.EntityStatEvents
-              .Where(a => a.EntityType == type).ToList();
+            IQueryable<EntityStatEvent> query = _context.EntityStatEvents
+                .AsNoTracking()
+                .Where(a => a.EntityType == type);
 
             if (startDate.HasValue)
             {
                 var start = startDate.Value.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
-                query = query.Where(e => e.CreatedAt >= start).ToList();
+                query = query.Where(e => e.CreatedAt >= start);
             }
 
             if (endDate.HasValue)
             {
                 var end = endDate.Value.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
-                query = query.Where(e => e.CreatedAt <= end).ToList();
+                query = query.Where(e => e.CreatedAt <= end);
             }
 
-            var r = query
+            var result = await query
                 .GroupBy(a => a.EntityId)
                 .Select(g => new PopularEntityResponse
                 {
@@ -85,21 +96,12 @@ namespace StatisticApiService.Services
                         g.Count(e => e.ActionType == ActionType.Booking) * 5
                 })
                 .OrderByDescending(x => x.Score)
-                .Take(limit).ToList();
-            return r;
-            //return await query
-            //    .GroupBy(a => a.EntityId)
-            //    .Select(g => new PopularEntityResponse
-            //    {
-            //        EntityId = g.Key,
-            //        Score =
-            //            g.Count(e => e.ActionType == ActionType.Search) * 1 +
-            //            g.Count(e => e.ActionType == ActionType.View) * 2 +
-            //            g.Count(e => e.ActionType == ActionType.Booking) * 5
-            //    })
-            //    .OrderByDescending(x => x.Score)
-            //    .Take(limit)
-            //    .ToListAsync();
+                .Take(limit)
+                .ToListAsync();
+
+            _logger.LogInformation("Retrieved {Count} popular entities", result.Count);
+
+            return result;
         }
     }
 }

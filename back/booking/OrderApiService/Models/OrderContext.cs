@@ -7,7 +7,9 @@ namespace OrderApiService.Models
     {
         public DbSet<Order> Orders { get; set; }
 
-
+        public OrderContext(DbContextOptions<OrderContext> options) : base(options)
+        {
+        }
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
             builder.Entity<Order>(entity =>

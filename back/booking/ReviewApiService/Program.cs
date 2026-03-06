@@ -1,7 +1,11 @@
 using Globals.Abstractions;
 using Globals.EventBus;
-using ReviewApiService.Service.Interface;
+using Globals.Extensions;
+using Globals.Middleware;
+using Microsoft.EntityFrameworkCore;
 using ReviewApiService.Service;
+using ReviewApiService.Models;
+using ReviewApiService.Service.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +27,25 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<ReviewContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+
+    var enableSensitive =
+        Environment.GetEnvironmentVariable("ENABLE_SENSITIVE_LOGGING");
+
+    var aspEnv =
+        Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+    if (string.Equals(enableSensitive, "true", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(aspEnv, "Development", StringComparison.OrdinalIgnoreCase))
+    {
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
+});
+
 builder.Services.AddScoped<IReviewService, ReviewService>();
 
 
@@ -30,6 +53,9 @@ builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 builder.Services.AddHostedService<ReviewRabbitListener>();
 
 var app = builder.Build();
+//app.UseMiddleware<ExceptionMiddleware>();
+app.UseGlobalMiddleware();
+
 
 Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
 

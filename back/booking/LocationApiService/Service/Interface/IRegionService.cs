@@ -4,7 +4,7 @@ using LocationApiService.Models;
 
 namespace LocationApiService.Service.Interfaces
 {
-    public interface IRegionService : IServiceBase<Region>
+    public interface IRegionService : IServiceBaseNew<Region>
     {
     }
 }

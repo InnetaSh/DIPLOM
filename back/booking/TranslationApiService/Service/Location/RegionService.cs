@@ -7,6 +7,8 @@ namespace TranslationApiService.Service.Location
 {
     public class RegionService : TranslationServiceBase<RegionTranslation, TranslationContext>, IRegionService
     {
-
+        public RegionService(TranslationContext context, ILogger<RegionService> logger) : base(context, logger)
+        {
+        }
     }
 }

@@ -2,9 +2,11 @@
 using System.Security.Cryptography;
 using System.Text;
 using UserApiService.Models;
-using UserApiService.Models.Enums;
+//using UserApiService.Models.Enums;
 using UserApiService.Services.Interfaces;
-using UserApiService.View;
+using UserContracts;
+using UserContracts.Enums;
+//using UserApiService.View;
 
 namespace UserApiService.Services
 {
@@ -13,12 +15,17 @@ namespace UserApiService.Services
         private readonly UserContext _context;
         private readonly ITokenService _tokenService;
         private readonly IPasswordHasher _passwordHasher;
-
-        public AuthService(ITokenService tokenService, IPasswordHasher passwordHasher)
+        private readonly ILogger<AuthService> _logger;
+        public AuthService(
+          UserContext context,
+          ITokenService tokenService,
+          IPasswordHasher passwordHasher,
+          ILogger<AuthService> logger)
         {
-            _context = new UserContext();
+            _context = context;
             _tokenService = tokenService;
             _passwordHasher = passwordHasher;
+            _logger = logger;
         }
 
         public async Task<LoginResponse> GoogleLoginAsync(string email, string name)
@@ -51,19 +58,24 @@ namespace UserApiService.Services
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
         {
-            //var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
             var normalizedPhone = NormalizePhone(request.Login);
+            _logger.LogInformation("Login attempt for {Login}", request.Login);
 
-            var user =  _context.Users.FirstOrDefault(u =>
-                u.Email == request.Login ||
-                u.PhoneNumber == normalizedPhone);
+            var user = await _context.Users
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(u =>
+                     u.Email == request.Login ||
+                     u.PhoneNumber == normalizedPhone);
 
-            if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash, user.PasswordSalt))
-                throw new UnauthorizedAccessException("Неверное имя пользователя или пароль");
+            if (user == null ||
+            !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash, user.PasswordSalt))
+            {
+                _logger.LogWarning("Failed login attempt for {Login}", request.Login);
+                throw new UnauthorizedAccessException("Invalid login or password");
+            }
 
             var token = _tokenService.GenerateJwtToken(user);
-            //user.Token = token;
-            await _context.SaveChangesAsync();
+            _logger.LogInformation("User {UserId} logged in", user.id);
 
             return new LoginResponse
             {
@@ -75,6 +87,15 @@ namespace UserApiService.Services
 
         public async Task<RegisterResponse> RegisterAsync(RegisterRequest request)
         {
+            _logger.LogInformation("Registration attempt for email {Email}", request.Email);
+
+            if (await _context.Users.AnyAsync(u => u.Email == request.Email))
+            {
+                _logger.LogWarning("Registration failed: Email {Email} already exists", request.Email);
+                throw new Exception("Email already exists");
+            }
+
+
             var normalizedPhone = NormalizePhone(request.PhoneNumber);
 
             _passwordHasher.CreatePasswordHash(request.Password, out byte[] hash, out byte[] salt);
@@ -105,6 +126,13 @@ namespace UserApiService.Services
 
             _context.Users.Add(newUser);
             await _context.SaveChangesAsync();
+            _logger.LogInformation(
+               "User registered successfully. UserId: {UserId}, Email: {Email}, Role: {Role}",
+               newUser.id,
+               newUser.Email,
+               newUser.RoleName
+           );
+
 
             return new RegisterResponse
             {
@@ -117,11 +145,21 @@ namespace UserApiService.Services
 
         public async Task<bool> DeleteUserAsync(int id)
         {
+            _logger.LogInformation("Attempt to delete user with id {UserId}", id);
+
             var user = await _context.Users.FindAsync(id);
-            if (user == null) return false;
+
+            if (user == null)
+            {
+                _logger.LogWarning("Delete failed. User with id {UserId} not found", id);
+                return false;
+            }
 
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
+
+            _logger.LogInformation("User with id {UserId} deleted successfully", id);
+
             return true;
         }
 
@@ -141,7 +179,6 @@ namespace UserApiService.Services
             if (string.IsNullOrWhiteSpace(phone))
                 return phone;
 
-            // убираем всё кроме цифр
             return new string(phone.Where(char.IsDigit).ToArray());
         }
 

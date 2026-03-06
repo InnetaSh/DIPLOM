@@ -1,57 +1,50 @@
 ﻿using Globals.Abstractions;
 using Globals.Sevices;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using OrderApiService.Mappers;
 using OrderApiService.Models;
-using OrderApiService.Models.Enum;
 using OrderApiService.Service.Interface;
-using OrderApiService.View;
-using System.Collections.Generic;
-using System.Net.Http.Json;
+using OrderContracts;
+using OrderContracts.Enum;
 
 namespace OrderApiService.Services
 {
-    public class OrderService : TableServiceBase<Order, OrderContext>, IOrderService
+    public class OrderService : TableServiceBaseNew<Order, OrderContext>, IOrderService
     {
-
+        public OrderService(OrderContext context, ILogger<OrderService> logger) : base(context, logger)
+        {
+        }
         //===========================================================================================
 
         public override async Task<bool> AddEntityAsync(Order order)
         {
-            try
-            {
-                order.TotalPrice = order.OrderPrice + order.TaxAmount;
+            order.TotalPrice = order.OrderPrice + order.TaxAmount;
+            order.Status = OrderStatus.Pending;
+            order.CreatedAt = DateTime.UtcNow;
 
-                order.Status = OrderStatus.Pending;
-                order.CreatedAt = DateTime.UtcNow;
-                await base.AddEntityAsync(order);
+            _logger.LogInformation("Adding order for client {ClientId}", order.ClientId);
+            var result = await base.AddEntityAsync(order);
+            _logger.LogInformation("Order added successfully with id {OrderId}", order.id);
 
-                return true;
-
-            }
-            catch (Exception ex) { }
-            return false;
+            return result;
         }
 
         //===========================================================================================
 
         public async Task<int> AddOrderAsync(Order order)
         {
-            try
-            {
-                await using var db = new OrderContext();
+            order.TotalPrice = order.OrderPrice + order.TaxAmount;
+            order.Status = OrderStatus.Pending;
+            order.CreatedAt = DateTime.UtcNow;
 
-                order.TotalPrice = order.OrderPrice + order.TaxAmount;
-                order.Status = OrderStatus.Pending;
-                order.CreatedAt = DateTime.UtcNow;
+            _logger.LogInformation("Adding order via AddOrderAsync for client {ClientId}", order.ClientId);
 
-                var res = db.Orders.Add(order);
-                await db.SaveChangesAsync();
+            var res = await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
 
-                return res.Entity.id;
-            }
-            catch (Exception ex) { }
-            return -1;
+            _logger.LogInformation("Order created successfully with id {OrderId}", res.Entity.id);
+            return res.Entity.id;
         }
 
 
@@ -60,25 +53,18 @@ namespace OrderApiService.Services
         //===========================================================================================
         public async Task<int> UpdateOrderStatus(int orderId, OrderStatus status)
         {
-            try
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order == null)
             {
-                using var db = new OrderContext();
-
-                var order = await db.Orders.FindAsync(orderId);
-                if (order == null)
-                    return -1;
-
-
-
-                order.Status = status;
-
-                await db.SaveChangesAsync();
-                return order.id;
-            }
-            catch
-            {
+                _logger.LogWarning("Order with id {OrderId} not found for status update", orderId);
                 return -1;
             }
+
+            order.Status = status;
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Order {OrderId} status updated to {Status}", orderId, status);
+            return order.id;
         }
 
 
@@ -88,43 +74,53 @@ namespace OrderApiService.Services
 
         public async Task<bool> HasDateConflict(int orderId, int offerId, DateTime start, DateTime end)
         {
-            using var db = new OrderContext();
+            _logger.LogInformation("Checking date conflict for order {OrderId} and offer {OfferId}", orderId, offerId);
 
-            var fitOrders = db.Orders.Where(o => o.id == orderId && o.OfferId == offerId).ToList();
-            var flag = false;
-            foreach (var order in fitOrders)
-            {
-                if (order.StartDate >= start && order.StartDate < end ) 
-                {
-                    flag= true;
-                    break;
-                }
-                else if(order.EndDate > start && order.EndDate <= end)
-                {
-                    flag = true;
-                    break;
-                }
-            }
-            return flag;
+            var conflict = await _context.Orders
+                .AsNoTracking()
+                .Where(o => o.id == orderId && o.OfferId == offerId)
+                .AnyAsync(o => (o.StartDate >= start && o.StartDate < end) ||
+                               (o.EndDate > start && o.EndDate <= end));
 
-            //return await db.Orders.AnyAsync(o =>
-            //    o.id == orderId &&
-            //    o.OfferId == offerId &&
-            //    ((o.StartDate >= start && o.StartDate <= end) || (o.EndDate >= start && o.EndDate <= end))
-            //);
+
+            //var flag = false;
+            //foreach (var order in fitOrders)
+            //{
+            //    if (order.StartDate >= start && order.StartDate < end ) 
+            //    {
+            //        flag= true;
+            //        break;
+            //    }
+            //    else if(order.EndDate > start && order.EndDate <= end)
+            //    {
+            //        flag = true;
+            //        break;
+            //    }
+            //}
+            if (conflict)
+                _logger.LogInformation("Date conflict detected for order {OrderId}", orderId);
+            else
+                _logger.LogInformation("No date conflict for order {OrderId}", orderId);
+
+            return conflict;
+
+            
         }
 
         //===========================================================================================
 
         public async Task<List<OrderResponse>> GetOrdersByClientIdAsync(int clientId)
         {
-            using var db = new OrderContext();
-            var orders = await db.Orders
+            _logger.LogInformation("Fetching orders for client {ClientId}", clientId);
+
+            var orders = await _context.Orders
+                .AsNoTracking()
                 .Where(o => o.ClientId == clientId)
                 .ToListAsync();
-            var orderResponses = orders
-                .Select(o => OrderResponse.MapToResponse(o))
-                .ToList();
+
+            var orderResponses = orders.Select(o => OrderMapper.MapToResponse(o)).ToList();
+
+            _logger.LogInformation("Found {Count} orders for client {ClientId}", orderResponses.Count, clientId);
             return orderResponses;
         }
 
@@ -132,13 +128,15 @@ namespace OrderApiService.Services
 
         public async Task<List<OrderResponse>> GetOrdersByOfferIdAsync(int offerId)
         {
-            using var db = new OrderContext();
-            var orders = await db.Orders
+            _logger.LogInformation("Fetching orders for offer {OfferId}", offerId);
+            var orders = await _context.Orders
+                .AsNoTracking()
                 .Where(o => o.OfferId == offerId)
                 .ToListAsync();
             var orderResponses = orders
-                .Select(o => OrderResponse.MapToResponse(o))
+                .Select(o => OrderMapper.MapToResponse(o))
                 .ToList();
+            _logger.LogInformation("Found {Count} orders for offer {OfferId}", orderResponses.Count, offerId);
             return orderResponses;
         }
 
@@ -146,14 +144,18 @@ namespace OrderApiService.Services
 
         public async Task<List<int>> GetPendingOfferIdsAsync(int ownerId)
         {
-            using var db = new OrderContext();
-
-            return await db.Orders
+            _logger.LogInformation("Fetching pending offers for owner {OwnerId}", ownerId);
+            var pendingOfferIds = await _context.Orders
+                .AsNoTracking()
                 .Where(o => o.OwnerId == ownerId && o.Status == OrderStatus.Pending)
                 .Select(o => o.OfferId)
-                .Distinct()         
+                .Distinct()
                 .ToListAsync();
+
+            _logger.LogInformation("Found {Count} pending offers for owner {OwnerId}", pendingOfferIds.Count, ownerId);
+            return pendingOfferIds;
         }
+    
 
         //public async Task<bool> HasPendingOrderAsync(int ownerId)
         //{

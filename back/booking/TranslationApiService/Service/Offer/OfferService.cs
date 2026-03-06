@@ -14,7 +14,8 @@ namespace TranslationApiService.Service.Offer
 {
     public class OfferService : TranslationServiceBase<OfferTranslation, TranslationContext>, IOfferService
     {
-        
-     
+        public OfferService(TranslationContext context, ILogger<OfferService> logger) : base(context, logger)
+        {
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UserApiService.Models;
-using UserApiService.Models.Enums;
 using UserApiService.Services;
+using UserContracts.Enums;
 
 
 namespace UserApiService.Data.Seed

@@ -1,7 +1,8 @@
 ﻿
+using AttractionApiService.Mappers;
 using AttractionApiService.Models;
 using AttractionApiService.Service.Interfaces;
-using AttractionApiService.View;
+using AttractionContracts;
 using Globals.Abstractions;
 using Globals.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -64,13 +65,13 @@ namespace AttractionApiService.Controllers
 
         protected override AttractionImage MapToModel (AttractionImageRequest request)
         {
-            return  AttractionImageRequest.MapToModel(request);
+            return  AttractionImageMapper.MapToModel(request);
         }
 
 
         protected override AttractionImageResponse MapToResponse(AttractionImage model)
         {
-            return AttractionImageResponse.MapToResponse(model,_baseUrl);
+            return AttractionImageMapper.MapToResponse(model,_baseUrl);
 
         }
 

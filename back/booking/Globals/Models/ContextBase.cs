@@ -10,10 +10,29 @@ namespace Globals.Models
 {
     public class ContextBase<T> : DbContext where T : EntityBase
     {
+        private NpgsqlConnectionStringBuilder npgsqlConnectionStringBuilder = null;
         private String TypeName => typeof(T).Name.Replace("Context", String.Empty);
         public DbSet<T> Values { get; set; }
 
         public ContextBase()
+        {
+            npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder();
+            //npgsqlConnectionStringBuilder.Host = "host.docker.internal"; // при запуске из докера
+            //npgsqlConnectionStringBuilder.Host = "localhost"; // при запуске без докера
+            npgsqlConnectionStringBuilder.Host = "postgres"; // при запуске из докера с использованием docker-compose (подключение к базе в контейнере)
+            npgsqlConnectionStringBuilder.Port = 5432;
+            npgsqlConnectionStringBuilder.Database = $"{TypeName}db";
+            npgsqlConnectionStringBuilder.Username = "postgres";
+            npgsqlConnectionStringBuilder.Password = "postgrespw";
+            npgsqlConnectionStringBuilder.SslMode = SslMode.Disable;
+
+
+            //if (TypeName == "Offer")
+            //  Database.EnsureDeleted();
+            Database.EnsureCreated();
+        }
+
+        public ContextBase(DbContextOptions options) : base(options)
         {
             //if (TypeName == "Offer")
             //  Database.EnsureDeleted();
@@ -22,15 +41,7 @@ namespace Globals.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            NpgsqlConnectionStringBuilder npgsqlConnectionStringBuilder = new NpgsqlConnectionStringBuilder();
-            //npgsqlConnectionStringBuilder.Host = "host.docker.internal"; // при запуске из докера
-            //npgsqlConnectionStringBuilder.Host = "localhost"; // при запуске без докера
-            npgsqlConnectionStringBuilder.Host = "postgres"; // при запуске из докера с использованием docker-compose (подключение к базе в контейнере)
-            npgsqlConnectionStringBuilder.Port = 5432;
-            npgsqlConnectionStringBuilder.Database = $"{TypeName }db";
-            npgsqlConnectionStringBuilder.Username = "postgres";
-            npgsqlConnectionStringBuilder.Password = "postgrespw";
-            npgsqlConnectionStringBuilder.SslMode = SslMode.Disable;
+            if (npgsqlConnectionStringBuilder == null) return;
 
             optionsBuilder.UseNpgsql(npgsqlConnectionStringBuilder.ConnectionString);
 

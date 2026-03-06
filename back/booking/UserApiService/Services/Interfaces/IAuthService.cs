@@ -1,4 +1,6 @@
-﻿using UserApiService.View;
+﻿//using UserApiService.View;
+
+using UserContracts;
 
 namespace UserApiService.Services.Interfaces
 {

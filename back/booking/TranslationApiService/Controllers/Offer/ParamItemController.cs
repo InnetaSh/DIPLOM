@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TranslationApiService.Models.Location;
 using TranslationApiService.Models.Offer;
 using TranslationApiService.Service.Offer.Interface;
-using TranslationApiService.View;
+using TranslationContracts;
 
 
 namespace TranslationApiService.Controllers

@@ -24,6 +24,10 @@ namespace TranslationApiService.Models
         public DbSet<ReviewTranslation> ReviewTranslation { get; set; }
         public DbSet<Language> Languages { get; set; }
 
+        public TranslationContext(DbContextOptions<TranslationContext> options) : base(options)
+        {
+        }
+
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
             builder.Entity<OfferTranslation>(entity =>

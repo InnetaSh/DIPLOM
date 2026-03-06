@@ -138,8 +138,4 @@ namespace Globals.Controllers
         protected virtual int GetModelId(TModel model) => (int)model.GetType().GetProperty("id").GetValue(model);
     }
 
-    public interface IBaseRequest { }
-
-    public interface IBaseResponse { }
-
 }

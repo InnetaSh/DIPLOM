@@ -1,4 +1,4 @@
-﻿using UserApiService.Models.Enums;
+﻿using UserContracts.Enums;
 
 namespace UserApiService.Models
 {

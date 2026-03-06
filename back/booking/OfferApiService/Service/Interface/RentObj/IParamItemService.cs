@@ -5,8 +5,8 @@ using OfferApiService.Models.RentObjModel;
 
 namespace OfferApiService.Services.Interfaces.RentObj
 {
-        public interface IParamItemService : IServiceBase<ParamItem>
-        {
-        }
+    public interface IParamItemService : IServiceBaseNew<ParamItem>
+    {
     }
+}
 

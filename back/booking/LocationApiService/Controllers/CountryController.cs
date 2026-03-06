@@ -1,8 +1,10 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
+using LocationApiService.Mappers;
 using LocationApiService.Models;
 using LocationApiService.Service.Interfaces;
-using LocationApiService.View;
+using LocationContracts;
+//using LocationApiService.View;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocationApiService.Controllers
@@ -50,7 +52,9 @@ namespace LocationApiService.Controllers
             if (country == null)
                 return NotFound(new { message = "country not found" });
 
-            return Ok(MapToResponse(country));
+            var response = MapToResponse(country);
+
+            return Ok(response);
         }
 
 
@@ -66,7 +70,10 @@ namespace LocationApiService.Controllers
             if (country == null)
                 return NotFound(new { message = "country not found" });
 
-            return Ok(MapToResponse(country));
+
+            var response = MapToResponse(country);
+
+            return Ok(response);
         }
 
 
@@ -128,13 +135,13 @@ namespace LocationApiService.Controllers
 
         protected override Country MapToModel(CountryRequest request)
         {
-            return CountryRequest.MapToModel(request);
+            return CountryMapper.MapToModel(request);
         }
 
 
         protected override CountryResponse MapToResponse(Country model)
         {
-            return CountryResponse.MapToResponse(model, _baseUrl);
+            return CountryMapper.MapToResponse(model, _baseUrl);
 
         }
 

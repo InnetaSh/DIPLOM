@@ -5,8 +5,11 @@ using LocationApiService.Service.Interfaces;
 
 namespace LocationApiService.Services
 {
-    public class DistrictService : TableServiceBase<District, LocationContext>, IDistrictService
+    public class DistrictService : TableServiceBaseNew<District, LocationContext>, IDistrictService
     {
-        
+        public DistrictService(LocationContext context, ILogger<DistrictService> logger) : base(context, logger)
+        {
+        }
+
     }
 }

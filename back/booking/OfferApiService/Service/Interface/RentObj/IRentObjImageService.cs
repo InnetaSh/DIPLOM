@@ -5,7 +5,7 @@ using OfferApiService.Models.RentObjModel;
 
 namespace OfferApiService.Services.Interfaces.RentObj
 {
-        public interface IRentObjImageService : IServiceBase<RentObjImage>
+        public interface IRentObjImageService : IServiceBaseNew<RentObjImage>
         {
 
         Task<string> SaveImageAsync(IFormFile file, int rentObjId);

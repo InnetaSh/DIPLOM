@@ -10,6 +10,9 @@ public class UserContext : ContextBase<User>
     public DbSet<User> Users { get; set; }
     public DbSet<Admin> Admins { get; set; }
     public DbSet<SuperAdmin> SuperAdmins { get; set; }
+    public UserContext(DbContextOptions<UserContext> options) : base(options)
+    {
+    }
 
     // Заказы владельцев
     public DbSet<OwnerOfferLink> OwnerOfferLinks { get; set; }

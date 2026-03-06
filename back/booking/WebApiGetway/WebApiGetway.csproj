@@ -16,6 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\LocationContracts\LocationContracts.csproj" />
+    <ProjectReference Include="..\..\OfferContracts\OfferContracts.csproj" />
+    <ProjectReference Include="..\..\OrderContracts\OrderContracts.csproj" />
+    <ProjectReference Include="..\..\ReviewContracts\ReviewContracts.csproj" />
+    <ProjectReference Include="..\..\StatisticContracts\StatisticContracts.csproj" />
+    <ProjectReference Include="..\..\TranslationContracts\TranslationContracts.csproj" />
+    <ProjectReference Include="..\..\UserContracts\UserContracts.csproj" />
     <ProjectReference Include="..\Globals\Globals.csproj" />
   </ItemGroup>
 

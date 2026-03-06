@@ -3,7 +3,7 @@ using Globals.Controllers;
 using TranslationApiService.Models.Offer;
 using TranslationApiService.Models.Review;
 using TranslationApiService.Service.Review.Interface;
-using TranslationApiService.View;
+using TranslationContracts;
 
 
 namespace TranslationApiService.Controllers

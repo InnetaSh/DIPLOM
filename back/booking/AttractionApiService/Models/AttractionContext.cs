@@ -7,9 +7,12 @@ namespace AttractionApiService.Models
 {
     public class AttractionContext : ContextBase<Attraction>
     {
-
         public DbSet<Attraction> Attractions { get; set; }
         public DbSet<AttractionImage> AttractionImages { get; set; }
+        public AttractionContext(DbContextOptions<AttractionContext> options) : base(options)
+        {
+        }
+
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
           

@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using UserApiService.Models;
 using UserApiService.Services.Interfaces;
-using UserApiService.View;
+using UserContracts;
+//using UserApiService.View;
 
 namespace UserApiService.Controllers
 {

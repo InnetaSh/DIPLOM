@@ -1,9 +1,13 @@
 using Globals.Abstractions;
 using Globals.EventBus;
+using Globals.Extensions;
+using Globals.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using UserApiService.Models;
 using UserApiService.Services;
 using UserApiService.Services.Interfaces;
 
@@ -33,6 +37,25 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<UserContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+
+    var enableSensitive =
+        Environment.GetEnvironmentVariable("ENABLE_SENSITIVE_LOGGING");
+
+    var aspEnv =
+        Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+    if (string.Equals(enableSensitive, "true", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(aspEnv, "Development", StringComparison.OrdinalIgnoreCase))
+    {
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
+});
 
 
 
@@ -95,9 +118,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 builder.Services.AddAuthorization();  
 
-
-
 var app = builder.Build();
+//app.UseMiddleware<ExceptionMiddleware>();
+app.UseGlobalMiddleware();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

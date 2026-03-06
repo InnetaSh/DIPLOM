@@ -1,9 +1,10 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using OfferApiService.Mappers;
 using OfferApiService.Models.RentObjModel;
 using OfferApiService.Services.Interfaces.RentObj;
-using OfferApiService.View.RentObj;
+using OfferContracts.RentObj;
 
 namespace OfferApiService.Controllers.RentObj
 {
@@ -64,13 +65,13 @@ namespace OfferApiService.Controllers.RentObj
 
         protected override RentObjImage MapToModel(RentObjImageRequest request)
         {
-            return RentObjImageRequest.MapToModel(request);
+            return RentObjImageMapper.MapToModel(request);
         }
 
 
         protected override RentObjImageResponse MapToResponse(RentObjImage model)
         {
-            return RentObjImageResponse.MapToResponse(model,_baseUrl);
+            return RentObjImageMapper.MapToResponse(model,_baseUrl);
 
         }
 

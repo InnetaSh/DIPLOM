@@ -1,14 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Globals.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace TranslationApiService.Models
 {
-    public class TranslationEntityBase
+    public class TranslationEntityBase : EntityBase
     {
-        [Key]
-        public int id { get; set; }
-
+  
         public int EntityId { get; set; }
-
 
         public string Lang { get; set; }   // "en", "ru", "de", ...
     }

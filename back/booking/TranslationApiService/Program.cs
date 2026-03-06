@@ -1,7 +1,10 @@
 using Globals.Abstractions;
 using Globals.EventBus;
+using Globals.Middleware;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TranslationApiService.Models;
 using TranslationApiService.Service.Attraction;
 using TranslationApiService.Service.Attraction.Interface;
 using TranslationApiService.Service.Location;
@@ -11,6 +14,7 @@ using TranslationApiService.Service.Offer.Interface;
 using TranslationApiService.Service.Review;
 using TranslationApiService.Service.Review.Interface;
 using TranslationApiService.Services;
+using Globals.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,14 +50,29 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 builder.Services.AddHostedService<TranslationRabbitListener>();
 
-
-
-
-
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<TranslationContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+
+    var enableSensitive =
+        Environment.GetEnvironmentVariable("ENABLE_SENSITIVE_LOGGING");
+
+    var aspEnv =
+        Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+    if (string.Equals(enableSensitive, "true", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(aspEnv, "Development", StringComparison.OrdinalIgnoreCase))
+    {
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
+});
+
 
 
 builder.Services.AddControllers()
@@ -69,6 +88,9 @@ builder.Services.AddControllers()
     });
 
 var app = builder.Build();
+//app.UseMiddleware<ExceptionMiddleware>();
+app.UseGlobalMiddleware();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

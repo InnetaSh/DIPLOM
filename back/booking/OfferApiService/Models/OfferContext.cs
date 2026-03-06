@@ -16,6 +16,10 @@ namespace OfferApiService.Models
 
         public DbSet<OfferOrderLink> OfferOrderLinks { get; set; }
 
+        public OfferContext(DbContextOptions<OfferContext> options) : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
 

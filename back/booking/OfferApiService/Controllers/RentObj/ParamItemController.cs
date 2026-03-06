@@ -1,9 +1,10 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using OfferApiService.Mappers;
 using OfferApiService.Models.RentObjModel;
 using OfferApiService.Services.Interfaces.RentObj;
-using OfferApiService.View.RentObj;
+using OfferContracts.RentObj;
 
 namespace OfferApiService.Controllers.RentObj
 {
@@ -19,13 +20,13 @@ namespace OfferApiService.Controllers.RentObj
 
         protected override ParamItem MapToModel(ParamItemRequest request)
         {
-            return ParamItemRequest.MapToModel(request);
+            return ParamItemMapper.MapToModel(request);
         }
 
 
         protected override ParamItemResponse MapToResponse(ParamItem model)
         {
-            return ParamItemResponse.MapToResponse(model);
+            return ParamItemMapper.MapToResponse(model);
 
         }
 

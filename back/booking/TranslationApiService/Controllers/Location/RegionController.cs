@@ -1,9 +1,8 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
-using Microsoft.AspNetCore.Mvc;
 using TranslationApiService.Models.Location;
 using TranslationApiService.Service.Location.Interface;
-using TranslationApiService.View;
+using TranslationContracts;
 
 
 namespace TranslationApiService.Controllers

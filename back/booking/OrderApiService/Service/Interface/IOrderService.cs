@@ -1,11 +1,11 @@
 ﻿using Globals.Abstractions;
 using OrderApiService.Models;
-using OrderApiService.Models.Enum;
-using OrderApiService.View;
+using OrderContracts;
+using OrderContracts.Enum;
 
 namespace OrderApiService.Service.Interface
 {
-    public interface IOrderService : IServiceBase<Order>
+    public interface IOrderService : IServiceBaseNew<Order>
     {
         Task<int> AddOrderAsync(Order order);
         Task<int> UpdateOrderStatus(int orderId, OrderStatus orderState);

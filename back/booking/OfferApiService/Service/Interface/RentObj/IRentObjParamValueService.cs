@@ -5,7 +5,7 @@ using OfferApiService.Models.RentObjModel;
 
 namespace OfferApiService.Services.Interfaces.RentObj
 {
-        public interface IRentObjParamValueService : IServiceBase<RentObjParamValue>
+        public interface IRentObjParamValueService : IServiceBaseNew<RentObjParamValue>
         {
        
         }

@@ -6,12 +6,21 @@ using System;
 
 namespace AttractionApiService.Service
 {
-    public class AttractionImageService : TableServiceBase<AttractionImage, AttractionContext>, IAttractionImageService
+    public class AttractionImageService : TableServiceBaseNew<AttractionImage, AttractionContext>, IAttractionImageService
     {
 
         private readonly IWebHostEnvironment _env;
+        private readonly IAttractionService _attractionService;
 
-        public AttractionImageService(IWebHostEnvironment env ) : base()
+        //public AttractionImageService(IWebHostEnvironment env, IAttractionService attractionService) : base()
+        //{
+        //    _env = env;
+        //    _attractionService = attractionService;
+        //}
+        public AttractionImageService(
+            AttractionContext context,
+            ILogger<AttractionImageService> logger,
+            IWebHostEnvironment env) : base(context, logger)
         {
             _env = env;
         }
@@ -36,14 +45,21 @@ namespace AttractionApiService.Service
 
             string url = $"/images/rentobj/{attractionId}/{fileName}";
 
-            await using var db = new AttractionContext();
+            //await using var db = new AttractionContext();
+            //var attractionImage = new AttractionImage
+            //{
+            //    AttractionId = attractionId,
+            //    Url = url
+            //};
+            //db.AttractionImages.Add(attractionImage);
+            //await db.SaveChangesAsync();
+
             var attractionImage = new AttractionImage
             {
                 AttractionId = attractionId,
                 Url = url
             };
-            db.AttractionImages.Add(attractionImage);
-            await db.SaveChangesAsync();
+            _attractionService.AddImage(attractionImage);
 
             return url;
         }
@@ -52,8 +68,11 @@ namespace AttractionApiService.Service
 
         public async Task<bool> DeleteImageAsync(int imageId)
         {
-            await using var db = new AttractionContext();
-            var image = await db.AttractionImages.FirstOrDefaultAsync(i => i.id == imageId);
+            //await using var db = new AttractionContext();
+            //var image = await db.AttractionImages.FirstOrDefaultAsync(i => i.id == imageId);
+            //if (image == null) return false;
+
+            var image = _attractionService.DelImage(imageId);
             if (image == null) return false;
 
             string physicalPath = Path.Combine(_env.WebRootPath, image.Url.TrimStart('/'));
@@ -67,8 +86,8 @@ namespace AttractionApiService.Service
                 }
             }
 
-            db.AttractionImages.Remove(image);
-            await db.SaveChangesAsync();
+            //db.AttractionImages.Remove(image);
+            //await db.SaveChangesAsync();
 
             string? folder = Path.GetDirectoryName(physicalPath);
             if (folder != null && Directory.Exists(folder) && !Directory.EnumerateFileSystemEntries(folder).Any())
@@ -82,37 +101,37 @@ namespace AttractionApiService.Service
 
         public async Task<bool> UpdateImageAsync(int imageId, IFormFile file)
         {
-            if (file == null || file.Length == 0)
-                return false;
+            //if (file == null || file.Length == 0)
+            //    return false;
 
-            await using var db = new AttractionContext();
-            var image = await db.AttractionImages.FirstOrDefaultAsync(i => i.id == imageId);
-            if (image == null) return false;
+            //await using var db = new AttractionContext();
+            //var image = await db.AttractionImages.FirstOrDefaultAsync(i => i.id == imageId);
+            //if (image == null) return false;
 
-            string oldPath = Path.Combine(_env.WebRootPath, image.Url.TrimStart('/'));
+            //string oldPath = Path.Combine(_env.WebRootPath, image.Url.TrimStart('/'));
 
-            if (File.Exists(oldPath))
-            {
-                try { File.Delete(oldPath); }
-                catch (IOException ex)
-                {
-                    Console.WriteLine($"Ошибка при удалении старого файла: {ex.Message}");
-                }
-            }
+            //if (File.Exists(oldPath))
+            //{
+            //    try { File.Delete(oldPath); }
+            //    catch (IOException ex)
+            //    {
+            //        Console.WriteLine($"Ошибка при удалении старого файла: {ex.Message}");
+            //    }
+            //}
 
-            string folder = Path.Combine(_env.WebRootPath, "images", "rentobj", image.AttractionId.ToString());
-            Directory.CreateDirectory(folder);
+            //string folder = Path.Combine(_env.WebRootPath, "images", "rentobj", image.AttractionId.ToString());
+            //Directory.CreateDirectory(folder);
 
-            string fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            string newPath = Path.Combine(folder, fileName);
+            //string fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            //string newPath = Path.Combine(folder, fileName);
 
-            await using (var fs = new FileStream(newPath, FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                await file.CopyToAsync(fs);
-            }
+            //await using (var fs = new FileStream(newPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            //{
+            //    await file.CopyToAsync(fs);
+            //}
 
-            image.Url = $"/images/rentobj/{image.AttractionId}/{fileName}";
-            await db.SaveChangesAsync();
+            //image.Url = $"/images/rentobj/{image.AttractionId}/{fileName}";
+            //await db.SaveChangesAsync();
 
             return true;
         }

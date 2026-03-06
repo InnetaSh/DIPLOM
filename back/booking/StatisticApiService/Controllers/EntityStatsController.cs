@@ -1,12 +1,11 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using StatisticApiService.Mappers;
 using StatisticApiService.Models;
-using StatisticApiService.Models.Enum;
-using StatisticApiService.Services;
 using StatisticApiService.Services.Interface;
-using StatisticApiService.View;
+using StatisticContracts;
+
 
 namespace StatisticApiService.Controllers
 {
@@ -32,7 +31,7 @@ namespace StatisticApiService.Controllers
         public async Task<IActionResult> AddEvent(
             EntityStatEventRequest entityStatEventRequest)
         {
-            var model = EntityStatEventRequest.MapToModel(entityStatEventRequest);
+            var model = StatisticMapper.MapToModel(entityStatEventRequest);
             var success = await _entityStatService.AddEventAsync(model);
             if (success)
                 return Ok();
@@ -126,5 +125,6 @@ namespace StatisticApiService.Controllers
                 today);
             return Ok(result);
         }
+
     }
 }

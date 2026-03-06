@@ -7,8 +7,11 @@ using OfferApiService.Models.RentObjModel;
 
 namespace OfferApiService.Services.Interfaces.RentObj
 {
-    public class ParamItemService : TableServiceBase<ParamItem, OfferContext>, IParamItemService
-    { 
+    public class ParamItemService : TableServiceBaseNew<ParamItem, OfferContext>, IParamItemService
+    {
+        public ParamItemService(OfferContext context, ILogger<ParamItemService> logger) : base(context, logger)
+        {
+        }
 
     }
 }

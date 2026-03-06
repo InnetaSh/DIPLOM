@@ -1,9 +1,12 @@
 using Globals.Abstractions;
 using Globals.EventBus;
+using Globals.Extensions;
+using Globals.Middleware;
 using LocationApiService.Service.Interfaces;
 using LocationApiService.Services;
-using LocationApiService.Services;
-using OfferApiService.Services;
+using LocationApiService.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,26 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddDbContext<LocationContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+
+    var enableSensitive =
+        Environment.GetEnvironmentVariable("ENABLE_SENSITIVE_LOGGING");
+
+    var aspEnv =
+        Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+    if (string.Equals(enableSensitive, "true", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(aspEnv, "Development", StringComparison.OrdinalIgnoreCase))
+    {
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
+});
+
 builder.Services.AddScoped<ICityService, CityService>();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<IDistrictService, DistrictService>();
@@ -37,6 +60,8 @@ builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 builder.Services.AddHostedService<LocationRabbitListener>();
 
 var app = builder.Build();
+//app.UseMiddleware<ExceptionMiddleware>();
+app.UseGlobalMiddleware();
 
 var imgUrl = builder.Configuration["ImgBaseUrl"];
 

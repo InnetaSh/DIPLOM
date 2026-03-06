@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\LocationContracts\LocationContracts.csproj" />
     <ProjectReference Include="..\Globals\Globals.csproj" />
   </ItemGroup>
 

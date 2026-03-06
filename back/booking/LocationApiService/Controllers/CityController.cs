@@ -1,8 +1,10 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
+using LocationApiService.Mappers;
 using LocationApiService.Models;
 using LocationApiService.Service.Interfaces;
-using LocationApiService.View;
+using LocationContracts;
+//using LocationApiService.View;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LocationApiService.Controllers
@@ -41,7 +43,7 @@ namespace LocationApiService.Controllers
                     continue;
 
                 var cityRez = await _cityService.GetEntityAsync(cityId);
-                var city = CityResponseForPupularList.MapToResponse(cityRez, _baseUrl);
+                var city = CityResponseForPupularListMapper.MapToResponse(cityRez, _baseUrl);
                 result.Add(city);
             }
 
@@ -52,13 +54,13 @@ namespace LocationApiService.Controllers
 
         protected override City MapToModel(CityRequest request)
         {
-            return CityRequest.MapToModel(request);
+            return CityMapper.MapToModel(request);
         }
 
 
         protected override CityResponse MapToResponse(City model)
         {
-            return CityResponse.MapToResponse(model, _baseUrl);
+            return CityMapper.MapToResponse(model, _baseUrl);
 
         }
     }

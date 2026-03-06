@@ -1,40 +1,47 @@
 ﻿using Globals.Sevices;
 using Microsoft.EntityFrameworkCore;
 using UserApiService.Models;
-using UserApiService.Models.Enums;
+//using UserApiService.Models.Enums;
 using UserApiService.Services.Interfaces;
-using UserApiService.View;
+using UserContracts;
+using UserContracts.Enums;
+//using UserApiService.View;
 
 namespace UserApiService.Services
 {
-    public class UserService : ServiceBase<User, UserContext>, IUserService
+    public class UserService : TableServiceBaseNew<User, UserContext>, IUserService
     {
+
+        public UserService(UserContext context, ILogger<UserService> logger) : base(context, logger)
+        {
+        }
         // =====================================================================
         // CLIENT → добавить заказ
         // =====================================================================
         public async Task<bool> AddOrderToClient(int userId, int orderId)
         {
-            await using var db = new UserContext();
+            _logger.LogInformation("User {UserId} adding order {OrderId}", userId, orderId);
 
-            var client = await db.Clients
-                .FirstOrDefaultAsync(x => x.id == userId);
-
+            var client = await _context.Clients.FirstOrDefaultAsync(x => x.id == userId);
             if (client == null)
+            {
+                _logger.LogWarning("AddOrder failed: client {UserId} not found", userId);
                 return false;
+            }
 
-            var exists = await db.ClientOrderLinks
+            var exists = await _context.ClientOrderLinks
                 .AnyAsync(x => x.ClientId == client.id && x.OrderId == orderId);
 
             if (exists)
-                return false;
-
-            db.ClientOrderLinks.Add(new ClientOrderLink
             {
-                ClientId = client.id,
-                OrderId = orderId
-            });
+                _logger.LogInformation("Order {OrderId} already exists for client {UserId}", orderId, userId);
+                return false;
+            }
 
-            await db.SaveChangesAsync();
+            _context.ClientOrderLinks.Add(new ClientOrderLink { ClientId = client.id, OrderId = orderId });
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation("Order {OrderId} added to client {UserId}", orderId, userId);
             return true;
         }
 
@@ -44,29 +51,33 @@ namespace UserApiService.Services
         // =====================================================================
         public async Task<bool> AddOfferToClientHistory(int userId, int offerId)
         {
-            await using var db = new UserContext();
+            _logger.LogInformation("Adding offer {OfferId} to history of client {UserId}", offerId, userId);
 
-            var client = await db.Clients
-              .FirstOrDefaultAsync(x => x.id == userId);
-
-
+            var client = await _context.Clients.FirstOrDefaultAsync(x => x.id == userId);
             if (client == null)
+            {
+                _logger.LogWarning("Client {UserId} not found", userId);
                 return false;
+            }
 
-            var exists = await db.HistoryOfferLinks
+            var exists = await _context.HistoryOfferLinks
                 .AnyAsync(x => x.ClientId == client.id && x.OfferId == offerId);
 
             if (exists)
+            {
+                _logger.LogInformation("Offer {OfferId} already in history for client {UserId}", offerId, userId);
                 return false;
+            }
 
-            db.HistoryOfferLinks.Add(new HistoryOfferLink
+            _context.HistoryOfferLinks.Add(new HistoryOfferLink
             {
                 ClientId = client.id,
                 OfferId = offerId,
                 IsFavorites = false
             });
 
-            await db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Offer {OfferId} added to history for client {UserId}", offerId, userId);
             return true;
         }
 
@@ -75,32 +86,35 @@ namespace UserApiService.Services
         // =====================================================================
         public async Task<bool> AddOfferToClientFavorite(int userId, int offerId)
         {
-            await using var db = new UserContext();
+            _logger.LogInformation("Adding offer {OfferId} to favorites of client {UserId}", offerId, userId);
 
-            var client = await db.Users
-                .FirstOrDefaultAsync(x => x.id == userId);
-
+            var client = await _context.Users.FirstOrDefaultAsync(x => x.id == userId);
             if (client == null)
+            {
+                _logger.LogWarning("Client {UserId} not found", userId);
                 return false;
+            }
 
-            var historyLink = await db.HistoryOfferLinks
+            var historyLink = await _context.HistoryOfferLinks
                 .FirstOrDefaultAsync(x => x.ClientId == client.id && x.OfferId == offerId);
 
             if (historyLink != null)
             {
                 historyLink.IsFavorites = true;
+                _logger.LogInformation("Offer {OfferId} marked as favorite for client {UserId}", offerId, userId);
             }
             else
             {
-                db.HistoryOfferLinks.Add(new HistoryOfferLink
+                _context.HistoryOfferLinks.Add(new HistoryOfferLink
                 {
                     ClientId = client.id,
                     OfferId = offerId,
                     IsFavorites = true
                 });
+                _logger.LogInformation("Offer {OfferId} added and marked as favorite for client {UserId}", offerId, userId);
             }
 
-            await db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return true;
         }
 
@@ -109,19 +123,22 @@ namespace UserApiService.Services
         // =====================================================================
         public async Task<List<HistoryOfferLink>> GetOffersToClientHistory(int userId)
         {
-            await using var db = new UserContext();
-
-            var client = await db.Users
+            var client = await _context.Users
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.id == userId);
-
             if (client == null)
+            {
+                _logger.LogWarning("Client {UserId} not found", userId);
                 return null;
+            }
 
-            var historyOffers = await db.HistoryOfferLinks
+            var historyOffers = await _context.HistoryOfferLinks
                 .Where(x => x.ClientId == client.id)
+                .AsNoTracking()
                 .ToListAsync();
 
-            return historyOffers; 
+            _logger.LogInformation("Retrieved {Count} history offers for client {UserId}", historyOffers.Count, userId);
+            return historyOffers;
         }
 
         // =====================================================================
@@ -129,27 +146,32 @@ namespace UserApiService.Services
         // =====================================================================
         public async Task<bool> AddOfferToOwner(int userId, int offerId)
         {
-            await using var db = new UserContext();
+            _logger.LogInformation("Adding offer {OfferId} to owner {UserId}", offerId, userId);
 
-            var owner = await db.Owners
-                .FirstOrDefaultAsync(x => x.id == userId);
-
+            var owner = await _context.Owners.FirstOrDefaultAsync(x => x.id == userId);
             if (owner == null)
+            {
+                _logger.LogWarning("Owner {UserId} not found", userId);
                 return false;
+            }
 
-            var exists = await db.OwnerOfferLinks
+            var exists = await _context.OwnerOfferLinks
                 .AnyAsync(x => x.OwnerId == owner.id && x.OfferId == offerId);
 
             if (exists)
+            {
+                _logger.LogInformation("Offer {OfferId} already exists for owner {UserId}", offerId, userId);
                 return false;
+            }
 
-            db.OwnerOfferLinks.Add(new OwnerOfferLink
+            _context.OwnerOfferLinks.Add(new OwnerOfferLink
             {
                 OwnerId = owner.id,
                 OfferId = offerId
             });
 
-            await db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            _logger.LogInformation("Offer {OfferId} added successfully to owner {UserId}", offerId, userId);
             return true;
         }
 
@@ -158,24 +180,37 @@ namespace UserApiService.Services
         // =====================================================================
         public async Task<User?> GetUserByIdAsync(int userId)
         {
-            await using var db = new UserContext();
-            return await db.Users
-                .AsNoTracking()
+            _logger.LogInformation("Fetching user by id {UserId}", userId);
+
+            var user = await _context.Users.AsNoTracking()
                 .FirstOrDefaultAsync(u => u.id == userId);
+
+            if (user == null)
+                _logger.LogWarning("User with id {UserId} not found", userId);
+            else
+                _logger.LogInformation("User with id {UserId} retrieved successfully", userId);
+
+            return user;
         }
 
- 
+
 
         // =====================================================================
         //              Получить пользователя по email
         // =====================================================================
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            await using var db = new UserContext();
+            _logger.LogInformation("Fetching user by email {Email}", email);
 
-            return await db.Users
-                .AsNoTracking()                  
+            var user = await _context.Users.AsNoTracking()
                 .FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+                _logger.LogWarning("User with email {Email} not found", email);
+            else
+                _logger.LogInformation("User with email {Email} retrieved successfully", email);
+
+            return user;
         }
 
         // =====================================================================
@@ -184,9 +219,9 @@ namespace UserApiService.Services
 
         public async Task<ClientResponse?> GetClientFullByIdAsync(int userId)
         {
-            await using var db = new UserContext();
+            _logger.LogInformation("Fetching full client data for user id {UserId}", userId);
 
-            return await db.Clients
+            var client = await _context.Clients
                 .Where(c => c.id == userId)
                 .Select(c => new ClientResponse
                 {
@@ -219,7 +254,15 @@ namespace UserApiService.Services
                         })
                         .ToList()
                 })
+                .AsNoTracking()
                 .FirstOrDefaultAsync();
+
+            if (client == null)
+                _logger.LogWarning("Full client data not found for user id {UserId}", userId);
+            else
+                _logger.LogInformation("Full client data retrieved for user id {UserId}", userId);
+
+            return client;
         }
 
 
@@ -230,9 +273,8 @@ namespace UserApiService.Services
 
         public async Task<OwnerResponse?> GetOwnerFullByIdAsync(int userId)
         {
-            await using var db = new UserContext();
-
-            return await db.Owners
+            _logger.LogInformation("Fetching full owner data for user id {UserId}", userId);
+            var owner = await _context.Owners
                 .Where(o => o.id == userId)
                 .Select(o => new OwnerResponse
                 {
@@ -245,7 +287,6 @@ namespace UserApiService.Services
                     RoleName = "Owner",
                     Discount = o.Discount,
 
-                    // ===== OwnerOfferLinks =====
                     OwnerOfferLinks = o.OwnerOfferLinks
                         .Select(ol => new OwnerOfferResponse
                         {
@@ -255,7 +296,15 @@ namespace UserApiService.Services
                         })
                         .ToList()
                 })
-                .FirstOrDefaultAsync();
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync();
+
+            if (owner == null)
+                _logger.LogWarning("Full owner data not found for user id {UserId}", userId);
+            else
+                _logger.LogInformation("Full owner data retrieved for user id {UserId}", userId);
+
+            return owner;
         }
 
 
@@ -265,28 +314,39 @@ namespace UserApiService.Services
         // ==============================================================================
         public async Task<bool> ValidOfferIdByOwner(int userId, int offerId)
         {
-            await using var db = new UserContext();
+            _logger.LogInformation("Checking if user {UserId} has access to offer {OfferId}", userId, offerId);
 
-            var user = await db.Users
+            var user = await _context.Users
                 .Where(u => u.id == userId)
                 .Select(u => new { u.id, u.RoleName })
                 .FirstOrDefaultAsync();
 
-            if (user == null)
-                return false;
 
-            if (user.RoleName == UserRole.SuperAdmin ||
-                user.RoleName == UserRole.Admin)
+            if (user == null)
             {
+                _logger.LogWarning("User {UserId} not found when checking offer access for offer {OfferId}", userId, offerId);
+                return false;
+            }
+            if (user.RoleName == UserRole.SuperAdmin || user.RoleName == UserRole.Admin)
+            {
+                _logger.LogInformation("User {UserId} has admin privileges, access granted for offer {OfferId}", userId, offerId);
                 return true;
             }
 
             if (user.RoleName == UserRole.Owner)
             {
-                return await db.OwnerOfferLinks
+                var hasAccess = await _context.OwnerOfferLinks
                     .AnyAsync(x => x.OwnerId == userId && x.OfferId == offerId);
+
+                if (hasAccess)
+                    _logger.LogInformation("Owner {UserId} owns offer {OfferId}, access granted", userId, offerId);
+                else
+                    _logger.LogWarning("Owner {UserId} does not own offer {OfferId}, access denied", userId, offerId);
+
+                return hasAccess;
             }
 
+            _logger.LogWarning("User {UserId} with role {Role} attempted access to offer {OfferId}, access denied", userId, user.RoleName, offerId);
             return false;
         }
         // ==============================================================================
@@ -294,15 +354,27 @@ namespace UserApiService.Services
         // ==============================================================================
         public async Task<bool> ValidAdminById(int userId)
         {
-            await using var db = new UserContext();
+            _logger.LogInformation("Checking if user {UserId} is admin or super admin", userId);
 
-            var user = await db.Users
+            var user = await _context.Users
                 .Where(u => u.id == userId)
                 .Select(u => new { u.id, u.RoleName })
                 .FirstOrDefaultAsync();
 
-            return user != null &&
-                    (user.RoleName == UserRole.SuperAdmin || user.RoleName == UserRole.Admin);
+            if (user == null)
+            {
+                _logger.LogWarning("User {UserId} not found when checking admin privileges", userId);
+                return false;
+            }
+
+            var isAdmin = user.RoleName == UserRole.SuperAdmin || user.RoleName == UserRole.Admin;
+
+            if (isAdmin)
+                _logger.LogInformation("User {UserId} is admin or super admin", userId);
+            else
+                _logger.LogWarning("User {UserId} is not admin, access denied", userId);
+
+            return isAdmin;
         }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TranslationApiService.Models.Location;
 using TranslationApiService.Models.Offer;
 using TranslationApiService.Service.Offer.Interface;
-using TranslationApiService.View;
+using TranslationContracts;
 
 
 namespace TranslationApiService.Controllers
@@ -20,29 +20,29 @@ namespace TranslationApiService.Controllers
 
 
 
-        protected override ParamsCategoryTranslation MapToModel(TranslationRequest request)
-        {
-            return new ParamsCategoryTranslation
-            {
+        //protected override ParamsCategoryTranslation MapToModel(TranslationRequest request)
+        //{
+        //    return new ParamsCategoryTranslation
+        //    {
 
-                id = request.id,
-                Title = request.Title,
-                EntityId = request.EntityId,
-                Lang = request.Lang
-            };
+        //        id = request.id,
+        //        Title = request.Title,
+        //        EntityId = request.EntityId,
+        //        Lang = request.Lang
+        //    };
 
-        }
+        //}
 
-        protected override TranslationResponse MapToResponse(ParamsCategoryTranslation model)
-        {
-            return new TranslationResponse
-            {
-                id = model.id,
-                Title = model.Title,
-                EntityId = model.EntityId,
-                Lang = model.Lang
+        //protected override TranslationResponse MapToResponse(ParamsCategoryTranslation model)
+        //{
+        //    return new TranslationResponse
+        //    {
+        //        id = model.id,
+        //        Title = model.Title,
+        //        EntityId = model.EntityId,
+        //        Lang = model.Lang
 
-            };
-        }
+        //    };
+        //}
     }
 }

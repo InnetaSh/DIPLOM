@@ -4,7 +4,7 @@ using OfferApiService.Models.RentObjModel;
 
 namespace OfferApiService.Services.Interfaces.RentObj
 {
-    public interface IParamsCategoryService : IServiceBase<ParamsCategory>
+    public interface IParamsCategoryService : IServiceBaseNew<ParamsCategory>
     {
     }
 }

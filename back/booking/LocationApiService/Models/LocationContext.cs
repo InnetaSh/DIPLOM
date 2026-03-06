@@ -11,7 +11,10 @@ namespace LocationApiService.Models
         public DbSet<Region> Regions { get; set; }
         public DbSet<Country> Countries { get; set; }
 
-       
+
+        public LocationContext(DbContextOptions<LocationContext> options) : base(options)
+        {
+        }
         protected override void ModelBuilderConfigure(ModelBuilder builder)
         {
             // --- Country ---

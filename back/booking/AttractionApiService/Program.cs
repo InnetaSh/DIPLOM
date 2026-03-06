@@ -1,7 +1,11 @@
+using AttractionApiService.Models;
 using AttractionApiService.Service;
 using AttractionApiService.Service.Interfaces;
 using Globals.Abstractions;
 using Globals.EventBus;
+using Globals.Extensions;
+using Globals.Middleware;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +29,25 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<AttractionContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+
+    var enableSensitive =
+        Environment.GetEnvironmentVariable("ENABLE_SENSITIVE_LOGGING");
+
+    var aspEnv =
+        Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+    if (string.Equals(enableSensitive, "true", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(aspEnv, "Development", StringComparison.OrdinalIgnoreCase))
+    {
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
+});
+
 builder.Services.AddScoped<IAttractionService, AttractionService>();
 builder.Services.AddScoped<IAttractionImageService, AttractionImageService>();
 
@@ -33,6 +56,8 @@ builder.Services.AddHostedService<AttractionRabbitListener>();
 builder.Services.AddHttpClient<GeocodingService>();
 
 var app = builder.Build();
+//app.UseMiddleware<ExceptionMiddleware>();
+app.UseGlobalMiddleware();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

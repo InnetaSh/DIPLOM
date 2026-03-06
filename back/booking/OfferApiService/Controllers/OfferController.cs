@@ -3,14 +3,13 @@ using Globals.Controllers;
 using Globals.Helpers;
 using Humanizer;
 using Microsoft.AspNetCore.Mvc;
+using OfferApiService.Mappers;
 using OfferApiService.Models;
-using OfferApiService.Models.RentObjModel;
-using OfferApiService.Models.View;
 using OfferApiService.Service;
 using OfferApiService.Service.Interface;
 using OfferApiService.Services.Interfaces.RentObj;
-using OfferApiService.View;
-using OfferApiService.View.RentObj;
+using OfferContracts;
+using OfferContracts.RentObj;
 
 namespace OfferApiService.Controllers
 {
@@ -69,7 +68,7 @@ namespace OfferApiService.Controllers
             var offers = await _offerService.GetEntitiesAsync();
 
 
-            var result = offers.Select(o => OfferShortResponse.MapToShortResponse(o, _baseUrl)).ToList();
+            var result = offers.Select(o => OfferShortMapper.MapToResponse(o, _baseUrl)).ToList();
             
             return Ok(result);
         }
@@ -91,7 +90,7 @@ namespace OfferApiService.Controllers
 
             //var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-            var result = offers.Select(o => OfferShortResponse.MapToShortResponse(o, _baseUrl)).ToList();
+            var result = offers.Select(o => OfferShortMapper.MapToResponse(o, _baseUrl)).ToList();
             //foreach (var o in result)
             //{
             //    o.GuestCount = request.Guests;
@@ -146,7 +145,7 @@ namespace OfferApiService.Controllers
 
             //var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-            var result = offers.Select(o => OfferShortResponse.MapToShortResponse(o, _baseUrl)).ToList();
+            var result = offers.Select(o => OfferShortMapper.MapToResponse(o, _baseUrl)).ToList();
            
             return Ok(result);
         }
@@ -169,7 +168,7 @@ namespace OfferApiService.Controllers
 
             //var baseUrl = $"{Request.Scheme}://{Request.Host}";
 
-            var result = offers.Select(o => OfferShortResponse.MapToShortResponse(o, _baseUrl)).ToList();
+            var result = offers.Select(o => OfferShortMapper.MapToResponse(o, _baseUrl)).ToList();
 
             return Ok(result);
         }
@@ -195,7 +194,7 @@ namespace OfferApiService.Controllers
                     continue;
 
                 var offerRez = await _offerService.GetEntityAsync(offerId);
-                var offer =OfferShortPopularResponse.MapToResponse(offerRez, _baseUrl);
+                var offer =OfferShortPopularMapper.MapToResponse(offerRez, _baseUrl);
                 result.Add(offer);
             }
            
@@ -222,7 +221,7 @@ namespace OfferApiService.Controllers
         [HttpGet("get-offer/{id}")]
         public async Task<ActionResult<OfferResponse>> GetOfferById(
             int id,
-             [FromQuery] OfferByIdRequest request,
+             [FromQuery] OfferForBookingRequest request,
             [FromQuery] decimal userDiscountPercent)
         {
 
@@ -241,7 +240,7 @@ namespace OfferApiService.Controllers
             //var baseUrl = $"{Request.Scheme}://{Request.Host}";
    
 
-            var response = OfferResponse.MapToResponse(
+            var response = OfferMapper.MapToResponse(
                 offer,
                 _baseUrl);
 
@@ -340,7 +339,7 @@ namespace OfferApiService.Controllers
             rentObjRequest.DistanceToCenter = (int)(rentObjRequest.DistanceToCenter);
 
 
-            var rentObjModel = RentObjRequest.MapToModel(rentObjRequest);
+            var rentObjModel = RentObjMapper.MapToModel(rentObjRequest);
 
             //var idRentObj = await _rentObjService.AddRentObjWithParamValuesAsync(rentObjModel);
 
@@ -351,7 +350,7 @@ namespace OfferApiService.Controllers
             //var modelOffer = OfferRequest.MapToModel(offerRequest);
 
             offerRequest.RentObj = rentObjRequest;
-            var modelOffer = OfferRequest.MapToModel(offerRequest,_baseUrl);
+            var modelOffer = OfferMapper.MapToModel(offerRequest,_baseUrl);
 
             var idOffer = await _offerService.AddOfferWithRentObjAndParamValuesAsync(modelOffer);
             if (idOffer == -1)
@@ -426,7 +425,7 @@ namespace OfferApiService.Controllers
 
             
 
-            var modelOffer = OfferRequest.MapToModel(offerRequest,_baseUrl);
+            var modelOffer = OfferMapper.MapToModel(offerRequest,_baseUrl);
             var offerUpdId = await _offerService
                 .UpdateOfferWithRentObjAndParamValuesAsyn(modelOffer);
             return Ok(MapToResponse( modelOffer));
@@ -560,7 +559,7 @@ namespace OfferApiService.Controllers
             var responseList = new List<OfferResponse>();
             foreach (var offer in offerList)
             {
-                var response = OfferResponse.MapToResponse(
+                var response = OfferMapper.MapToResponse(
                 offer,
                 _baseUrl);
                 responseList.Add(response);
@@ -611,7 +610,7 @@ namespace OfferApiService.Controllers
             var responseList = new List<OfferResponse>();
             foreach (var offer in offerList)
             {
-                var response = OfferResponse.MapToResponse(
+                var response = OfferMapper.MapToResponse(
                 offer,
                 _baseUrl);
                 responseList.Add(response);
@@ -640,9 +639,8 @@ namespace OfferApiService.Controllers
             var responseList = new List<OfferResponse>();
             foreach (var offer in offerList)
             {
-                var response = OfferResponse.MapToResponse(
-                offer,
-                _baseUrl);
+                var response = MapToResponse(
+                offer);
                 responseList.Add(response);
             }
 
@@ -652,13 +650,13 @@ namespace OfferApiService.Controllers
         //===========================================================================================
         protected override Offer MapToModel(OfferRequest request)
         {
-            return  OfferRequest.MapToModel(request, _baseUrl);
+            return OfferMapper.MapToModel(request, _baseUrl);
         }
 
 
         protected override OfferResponse MapToResponse(Offer model)
         {
-            return OfferResponse.MapToResponse(model,_baseUrl);
+            return OfferMapper.MapToResponse(model,_baseUrl);
 
         }
 

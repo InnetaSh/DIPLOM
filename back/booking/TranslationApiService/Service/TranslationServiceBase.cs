@@ -7,86 +7,130 @@ using TranslationApiService.Models;
 
 namespace Globals.Sevices
 {
-    public class TranslationServiceBase<T, V> : ITranslationServiceBase<T> where T : TranslationEntityBase where V : DbContext, new()
+    public class TranslationServiceBase<T, V> : ITranslationServiceBase<T> where T : TranslationEntityBase where V : DbContext
     {
         private String TableName => $"{typeof(T).Name}s";
 
+        protected readonly V _context;
+        protected readonly ILogger<TranslationServiceBase<T, V>> _logger;
+
+        public TranslationServiceBase(V context, ILogger<TranslationServiceBase<T, V>> logger)
+        {
+            _context = context;
+            _logger = logger;
+        }
+
         public virtual async Task<bool> AddEntityAsync(T entity)
         {
-            try
-            {
-                using (var db = (V)Activator.CreateInstance(typeof(V)))
-                {
-                    var dbSet = GetDbSet(db);
-                    await dbSet.AddAsync(entity);
-                    await db.SaveChangesAsync();
-                    return true;
-                }
-            }
-            catch (Exception ex) { }
-            return false;
+            _logger.LogInformation("Adding entity {EntityType}", typeof(T).Name);
+           
+            var dbSet = GetDbSet(_context);
+            var res = await dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            
+            _logger.LogInformation(
+                "Entity {EntityType} created with id {Id}",
+                typeof(T).Name,
+                res.Entity.id);
+            return true;
         }
 
         public virtual async Task<bool> DelEntityAsync(int EntityId, string lang)
         {
-            using (var db = (V)Activator.CreateInstance(typeof(V)))
-            //using (var db = new V())
+           
+            var dbSet = GetDbSet(_context);
+            var found =  dbSet.FirstOrDefault( x => x.EntityId == EntityId && x.Lang == lang);
+            if (found == null)
             {
-                var dbSet = GetDbSet(db);
-                var found =  dbSet.FirstOrDefault( x => x.EntityId == EntityId && x.Lang == lang);
-                if (found == null) return false;
-
-                dbSet.Remove(found);
-                await db.SaveChangesAsync();
-                return true;
+                _logger.LogWarning(
+                    "Entity {EntityType} with id {Id} not found for deletion",
+                    typeof(T).Name,
+                    EntityId);
+                return false;
             }
+
+            dbSet.Remove(found);
+                await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+            "Entity {EntityType} with id {Id} deleted",
+            typeof(T).Name,
+            EntityId);
+
+            return true;
         }
 
         public virtual async Task<bool> ExistsEntityAsync(int EntityId, string lang)
         {
-            using (var db = (V)Activator.CreateInstance(typeof(V)))
-            {
-                var query = Include(db);
-                return await query.AnyAsync(x => x.EntityId == EntityId && x.Lang == lang);
-            }
+            var query = Include();
+            var exists = await query.AnyAsync(x => x.EntityId == EntityId && x.Lang == lang);
+
+            _logger.LogInformation(
+                            "Existence check for entity {EntityType} with id {Id}: {Exists}",
+                            typeof(T).Name,
+                            EntityId,
+                            exists);
+            return exists;
+            
         }
 
 
         public virtual async Task<List<T>> GetEntitiesAsync(string lang)
         {
-            using (var db = (V)Activator.CreateInstance(typeof(V)))
-            {
-                var query = Include(db);
-                return await query
+            var query = Include();
+            var list = await query
+                .AsNoTracking()
                     .Where(x => x.Lang == lang)
                     .ToListAsync();
-            }
+
+            _logger.LogInformation(
+                "Retrieved {Count} entities of type {EntityType}",
+                list.Count,
+                typeof(T).Name);
+
+            return list;
         }
 
 
         public virtual async Task<T> GetEntityAsync(int EntityId, string lang)
         {
-            using (var db = (V)Activator.CreateInstance(typeof(V)))
-            {
-                var query = Include(db);
-                return await query.FirstOrDefaultAsync(x => x.EntityId == EntityId && x.Lang == lang);
-            }
+            var query = Include();
+            var entity = await query
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.EntityId == EntityId && x.Lang == lang);
+
+            _logger.LogInformation(
+                entity != null
+                    ? "Retrieved entity {EntityType} with id {Id}"
+                    : "Entity {EntityType} with id {Id} not found",
+                typeof(T).Name,
+                EntityId);
+
+            return entity;
         }
 
         public virtual async Task<bool> UpdateEntityAsync(T entity)
         {
-            using (var db = (V)Activator.CreateInstance(typeof(V)))
-            {
-                var dbSet = GetDbSet(db);
+            var dbSet = GetDbSet(_context);
                 var existing = await dbSet.FirstOrDefaultAsync(x => x.EntityId == entity.EntityId && x.Lang == entity.Lang);
-                if (existing == null) return false;
-                dbSet.Remove(existing);
-                await dbSet.AddAsync(entity);
-
-              
-                await db.SaveChangesAsync();
-                return true;
+            if (existing == null)
+            {
+                _logger.LogWarning(
+                    "Entity {EntityType} with id {Id} not found for update",
+                    typeof(T).Name,
+                    entity.id);
+                return false;
             }
+
+            _context.Entry(existing).CurrentValues.SetValues(entity);
+            await _context.SaveChangesAsync();
+
+            _logger.LogInformation(
+                "Entity {EntityType} with id {Id} updated",
+                typeof(T).Name,
+                entity.id);
+
+            return true;
         }
 
 
@@ -120,17 +164,15 @@ namespace Globals.Sevices
                 var val = propByType.GetValue(db) as DbSet<T>;
                 if (val != null) return val;
             }
-
-            
             return db.Set<T>();
         }
 
-        private IQueryable<T> Include(V db, params string[] includeProperties)
+        private IQueryable<T> Include( params string[] includeProperties)
         {
-            var query = db.Set<T>().AsQueryable();
+            var query = _context.Set<T>().AsQueryable();
 
             // Use EF model metadata to discover navigations (same approach used in ServiceBase)
-            var entityType = db.Model.FindEntityType(typeof(T));
+            var entityType = _context.Model.FindEntityType(typeof(T));
             if (entityType == null) return query;
 
             var navigations = entityType.GetDerivedTypesInclusive()

@@ -1,12 +1,12 @@
 ﻿using Globals.Abstractions;
 using Globals.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using OrderApiGetway.View;
+using OrderApiService.Mappers;
 using OrderApiService.Models;
-using OrderApiService.Models.Enum;
 using OrderApiService.Service.Interface;
-using OrderApiService.Services;
-using OrderApiService.View;
+using OrderContracts;
+using OrderContracts.Enum;
+
 
 namespace OrderApiService.Controllers
 {
@@ -155,13 +155,13 @@ namespace OrderApiService.Controllers
             //var offer = orderService.GetById(request.OfferId);
 
 
-            return OrderRequest.MapToModel(request);
+            return OrderMapper.MapToModel(request);
            
         }
 
         protected override OrderResponse MapToResponse(Order model)
         {
-            return  OrderResponse.MapToResponse(model);
+            return OrderMapper.MapToResponse(model);
            
         }
     }

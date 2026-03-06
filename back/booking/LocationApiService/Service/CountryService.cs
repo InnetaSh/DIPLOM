@@ -5,39 +5,64 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LocationApiService.Services
 {
-    public class CountryService : TableServiceBase<Country, LocationContext>, ICountryService
+    public class CountryService : TableServiceBaseNew<Country, LocationContext>, ICountryService
     {
-        public override async Task<List<Country>> GetEntitiesAsync(params string[] includeProperties)
+
+        public CountryService(LocationContext context, ILogger<CountryService> logger) : base(context, logger)
         {
-            using (var db = (LocationContext)Activator.CreateInstance(typeof(LocationContext)))
-            {
-                return await db.Countries
-                    .Include(c => c.Regions)
-                        .ThenInclude(r => r.Cities)
-                            //.ThenInclude(ci => ci.Districts)
-                    .ToListAsync();
-            }
+        }
+
+        public override async Task<List<Country>> GetEntitiesAsync(Predicate<Country>? additional = null, params string[] includeProperties)
+        {
+            _logger.LogInformation("Getting all countries with regions and cities");
+
+            var countries = await _context.Countries
+                .AsNoTracking()
+                .Include(c => c.Regions)
+                    .ThenInclude(r => r.Cities)
+                .ToListAsync();
+
+            _logger.LogInformation("Retrieved {Count} countries", countries.Count);
+
+            return countries;
         }
         public  async Task<List<Country>> GetEntitiesWithCodeAsync(params string[] includeProperties)
         {
-            using (var db = (LocationContext)Activator.CreateInstance(typeof(LocationContext)))
-            {
-                return await db.Countries
-                    .ToListAsync();
-            }
+
+            _logger.LogInformation("Getting all countries without includes");
+
+            var countries = await _context.Countries
+                .AsNoTracking()
+                .ToListAsync();
+
+            _logger.LogInformation("Retrieved {Count} countries", countries.Count);
+
+            return countries;
+
         }
 
 
-        public override async Task<Country> GetEntityAsync(int id, params string[] includeProperties)
+        public override async Task<Country> GetEntityAsync(int id, Predicate<Country>? additional = null, params string[] includeProperties)
         {
-            using (var db = (LocationContext)Activator.CreateInstance(typeof(LocationContext)))
+
+            _logger.LogInformation("Getting country with id {CountryId}", id);
+
+            var country = await _context.Countries
+                .AsNoTracking()
+                .Include(c => c.Regions)
+                    .ThenInclude(r => r.Cities)
+                        .ThenInclude(ci => ci.Districts)
+                .FirstOrDefaultAsync(c => c.id == id);
+
+            if (country == null)
             {
-                return await db.Countries
-                    .Include(c => c.Regions)
-                        .ThenInclude(r => r.Cities)
-                            .ThenInclude(ci => ci.Districts)
-                    .FirstOrDefaultAsync(c => c.id == id);
+                _logger.LogWarning("Country with id {CountryId} not found", id);
+                return null;
             }
+
+            _logger.LogInformation("Country with id {CountryId} retrieved successfully", id);
+
+            return country;
         }
     }
 }

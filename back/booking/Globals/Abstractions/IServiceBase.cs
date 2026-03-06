@@ -22,4 +22,20 @@ namespace Globals.Abstractions
 
         Task<bool> ExistsEntityAsync(int id);
     }
+
+    public interface IServiceBaseNew<T> where T : EntityBase
+    {
+        //Task<Boolean> AddEntityAsync(T entity);
+        Task<int> AddEntityGetIdAsync(T entity);
+
+        Task<T> GetEntityAsync(int id, Predicate<T>? additional = null, params string[] includeProperties);
+
+        Task<List<T>> GetEntitiesAsync(Predicate<T>? additional = null, params string[] includeProperties);
+
+        Task<Boolean> UpdateEntityAsync(T entity);
+
+        Task<Boolean> DelEntityAsync(int id, Predicate<T>? additional = null);
+
+        Task<bool> ExistsEntityAsync(int id, Predicate<T>? additional = null);
+    }
 }

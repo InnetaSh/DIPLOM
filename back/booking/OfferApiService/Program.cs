@@ -1,5 +1,9 @@
 ﻿using Globals.Abstractions;
 using Globals.EventBus;
+using Globals.Extensions;
+using Globals.Middleware;
+using Microsoft.EntityFrameworkCore;
+using OfferApiService.Models;
 using OfferApiService.Service;
 using OfferApiService.Service.Interface;
 using OfferApiService.Services;
@@ -26,6 +30,24 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<OfferContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+
+    var enableSensitive =
+        Environment.GetEnvironmentVariable("ENABLE_SENSITIVE_LOGGING");
+
+    var aspEnv =
+        Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+    if (string.Equals(enableSensitive, "true", StringComparison.OrdinalIgnoreCase)
+        || string.Equals(aspEnv, "Development", StringComparison.OrdinalIgnoreCase))
+    {
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
+});
 
 
 builder.Services.AddScoped<IOfferService, OfferService>();
@@ -61,6 +83,9 @@ builder.Services.AddControllers()
 
 
 var app = builder.Build();
+//app.UseMiddleware<ExceptionMiddleware>();
+app.UseGlobalMiddleware();
+
 
 Console.WriteLine($"Environment: {app.Environment.EnvironmentName}");
 

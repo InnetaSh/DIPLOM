@@ -21,10 +21,10 @@ namespace Globals.Controllers
      where TResponse : IBaseResponse , new()
      where TRequest : IBaseRequest, new()
     {
-        protected readonly IServiceBase<TModel> _service;
+        protected readonly IServiceBaseNew<TModel> _service;
         private readonly IRabbitMqService _mqService;
 
-        public EntityControllerBase(IServiceBase<TModel> service, IRabbitMqService mqService)
+        public EntityControllerBase(IServiceBaseNew<TModel> service, IRabbitMqService mqService)
         {
             _service = service;
             _mqService = mqService;

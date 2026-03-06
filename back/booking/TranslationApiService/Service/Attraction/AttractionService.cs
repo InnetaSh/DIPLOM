@@ -10,6 +10,8 @@ namespace TranslationApiService.Service.Attraction
 {
     public class AttractionService : TranslationServiceBase<AttractionTranslation, TranslationContext>, IAttractionService
     {
-        
+        public AttractionService(TranslationContext context, ILogger<AttractionService> logger) : base(context, logger)
+        {
+        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using OfferApiService.View.RentObj;
-using System.Net.Http;
-using System.Text.Json;
+﻿
 
 namespace OfferApiService.Controllers
 {

@@ -5,7 +5,7 @@ using AttractionApiService.Models;
 
 namespace AttractionApiService.Service.Interfaces
 {
-    public interface IAttractionImageService : IServiceBase<AttractionImage>
+    public interface IAttractionImageService : IServiceBaseNew<AttractionImage>
     {
         Task<string> SaveImageAsync(IFormFile file, int attractionId);
         Task<bool> DeleteImageAsync(int imageId);

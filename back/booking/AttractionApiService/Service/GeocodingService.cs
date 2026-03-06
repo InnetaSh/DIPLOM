@@ -1,4 +1,5 @@
-﻿using AttractionApiService.View;
+﻿
+using AttractionContracts;
 using System.Net.Http;
 using System.Text.Json;
 

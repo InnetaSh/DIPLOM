@@ -1,8 +1,9 @@
 ﻿
+using AttractionApiService.Mappers;
 using AttractionApiService.Models;
 using AttractionApiService.Service;
 using AttractionApiService.Service.Interfaces;
-using AttractionApiService.View;
+using AttractionContracts;
 using Globals.Abstractions;
 using Globals.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -42,7 +43,7 @@ namespace AttractionApiService.Controllers
             if (coords == null)
                 return BadRequest("Адрес не найден");
 
-            var model = AttractionRequest.MapToModelWithCoords(
+            var model = AttractionMapper.MapToModelWithCoords(
                 request,
                 coords.Value.lat,
                 coords.Value.lon
@@ -69,7 +70,7 @@ namespace AttractionApiService.Controllers
             [FromRoute] int cityId)
         {
             var attractions = await _attractionService.GetAttractionByCityId(cityId);
-            var result = attractions.Select(o => AttractionShortResponse.MapToResponse(o, _baseUrl)).ToList();
+            var result = attractions.Select(o => AttractionShortMapper.MapToResponse(o, _baseUrl)).ToList();
 
             return Ok(result);
         }
@@ -85,7 +86,7 @@ namespace AttractionApiService.Controllers
            [FromRoute] int id)
         {
             var attractions = await _attractionService.GetAttractionById(id);
-            var result = attractions.Select(o => AttractionResponse.MapToResponse(o, _baseUrl)).ToList();
+            var result = attractions.Select(o => AttractionMapper.MapToResponse(o, _baseUrl)).ToList();
             return Ok(result);
         }
 
@@ -108,7 +109,7 @@ namespace AttractionApiService.Controllers
             if (coords == null)
                 return BadRequest("Адрес не найден");
 
-            var updatedModel = AttractionRequest.MapToModelWithCoords(
+            var updatedModel = AttractionMapper.MapToModelWithCoords(
                 request,
                 coords.Value.lat,
                 coords.Value.lon
@@ -162,13 +163,13 @@ namespace AttractionApiService.Controllers
 
         protected override Attraction MapToModel(AttractionRequest request)
         {
-            return AttractionRequest.MapToModel(request);
+            return AttractionMapper.MapToModel(request);
         }
 
 
         protected override AttractionResponse MapToResponse(Attraction model)
         {
-            return AttractionResponse.MapToResponse(model, _baseUrl);
+            return AttractionMapper.MapToResponse(model, _baseUrl);
 
         }
 
