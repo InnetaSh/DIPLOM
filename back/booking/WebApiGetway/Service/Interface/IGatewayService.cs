@@ -18,6 +18,13 @@ namespace WebApiGetway.Service.Interfase
             HttpMethod method,
             IFormFile file
         );
+
+        Task<T> SendAsync<T>(
+            string serviceName,
+            string url,
+            HttpMethod method,
+            object? body = null
+        );
     }
 
 }

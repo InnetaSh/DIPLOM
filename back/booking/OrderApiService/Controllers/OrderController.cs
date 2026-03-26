@@ -63,8 +63,8 @@ namespace OrderApiService.Controllers
 
             var result = await _orderService.UpdateOrderStatus(orderId, statusEnum);
 
-            if (result == -1)
-                return BadRequest("Не удалось изменить заказ");
+            //if (result == -1)
+            //    return BadRequest("Не удалось изменить заказ");
 
             return Ok(result);
         }
@@ -72,7 +72,7 @@ namespace OrderApiService.Controllers
 
         //===========================================================================================
 
-        [HttpGet("get/orders/{clientId}")]
+        [HttpGet("get/ordersByUserId/{clientId}")]
         public async Task<ActionResult<List<OrderResponse>>> GetOrderById(
         int clientId)
         {
@@ -131,19 +131,10 @@ namespace OrderApiService.Controllers
         //===========================================================================================
         [HttpPost("{offerId}/valid/date-time")]
         public async Task<ActionResult<bool>> HasDateConflict(
-           int offerId,
              [FromBody] DateValidationRequest request)
         {
-            var ordersIdList = request.OrdersIdList;
-            var start = request.Start;
-            var end = request.End;
-            foreach (var orderId in ordersIdList)
-            {
-                var isExist = await _orderService.HasDateConflict(orderId, offerId, start, end);
-                if (!isExist)
-                    return false;
-            }
-            return true;
+            var isExist = await _orderService.HasDateConflict(request);
+            return isExist;
         }
 
         //===========================================================================================

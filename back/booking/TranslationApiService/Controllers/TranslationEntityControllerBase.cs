@@ -46,6 +46,16 @@ namespace Globals.Controllers
             return Ok(responseList);
         }
 
+        [HttpGet("get-translation-byId/{EntityId}/{lang}")]
+        public virtual async Task<ActionResult<TResponse>> GetEntityById(int EntityId, string lang)
+        {
+            var item = await _service.GetEntityAsync(EntityId, lang);
+            if (item == null)
+                return NotFound(new { message = "Item not found" });
+
+            return Ok(MapToResponse(item));
+        }
+
 
         [HttpGet("get-translations/{EntityId}/{lang}")]
         public virtual async Task<ActionResult<TResponse>> GetById(int EntityId, string lang)
@@ -104,18 +114,22 @@ namespace Globals.Controllers
 
 
 
-        [HttpDelete("del-translations/{EntityId}/{lang}")]
-        public virtual async Task<IActionResult> Delete(int EntityId, string lang)
+        [HttpDelete("del-translations/{EntityId}")]
+        public virtual async Task<IActionResult> Delete(int EntityId)
         {
-            var exists = await _service.ExistsEntityAsync(EntityId, lang);
+            var exists = await _service.ExistsEntityAsync(EntityId, "uk");
             if (!exists)
                 return NotFound(new { message = "Item not found" });
 
-            var success = await _service.DelEntityAsync(EntityId, lang);
+            var existsEn = await _service.ExistsEntityAsync(EntityId, "en");
+            if (!existsEn)
+                return NotFound(new { message = "Item not found" });
+
+            var success = await _service.DelEntityAsync(EntityId);
             if (!success)
                 return StatusCode(500, new { message = "Error deleting item" });
 
-            PublishMqEvent("Deleted", new { EntityId, lang });
+            PublishMqEvent("Deleted translations", new { EntityId });
 
             return NoContent();
         }

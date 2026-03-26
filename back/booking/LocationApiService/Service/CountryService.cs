@@ -26,7 +26,7 @@ namespace LocationApiService.Services
 
             return countries;
         }
-        public  async Task<List<Country>> GetEntitiesWithCodeAsync(params string[] includeProperties)
+        public  async Task<List<Country>> GetOnlyCountriesAsync(params string[] includeProperties)
         {
 
             _logger.LogInformation("Getting all countries without includes");

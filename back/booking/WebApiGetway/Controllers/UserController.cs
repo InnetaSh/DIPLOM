@@ -5,6 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using UserContracts;
 using WebApiGetway.Controllers;
 using WebApiGetway.Service.Interfase;
 using WebApiGetway.View;
@@ -22,7 +23,8 @@ public class UserController : ControllerBase
     }
 
     //===========================================================================================
-    //  GET METHODS (для админа) - получить всех пользователей
+    // !!!!!!!!!!+++ GET METHODS (для админа) - получить всех пользователей
+    //  [HttpGet("admin/all")]
     //===========================================================================================
 
     [HttpGet("get-all")]
@@ -32,14 +34,22 @@ public class UserController : ControllerBase
 
 
     //===========================================================================================
-    //  GET METHODS (для админа) - получить полную информацию о пользователе по Id
+    // !!!!!!!!!+++ GET METHODS (для админа) - получить полную информацию о пользователе по Id
+    //   [HttpGet("admin/{userId}")]
     //===========================================================================================
     [HttpGet("get/{userId}")]
     public Task<IActionResult> GetById(int userId) =>
         _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/user/admin/get/userfullinfo/{userId}", HttpMethod.Get, null);
 
     // ==========================================================================================
-    // GET METHODS (для админа) - получить полную информацию о пользователе по email
+    // !!!!!!! ++++ GET METHODS (для админа) - получить полную информацию о пользователе по email
+    //[HttpGet("admin/by-email")]
+    //[Authorize(Roles = "Admin,SuperAdmin")]
+
+    //public async Task<ActionResult<UserResponse>> GetByEmail(
+    //        [FromQuery] string email)
+
+
     // ==========================================================================================
     [HttpGet("get/{email}")]
     public Task<IActionResult> GetByEmail(string email) =>
@@ -49,14 +59,18 @@ public class UserController : ControllerBase
 
 
 
-
+    // ==========================================================================================
+    //  +++++  GOOGLE
+    //   [HttpPost("login/google")]
+    // ==========================================================================================
     [HttpPost("google")]
     public Task<IActionResult> GoogleLogin([FromBody] object request) =>
       _gateway.ForwardRequestAsync("UserApiService", $"/api/auth/google", HttpMethod.Post, request);
 
 
     //===========================================================================================
-    //  GET METHODS (для авторизованного пользователя) - получить полную информацию о себе
+    //  !!!!!!!+++ GET METHODS (для авторизованного пользователя) - получить полную информацию о себе
+    //    [HttpGet("me")]
     //===========================================================================================
 
     [HttpGet("me/{lang}")]
@@ -95,7 +109,8 @@ public class UserController : ControllerBase
     }
 
     //===========================================================================================
-    //  AUTH METHODS - login / register
+    //  ++++ AUTH METHODS - login / register
+    //    [HttpPost("login")]
     //===========================================================================================
 
     [HttpPost("login")]
@@ -103,7 +118,7 @@ public class UserController : ControllerBase
         _gateway.ForwardRequestAsync("UserApiService", "/api/auth/login", HttpMethod.Post, request);
 
     //===========================================================================================
-    //  REGISTRATION METHODS - register client / register owner
+    //  !!!!!!!!!!!+++++ REGISTRATION METHODS - register client / register owner
     //===========================================================================================
 
     [HttpPost("register/client")]
@@ -115,6 +130,12 @@ public class UserController : ControllerBase
       _gateway.ForwardRequestAsync("UserApiService", "/api/auth/register/owner", HttpMethod.Post, request);
 
 
+    //===========================================================================================
+    //!!!!!!+++++ UPDATE METHODS 
+
+    //  [HttpPut("me")]
+    //   [HttpPut("me/password")]
+    //    [HttpPut("me/email")]
     //===========================================================================================
 
 
@@ -132,8 +153,15 @@ public class UserController : ControllerBase
     [Authorize]
     public Task<IActionResult> ChangeEmail([FromBody] object request) =>
     _gateway.ForwardRequestAsync("UserApiService", $"/api/user/me/change-email", HttpMethod.Post, request);
-    
-    
+
+
+    //===========================================================================================
+    //  !!!!!!!++++ DELETE METHODS
+
+    //[HttpDelete("admin/{userId}")]
+    //[Authorize(Roles = "Admin,SuperAdmin")]
+
+    //[HttpDelete("me")]
     //===========================================================================================
 
     [HttpDelete("delete/me")]
@@ -145,7 +173,8 @@ public class UserController : ControllerBase
 
 
     // =====================================================================
-    //  получить обьявления владельцем
+    //  !!!!!!+++ получить обьявления владельцем
+    //  HttpGet("me/offers")]
     // =====================================================================
     [Authorize]
     [HttpGet("me/offers/{lang}")]
@@ -225,7 +254,8 @@ public class UserController : ControllerBase
 
 
     // =====================================================================
-    //  получить обьявления владельцем по конкретному городу
+    // !!!!!!!!++++  получить обьявления владельцем по конкретному городу
+    //   [HttpGet("me/offers/by-city")]
     // =====================================================================
     [Authorize]
     [HttpGet("me/offers/{cityId:int}/{lang}")]
@@ -266,7 +296,7 @@ public class UserController : ControllerBase
 
         var offerObjResult = await _gateway.ForwardRequestAsync<object>(
                "OfferApiService",
-               $"/api/Offer/get/offers/{userId}/{cityId}",
+               $"/api/Offer/get/offersByOwnerFromCity/{userId}/{cityId}",
                HttpMethod.Get,
                null
            );
@@ -287,7 +317,8 @@ public class UserController : ControllerBase
 
 
     // =====================================================================
-    //  получить обьявления владельцем по конкретной стране
+    // !!!!!!!++++    получить обьявления владельцем по конкретной стране
+    //  [HttpGet("me/offers/by-country")]
     // =====================================================================
     [Authorize]
     [HttpGet("me/offers/{countryId:int}/{lang}")]
@@ -328,7 +359,7 @@ public class UserController : ControllerBase
 
         var offerObjResult = await _gateway.ForwardRequestAsync<object>(
                "OfferApiService",
-               $"/api/Offer/get/offers/{userId}/{countryId}",
+               $"/api/Offer/get/offersByOwnerFromCountry/{userId}/{countryId}",
                HttpMethod.Get,
                null
            );
@@ -348,7 +379,8 @@ public class UserController : ControllerBase
 
 
     // =====================================================================
-    // проверить есть ли новые не подтвержденные брони у owner
+    //  !!!!+++  проверить есть ли новые не подтвержденные брони у owner
+    //  [HttpGet("me/orders/has-pending")]
     // =====================================================================
     [Authorize]
     [HttpGet("me/myOffers/orders/has-pending")]
@@ -372,10 +404,11 @@ public class UserController : ControllerBase
     }
 
 
-        // =====================================================================
-        //  получить брони клиентом
-        // =====================================================================
-        [Authorize]
+    // =====================================================================
+    //  !!!!!!+++  получить брони клиентом
+    //[HttpGet("me/{lang}")]
+    // =====================================================================
+    [Authorize]
     [HttpGet("me/orders/{lang}")]
     public async Task<IActionResult> GetMyOrders(string lang)
     {
@@ -392,7 +425,7 @@ public class UserController : ControllerBase
 
         var orderObjResult = await _gateway.ForwardRequestAsync<object>(
                "OrderApiService",
-               $"/api/order/get/orders/{userId}",
+               $"/api/order/get/ordersByUserId/{userId}",
                HttpMethod.Get,
                null
            );

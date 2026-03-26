@@ -10,6 +10,7 @@ namespace WebApiGetway.View
         public int Guests { get; set; }
         public int Adults { get; set; }
         public int Children { get; set; }
+        public int Rooms { get; set; }
         public string? MainGuestFirstName { get; set; }
         public string? MainGuestLastName { get; set; }
 

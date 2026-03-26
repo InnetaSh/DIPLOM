@@ -137,6 +137,7 @@ namespace UserApiService.Services
                 .AsNoTracking()
                 .ToListAsync();
 
+
             _logger.LogInformation("Retrieved {Count} history offers for client {UserId}", historyOffers.Count, userId);
             return historyOffers;
         }

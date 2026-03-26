@@ -51,20 +51,21 @@ namespace OrderApiService.Services
 
 
         //===========================================================================================
-        public async Task<int> UpdateOrderStatus(int orderId, OrderStatus status)
+        public async Task<bool> UpdateOrderStatus(int orderId, OrderStatus status)
         {
             var order = await _context.Orders.FindAsync(orderId);
+
             if (order == null)
             {
                 _logger.LogWarning("Order with id {OrderId} not found for status update", orderId);
-                return -1;
+                return false;
             }
 
             order.Status = status;
             await _context.SaveChangesAsync();
 
             _logger.LogInformation("Order {OrderId} status updated to {Status}", orderId, status);
-            return order.id;
+            return true;
         }
 
 
@@ -72,16 +73,15 @@ namespace OrderApiService.Services
 
         //===========================================================================================
 
-        public async Task<bool> HasDateConflict(int orderId, int offerId, DateTime start, DateTime end)
+        public async Task<bool> HasDateConflict(DateValidationRequest request)
         {
-            _logger.LogInformation("Checking date conflict for order {OrderId} and offer {OfferId}", orderId, offerId);
+            _logger.LogInformation("Checking date conflict for order {OrderId} and offer {OfferId}", request.OfferId);
 
             var conflict = await _context.Orders
                 .AsNoTracking()
-                .Where(o => o.id == orderId && o.OfferId == offerId)
-                .AnyAsync(o => (o.StartDate >= start && o.StartDate < end) ||
-                               (o.EndDate > start && o.EndDate <= end));
-
+                .Where(o => o.OfferId == request.OfferId)
+                .AnyAsync(o => (o.StartDate >= request.Start && o.StartDate < request.End) ||
+                               (o.EndDate > request.Start && o.EndDate <= request.End));
 
             //var flag = false;
             //foreach (var order in fitOrders)
@@ -98,9 +98,9 @@ namespace OrderApiService.Services
             //    }
             //}
             if (conflict)
-                _logger.LogInformation("Date conflict detected for order {OrderId}", orderId);
+                _logger.LogInformation("Date conflict detected for offer {OfferId}", request.OfferId);
             else
-                _logger.LogInformation("No date conflict for order {OrderId}", orderId);
+                _logger.LogInformation("No date conflict for offer {OfferId}", request.OfferId);
 
             return conflict;
 

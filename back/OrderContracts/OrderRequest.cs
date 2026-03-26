@@ -21,8 +21,9 @@ namespace OrderContracts
         public string? MainGuestLastName { get; set; }
 
         // Даты проживания
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+         public string StartDate { get; set; }
+        public string EndDate { get; set; }
+     
 
         // ===== Финансовая информация =====
 

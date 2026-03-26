@@ -1,10 +1,83 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using TranslationContracts;
 
 namespace WebApiGetway.Controllers
 {
     public class BffHelper
     {
+
+        /// <summary>
+        /// Выполняет слияние данных, копируя совпадающие по имени и типу свойства 
+        /// из объектов перевода (<see cref="TranslationResponse"/>) в целевые объекты.
+        /// Свойство <c>id</c> не изменяется.
+        /// </summary>
+        /// <typeparam name="TSource">Тип целевой сущности.</typeparam>
+        /// <param name="source">Коллекция целевых объектов, в которые применяется перевод.</param>
+        /// <param name="translations">Коллекция объектов перевода.</param>
+        /// <param name="sourceKeySelector">
+        /// Функция для получения идентификатора целевого объекта (используется для сопоставления с <c>EntityId</c>).
+        /// </param>
+
+        public static class MergeHelper
+        {
+            public static void Merge<TSource>(
+                IEnumerable<TSource> source,
+                IEnumerable<TranslationResponse> translations,
+                Func<TSource, int> sourceKeySelector)
+                where TSource : class
+            {
+                var dict = translations
+                    .GroupBy(t => t.EntityId)
+                    .ToDictionary(g => g.Key, g => g.First());
+
+                var sourceProps = typeof(TSource).GetProperties()
+                    .Where(p => p.CanWrite && p.Name != "id")
+                    .ToList();
+
+                var translationProps = typeof(TranslationResponse).GetProperties()
+                    .ToDictionary(p => p.Name, p => p);
+
+                foreach (var item in source)
+                {
+                    var key = sourceKeySelector(item);
+
+                    if (!dict.TryGetValue(key, out var translation))
+                        continue;
+
+                    foreach (var prop in sourceProps)
+                    {
+                        if (translationProps.TryGetValue(prop.Name, out var trProp))
+                        {
+                            if (prop.PropertyType != trProp.PropertyType)
+                                continue;
+
+                            var value = trProp.GetValue(translation);
+                            prop.SetValue(item, value);
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //public static List<Dictionary<string, object>> ConvertActionResultToDict(OkObjectResult objResult)
         //{
         //    if (objResult?.Value is JsonElement element)

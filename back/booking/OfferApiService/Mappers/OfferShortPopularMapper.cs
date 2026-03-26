@@ -5,14 +5,14 @@ namespace OfferApiService.Mappers
 {
     public static class OfferShortPopularMapper
     {
-        public static OfferShortPopularResponse MapToResponse(  Offer model, string baseUrl)
+        public static OfferResponseForPupularList MapToResponse(  Offer model, string baseUrl)
         {
 
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
             var firstImage = model.RentObj.Images?.FirstOrDefault();
 
-            return new OfferShortPopularResponse
+            return new OfferResponseForPupularList
             {
                 id = model.id,
 

@@ -24,10 +24,10 @@ namespace LocationApiService.Controllers
             _countryService = countryService;
         }
 
-        [HttpGet("get-all-with-code")]
-        public async Task<ActionResult<CountryResponse>> GetAllWithCode()
+        [HttpGet("get-only-countries")]
+        public async Task<ActionResult<CountryResponse>> GetOnlyCountries()
         {
-            var items = await _countryService.GetEntitiesWithCodeAsync();
+            var items = await _countryService.GetOnlyCountriesAsync();
             if (items == null || !items.Any())
                 return NotFound(new { message = "No items found" });
 

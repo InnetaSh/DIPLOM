@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LocationContracts
 {
-    public class CityResponseForPupularList : IBaseResponse
+    public class CityResponseForPopularList : IBaseResponse
     {
         public int id { get; set; }
         public string? Title { get; set; }

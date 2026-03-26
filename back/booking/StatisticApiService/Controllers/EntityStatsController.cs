@@ -73,7 +73,7 @@ namespace StatisticApiService.Controllers
         //                              Топ 10 за неделю
         //====================================================================
         [HttpGet("top-week")]
-        public async Task<IActionResult> GetPopularTopWeek(
+        public async Task<IEnumerable<PopularEntityResponse>> GetPopularTopWeek(
             int entityType,
             int limit = 10)
         {
@@ -86,13 +86,13 @@ namespace StatisticApiService.Controllers
                 weekAgo,
                 today);
 
-            return Ok(result);
+            return result ?? Enumerable.Empty<PopularEntityResponse>();
         }
         // ===================================================================
         //                              Топ 10 за месяц
         //====================================================================
         [HttpGet("top-month")]
-        public async Task<IActionResult> GetPopularTopMonth(
+        public async Task<IEnumerable<PopularEntityResponse>> GetPopularTopMonth(
             int entityType,
              int limit = 10)
         {
@@ -104,13 +104,13 @@ namespace StatisticApiService.Controllers
                 limit,
                 startOfMonth,
                 today);
-            return Ok(result);
+            return result ?? Enumerable.Empty<PopularEntityResponse>();
         }
         // ===================================================================
         //                              Топ 10 за год
         //====================================================================
         [HttpGet("top-year")]
-        public async Task<IActionResult> GetPopularTopYear(
+        public async Task<IEnumerable<PopularEntityResponse>> GetPopularTopYear(
             int entityType,
              int limit = 10)
         {
@@ -123,7 +123,7 @@ namespace StatisticApiService.Controllers
                 limit,
                 startOfYear, 
                 today);
-            return Ok(result);
+            return result ?? Enumerable.Empty<PopularEntityResponse>();
         }
 
     }

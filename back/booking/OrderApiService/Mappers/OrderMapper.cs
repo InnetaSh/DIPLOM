@@ -8,6 +8,15 @@ namespace OrderApiService.Mappers
     {
         public static Order MapToModel( OrderRequest request)
         {
+            DateTime startDate;
+            DateTime endDate;
+
+            if (!DateTime.TryParse(request.StartDate, out startDate))
+                throw new ArgumentException($"Неверный формат StartDate: {request.StartDate}");
+
+            if (!DateTime.TryParse(request.EndDate, out endDate))
+                throw new ArgumentException($"Неверный формат EndDate: {request.EndDate}");
+
             return new Order
             {
                 OfferId = request.OfferId,
@@ -21,8 +30,8 @@ namespace OrderApiService.Mappers
                 MainGuestFirstName = request.MainGuestFirstName,
                 MainGuestLastName = request.MainGuestLastName,
 
-                StartDate = request.StartDate,
-                EndDate = request.EndDate,
+                StartDate = startDate,
+                EndDate = endDate,
 
                 // ===== Финансы =====
                 OrderPrice = request.OrderPrice,

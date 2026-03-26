@@ -7,7 +7,7 @@ namespace LocationApiService.Mappers
     {
 
         private const string DefaultCityImage = "/images/default-city.jpeg";
-        public static CityResponseForPupularList MapToResponse( City model, string baseUrl)
+        public static CityResponseForPopularList MapToResponse( City model, string baseUrl)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -18,7 +18,7 @@ namespace LocationApiService.Mappers
 
 
 
-            return new CityResponseForPupularList
+            return new CityResponseForPopularList
             {
                 id = model.id,
 

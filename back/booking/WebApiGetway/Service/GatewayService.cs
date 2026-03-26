@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -140,5 +141,31 @@ namespace WebApiGetway.Service
                 StatusCode = (int)response.StatusCode
             };
         }
+
+
+        public async Task<T> SendAsync<T>(
+            string serviceName,
+            string url,
+            HttpMethod method,
+            object? body = null)
+        {
+            var client = _clientFactory.CreateClient(serviceName);
+
+            var request = new HttpRequestMessage(method, url);
+
+            if (body != null)
+            {
+                request.Content = JsonContent.Create(body);
+            }
+
+            var response = await client.SendAsync(request);
+
+            response.EnsureSuccessStatusCode();
+
+            var content = await response.Content.ReadFromJsonAsync<T>();
+
+            return content!;
+        }
+
     }
 }

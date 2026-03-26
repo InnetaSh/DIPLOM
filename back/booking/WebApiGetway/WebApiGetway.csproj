@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\AttractionContracts\AttractionContracts.csproj" />
     <ProjectReference Include="..\..\LocationContracts\LocationContracts.csproj" />
     <ProjectReference Include="..\..\OfferContracts\OfferContracts.csproj" />
     <ProjectReference Include="..\..\OrderContracts\OrderContracts.csproj" />

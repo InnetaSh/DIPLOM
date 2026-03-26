@@ -4,8 +4,12 @@ using Globals.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Text;
+using System.Text.Json.Serialization;
 using WebApiGateway.Services;
+using WebApiGetway.Clients;
+using WebApiGetway.Clients.Interface;
 using WebApiGetway.Controllers;
 using WebApiGetway.Service;
 using WebApiGetway.Service.Interfase;
@@ -27,10 +31,125 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.CustomSchemaIds(type => type.FullName);
+});
 
 
 var imgUrl = builder.Configuration["ImgBaseUrl"];
+
+
+
+
+
+//-----------------------------------------------------------------------------------
+builder.Services.AddScoped<IUserBffService, UserBffService>();
+builder.Services.AddScoped<ILocationBffService, LocationBffService>();
+builder.Services.AddScoped<IOfferBffService, OfferBffService>();
+builder.Services.AddScoped<IOrderBffService, OrderBffService>();
+builder.Services.AddScoped<IReviewBffService, ReviewBffService>();
+builder.Services.AddScoped<IAttractionBffService, AttractionBffService>();
+builder.Services.AddScoped<WebApiGetway.Helpers.HelpersFunctions>();
+//-----------------------------------------------------------------------------------
+
+builder.Services.AddHttpClient<IUserApiClient, UserApiClient>(client =>
+{
+    var baseUrl = builder.Configuration["UserApiServiceUrl"] ?? "http://userapiservice";
+    var port = builder.Configuration["UserApiServicePort"] ?? "8080";
+
+    baseUrl = baseUrl.TrimEnd('/');
+
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+    client.Timeout = TimeSpan.FromSeconds(45);
+});
+
+//-----------------------------------------------------------------------------------
+
+builder.Services.AddHttpClient<IOfferApiClient, OfferApiClient>(client =>
+{
+    var baseUrl = builder.Configuration["OfferApiServiceUrl"] ?? "http://offerapiservice";
+    var port = builder.Configuration["OfferApiServicePort"] ?? "8080";
+
+    baseUrl = baseUrl.TrimEnd('/');
+
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+    client.Timeout = TimeSpan.FromSeconds(45);
+});
+//-----------------------------------------------------------------------------------
+
+builder.Services.AddHttpClient<IOrderApiClient, OrderApiClient>(client =>
+{
+    var baseUrl = builder.Configuration["OrderApiServiceUrl"] ?? "http://orderapiservice";
+    var port = builder.Configuration["OrderApiServicePort"] ?? "8080";
+
+    baseUrl = baseUrl.TrimEnd('/');
+
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+    client.Timeout = TimeSpan.FromSeconds(45);
+});
+
+//-----------------------------------------------------------------------------------
+
+//builder.Services.AddHttpClient<ITranslationApiClient, TranslationApiClient>(client =>
+//{
+//    client.BaseAddress = new Uri("http://translationapiservice");
+//});
+
+builder.Services.AddHttpClient<ITranslationApiClient, TranslationApiClient>(client =>
+{
+    var baseUrl = builder.Configuration["TranslationApiServiceUrl"] ?? "http://translationapiservice";
+    var port = builder.Configuration["TranslationApiServicePort"] ?? "8080";
+
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+    client.Timeout = TimeSpan.FromSeconds(45);
+});
+
+//-----------------------------------------------------------------------------------
+
+builder.Services.AddHttpClient<ILocationApiClient, LocationApiClient>(client =>
+{
+    var baseUrl = builder.Configuration["LocationApiServiceUrl"] ?? "http://locationapiservice";
+    var port = builder.Configuration["LocationApiServicePort"] ?? "8080";
+
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+    client.Timeout = TimeSpan.FromSeconds(45);
+});
+//-----------------------------------------------------------------------------------
+
+builder.Services.AddHttpClient<IStatisticApiClient, StatisticApiClient>(client =>
+{
+    var baseUrl = builder.Configuration["StatisticApiServiceUrl"] ?? "http://statisticapiservice";
+    var port = builder.Configuration["StatisticApiServicePort"] ?? "8080";
+
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+    client.Timeout = TimeSpan.FromSeconds(45);
+});
+//-----------------------------------------------------------------------------------
+
+builder.Services.AddHttpClient<IReviewApiClient, ReviewApiClient>(client =>
+{
+    var baseUrl = builder.Configuration["ReviewApiServiceUrl"] ?? "http://reviewapiservice";
+    var port = builder.Configuration["ReviewApiServicePort"] ?? "8080";
+
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+    client.Timeout = TimeSpan.FromSeconds(45);
+});
+
+//-----------------------------------------------------------------------------------
+
+builder.Services.AddHttpClient<IAttractionApiClient, AttractionApiClient>(client =>
+{
+    var baseUrl = builder.Configuration["AttractionApiServiceUrl"] ?? "http://attractionapiservice";
+    var port = builder.Configuration["AttractionApiServicePort"] ?? "8080";
+
+    client.BaseAddress = new Uri($"{baseUrl}:{port}");
+    client.Timeout = TimeSpan.FromSeconds(45);
+});
+
+//-----------------------------------------------------------------------------------
+
+// TODO: remove after migration to typed clients
 
 builder.Services.AddHttpClient("UserApiService", client =>
 {
@@ -65,6 +184,8 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
+
+    
 });
 
 
@@ -133,6 +254,12 @@ builder.Services.AddHttpClient("StatisticApiService", client =>
 //    var port = "8080";
 //    client.BaseAddress = new Uri($"{baseUrl}:{port}");
 //});
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddScoped<IRabbitMqService, RabbitMqService>();
 builder.Services.AddHostedService<GetwayRabbitListener>();

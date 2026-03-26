@@ -102,8 +102,11 @@ namespace UserApiService.Controllers
                 return Unauthorized();
 
             var result = await _userService.GetOffersToClientHistory(userId.Value);
+            var response = result?
+                 .Select(HistoryOfferLinkMapper.MapToResponse)
+                 .ToList();
 
-            return Ok(result ?? new List<HistoryOfferLink>());
+            return Ok(response ?? new List<HistoryOfferLinkResponse>());
         }
 
 
@@ -211,8 +214,8 @@ namespace UserApiService.Controllers
         // Получить имя пользователя по id
         // =====================================================================
 
-        [HttpGet("get/name/{userId}")]
-        public async Task<IActionResult> GetNameById(int userId)
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetUserById(int userId)
         {
             var user = await _userService.GetUserByIdAsync(userId);
             if (user == null)
@@ -239,9 +242,9 @@ namespace UserApiService.Controllers
 
             user.Discount += discountCount;
             await _userService.UpdateEntityAsync(user);
-            var userDto = MapToResponse(user);
+            ;
 
-            return Ok(userDto);
+            return Ok(true);
         }
 
         // =====================================================================
@@ -300,7 +303,7 @@ namespace UserApiService.Controllers
             for (int i = 0; i < computedHash.Length; i++)
             {
                 if (computedHash[i] != user.PasswordHash[i])
-                    return BadRequest("Old password is incorrect");
+                    return Ok(false);
             }
 
             // --- Установка нового пароля ---
@@ -310,7 +313,7 @@ namespace UserApiService.Controllers
 
             await _userService.UpdateEntityAsync(user);
 
-            return Ok(new { message = "Password updated successfully" });
+            return Ok(true);
         }
 
 
@@ -338,8 +341,7 @@ namespace UserApiService.Controllers
 
             await _userService.UpdateEntityAsync(user);
 
-            var userDto = MapToResponse(user);
-            return Ok(userDto);
+            return Ok(true);
         }
 
 

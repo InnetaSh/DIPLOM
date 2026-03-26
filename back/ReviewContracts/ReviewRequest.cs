@@ -22,5 +22,7 @@ namespace ReviewContracts
 
         // Опционально: статус модерации
         public bool IsApproved { get; set; } = true;
+
+        public string Comment { get; set; }
     }
 }

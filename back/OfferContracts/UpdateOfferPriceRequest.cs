@@ -4,7 +4,6 @@ namespace OfferContracts
 {
     public class UpdateOfferPriceRequest
     {
-        public int id { get; set; }
         public decimal PricePerDay { get; set; }
         public decimal? PricePerWeek { get; set; }
         public decimal? PricePerMonth { get; set; }

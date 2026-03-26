@@ -1,4 +1,5 @@
 ﻿
+using LocationContracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
@@ -28,7 +29,8 @@ namespace WebApiGetway.Controllers
 
 
         //=============================================================================
-        //                      получаем список названий городов 
+        //               !!+++++       получаем список названий городов 
+        [HttpGet("cities/translations/{lang}")]
         //=============================================================================
 
         [HttpGet("city/get-all-translations/{lang}")]
@@ -45,7 +47,8 @@ namespace WebApiGetway.Controllers
         }
 
         //=============================================================================
-        //                      получаем  название города по id 
+        //                !! +++++     получаем  название города по id 
+        //[HttpGet("cities/{cityId}/locations/translations/{lang}")]
         //=============================================================================
 
         [HttpGet("city/country/get-translations/{cityId}/{lang}")]
@@ -120,7 +123,8 @@ namespace WebApiGetway.Controllers
 
 
         //=============================================================================
-        //            получаем список названий категорий и параметров для фильтра
+        //      !!!++++++++++   получаем список названий категорий и параметров для фильтра
+         //  [HttpGet("param-categories/{lang}")]
         //=============================================================================
 
 
@@ -162,7 +166,8 @@ namespace WebApiGetway.Controllers
 
 
         //=============================================================================
-        //                      получаем список названий параметров
+        //        !!! ++++      получаем список названий параметров
+        //   [HttpGet("param-items/{lang}")]
         //=============================================================================
 
 
@@ -192,7 +197,8 @@ namespace WebApiGetway.Controllers
 
 
         //=====================================================================================
-        //      получаем список всех обьявлений ( для админа)
+        //      !!!!++++  получаем список всех обьявлений ( для админа)
+        //[HttpGet("admin/{lang}")]
         //=====================================================================================
 
         [HttpGet("search/offers/all/{lang}")]
@@ -225,7 +231,11 @@ namespace WebApiGetway.Controllers
                 idList.Add(id);
             }
                 //получаем рейтинг
-                var ratingObjResult = await _gateway.ForwardRequestAsync<object>("ReviewApiService", $"/api/review/search/offers/rating", HttpMethod.Get, idList);
+                var ratingObjResult = await _gateway.ForwardRequestAsync<object>(
+                    "ReviewApiService",
+                    $"/api/review/search/offers/rating",
+                    HttpMethod.Post,
+                    idList);
             if (ratingObjResult is not OkObjectResult okRating)
                 return Ok(updateOfferDictList);
             var ratingDictList = BffHelper.ConvertActionResultToDict(okRating);
@@ -237,7 +247,8 @@ namespace WebApiGetway.Controllers
 
 
         //=====================================================================================
-        //      получаем список обьявлений по запросу(город, даты и параметры(если они есть))
+        //   !!!+++++++ получаем список обьявлений по поиску клиента(город, даты и параметры(если они есть))
+        //  [HttpGet("search")]
         //=====================================================================================
 
         [HttpGet("search/offers/{lang}")]
@@ -420,7 +431,8 @@ namespace WebApiGetway.Controllers
 
 
         //======================================================================================
-        //                      получаем полные данные об обьявлении по id
+        //    !!!!! ++++          получаем полные данные об обьявлении по id
+        //[HttpGet("{offerId}")]
         //======================================================================================
 
 
@@ -556,7 +568,8 @@ namespace WebApiGetway.Controllers
 
 
         //======================================================================================
-        //                      получаем полные данные об обьявлении по offerId и orderId
+        //      !!!! +++   получаем полные данные об обьявлении по offerId и orderId
+        // [HttpGet("history/{offerId}/{orderId}/{lang}")]
         //======================================================================================
 
 
@@ -687,7 +700,8 @@ namespace WebApiGetway.Controllers
         }
 
         //======================================================================================
-        //                      получаем отзывы об обьявлении по offerId
+        //     !!!   +++++       получаем отзывы об обьявлении по offerId
+        //    [HttpGet("by-offer/{offerId}/{lang}")]
         //======================================================================================
 
 
@@ -710,7 +724,7 @@ namespace WebApiGetway.Controllers
             foreach (var rating in ratingDictList)
             {
                 var userId = rating["userId"]?.ToString();
-                var userResult = await _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/User/get/name/{userId}", HttpMethod.Get, null);
+                var userResult = await _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/User/{userId}", HttpMethod.Get, null);
                 if (userResult is not OkObjectResult okResult)
                 {
                     continue;
@@ -731,11 +745,12 @@ namespace WebApiGetway.Controllers
             return Ok(ratingDictList);
         }
 
-            // =======================================================================================
-            //                          CLIENT: добавить заказ в избранное
-            // =======================================================================================
+        // =======================================================================================
+        //      !!!+++  CLIENT: добавить заказ в избранное
+        //   [HttpPost("me/favorites/{offerId}")]
+        // =======================================================================================
 
-            [Authorize]
+        [Authorize]
         [HttpPost("me/offer/isfavorite/add/{offerId}")]
         public async Task<IActionResult> AddOfferToClientFavorite(
             int offerId)
@@ -755,7 +770,8 @@ namespace WebApiGetway.Controllers
         }
 
         // =======================================================================================
-        //                          CLIENT:  получить все заказы из истории и из избранное
+        //                   ++++       CLIENT:  получить все заказы из истории и из избранное
+        //    [HttpGet("me/history/{lang}")]
         // =======================================================================================
 
         [Authorize]
@@ -855,8 +871,9 @@ namespace WebApiGetway.Controllers
         }
 
 
-         // =======================================================================================
-        //                          CLIENT:  получить все id  заказов из истории и из избранное
+        // =======================================================================================
+        //      !!!! +++           CLIENT:  получить все id  заказов из истории и из избранное
+        //    [HttpGet("me/history/offersId/{lang}")]
         // =======================================================================================
 
         [Authorize]
@@ -899,11 +916,12 @@ namespace WebApiGetway.Controllers
         }
 
         //============================================================================================
-        //                           ближайшие  достопримечательности
+        //           !!!  +++     ближайшие  достопримечательности
+        // [HttpGet("attractions/near/{offerId}/{distance}/{lang}")]
         //============================================================================================
 
         [HttpGet("search/booking-offer/attractions/{id}/{distance}/{lang}")]
-        public async Task<IActionResult> GetNearSttractionsByIdWithDistance(int id,
+        public async Task<IActionResult> GetNearAttractionsByIdWithDistance(int id,
         decimal distance,
         string lang)
         {
@@ -946,7 +964,9 @@ namespace WebApiGetway.Controllers
 
 
         //============================================================================================
-        //                           создание обьявления
+        //      !!!! +++               создание обьявления
+
+        // [HttpPost]
         //============================================================================================
         [HttpPost("create/booking-offer")]
         [Authorize]
@@ -1054,7 +1074,8 @@ namespace WebApiGetway.Controllers
 
 
         //============================================================================================
-        //                             редактирование обьявления
+        //     !!! ++++       редактирование обьявления
+        //    [HttpPut("{offerId}/{lang}")]
         //============================================================================================
         [HttpPost("update/booking-offer")]
         [Authorize]
@@ -1156,7 +1177,8 @@ namespace WebApiGetway.Controllers
         }
 
         //============================================================================================
-        //                                 редактирование цены обьявления
+        //       !!!!! ++++                редактирование цены обьявления
+        //     [HttpPut("{offerId}/price/{lang}")]
         //============================================================================================
         [HttpPut("update/price/booking-offer/{id}")]
         [Authorize]
@@ -1202,7 +1224,8 @@ namespace WebApiGetway.Controllers
 
 
         //============================================================================================
-        //                               редактирование текста обьявления
+        //    !!! +++++              редактирование текста обьявления
+        //  [HttpPut("{offerId}/text/{lang}")]
         //============================================================================================
         [HttpPut("update/text/booking-offer/{id}")]
         [Authorize]
@@ -1244,7 +1267,8 @@ namespace WebApiGetway.Controllers
         }
 
         //============================================================================================
-        //                            добавление изображений обьявления
+        //               +++             добавление изображений обьявления
+        //   [HttpPost("{offerId}/img")]
         //============================================================================================
         [HttpPost("img/booking-offer/{offerId}/add")]
         [Authorize]
@@ -1312,7 +1336,8 @@ namespace WebApiGetway.Controllers
         }
 
         //============================================================================================
-        //                             редактирование изображений обьявления
+        //   !!!! +++              редактирование изображений обьявления
+        //   [HttpPut("{offerId}/img/{imageId}")]
         //============================================================================================
         public class UpdateImageOfferRequest
         {
@@ -1356,7 +1381,8 @@ namespace WebApiGetway.Controllers
 
 
         //============================================================================================
-        //                               удаление изображений обьявления
+        //     !!!!+++                          удаление изображений обьявления
+        //    [HttpDelete("{offerId}/img/{imageId}")]
         //============================================================================================
         [HttpPut("img/booking-offer/{id}/delete/{imageId}")]
         [Authorize]
@@ -1383,14 +1409,19 @@ namespace WebApiGetway.Controllers
             return await _gateway.ForwardRequestAsync<object>(
                 "OfferApiService",
                 $"/api/rentobjimage/delete/{imageId}",
-                HttpMethod.Put,
+                HttpMethod.Delete,
                 null
             );
         }
 
 
         //==========================================================================================
-        //       заблокировать обьявление
+        //   !!!!+++  заблокировать обьявление
+        //  [HttpPut("{offerId}/isblock")]
+        //[Authorize]
+        //public async Task<ActionResult<bool>> SetOfferBlockStatus(
+        //    [FromRoute] int offerId,
+        //    [FromQuery] bool block)
         //==========================================================================================
         [HttpPut("block/booking-offer/{offerId}")]
         [Authorize]
@@ -1422,7 +1453,7 @@ namespace WebApiGetway.Controllers
 
             var blockResult = await _gateway.ForwardRequestAsync<object>(
                 "OfferApiService",
-                $"/api/offer/block/{offerId}",
+                $"/api/offer/{offerId}/block",
                 HttpMethod.Put,
                 null
             );
@@ -1431,7 +1462,12 @@ namespace WebApiGetway.Controllers
 
 
         //==========================================================================================
-        //       разблокировать обьявление
+        //   !!!!! +++  разблокировать обьявление
+        //[HttpPut("{offerId}/isblock")]
+        //[Authorize]
+        //public async Task<ActionResult<bool>> SetOfferBlockStatus(
+        //   [FromRoute] int offerId,
+        //   [FromQuery] bool block)
         //==========================================================================================
         [HttpPut("unblock/booking-offer/{offerId}")]
         [Authorize]
@@ -1463,7 +1499,7 @@ namespace WebApiGetway.Controllers
 
             var blockResult = await _gateway.ForwardRequestAsync<object>(
                 "OfferApiService",
-                $"/api/offer/unblock/{offerId}",
+                $"/api/offer/{offerId}/unblock",
                 HttpMethod.Put,
                 null
             );
@@ -1475,7 +1511,8 @@ namespace WebApiGetway.Controllers
 
 
         //============================================================================================
-        //                                создание заказа
+        //       !!!!   ++++        создание заказа
+        // [HttpPost("{lang}")]
         //============================================================================================
 
 
@@ -1657,7 +1694,12 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                                         редактирование статуса заказа
+        //       !!!!!++++          редактирование статуса заказа
+        //[HttpPut("me/{orderId}/status")]
+        //[Authorize]
+        //public async Task<ActionResult<bool>> UpdateOrderStatus(
+        //[FromRoute] int orderId,
+        //[FromBody] string orderState)
         //======================================+=========================================================================
 
 
@@ -1713,13 +1755,13 @@ namespace WebApiGetway.Controllers
                     return resultObj;
                 }
 
-                if (okResult.Value is int resultId)
-                {
-                    if (resultId == -1)
-                    {
-                        return BadRequest(new { message = "Не удалось изменить заказ" });
-                    }
-                }
+                //if (okResult.Value is int resultId)
+                //{
+                //    if (resultId == -1)
+                //    {
+                //        return BadRequest(new { message = "Не удалось изменить заказ" });
+                //    }
+                //}
             
 
             return Ok(order);
@@ -1730,7 +1772,8 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                                         получение броней заказа
+        //         !!!!  ++++           получение броней заказа
+        //   [HttpGet("by-offer/{offerId}/{lang}")]
         //===============================================================================================================
 
         [HttpGet("offer/{offerId}/orders/{lang}")]
@@ -1808,7 +1851,8 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                                         создание отзыва
+        //                 !!!! ++++++++               создание отзыва
+        // [HttpPost("{lang}")]
         //======================================+=========================================================================
 
         [HttpPost("user/orders/{orderId}/{offerId}/reviews/create/{lang}")]
@@ -1828,7 +1872,7 @@ namespace WebApiGetway.Controllers
 
             if (userIdRequest == userId)
             {
-                var userResult = await _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/User/get/name/{userIdRequest}", HttpMethod.Get, null);
+                var userResult = await _gateway.ForwardRequestAsync<object>("UserApiService", $"/api/User/{userIdRequest}", HttpMethod.Get, null);
                 if (userResult is not OkObjectResult okResult)
                 {
                     return userResult;
@@ -1974,7 +2018,8 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                                         получение отзывoв обьявления
+        //             !!! +++++          получение отзывoв обьявления
+        //[HttpGet("by-offer/{offerId}/{lang}")]
         //===============================================================================================================
 
         [HttpGet("offer/{offerId}/reviews/{lang}")]
@@ -2042,7 +2087,8 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                                         получение отзывoв клиента
+        //                   !!!!!++++         получение отзывoв клиента
+        // [HttpGet("by-user/{userId}/{lang}")]
         //===============================================================================================================
 
         [HttpPost("me/reviews/get/{lang}")]
@@ -2093,7 +2139,8 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                                         редактирование отзывoв 
+        //                !!!! +++     редактирование отзывoв 
+        //[HttpPut("me/{reviewId}/{lang}")]
         //===============================================================================================================
 
         [HttpPost("me/{orderId}/reviews/update/{reviewId}/{lang}")]
@@ -2147,7 +2194,12 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                                         удаление отзывoв 
+        //             !!!!+++       удаление отзывoв 
+        //   [HttpDelete("me/{reviewId}")]
+        //[Authorize]
+        //public async Task<ActionResult<bool>> DeleteReviewById(
+        //    [FromRoute] int reviewId,
+        //    [FromQuery] int orderId)
         //===============================================================================================================
 
         [HttpDelete("me/{userId}/{orderId}/reviews/delete/{reviewId}")]
@@ -2167,7 +2219,7 @@ namespace WebApiGetway.Controllers
             {
                 await _gateway.ForwardRequestAsync<object>(
                       "ReviewApiService",
-                      $"/api/review/update/{reviewId}",
+                      $"/api/review/del/{reviewId}",
                       HttpMethod.Delete,
                       null);
 
@@ -2181,7 +2233,8 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                      all   country  with regions, city, translation
+        //     !!!!++++     all   country  with regions, city, translation
+        //[HttpGet("countries/full/{lang}")]
         //===============================================================================================================
 
         [HttpGet("get/allCountries/{lang}")]
@@ -2281,7 +2334,8 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                      all   country  with countryCode
+        //             !!!  +++++       all   country  with countryCode
+        //[HttpGet("countries/{lang}")]
         //===============================================================================================================
 
         [HttpGet("get/countries/countriesCode/{lang}")]
@@ -2291,7 +2345,7 @@ namespace WebApiGetway.Controllers
 
             var countriesObjResult = await _gateway.ForwardRequestAsync<object>(
                   "LocationApiService",
-                  $"/api/Country/get-all-with-code",
+                  $"/api/Country/get-only-countries",
                   HttpMethod.Get,
                   null);
             if (countriesObjResult is not OkObjectResult okCountries)
@@ -2316,7 +2370,9 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                      all   regions 
+        //     !!!!!+++++              all   regions 
+
+        //   [HttpGet("regions/{lang}")]
         //===============================================================================================================
 
         [HttpGet("/get/regions/{lang}")]
@@ -2352,7 +2408,8 @@ namespace WebApiGetway.Controllers
         }
 
         //===============================================================================================================
-        //                      all   city 
+        //           !!!!!+++++++       all   city 
+        //[HttpGet("cities/{lang}")]
         //===============================================================================================================
 
         [HttpGet("/get/cities/{lang}")]
@@ -2388,7 +2445,7 @@ namespace WebApiGetway.Controllers
         }
 
        //===============================================================================================================
-        //                      all   districts 
+        //            --------          all   districts 
         //===============================================================================================================
 
         [HttpGet("/get/districts/{lang}")]
@@ -2427,7 +2484,8 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                          city за id
+        //        !!!+++++++++++++                city за id
+        // [HttpGet("cities/{cityId}/{lang}")]
         //===============================================================================================================
 
         [HttpGet("location/get/city/{id}/{lang}")]
@@ -2464,7 +2522,13 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                         Топ city за период (week / month / year)
+        //       !! +++++++++           Топ city за период (week / month / year)
+
+        //[HttpGet("cities/populars")]
+        //public Task<IEnumerable<CityResponseForPopularList>> GetPopularTopCities(
+        //    [FromQuery] string period,
+        //    [FromQuery] int limit,
+        //    [FromQuery] string lang)
         //===============================================================================================================
 
         [HttpGet("statistic/top/{period}/get/city/{limit}/{lang}")]
@@ -2541,7 +2605,8 @@ namespace WebApiGetway.Controllers
         }
 
         //===============================================================================================================
-        //                         Топ offer за период (week / month / year)
+        //     !!!!  +++   Топ offer за период (week / month / year)
+        //     [HttpGet("populars")]
         //===============================================================================================================
 
         [HttpGet("statistic/top/{period}/get/offer/{limit}/{lang}")]
@@ -2702,7 +2767,8 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                       получать все достопримечательности города
+        //            !!!  +++    получать все достопримечательности города
+        //  [HttpGet("cities/{cityId}/attractions/{lang}")]
         //===============================================================================================================
 
         [HttpGet("attractions/get/byCityId/{cityId}/{lang}")]
@@ -2746,7 +2812,8 @@ namespace WebApiGetway.Controllers
 
 
         //===============================================================================================================
-        //                         получать  достопримечательности по id
+        //        !!!++++      получать  достопримечательности по id
+        //  [HttpGet("attractions/{attractionId}/{lang}")]
         //===============================================================================================================
 
         [HttpGet("attractions/get/{id}/{lang}")]

@@ -3,7 +3,7 @@ using OfferContracts.RentObj;
 
 namespace OfferContracts
 {
-    public class OfferShortPopularResponse : IBaseResponse
+    public class OfferResponseForPupularList : IBaseResponse
     {
         public int id { get; set; }
 

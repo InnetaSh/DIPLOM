@@ -9,6 +9,7 @@ namespace ReviewContracts
         public int UserId { get; set; }
         public int OrderId { get; set; }
         public string? UserName { get; set; }
+        public string? UserEmail { get; set; }
         public string? UserCountry { get; set; }
 
         public string? Title { get; set; }

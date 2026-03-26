@@ -1,7 +1,9 @@
 ﻿using Globals.Controllers;
+using System.Text.Json.Serialization;
 
 namespace OfferContracts.RentObj.Enums
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum ParamValueType
     {
         Boolean = 1,

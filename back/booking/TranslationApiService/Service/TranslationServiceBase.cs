@@ -35,23 +35,23 @@ namespace Globals.Sevices
             return true;
         }
 
-        public virtual async Task<bool> DelEntityAsync(int EntityId, string lang)
+        public virtual async Task<bool> DelEntityAsync(int EntityId)
         {
            
             var dbSet = GetDbSet(_context);
-            var found =  dbSet.FirstOrDefault( x => x.EntityId == EntityId && x.Lang == lang);
-            if (found == null)
+            var deleted = await dbSet
+                .Where(x => x.EntityId == EntityId)
+                .ExecuteDeleteAsync();
+
+            if (deleted == 0)
             {
                 _logger.LogWarning(
-                    "Entity {EntityType} with id {Id} not found for deletion",
+                    "Entities {EntityType} with id {Id} not found for deletion",
                     typeof(T).Name,
                     EntityId);
+
                 return false;
             }
-
-            dbSet.Remove(found);
-                await _context.SaveChangesAsync();
-
             _logger.LogInformation(
             "Entity {EntityType} with id {Id} deleted",
             typeof(T).Name,
@@ -199,7 +199,7 @@ namespace Globals.Sevices
 
         Task<Boolean> UpdateEntityAsync(T entity);
 
-        Task<Boolean> DelEntityAsync(int EntityId, string lang);
+        Task<Boolean> DelEntityAsync(int EntityId);
 
         Task<bool> ExistsEntityAsync(int EntityId, string lang);
     }

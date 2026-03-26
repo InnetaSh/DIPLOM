@@ -53,7 +53,7 @@ namespace OfferApiService.Controllers
             if (!result)
                 return BadRequest("Не удалось добавить заказ для обьявления");
 
-            return Ok(new { message = "Заказ добавлен" });
+            return Ok(true);
         }
 
 
@@ -181,12 +181,12 @@ namespace OfferApiService.Controllers
         //===========================================================================================
 
         [HttpPost("search/offers/populars")]
-        public async Task<ActionResult<List<OfferShortPopularResponse>>> GetSearchPopularOffers(
+        public async Task<ActionResult<List<OfferResponseForPupularList>>> GetSearchPopularOffers(
             [FromBody] List<int> idList)
         {
 
             
-            var result = new List<OfferShortPopularResponse>();
+            var result = new List<OfferResponseForPupularList>();
             foreach (var offerId in idList)
             {
                 var exists = await _offerService.ExistsEntityAsync(offerId);
@@ -288,7 +288,7 @@ namespace OfferApiService.Controllers
         //===========================================================================================
 
         [HttpPost("create/offer-with-rentobj-with-param-values")]
-        public async Task<ActionResult<OfferResponse>> CreateOffer(
+        public async Task<ActionResult<int>> CreateOffer(
          [FromBody] OfferRequest Offer
             )
         {
@@ -353,8 +353,8 @@ namespace OfferApiService.Controllers
             var modelOffer = OfferMapper.MapToModel(offerRequest,_baseUrl);
 
             var idOffer = await _offerService.AddOfferWithRentObjAndParamValuesAsync(modelOffer);
-            if (idOffer == -1)
-                return StatusCode(500, new { message = "Error creating item" });
+            //if (idOffer == -1)
+            //    return StatusCode(500, new { message = "Error creating item" });
 
             return Ok(new { idOffer });
         }
@@ -363,12 +363,12 @@ namespace OfferApiService.Controllers
         // редактирование обьявления с обьектом оренды с параметрами
         //===========================================================================================
 
-        [HttpPut("update/offer-with-rentobj-with-param-values")]
+        [HttpPut("{offerId}/offer-with-rentobj-with-param-values")]
         public async Task<ActionResult<OfferResponse>> UpdateOffer(
+         [FromRoute] int offerId,
          [FromBody] OfferRequest Offer
             )
         {
-            var offerId = Offer.id;
             var rentObjId = Offer.RentObj.id;
             var offerRequest = Offer;
             var rentObjRequest = Offer.RentObj;
@@ -437,7 +437,7 @@ namespace OfferApiService.Controllers
         //==========================================================================================
 
 
-        [HttpPut("block/booking-offer/{offerId}")]
+        [HttpPut("{offerId}/block")]
         public async Task<ActionResult> BlockOffer(int offerId)
         {
             var existOffer = await _offerService.ExistsEntityAsync(offerId);
@@ -454,7 +454,7 @@ namespace OfferApiService.Controllers
             if (!successOffer)
                 return StatusCode(500, new { message = "Error updating offer" });
             
-            return Ok(new { message = "Offer blocked successfully" });
+            return Ok(true);
         }
 
 
@@ -463,7 +463,7 @@ namespace OfferApiService.Controllers
         //==========================================================================================
 
 
-        [HttpPut("unblock/booking-offer/{offerId}")]
+        [HttpPut("{offerId}/unblock")]
         public async Task<ActionResult> UnBlockOffer(int offerId)
         {
             var existOffer = await _offerService.ExistsEntityAsync(offerId);
@@ -480,7 +480,7 @@ namespace OfferApiService.Controllers
             if (!successOffer)
                 return StatusCode(500, new { message = "Error updating offer" });
 
-            return Ok(new { message = "Offer blocked successfully" });
+            return Ok(true);
         }
 
 
@@ -595,7 +595,7 @@ namespace OfferApiService.Controllers
         //  получение обьявлений по id владельца и городу
         //===========================================================================================
 
-        [HttpGet("get/offers/{ownerId}/{cityId}")]
+        [HttpGet("get/offersByOwnerFromCity/{ownerId}/{cityId}")]
         public async Task<ActionResult<OfferResponse>> GetOfferByIdAndCity(
         int ownerId,
         int cityId)
@@ -624,7 +624,7 @@ namespace OfferApiService.Controllers
         //  получение обьявлений по id владельца и стране
         //===========================================================================================
 
-        [HttpGet("get/offers/{ownerId}/{countryId}")]
+        [HttpGet("get/offersByOwnerFromCountry/{ownerId}/{countryId}")]
         public async Task<ActionResult<OfferResponse>> GetOfferByIdAndCountry(
         int ownerId,
         int countryId)

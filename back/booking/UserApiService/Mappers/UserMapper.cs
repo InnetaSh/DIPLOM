@@ -11,7 +11,6 @@ namespace UserApiService.Mappers
 
             return new User
             {
-                id = request.id,
                 Username = request.Username,
                 Lastname = request.Lastname,
                 Email = request.Email,

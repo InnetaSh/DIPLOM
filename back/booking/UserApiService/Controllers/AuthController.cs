@@ -104,14 +104,14 @@ namespace UserApiService.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
             var success = await _authService.DeleteUserAsync(id);
             if (!success)
-                return NotFound(new { message = "Пользователь не найден" });
+                return Ok(false); ;
 
-            return Ok(new { message = "Пользователь успешно удалён" });
+            return Ok(true);
         }
     }
 }

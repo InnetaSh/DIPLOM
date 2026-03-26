@@ -30,12 +30,28 @@ namespace LocationApiService.Controllers
         //===========================================================================================
 
         [HttpPost("search/cities/populars")]
-        public async Task<ActionResult<List<CityResponseForPupularList>>> GetSearchPopularCities(
+        public async Task<ActionResult<List<CityResponseForPopularList>>> GetSearchPopularCities(
           [FromBody] List<int> idList)
         {
+            var result = new List<CityResponseForPopularList>();
 
+            if (idList.Count == 0)
+            {
+                var topCities = await _cityService.GetEntitiesAsync();
 
-            var result = new List<CityResponseForPupularList>();
+                var filtered = topCities
+                    .Where(x => x.IsTop == true)
+                    .ToList();
+
+                foreach (var cityEntity in filtered)
+                {
+                    var city = CityResponseForPupularListMapper
+                        .MapToResponse(cityEntity, _baseUrl);
+
+                    result.Add(city);
+                }
+            }
+
             foreach (var cityId in idList)
             {
                 var exists = await _cityService.ExistsEntityAsync(cityId);
@@ -46,7 +62,6 @@ namespace LocationApiService.Controllers
                 var city = CityResponseForPupularListMapper.MapToResponse(cityRez, _baseUrl);
                 result.Add(city);
             }
-
             return Ok(result);
         }
 
