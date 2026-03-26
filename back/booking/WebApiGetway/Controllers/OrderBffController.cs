@@ -31,11 +31,11 @@ namespace WebApiGetway.Controllers
         //===============================================================================================================
         //     	  CREATE ORDER
         //===============================================================================================================
-        [HttpPost("{lang}")]
+        [HttpPost]
         [Authorize]
         public async Task<ActionResult<int>> CreateOrder(
              [FromBody] CreateOrderRequest request,
-             [FromRoute] string lang)
+             [FromQuery] string lang)
         {
             var userId = User.GetUserId();
             var user = await _userService.GetById(userId);
@@ -52,10 +52,10 @@ namespace WebApiGetway.Controllers
         //===============================================================================================================
         //          GET ALL orders BY offerId
         //===============================================================================================================
-        [HttpGet("by-offer/{offerId}/{lang}")]
+        [HttpGet("by-offer/{offerId}")]
         public async Task<ActionResult<IEnumerable<OrderResponse>>> GetOrdersByOfferId(
             [FromRoute] int offerId,
-            [FromRoute] string lang)
+            [FromQuery] string lang)
         {
             var result = await _orderService.GetOrdersByOfferId(offerId, lang);
             return Ok(result);
@@ -64,10 +64,10 @@ namespace WebApiGetway.Controllers
         //===============================================================================================================
         //          GET ALL orders BY userId
         //===============================================================================================================
-        [HttpGet("me/{lang}")]
+        [HttpGet("me")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<OrderResponseForUserCard>>> GetOrdersByUserId(
-            [FromRoute] string lang)
+            [FromQuery] string lang)
         {
             var userId = User.GetUserId();
             var result = await _orderService.GetOrdersByUserId(userId, lang);
@@ -83,9 +83,9 @@ namespace WebApiGetway.Controllers
         [Authorize]
         public async Task<ActionResult<bool>> UpdateOrderStatus(
          [FromRoute] int orderId,
-         [FromBody] string orderState)
+         [FromBody] UpdateOrderStatusRequest request)
         {
-            var result = await _orderService.UpdateStateOrder(orderId, orderState);
+            var result = await _orderService.UpdateStateOrder(orderId, request.OrderState);
             return Ok(result);
         }
 

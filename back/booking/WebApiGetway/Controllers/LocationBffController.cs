@@ -21,16 +21,18 @@ namespace WebApiGetway.Controllers
         //     TRANSLATIONS FOR ALL CITIES
         //===============================================================================================================
         
-        [HttpGet("cities/translations/{lang}")]
-        public Task<IEnumerable<TranslationResponse>> GetAllCitiesTranslations(string lang)
+        [HttpGet("cities/translations")]
+        public Task<IEnumerable<TranslationResponse>> GetAllCitiesTranslations(
+             [FromQuery] string lang)
            => _locationService.GetAllCityTranslations(lang);
 
         //===============================================================================================================
         //      	ALL CITY WITH TRANSLATION
         //===============================================================================================================
 
-        [HttpGet("cities/all/{lang}")]
-        public Task<IEnumerable<CityResponse>> GetAllCitiesWithTranslations(string lang)
+        [HttpGet("cities/all")]
+        public Task<IEnumerable<CityResponse>> GetAllCitiesWithTranslations(
+             [FromQuery] string lang)
              => _locationService.GetAllCities(lang);
 
 
@@ -38,8 +40,10 @@ namespace WebApiGetway.Controllers
         //         CITY BY cityId WITH TRANSLATION
         //===============================================================================================================
 
-        [HttpGet("cities/{cityId}/{lang}")]
-        public Task<CityResponse> GetCityByIdWithTranslations(int cityId,string lang)
+        [HttpGet("cities/{cityId}")]
+        public Task<CityResponse> GetCityByIdWithTranslations(
+            [FromRoute] int cityId, 
+            [FromQuery] string lang)
              => _locationService.GetCityById(cityId,lang);
 
         //===============================================================================================================
@@ -57,30 +61,35 @@ namespace WebApiGetway.Controllers
         //         ALL REGIONS WITH TRANSLATION
         //===============================================================================================================
 
-        [HttpGet("regions/{lang}")]
-        public Task<IEnumerable<RegionResponse>> GetAllRegionsWithTranslations(string lang)
+        [HttpGet("regions}")]
+        public Task<IEnumerable<RegionResponse>> GetAllRegionsWithTranslations(
+            [FromQuery] string lang)
              => _locationService.GetAllRegions(lang);
 
         //===============================================================================================================
         //       CITY, REGION, COUNTRY WITH TRANSLATION BY cityId
         //===============================================================================================================
-        [HttpGet("cities/{cityId}/locations/translations/{lang}")]
-        public Task<CityResponse> GetAllLocationsTitlesByCityId(int cityId, string lang)
+        [HttpGet("cities/{cityId}/details")]
+        public Task<CityResponse> GetAllLocationsTitlesByCityId(
+             [FromRoute] int cityId,
+             [FromQuery] string lang)
          => _locationService.GetAllLocationsTitlesByCityId(cityId, lang);
 
         //===============================================================================================================
         //      	ALL COUNTRIES WITH TRANSLATION - WITHOUT REGIONS, CITY (ALL COUNTRY WITH COUNTRYCODE)
         //===============================================================================================================
-        [HttpGet("countries/all/{lang}")]
-        public  Task<IEnumerable<CountryResponse>> GetAllOnlyCountries(string lang)
+        [HttpGet("countries/all")]
+        public  Task<IEnumerable<CountryResponse>> GetAllOnlyCountries(
+            [FromQuery] string lang)
               => _locationService.GetAllOnlyCountries(lang);
 
         //===============================================================================================================
         //      ALL COUNTRIES WITH REGIONS, CITY, TRANSLATION
         //===============================================================================================================
 
-        [HttpGet("countries/full/{lang}")]
-        public  Task<IEnumerable<CountryResponse>> GetAllCountryWithRegionsWithCityTranslations(string lang)
+        [HttpGet("countries/full")]
+        public  Task<IEnumerable<CountryResponse>> GetAllCountryWithRegionsWithCityTranslations(
+            [FromQuery] string lang)
               => _locationService.GetAllCountryWithRegionsWithCityTranslations(lang);
     }
 }

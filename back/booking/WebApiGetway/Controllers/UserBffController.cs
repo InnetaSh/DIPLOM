@@ -20,12 +20,15 @@ namespace WebApiGetway.Controllers
     public class UserBffController : ControllerBase
     {
         private readonly IOrderBffService _orderService;
+        private readonly IOfferBffService _offerService;
         private readonly IUserBffService _userService;
         public UserBffController(
             IOrderBffService orderService,
+            IOfferBffService offerService,
             IUserBffService userService)
         {
             _orderService = orderService;
+            _offerService = offerService;
             _userService = userService;
         }
 
@@ -33,7 +36,7 @@ namespace WebApiGetway.Controllers
         //===============================================================================================================
         //		(FOR ADMIN) - GET ALL USERS
         //===============================================================================================================
-        [HttpGet("admin/all")]
+        [HttpGet("admin/all/users")]
         [Authorize(Roles = "Admin,SuperAdmin")]
 
         public async Task<ActionResult<IEnumerable<UserResponse>>> GetAll()
@@ -42,11 +45,23 @@ namespace WebApiGetway.Controllers
             return Ok(result);
         }
 
+        //===============================================================================================================
+        //      (FOR ADMIN) - GET ALL OFFERS 
+        //===============================================================================================================
+
+        [HttpGet("admin/all/offers")]
+        [Authorize(Roles = "Admin,SuperAdmin")]
+        public async Task<ActionResult<IEnumerable<OfferResponse>>> GetAllOffers(
+            [FromQuery] string lang)
+        {
+            var result = await _offerService.GetAllOffers(lang);
+            return Ok(result);
+        }
 
         //===========================================================================================
         //		(FOR ADMIN) - GET FULL USER INFORMATION BY userId
         //===========================================================================================
-        
+
         [HttpGet("admin/by-id/{userId}")]
         [Authorize(Roles = "Admin,SuperAdmin")]
 
@@ -169,10 +184,10 @@ namespace WebApiGetway.Controllers
         //		CLIENT: GET ALL OFFERS FROM HISTORY
         //===============================================================================================================
 
-        [HttpGet("me/history/{lang}")]
+        [HttpGet("me/history")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<HistoryOfferLinkResponse>>> GetOffersFromClientHistory(
-          [FromRoute] string lang)
+          [FromQuery] string lang)
         {
             var userId = User.GetUserId();
             var result = await _userService.GetOffersFromClientHistory(
@@ -188,9 +203,9 @@ namespace WebApiGetway.Controllers
         //		CLIENT: GET OFFER IDS FROM HISTORY AND FAVORITES
         //===============================================================================================================
         [Authorize]
-        [HttpGet("me/history/offersId/{lang}")]
+        [HttpGet("me/history/offersId")]
         public async Task<ActionResult<IEnumerable<int>>> GetOffersIdFromClientHistory(
-             [FromRoute] string lang)
+             [FromQuery] string lang)
         {
             var result = await _userService.GetOffersIdFromClientHistory(
                 lang: lang

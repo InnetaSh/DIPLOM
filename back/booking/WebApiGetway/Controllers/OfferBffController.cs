@@ -31,9 +31,9 @@ namespace WebApiGetway.Controllers
         //===============================================================================================================
         //           PARAMS CATEGORIES WITH PARAMS AND TRANSLATION
         //===============================================================================================================
-        [HttpGet("param-categories/{lang}")]
+        [HttpGet("param-categories")]
         public async Task<ActionResult<IEnumerable<ParamsCategoryResponse>>> GetMainParamCategory(
-            [FromRoute] string lang)
+            [FromQuery] string lang)
         {
             var result = await _offerService.GetAllParamCategoryWithParamsAndTranslations(lang);
             return Ok(result);
@@ -50,18 +50,7 @@ namespace WebApiGetway.Controllers
             return Ok(result);
         }
 
-        //===============================================================================================================
-        //                    GET ALL OFFERS (FOR ADMIN)
-        //===============================================================================================================
-
-        [HttpGet("admin/{lang}")]
-        [Authorize(Roles = "Admin,SuperAdmin")]
-        public async Task<ActionResult<IEnumerable<OfferResponse>>> GetAllOffers(
-            [FromRoute] string lang)
-        {
-            var result = await _offerService.GetAllOffers(lang);
-            return Ok(result);
-        }
+       
 
         //===============================================================================================================
         //      SEARCHES FOR AVAILABLE OFFERS (HOTELS, APARTMENTS, ETC.) based on parameters
@@ -116,8 +105,7 @@ namespace WebApiGetway.Controllers
           [FromQuery] DateOnly? endDate,
           [FromQuery] int adults = 1,
           [FromQuery] int children = 0,
-          [FromQuery] int rooms = 1,
-          [FromQuery] string? paramItemFilters = null)
+          [FromQuery] int rooms = 1)
         {
             int userId = -1;
             decimal discount = 0m;
@@ -145,11 +133,11 @@ namespace WebApiGetway.Controllers
         //===============================================================================================================
         //      GET FULL OFFER DETAILS BY offerId AND orderId FOR USER HISTORY 
         //===============================================================================================================
-        [HttpGet("history/{offerId}/{orderId}/{lang}")]
+        [HttpGet("history/{offerId}/{orderId}")]
         public async Task<ActionResult<OfferResponse>> GetOfferByIdForOrderHistory(
           [FromRoute] int offerId,
           [FromRoute] int orderId,
-          [FromRoute] string lang)
+          [FromQuery] string lang = "en")
         {
             var result = await _offerService.GetOfferByIdForOrderHistory(
                 offerId: offerId,
@@ -187,11 +175,11 @@ namespace WebApiGetway.Controllers
         //===============================================================================================================
         //		UPDATE OFFER
         //===============================================================================================================
-        [HttpPut("{offerId}/{lang}")]
+        [HttpPut("{offerId}")]
         [Authorize]
         public async Task<ActionResult<OfferResponse>> UpdateOffer(
              [FromRoute] int offerId,
-             [FromRoute] string lang,
+             [FromQuery] string lang,
              [FromBody, Required] OfferRequest offer)
         {
             if (!ModelState.IsValid)
@@ -212,11 +200,11 @@ namespace WebApiGetway.Controllers
         //===============================================================================================================
 
 
-        [HttpPut("{offerId}/price/{lang}")]
+        [HttpPut("{offerId}/price")]
         [Authorize]
         public async Task<ActionResult<int>> UpdateOfferPrice(
              [FromRoute] int offerId,
-             [FromRoute] string lang,
+             [FromQuery] string lang,
              [FromBody, Required] UpdateOfferPriceRequest request)
         {
             var result = await _offerService.UpdateOfferPrice(
@@ -231,11 +219,11 @@ namespace WebApiGetway.Controllers
         //		UPDATE OFFER TEXT
         //===============================================================================================================
 
-        [HttpPut("{offerId}/text/{lang}")]
+        [HttpPut("{offerId}/text")]
         [Authorize]
         public async Task<ActionResult<int>> UpdateTextOffer(
              [FromRoute] int offerId,
-             [FromRoute] string lang,
+             [FromQuery] string lang,
              [FromBody, Required] TranslationRequest request)
         {
             request.EntityId = offerId;

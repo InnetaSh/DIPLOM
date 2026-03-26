@@ -26,11 +26,11 @@ namespace WebApiGetway.Controllers
         //      CREATING A REVIEW
         //===============================================================================================================
 
-        [HttpPost("{lang}")]
+        [HttpPost]
         [Authorize]
         public async Task<ActionResult<ReviewResponse>> CreateReview(
             [FromBody, Required] ReviewRequest request,
-            [FromRoute]  string lang)
+            [FromQuery]  string lang)
         {
             request.UserId = User.GetUserId();  
             var result = await _reviewService.CreateReview(request, lang);
@@ -42,10 +42,10 @@ namespace WebApiGetway.Controllers
         //      	RECEIVING REVIEW BY offerId
         //===============================================================================================================
 
-        [HttpGet("by-offer/{offerId}/{lang}")]
+        [HttpGet("by-offer/{offerId}")]
         public async Task<ActionResult<IEnumerable<ReviewResponse>>> GetReviewByOffer(
          [FromRoute] int offerId,
-         [FromRoute] string lang)
+         [FromQuery] string lang)
         {
             var reviews = await _reviewService.GetReviewByOffer(offerId, lang);
             return Ok(reviews);
@@ -57,10 +57,10 @@ namespace WebApiGetway.Controllers
         //          RECEIVING REVIEW BY userId
         //===============================================================================================================
 
-        [HttpGet("by-user/{userId}/{lang}")]
+        [HttpGet("by-user/{userId}")]
         public async Task<ActionResult<IEnumerable<ReviewResponse>>> GetReviewByUser(
           [FromRoute] int userId,
-          [FromRoute] string lang)
+          [FromQuery] string lang)
         {
             var reviews = await _reviewService.GetReviewByUser(userId, lang);
             return Ok(reviews);
@@ -71,12 +71,12 @@ namespace WebApiGetway.Controllers
         //        UPDATE REVIEWS 
         //===============================================================================================================
 
-        [HttpPut("me/{reviewId}/{lang}")]
+        [HttpPut("me/{reviewId}")]
         [Authorize]
         public async Task<ActionResult<ReviewResponse>> UpdateReviewById(
             [FromBody, Required] ReviewRequest request,
             [FromRoute] int reviewId,
-            [FromRoute] string lang)
+            [FromQuery] string lang)
         {
             request.UserId = User.GetUserId();  
             var result = await _reviewService.UpdateReviewById(request, reviewId, lang);

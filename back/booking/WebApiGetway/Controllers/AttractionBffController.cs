@@ -21,20 +21,20 @@ namespace WebApiGetway.Controllers
         //     	GET ALL CITY ATTRACTIONS BY CityId
         //===============================================================================================================
 
-        [HttpGet("from-cities/{cityId}/attractions/{lang}")]
+        [HttpGet("from-cities/{cityId}/attraction}")]
         public Task<IEnumerable<AttractionResponse>> GetAllAttractionByCityId(
             [FromRoute] int cityId,
-            [FromRoute] string lang)
+            [FromQuery] string lang)
            => _attractionService.GetAllAttractionByCityId(cityId, lang);
 
         //===============================================================================================================
         //      GET ATTRACTIONS BY  attractionId
         //===============================================================================================================
 
-        [HttpGet("{attractionId}/{lang}")]
+        [HttpGet("{attractionId}")]
         public Task<AttractionResponse> GetAttractionById(
             [FromRoute] int attractionId,
-            [FromRoute] string lang)
+            [FromQuery] string lang)
              => _attractionService.GetAttractionById(attractionId, lang);
 
 
@@ -42,11 +42,11 @@ namespace WebApiGetway.Controllers
         //          GET NEAREST ATTRACTIONS
         //===============================================================================================================
 
-        [HttpGet("near/{offerId}/{distance}/{lang}")]
+        [HttpGet("near/{offerId}/{distance}")]
         public Task<IEnumerable<AttractionResponse>> GetNearAttractionsByIdWithDistance(
             [FromRoute] int offerId,
             [FromRoute] decimal distance,
-            [FromRoute] string lang)
+            [FromQuery] string lang)
              => _attractionService.GetNearAttractionsByIdWithDistance(offerId, distance, lang);
 
        
