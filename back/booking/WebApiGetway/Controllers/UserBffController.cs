@@ -41,7 +41,11 @@ namespace WebApiGetway.Controllers
 
         public async Task<ActionResult<IEnumerable<UserResponse>>> GetAll()
         {
-            var result = await _userService.GetAll();
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
+            var result = await _userService.GetAll(accessToken);
             return Ok(result);
         }
 
@@ -54,7 +58,11 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<IEnumerable<OfferResponse>>> GetAllOffers(
             [FromQuery] string lang)
         {
-            var result = await _offerService.GetAllOffers(lang);
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
+            var result = await _offerService.GetAllOffers(lang, accessToken);
             return Ok(result);
         }
 
@@ -68,7 +76,11 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<UserResponse>> GetById(
              [FromRoute] int userId)
         {
-            var result = await _userService.GetById(userId);
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
+            var result = await _userService.GetByIdForAdmin(userId, accessToken);
             return Ok(result);
         }
 
@@ -82,7 +94,11 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<UserResponse>> GetByEmail(
              [FromQuery] string email)
         {
-            var result = await _userService.GetByEmail(email);
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
+            var result = await _userService.GetByEmail(email, accessToken);
             return Ok(result);
         }
 
@@ -96,8 +112,12 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<UserResponse>> GetMeAsync(
              [FromQuery] string lang)
         {
-            var result = await _userService.GetMeAsync(lang);
-            return Ok(result);
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
+            var user = await _userService.GetMeAsync(lang, accessToken);
+            return Ok(user);
         }
 
 
@@ -111,7 +131,11 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<IEnumerable<OfferResponse>>> GetMyOffers(
              [FromQuery] string lang)
         {
-            var result = await _userService.GetMyOffers(lang);
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
+            var result = await _userService.GetMyOffers(lang, accessToken);
             return Ok(result);
         }
 
@@ -126,7 +150,11 @@ namespace WebApiGetway.Controllers
              [FromQuery] int cityId,
              [FromQuery] string lang)
         {
-            var result = await _userService.GetMyOffersByCityId(cityId, lang);
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
+            var result = await _userService.GetMyOffersByCityId(cityId, lang,accessToken);
             return Ok(result);
         }
 
@@ -141,7 +169,11 @@ namespace WebApiGetway.Controllers
              [FromQuery] int countryId,
              [FromQuery] string lang)
         {
-            var result = await _userService.GetMyOffersByCountryId(countryId, lang);
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
+            var result = await _userService.GetMyOffersByCountryId(countryId, lang, accessToken);
             return Ok(result);
         }
 
@@ -172,8 +204,13 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<bool>> AddOfferToClientFavorite(
         [FromRoute] int offerId)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var result = await _userService.AddOfferToClientFavorite(
-                offerId: offerId
+                offerId: offerId,
+                accessToken: accessToken
             );
             if (!result)
                 return BadRequest("Offer could not be added to favorites.");
@@ -189,10 +226,16 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<IEnumerable<HistoryOfferLinkResponse>>> GetOffersFromClientHistory(
           [FromQuery] string lang)
         {
+
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var userId = User.GetUserId();
             var result = await _userService.GetOffersFromClientHistory(
                 userId: userId,
-                lang: lang
+                lang: lang,
+                accessToken: accessToken
             );
             if (result == null)
                 return NotFound();
@@ -207,8 +250,13 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<IEnumerable<int>>> GetOffersIdFromClientHistory(
              [FromQuery] string lang)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var result = await _userService.GetOffersIdFromClientHistory(
-                lang: lang
+                lang: lang,
+                accessToken: accessToken
             );
             if (result == null)
                 return NotFound();
@@ -276,11 +324,15 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<UserResponse>> UpdateMe(
            [FromBody, Required] UserRequest request)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
 
             var userId = User.GetUserId();
             var result = await _userService.UpdateMe(
                 request: request,
-                userId: userId
+                userId: userId,
+                accessToken: accessToken
             );
             return Ok(result);
         }
@@ -294,10 +346,15 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<bool>> ChangePassword(
            [FromBody, Required] ChangePasswordRequest request)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var userId = User.GetUserId();
             var result = await _userService.ChangePassword(
                 request: request,
-                userId: userId
+                userId: userId,
+                accessToken: accessToken
             );
             return Ok(result);
         }
@@ -310,10 +367,15 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<bool>> ChangeEmail(
            [FromBody, Required] ChangeEmailRequest request)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var userId = User.GetUserId();
             var result = await _userService.ChangeEmail(
                 request: request,
-                userId: userId
+                userId: userId,
+                accessToken: accessToken
             );
             return Ok(result);
         }
@@ -326,8 +388,13 @@ namespace WebApiGetway.Controllers
         public async Task<ActionResult<bool>> DeleteAsync(
             [FromRoute] int userId)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var result = await _userService.DeleteAsync(
-                userId: userId
+                userId: userId,
+                accessToken: accessToken
             );
             if (!result) return NotFound(new { Message = $"User {userId} not found or cannot be deleted" });
             return Ok(true);
@@ -339,9 +406,14 @@ namespace WebApiGetway.Controllers
         [Authorize]
         public async Task<ActionResult<bool>> DeleteAsync()
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var userId = User.GetUserId();
             var result = await _userService.DeleteAsync(
-                userId: userId
+                userId: userId,
+                accessToken: accessToken
             );
             if (!result) 
                 return NotFound(new { Message = $"User {userId} not found or cannot be deleted" });

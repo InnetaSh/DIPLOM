@@ -82,11 +82,12 @@ namespace AttractionApiService.Controllers
 
 
         [HttpGet("get/byId/{id}")]
-        public async Task<ActionResult<List<AttractionResponse>>> GetAttractionById(
-           [FromRoute] int id)
+        public async Task<ActionResult<AttractionResponse>> GetAttractionById(
+             [FromRoute] int id)
         {
-            var attractions = await _attractionService.GetAttractionById(id);
-            var result = attractions.Select(o => AttractionMapper.MapToResponse(o, _baseUrl)).ToList();
+            var attraction = await _attractionService.GetAttractionById(id);
+           
+            var result = AttractionMapper.MapToResponse(attraction, _baseUrl);
             return Ok(result);
         }
 

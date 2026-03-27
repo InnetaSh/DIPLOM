@@ -10,7 +10,7 @@ namespace WebApiGetway.Clients.Interface
         Task<IEnumerable<ParamsCategoryResponse>> GetAllParamCategoryWithParams();
         Task<IEnumerable<ParamItemResponse>> GetAllParamsItems();
         //-------------------------------------------------------------------------------------
-        Task<IEnumerable<OfferResponse>> GetAllOffers();
+        Task<IEnumerable<OfferResponse>> GetAllOffers(string accessToken);
 
         //-------------------------------------------------------------------------------------
         Task<IEnumerable<OfferResponse>> GetOffersByCityAsync(

@@ -9,20 +9,21 @@ namespace WebApiGetway.Service.Interfase
 {
     public interface IUserBffService
     {
-        Task<IEnumerable<UserResponse>> GetAll();
         Task<UserResponse> GetById(int userId);
-        Task<UserResponse> GetByEmail(string email);
-        Task<UserResponse> GetMeAsync(string lang);
+        Task<IEnumerable<UserResponse>> GetAll(string accessToken);
+        Task<UserResponse> GetByIdForAdmin(int userId, string accessToken);
+        Task<UserResponse> GetByEmail(string email, string accessToken);
+        Task<UserResponse> GetMeAsync(string lang, string accessToken);
 
-        Task<IEnumerable<OfferResponse>> GetMyOffers(string lang);
-        Task<IEnumerable<OfferResponse>> GetMyOffersByCityId(int cityId, string lang);
-        Task<IEnumerable<OfferResponse>> GetMyOffersByCountryId(int countryId, string lang);
+        Task<IEnumerable<OfferResponse>> GetMyOffers(string lang, string accessToken);
+        Task<IEnumerable<OfferResponse>> GetMyOffersByCityId(int cityId, string lang, string accessToken);
+        Task<IEnumerable<OfferResponse>> GetMyOffersByCountryId(int countryId, string lang, string accessToken);
         //=====================================================================
 
-        Task<bool> AddOfferToClientFavorite(int offerId);
+        Task<bool> AddOfferToClientFavorite(int offerId, string accessToken);
 
-        Task<IEnumerable<HistoryOfferLinkResponse>> GetOffersFromClientHistory(string lang, int userId);
-        Task<IEnumerable<int>> GetOffersIdFromClientHistory(string lang);
+        Task<IEnumerable<HistoryOfferLinkResponse>> GetOffersFromClientHistory(string lang, int userId, string accessToken);
+        Task<IEnumerable<int>> GetOffersIdFromClientHistory(string lang, string accessToken);
         Task<IEnumerable<int>> HasPendingOrder(int userId);
 
         //=====================================================================
@@ -34,11 +35,11 @@ namespace WebApiGetway.Service.Interfase
         Task<RegisterResponse> RegisterClient(RegisterRequest request);
         Task<RegisterResponse> RegisterOwner(RegisterRequest request);
         //=====================================================================
-        Task<UserResponse> UpdateMe(UserRequest request, int userId);
-        Task<bool> ChangePassword(ChangePasswordRequest request, int userId);
-        Task<bool> ChangeEmail(ChangeEmailRequest request, int userId);
+        Task<UserResponse> UpdateMe(UserRequest request, int userId, string accessToken);
+        Task<bool> ChangePassword(ChangePasswordRequest request, int userId, string accessToken);
+        Task<bool> ChangeEmail(ChangeEmailRequest request, int userId, string accessToken);
         //=====================================================================
-        Task<bool> DeleteAsync(int userId);
+        Task<bool> DeleteAsync(int userId, string accessToken);
     }
 
 }

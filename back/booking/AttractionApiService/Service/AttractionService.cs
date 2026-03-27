@@ -41,18 +41,17 @@ namespace AttractionApiService.Service
         //==================================================================================================================
 
 
-        public async Task<List<Attraction>> GetAttractionById([FromQuery] int id)
+        public async Task<Attraction> GetAttractionById([FromQuery] int id)
         {
             try
             {
                // using var db = new AttractionContext();
 
-                var attractions = await _context.Attractions
+                var attraction = await _context.Attractions
                      .AsNoTracking()
-                    .Where(a => a.id == id)
-                    .ToListAsync();
+                     .FirstOrDefaultAsync(a => a.id == id);
 
-                return attractions;
+                return attraction ?? new Attraction();
             }
             catch (Exception ex)
             {

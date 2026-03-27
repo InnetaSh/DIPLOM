@@ -51,7 +51,36 @@ namespace WebApiGetway.Service
             _helpers = helpers;
         }
 
+        //===========================================================================================
+        //		 GET  USER INFORMATION BY userId
+        //===========================================================================================
+        /// <summary>
+        /// Получает информацию о пользователе по его идентификатору.
+        /// </summary>
+        /// <param name="userId">Идентификатор пользователя.</param>
+        /// <returns>Информация о пользователе или пустой объект UserResponse, если пользователь не найден.</returns>
+        /// <exception cref="ArgumentException">Если userId <= 0.</exception>
+        public async Task<UserResponse> GetById(int userId)
+        {
+            if (userId <= 0)
+            {
+                throw new ArgumentException("Invalid userId", nameof(userId));
+            }
 
+            _logger.LogInformation("Start fetching full information for userId: {UserId}", userId);
+
+            var user = await _userApiClient.GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                _logger.LogWarning("User not found for userId: {UserId}", userId);
+                return new UserResponse();
+            }
+
+            _logger.LogInformation("Successfully retrieved information for userId: {UserId}", userId);
+
+            return user;
+        }
 
         //===============================================================================================================
         //		(FOR ADMIN) - GET ALL USERS
@@ -60,11 +89,11 @@ namespace WebApiGetway.Service
         /// Получает всех пользователей системы.
         /// </summary>
         /// <returns>Коллекция пользователей или пустой список, если пользователей нет.</returns>
-        public async Task<IEnumerable<UserResponse>> GetAll()
+        public async Task<IEnumerable<UserResponse>> GetAll(string accessToken)
         {
             _logger.LogInformation("Start fetching all users for admin.");
 
-            var users = await _userApiClient.GetAll();
+            var users = await _userApiClient.GetAll(accessToken);
 
             if (users == null || !users.Any())
             {
@@ -86,7 +115,7 @@ namespace WebApiGetway.Service
         /// <param name="userId">Идентификатор пользователя.</param>
         /// <returns>Информация о пользователе или пустой объект UserResponse, если пользователь не найден.</returns>
         /// <exception cref="ArgumentException">Если userId <= 0.</exception>
-        public async Task<UserResponse> GetById(int userId)
+        public async Task<UserResponse> GetByIdForAdmin(int userId, string accessToken)
         {
             if (userId <= 0)
             {
@@ -95,7 +124,7 @@ namespace WebApiGetway.Service
 
             _logger.LogInformation("Start fetching full information for userId: {UserId}", userId);
 
-            var user = await _userApiClient.GetById(userId);
+            var user = await _userApiClient.GetByIdForAdmin(userId, accessToken);
 
             if (user == null)
             {
@@ -117,7 +146,7 @@ namespace WebApiGetway.Service
         /// <param name="email">Email пользователя.</param>
         /// <returns>Информация о пользователе или пустой объект UserResponse, если пользователь не найден.</returns>
         /// <exception cref="ArgumentException">Если email пустой или null.</exception>
-        public async Task<UserResponse> GetByEmail(string email)
+        public async Task<UserResponse> GetByEmail(string email, string accessToken)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
@@ -126,7 +155,7 @@ namespace WebApiGetway.Service
 
             _logger.LogInformation("Start fetching full information for user with email: {Email}", email);
 
-            var user = await _userApiClient.GetByEmail(email);
+            var user = await _userApiClient.GetByEmail(email, accessToken);
 
             if (user == null)
             {
@@ -147,7 +176,7 @@ namespace WebApiGetway.Service
         /// </summary>
         /// <param name="lang">Код языка для перевода страны (например: "en", "uk", "ru").</param>
         /// <returns>Информация о пользователе с переводом страны или пустой объект UserResponse, если пользователь не найден.</returns>
-        public async Task<UserResponse> GetMeAsync(string lang)
+        public async Task<UserResponse> GetMeAsync(string lang, string accessToken)
         {
             if (string.IsNullOrWhiteSpace(lang))
             {
@@ -156,7 +185,7 @@ namespace WebApiGetway.Service
 
             _logger.LogInformation("Start fetching current user information. Lang: {Lang}", lang);
 
-            var user = await _userApiClient.GetMeAsync();
+            var user = await _userApiClient.GetMeAsync(accessToken);
 
             if (user == null)
             {
@@ -185,14 +214,14 @@ namespace WebApiGetway.Service
         /// <returns>Коллекция объявлений с переводами и рейтингами.</returns>
         /// <exception cref="UnauthorizedAccessException">Если текущий пользователь не является собственником.</exception>
 
-        public async Task<IEnumerable<OfferResponse>> GetMyOffers( string lang)
+        public async Task<IEnumerable<OfferResponse>> GetMyOffers( string lang, string accessToken)
         {
             if (string.IsNullOrWhiteSpace(lang))
                 throw new ArgumentException("Language code is required", nameof(lang));
 
             _logger.LogInformation("Start fetching offers for current owner. Lang: {Lang}", lang);
 
-            var user = await _userApiClient.GetMeAsync();
+            var user = await _userApiClient.GetMeAsync( accessToken);
             if (user == null)
             {
                 _logger.LogWarning("Current user not found.");
@@ -260,14 +289,17 @@ namespace WebApiGetway.Service
         /// <returns>Коллекция объявлений с переводами и рейтингами.</returns>
         /// <exception cref="UnauthorizedAccessException">Если текущий пользователь не является собственником.</exception>
 
-        public async Task<IEnumerable<OfferResponse>> GetMyOffersByCityId(int cityId, string lang)
+        public async Task<IEnumerable<OfferResponse>> GetMyOffersByCityId(
+            int cityId,
+            string lang,
+            string accessToken)
         {
             if (string.IsNullOrWhiteSpace(lang))
                 throw new ArgumentException("Language code is required", nameof(lang));
 
             _logger.LogInformation("Start fetching offers for current owner in cityId: {CityId}, Lang: {Lang}", cityId, lang);
 
-            var user = await _userApiClient.GetMeAsync();
+            var user = await _userApiClient.GetMeAsync( accessToken);
             if (user == null)
             {
                 _logger.LogWarning("Current user not found.");
@@ -333,14 +365,17 @@ namespace WebApiGetway.Service
         /// <returns>Коллекция объявлений с переводами и рейтингами.</returns>
         /// <exception cref="UnauthorizedAccessException">Если текущий пользователь не является собственником.</exception>
 
-        public async Task<IEnumerable<OfferResponse>> GetMyOffersByCountryId(int countryId, string lang)
+        public async Task<IEnumerable<OfferResponse>> GetMyOffersByCountryId(
+            int countryId,
+            string lang,
+            string accessToken)
         {
             if (string.IsNullOrWhiteSpace(lang))
                 throw new ArgumentException("Language code is required", nameof(lang));
 
             _logger.LogInformation("Start fetching offers for current owner in countryId: {CountryId}, Lang: {Lang}", countryId, lang);
 
-            var user = await _userApiClient.GetMeAsync();
+            var user = await _userApiClient.GetMeAsync( accessToken);
             if (user == null)
             {
                 _logger.LogWarning("Current user not found.");
@@ -408,11 +443,11 @@ namespace WebApiGetway.Service
         /// </summary>
         /// <param name="offerId">Идентификатор объявления</param>
         /// <returns>true — если успешно добавлено, иначе false</returns>
-        public async Task<bool> AddOfferToClientFavorite(int offerId)
+        public async Task<bool> AddOfferToClientFavorite(int offerId, string accessToken)
         {
             _logger.LogInformation("Start adding offer to favorites. OfferId: {OfferId}", offerId);
 
-            var result = await _userApiClient.AddOfferToFavoriteForUserAsync(offerId);
+            var result = await _userApiClient.AddOfferToFavoriteForUserAsync(offerId, accessToken);
 
             if (!result)
             {
@@ -437,11 +472,14 @@ namespace WebApiGetway.Service
         /// <param name="lang">Код языка (например: "en", "uk", "ru")</param>
         /// <param name="userId">Идентификатор пользователя</param>
         /// <returns>Коллекция HistoryOfferLinkResponse</returns>
-        public async Task<IEnumerable<HistoryOfferLinkResponse>> GetOffersFromClientHistory(string lang, int userId)
+        public async Task<IEnumerable<HistoryOfferLinkResponse>> GetOffersFromClientHistory(
+            string lang,
+            int userId,
+            string accessToken)
         {
             _logger.LogInformation("Start fetching client history. UserId: {UserId}, Lang: {Lang}", userId, lang);
 
-            var historyLinks = await _userApiClient.GetOffersFromClientHistory();
+            var historyLinks = await _userApiClient.GetOffersFromClientHistory(accessToken);
 
             if (historyLinks == null || !historyLinks.Any())
             {
@@ -497,11 +535,11 @@ namespace WebApiGetway.Service
         /// </summary>
         /// <param name="lang">Код языка (не используется, но сохранён для совместимости)</param>
         /// <returns>Коллекция идентификаторов объявлений</returns>
-        public async Task<IEnumerable<int>> GetOffersIdFromClientHistory(string lang)
+        public async Task<IEnumerable<int>> GetOffersIdFromClientHistory(string lang, string accessToken)
         {
             _logger.LogInformation("Start fetching offer IDs from client history");
 
-            var historyLinks = await _userApiClient.GetOffersFromClientHistory();
+            var historyLinks = await _userApiClient.GetOffersFromClientHistory(accessToken);
 
             if (historyLinks == null || !historyLinks.Any())
             {
@@ -653,7 +691,7 @@ namespace WebApiGetway.Service
         /// </summary>
         /// <param name="request">Данные для обновления пользователя.</param>
         /// <returns>Обновлённая информация о пользователе.</returns>
-        public async Task<UserResponse> UpdateMe(UserRequest request, int userId)
+        public async Task<UserResponse> UpdateMe(UserRequest request, int userId, string accessToken)
         {
             if (request == null)
             {
@@ -663,7 +701,7 @@ namespace WebApiGetway.Service
 
             _logger.LogInformation("Updating current user information for userId: {UserId}", userId);
 
-            var result = await _userApiClient.UpdateMe(request);
+            var result = await _userApiClient.UpdateMe(request, accessToken);
 
             if (result == null)
             {
@@ -684,7 +722,7 @@ namespace WebApiGetway.Service
         /// </summary>
         /// <param name="request">Данные для смены пароля (старый и новый пароль).</param>
         /// <returns>True, если пароль успешно изменён.</returns>
-        public async Task<bool> ChangePassword(ChangePasswordRequest request, int userId)
+        public async Task<bool> ChangePassword(ChangePasswordRequest request, int userId, string accessToken)
         {
             if (request == null)
             {
@@ -694,7 +732,7 @@ namespace WebApiGetway.Service
 
             _logger.LogInformation("Changing password for userId: {UserId}", userId);
 
-            var result = await _userApiClient.ChangePassword(request);
+            var result = await _userApiClient.ChangePassword(request, accessToken);
 
             if (!result)
             {
@@ -714,7 +752,7 @@ namespace WebApiGetway.Service
         /// </summary>
         /// <param name="request">Данные для смены email.</param>
         /// <returns>True, если email успешно изменён.</returns>
-        public async Task<bool> ChangeEmail(ChangeEmailRequest request, int userId)
+        public async Task<bool> ChangeEmail(ChangeEmailRequest request, int userId, string accessToken)
         {
             if (request == null)
             {
@@ -724,7 +762,7 @@ namespace WebApiGetway.Service
 
             _logger.LogInformation("Changing email for userId: {UserId}", userId);
 
-            var result = await _userApiClient.ChangeEmail(request);
+            var result = await _userApiClient.ChangeEmail(request, accessToken);
 
             if (!result)
             {
@@ -744,11 +782,11 @@ namespace WebApiGetway.Service
         /// </summary>
         /// <param name="userId">Идентификатор пользователя.</param>
         /// <returns>True, если пользователь успешно удалён.</returns>
-        public async Task<bool> DeleteAsync(int userId)
+        public async Task<bool> DeleteAsync(int userId, string accessToken)
         {
             _logger.LogInformation("Attempting to delete user with userId: {UserId}", userId);
 
-            var result = await _userApiClient.DeleteAsync(userId);
+            var result = await _userApiClient.DeleteAsync(userId, accessToken);
 
             if (!result)
             {

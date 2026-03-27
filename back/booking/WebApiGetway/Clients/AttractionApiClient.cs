@@ -34,7 +34,7 @@ namespace WebApiGetway.Clients
         //===============================================================================================================
         public async Task<AttractionResponse> GetAttractionByIdAsync(int attractionId)
         {
-            var result = await GetAsync<AttractionResponse>($"/api/attraction/get/get/byId/{attractionId}");
+            var result = await GetAsync<AttractionResponse>($"/api/attraction/get/byId/{attractionId}");
             return result ?? new AttractionResponse();
         }
 

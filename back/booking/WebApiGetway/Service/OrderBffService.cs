@@ -69,7 +69,8 @@ namespace WebApiGetway.Service
               CreateOrderRequest request,
               int userId,
               decimal userDiscountPercent,
-              string lang)
+              string lang,
+               string accessToken)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
@@ -81,7 +82,7 @@ namespace WebApiGetway.Service
                 _logger.LogWarning("CreateOrder called with userId = 0");
 
             
-            var user = await _userApiClient.GetMeAsync();
+            var user = await _userApiClient.GetMeAsync(accessToken);
 
             var ClientPhoneNumber = user?.PhoneNumber ?? null;
             var ClientEmail = user?.Email ?? null;
@@ -167,7 +168,7 @@ namespace WebApiGetway.Service
             _logger.LogInformation("Order created. OrderId={OrderId}", orderId);
            
             var addToOfferTask = _offerApiClient.AddOrderToOffersOrderList(request.OfferId, orderId);
-            var addToUserTask = _userApiClient.AddOrderToUsersOrderList(orderId);
+            var addToUserTask = _userApiClient.AddOrderToUsersOrderList(orderId, accessToken);
 
             await Task.WhenAll(addToOfferTask, addToUserTask);
 

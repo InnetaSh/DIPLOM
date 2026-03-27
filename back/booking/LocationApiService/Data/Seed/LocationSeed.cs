@@ -98,10 +98,10 @@ namespace LocationApiService.Data.Seed
               PostCode = "01001",
               IsTop = true,
               Slug= "Kyiv",
-              ImageUrl_Main = "images/Kyiv/cities/Kyiv.jpg",
-              ImageUrl_1 = "images/Kyiv/cities/Kyiv_1.jpg",
-              ImageUrl_2 = "images/Kyiv/cities/Kyiv_2.jpg",
-              ImageUrl_3 = "images/Kyiv/cities/Kyiv_3.jpg",
+              ImageUrl_Main = "images/cities/Kyiv/Kyiv.jpg",
+              ImageUrl_1 = "images/cities/Kyiv/Kyiv_1.jpg",
+              ImageUrl_2 = "images/cities/Kyiv/Kyiv_2.jpg",
+              ImageUrl_3 = "images/cities/Kyiv/Kyiv_3.jpg",
           },
             // Винниця
             new City

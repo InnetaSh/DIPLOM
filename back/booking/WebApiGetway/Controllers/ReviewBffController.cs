@@ -32,6 +32,7 @@ namespace WebApiGetway.Controllers
             [FromBody, Required] ReviewRequest request,
             [FromQuery]  string lang)
         {
+
             request.UserId = User.GetUserId();  
             var result = await _reviewService.CreateReview(request, lang);
             return Ok(result);

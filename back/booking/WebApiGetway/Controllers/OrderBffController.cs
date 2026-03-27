@@ -37,14 +37,19 @@ namespace WebApiGetway.Controllers
              [FromBody] CreateOrderRequest request,
              [FromQuery] string lang)
         {
-            var userId = User.GetUserId();
-            var user = await _userService.GetById(userId);
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
+            var user = await _userService.GetMeAsync(lang, accessToken);
+            var userId = user?.id ?? -1;
             var discount = user?.Discount ?? 0m;
             var result = await _orderService.CreateOrder(
                 request,
                 userId,
                 discount,
-                lang);
+                lang,
+                accessToken);
 
             return Ok(result);
         }

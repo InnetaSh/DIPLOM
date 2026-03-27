@@ -27,33 +27,51 @@ namespace WebApiGetway.Clients
         //===============================================================================================================
         public Task<UserResponse?> GetUserByIdAsync(int userId)
         {
-            return GetAsync<UserResponse>($"/api/User/{userId}");
+            return GetAsync<UserResponse>($"/api/user/{userId}");
         }
 
         //===========================================================================================
         //  GET METHODS (для авторизованного пользователя) - получить полную информацию о себе
         //===========================================================================================
 
-        public Task<UserResponse?> GetMeAsync()
+        public Task<UserResponse?> GetMeAsync(string accessToken)
         {
-            return GetAsync<UserResponse>($"/api/User/me");
+            return GetAsync<UserResponse>(
+                "/api/user/me",
+                headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
+            );
         }
         //===========================================================================================
         //  GET METHODS (для админа) - получить всех пользователей
         //===========================================================================================
 
-        public async Task<IEnumerable<UserResponse?>> GetAll()
+        public async Task<IEnumerable<UserResponse?>> GetAll(string accessToken)
         {
-            var result = await GetAsync<IEnumerable<UserResponse>>($"/api/User/get-all");
+            var result = await GetAsync<IEnumerable<UserResponse>>(
+                $"/api/user/get-all",
+                 headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
+            );
             return result ?? Enumerable.Empty<UserResponse>();
         }
         //===========================================================================================
         //  GET METHODS (для админа) - получить полную информацию о пользователе по Id
         //===========================================================================================
 
-        public async Task<UserResponse?> GetById(int userId)
+        public async Task<UserResponse?> GetByIdForAdmin(int userId, string accessToken)
         {
-            var result = await GetAsync<UserResponse>($"/api/User/admin/get/userfullinfo/{userId}");
+            var result = await GetAsync<UserResponse>(
+                $"/api/user/admin/get/userfullinfo/{userId}",
+                 headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
+            );
             return result ?? new UserResponse();
         }
 
@@ -61,9 +79,15 @@ namespace WebApiGetway.Clients
         //  GET METHODS (для админа) - получить полную информацию о пользователе по email
         //===========================================================================================
 
-        public async Task<UserResponse?> GetByEmail(string email)
+        public async Task<UserResponse?> GetByEmail(string email, string accessToken)
         {
-            var result = await GetAsync<UserResponse>($"/api/User/admin/get/userfullinfo/{email}");
+            var result = await GetAsync<UserResponse>(
+                $"/api/user/admin/get/userfullinfo/by-email/{email}",
+                 headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
+            );
             return result ?? new UserResponse();
         }
 
@@ -73,10 +97,14 @@ namespace WebApiGetway.Clients
         //  GET METHODS  получить offers из истории пользователя
         // ==========================================================================================
 
-        public async Task<IEnumerable<HistoryOfferLinkResponse>> GetOffersFromClientHistory()
+        public async Task<IEnumerable<HistoryOfferLinkResponse>> GetOffersFromClientHistory(string accessToken)
         {
             var result = await GetAsync<IEnumerable<HistoryOfferLinkResponse>>(
-                "/api/User/me/history/get/offers"
+                "/api/user/me/history/get/offers",
+                 headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
             );
 
             return result ?? Enumerable.Empty<HistoryOfferLinkResponse>();
@@ -85,11 +113,15 @@ namespace WebApiGetway.Clients
         //    ADD METHODS offer в историю пользователя
         // ==========================================================================================
 
-        public async Task<IEnumerable<HistoryOfferLinkResponse>> AddOffersToClientHistory(int offerId)
+        public async Task<IEnumerable<HistoryOfferLinkResponse>> AddOffersToClientHistory(int offerId, string accessToken)
         {
             var result = await PostAsync<IEnumerable<HistoryOfferLinkResponse>>(
-                $"/api/User/me/history/add/offer/{offerId}",
-                new {}
+                $"/api/user/me/history/add/offer/{offerId}",
+                new {},
+                 headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
             );
 
             return result ?? Enumerable.Empty<HistoryOfferLinkResponse>();
@@ -101,11 +133,18 @@ namespace WebApiGetway.Clients
         //      ADD METHODS в избранное пользователя
         // ==========================================================================================
 
-        public async Task<bool> AddOfferToFavoriteForUserAsync(int offerId)
+        public async Task<bool> AddOfferToFavoriteForUserAsync(int offerId, string accessToken)
         {
             try
             {
-                await PostAsync<UserResponse>($"/api/user/me/isfavorite/add/offer/{offerId}", offerId);
+                await PostAsync<UserResponse>(
+                    $"/api/user/me/isfavorite/add/offer/{offerId}",
+                    offerId,
+                     headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
+            );
 
                 return true;
             }
@@ -121,11 +160,15 @@ namespace WebApiGetway.Clients
         // ==========================================================================================
         //   ADD METHODS  добавить в список обьявлений  owner          
         // ==========================================================================================
-        public async Task<bool> AddOfferToClient(int offerId)
+        public async Task<bool> AddOfferToClient(int offerId, string accessToken)
         {
             var result = await PostAsync<bool>(
-                $"/api/User/owner/offers/add/{offerId}",
-                offerId 
+                $"/api/user/owner/offers/add/{offerId}",
+                offerId,
+                     headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
             );
 
             return result;
@@ -134,11 +177,15 @@ namespace WebApiGetway.Clients
         //===========================================================================================
         //       ADD METHODS добавить ссылки на заказ for user
         //===========================================================================================
-        public async Task<bool> AddOrderToUsersOrderList(int orderId)
+        public async Task<bool> AddOrderToUsersOrderList(int orderId, string accessToken)
         {
             return await PostAsync<bool>(
                 $"/api/user/client/orders/add/{orderId}",
-                new { }
+                new { },
+            headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
             );
         }
 
@@ -146,11 +193,15 @@ namespace WebApiGetway.Clients
         // ==========================================================================================
         //      Valid METHODS : принадлежит ли offer текущему владельцу (userId получает сам контроллер)
         // ==========================================================================================
-        public async Task<bool> ValidOfferIdByOwner(int offerId)
+        public async Task<bool> ValidOfferIdByOwner(int offerId, string accessToken)
         {
             var result = await PostAsync<bool>(
-                $"/api/User/valid/offers/{offerId}",
-                offerId
+                $"/api/user/valid/offers/{offerId}",
+                offerId,
+                 headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
             );
 
             return result;
@@ -236,11 +287,15 @@ namespace WebApiGetway.Clients
         //===========================================================================================
         //      UPDATE METHODS 
         //===========================================================================================
-        public async Task<UserResponse> UpdateMe(UserRequest request)
+        public async Task<UserResponse> UpdateMe(UserRequest request, string accessToken)
         {
             var result = await PostAsync<UserResponse>(
                 $"/api/user/me/update",
-                request
+                request,
+                headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
             );
 
             return result ?? new UserResponse();
@@ -248,21 +303,29 @@ namespace WebApiGetway.Clients
 
 
         //===========================================================================================
-        public async Task<bool> ChangePassword(ChangePasswordRequest request)
+        public async Task<bool> ChangePassword(ChangePasswordRequest request, string accessToken)
         {
             var result = await PostAsync<bool>(
                 $"/api/user/me/change-password",
-                request
+                request,
+                headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
             );
 
             return result;
         }
         //===========================================================================================
-        public async Task<bool> ChangeEmail(ChangeEmailRequest request)
+        public async Task<bool> ChangeEmail(ChangeEmailRequest request, string accessToken)
         {
             var result = await PostAsync<bool>(
                 $"/api/user/me/change-email",
-                request
+                request,
+                headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
             );
 
             return result;
@@ -271,10 +334,15 @@ namespace WebApiGetway.Clients
         //===========================================================================================
         //      DELETE METHODS 
         //===========================================================================================
-        public async Task<bool> DeleteAsync(int userId)
+        public async Task<bool> DeleteAsync(int userId, string accessToken)
         {
             var result = await DeleteAsync<bool>(
-                $"/api/auth/delete/{userId}");
+                $"/api/auth/delete/{userId}",
+                  headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
+            );
 
             return result;
         }

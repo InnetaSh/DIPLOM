@@ -160,7 +160,7 @@ namespace UserApiService.Controllers
         // ADMIN:  Получить пользователя по почте если админ
         // =====================================================================
 
-        [HttpGet("admin/get/userfullinfo/{email}")]
+        [HttpGet("admin/get/userfullinfo/by-email/{email}")]
         [Authorize]
         public async Task<IActionResult> GetUserFullInfoByEmail(string email)
         {
@@ -221,10 +221,7 @@ namespace UserApiService.Controllers
             if (user == null)
                 return NotFound();
 
-            return Ok(new { 
-                userName = user.Username,
-                countryId = user.CountryId
-            });
+            return Ok(user);
 
 
         }

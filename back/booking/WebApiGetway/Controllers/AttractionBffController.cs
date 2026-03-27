@@ -21,7 +21,7 @@ namespace WebApiGetway.Controllers
         //     	GET ALL CITY ATTRACTIONS BY CityId
         //===============================================================================================================
 
-        [HttpGet("from-cities/{cityId}/attraction}")]
+        [HttpGet("from-cities/{cityId}/attraction")]
         public Task<IEnumerable<AttractionResponse>> GetAllAttractionByCityId(
             [FromRoute] int cityId,
             [FromQuery] string lang)

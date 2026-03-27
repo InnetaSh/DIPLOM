@@ -7,22 +7,22 @@ namespace WebApiGetway.Clients.Interface
     public interface IUserApiClient
     {
         Task<UserResponse?> GetUserByIdAsync(int userId);
-        Task<UserResponse?> GetMeAsync();
-        Task<IEnumerable<UserResponse?>> GetAll();
-        Task<UserResponse?> GetById(int userId);
-        Task<UserResponse?> GetByEmail(string email);
-        Task<IEnumerable<HistoryOfferLinkResponse>> GetOffersFromClientHistory();
-        Task<IEnumerable<HistoryOfferLinkResponse>> AddOffersToClientHistory(int offerId);
+        Task<UserResponse?> GetMeAsync(string accessToken);
+        Task<IEnumerable<UserResponse?>> GetAll(string accessToken);
+        Task<UserResponse?> GetByIdForAdmin(int userId, string accessToken);
+        Task<UserResponse?> GetByEmail(string email, string accessToken);
+        Task<IEnumerable<HistoryOfferLinkResponse>> GetOffersFromClientHistory(string accessToken);
+        Task<IEnumerable<HistoryOfferLinkResponse>> AddOffersToClientHistory(int offerId, string accessToken);
 
         //-------------------------------------------------------------------------------------
-        Task<bool> AddOfferToFavoriteForUserAsync(int offerId);
-        Task<bool> AddOfferToClient(int offerId);
-        Task<bool> AddOrderToUsersOrderList(int orderId);
+        Task<bool> AddOfferToFavoriteForUserAsync(int offerId, string accessToken);
+        Task<bool> AddOfferToClient(int offerId, string accessToken);
+        Task<bool> AddOrderToUsersOrderList(int orderId, string accessToken);
 
         //-------------------------------------------------------------------------------------
 
 
-        Task<bool> ValidOfferIdByOwner(int offerId);
+        Task<bool> ValidOfferIdByOwner(int offerId, string accessToken);
       
         Task<bool> ValidOffer(int offerId);
         Task<bool> UpdateDiscount(int userId, decimal discountCount);
@@ -34,12 +34,12 @@ namespace WebApiGetway.Clients.Interface
         Task<RegisterResponse> RegisterOwner(RegisterRequest request);
         //-------------------------------------------------------------------------------------
 
-        Task<UserResponse> UpdateMe(UserRequest request);
-        Task<bool> ChangePassword(ChangePasswordRequest request);
+        Task<UserResponse> UpdateMe(UserRequest request,string accessToken);
+        Task<bool> ChangePassword(ChangePasswordRequest request, string accessToken);
 
-        Task<bool> ChangeEmail(ChangeEmailRequest request);
+        Task<bool> ChangeEmail(ChangeEmailRequest request, string accessToken);
 
         //-------------------------------------------------------------------------------------
-        Task<bool> DeleteAsync(int userId);
+        Task<bool> DeleteAsync(int userId,string accessToken);
     }
 }

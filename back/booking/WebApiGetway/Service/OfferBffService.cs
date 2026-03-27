@@ -179,10 +179,10 @@ namespace WebApiGetway.Service
         /// </summary>
         /// <param name="lang">Код языка (например: "en", "uk", "ru").</param>
         /// <returns>Коллекция объявлений с переводами и рейтингами.</returns>
-        public async Task<IEnumerable<OfferResponse>> GetAllOffers(string lang)
+        public async Task<IEnumerable<OfferResponse>> GetAllOffers(string lang, string accessToken)
         {
             _logger.LogInformation("Start aggregation for all offers with translation for admin. Lang: {Lang}", lang);
-            var offersListTask = _offerApiClient.GetAllOffers();
+            var offersListTask = _offerApiClient.GetAllOffers(accessToken);
             var offersTranslationsListTask = _translationClient.GetAllOffersTranslationAsync(lang);
             await Task.WhenAll(offersListTask, offersTranslationsListTask);
 
@@ -295,9 +295,33 @@ namespace WebApiGetway.Service
 
             var translationsTask = _translationClient.GetAllOffersTranslationAsync(lang);
 
+            var (entityId, entityType) = cityId.HasValue
+              ? (cityId.Value, "City")
+              : regionId.HasValue
+                  ? (regionId.Value, "Region")
+                  : (countryId.Value, "Country");
+
+            _ = _helpers.SendStatEvent(new EntityStatEventRequest
+            {
+                EntityId = entityId,
+                EntityType = entityType,
+                ActionType = "Search",
+                UserId = userId
+            }, entityType);
+
+
             await Task.WhenAll(offersTask, translationsTask);
 
             var offers = offersTask.Result;
+
+
+            //await _helpers.SendStatEvent(new EntityStatEventRequest
+            //{
+            //    EntityId = entityId,
+            //    EntityType = entityType,
+            //    ActionType = "Search",
+            //    UserId = userId
+            //}, entityType);
 
             if (offers == null || !offers.Any())
                 return Enumerable.Empty<OfferResponse>();
@@ -352,21 +376,8 @@ namespace WebApiGetway.Service
                 )
             );
 
-            var (entityId, entityType) = cityId.HasValue
-                 ? (cityId.Value, "City")
-                 : regionId.HasValue
-                     ? (regionId.Value, "Region")
-                     : (countryId.Value, "Country");
-
-            await _helpers.SendStatEvent(new EntityStatEventRequest
-            {
-                EntityId = entityId,
-                EntityType = entityType,
-                ActionType = "Search",
-                UserId = userId
-            }, entityType);
-
         
+
             var idList = offers.Select(x => x.id).ToList();
             var offersRatings = await _reviewApiClient.GetOffersRatingAsync(idList);
             MergeHelper.Merge(
@@ -401,6 +412,7 @@ namespace WebApiGetway.Service
         /// <param name="userDiscountPercent">Процент скидки пользователя</param>
         /// <returns>Полный объект OfferResponse с переводами и рейтингами</returns>
         public async Task<OfferResponse?> GetFullOfferById(
+         string? accessToken,
          int userId,
          int offerId,
          string lang,
@@ -413,8 +425,8 @@ namespace WebApiGetway.Service
         {
             var offer = await _offerApiClient.GetFullOfferById(
                    offerId,
-                   startDate.ToString(),
-                   endDate.ToString(),
+                   startDate?.ToString("yyyy-MM-dd"),
+                   endDate?.ToString("yyyy-MM-dd"),
                    adults,
                    children,
                    rooms,
@@ -464,8 +476,10 @@ namespace WebApiGetway.Service
                   r => r.EntityId
                 );
             }
-           
-            var OfferLink = await _userApiClient.AddOffersToClientHistory(offerId);
+            if (!string.IsNullOrWhiteSpace(accessToken))
+            {
+                _ = Task.Run(() => _userApiClient.AddOffersToClientHistory(offerId, accessToken));
+            }
             
             var entityStatEventRequest = new EntityStatEventRequest
             {
@@ -676,7 +690,8 @@ namespace WebApiGetway.Service
         public async Task<int> CreateOffer(
             int userId,
             OfferRequest offer,
-            string lang)
+            string lang,
+            string accessToken)
 
         {
             _logger.LogInformation("Start creating offer. UserId: {UserId}, Lang: {Lang}", userId, lang);
@@ -694,7 +709,7 @@ namespace WebApiGetway.Service
                     param.ValueString ??= "";
                 }
             }
-            var (isOwner, error) = await _helpers.ValidateOwnerAsync(userId);
+            var (isOwner, error) = await _helpers.ValidateOwnerAsync(userId, accessToken);
 
             if (!isOwner)
             {
@@ -746,7 +761,7 @@ namespace WebApiGetway.Service
 
             var sourceTask = _translationClient.AddOfferTranslationAsync(sourceTranslation, sourceLang);
             var translatedTask = _translationClient.AddOfferTranslationAsync(translatedTranslation, targetLang);
-            var addOfferTask = _userApiClient.AddOfferToClient(offerId);
+            var addOfferTask = _userApiClient.AddOfferToClient(offerId, accessToken);
 
             await Task.WhenAll(sourceTask, translatedTask, addOfferTask);
             if (sourceTask.Result == null || translatedTask.Result == null)
@@ -783,7 +798,8 @@ namespace WebApiGetway.Service
         public async Task<OfferResponse> UpdateOffer(
               int offerId,
               OfferRequest offer,
-              string lang)
+              string lang,
+              string accessToken)
         {
             if (offer == null)
             {
@@ -793,7 +809,7 @@ namespace WebApiGetway.Service
 
             _logger.LogInformation("Start updating offer. OfferId: {OfferId}, Lang: {Lang}", offerId, lang);
 
-            var isValid = await _userApiClient.ValidOfferIdByOwner(offerId);
+            var isValid = await _userApiClient.ValidOfferIdByOwner(offerId, accessToken );
             if (!isValid)
             {
                 _logger.LogWarning("Unauthorized update attempt. OfferId: {OfferId}", offerId);
@@ -861,7 +877,7 @@ namespace WebApiGetway.Service
 
             var sourceTask = _translationClient.AddOfferTranslationAsync(sourceTranslation, sourceLang);
             var translatedTask = _translationClient.AddOfferTranslationAsync(translatedTranslation, targetLang);
-            var addOfferTask = _userApiClient.AddOfferToClient(offerId);
+            var addOfferTask = _userApiClient.AddOfferToClient(offerId, accessToken);
 
             await Task.WhenAll(sourceTask, translatedTask, addOfferTask);
 
@@ -897,7 +913,8 @@ namespace WebApiGetway.Service
         public async Task<int> UpdateOfferPrice(
             int offerId,
             UpdateOfferPriceRequest updateOfferPriceRequest,
-            string lang)
+            string lang,
+            string accessToken)
         {
             if (updateOfferPriceRequest == null)
             {
@@ -908,7 +925,7 @@ namespace WebApiGetway.Service
             _logger.LogInformation("Start updating offer price. OfferId: {OfferId}", offerId);
 
 
-            var isOwner = await _userApiClient.ValidOfferIdByOwner(offerId);
+            var isOwner = await _userApiClient.ValidOfferIdByOwner(offerId, accessToken);
             if (!isOwner)
             {
                 _logger.LogWarning("Unauthorized price update attempt. OfferId: {OfferId}", offerId);
@@ -952,7 +969,8 @@ namespace WebApiGetway.Service
         /// <returns>Идентификатор объявления</returns>
         public async Task<int> UpdateTextOffer(
             TranslationRequest request,
-            string lang)
+            string lang,
+            string accessToken)
         {
             _logger.LogInformation("Start updating offer text. OfferId: {OfferId}, Lang: {Lang}", request?.EntityId, lang);
 
@@ -964,7 +982,7 @@ namespace WebApiGetway.Service
 
             var offerId = request.EntityId;
 
-            var isValid = await _userApiClient.ValidOfferIdByOwner(offerId);
+            var isValid = await _userApiClient.ValidOfferIdByOwner(offerId, accessToken);
             if (!isValid)
             {
                 _logger.LogWarning("Unauthorized text update attempt. OfferId: {OfferId}", offerId);
@@ -1027,7 +1045,8 @@ namespace WebApiGetway.Service
         /// <returns>Коллекция URL загруженных изображений</returns>
         public async Task<IEnumerable<string>> AddImageOffer(
           int offerId,
-          List<IFormFile> files)
+          List<IFormFile> files,
+          string accessToken)
         {
 
             if (files == null || files.Count == 0)
@@ -1040,7 +1059,7 @@ namespace WebApiGetway.Service
                  offerId,
                  files.Count
              );
-            var isValid = await _userApiClient.ValidOfferIdByOwner(offerId);
+            var isValid = await _userApiClient.ValidOfferIdByOwner(offerId, accessToken);
             if (!isValid)
             {
                 _logger.LogWarning("Unauthorized image upload attempt. OfferId: {OfferId}", offerId);
@@ -1109,7 +1128,8 @@ namespace WebApiGetway.Service
         public async Task<UpdateImageOfferResponse> UpdateImageOffer(
                int offerId,
                int imageId,
-               IFormFile file
+               IFormFile file,
+               string accessToken
         )
         {
             _logger.LogInformation(
@@ -1125,7 +1145,7 @@ namespace WebApiGetway.Service
                 throw new ValidationException("Файл не передан");
             }
 
-            var isOwner = await _userApiClient.ValidOfferIdByOwner(offerId);
+            var isOwner = await _userApiClient.ValidOfferIdByOwner(offerId, accessToken);
             if (!isOwner)
             {
                 _logger.LogWarning("Unauthorized image update attempt. OfferId: {OfferId}, ImageId: {ImageId}", offerId, imageId);
@@ -1166,7 +1186,8 @@ namespace WebApiGetway.Service
         /// <returns>True, если изображение успешно удалено, иначе false</returns>
         public async Task<bool> DeleteImageOffer(
                int offerId,
-               int imageId
+               int imageId,
+               string accessToken
         )
         {
             _logger.LogInformation(
@@ -1175,7 +1196,7 @@ namespace WebApiGetway.Service
                  imageId
              );
 
-            var isOwner = await _userApiClient.ValidOfferIdByOwner(offerId);
+            var isOwner = await _userApiClient.ValidOfferIdByOwner(offerId, accessToken);
             if (!isOwner)
             {
                 _logger.LogWarning(
@@ -1214,7 +1235,7 @@ namespace WebApiGetway.Service
         /// <param name="offerId">Идентификатор объявления</param>
         /// <param name="block">True — заблокировать, False — разблокировать</param>
         /// <returns>True, если операция выполнена успешно, иначе false</returns>
-        public async Task<bool> SetOfferBlockStatus(int offerId, bool block)
+        public async Task<bool> SetOfferBlockStatus(int offerId, bool block, string accessToken)
         {
             _logger.LogInformation(
                  "Attempting to {Action} offer. OfferId: {OfferId}",
@@ -1222,7 +1243,7 @@ namespace WebApiGetway.Service
                  offerId
              );
 
-            var isOwner = await _userApiClient.ValidOfferIdByOwner(offerId);
+            var isOwner = await _userApiClient.ValidOfferIdByOwner(offerId, accessToken);
             if (!isOwner)
             {
                 _logger.LogWarning(

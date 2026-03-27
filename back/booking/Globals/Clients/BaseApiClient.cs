@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Globals.Clients
@@ -19,43 +18,54 @@ namespace Globals.Clients
             _client = client;
             _logger = logger;
         }
-        ////-------------------------------------------------------------------------------------
 
-
+        //=====================================================================================
         // GET
-        public Task<T?> GetAsync<T>(string url, int maxAttempts = 3)
+        //=====================================================================================
+        public Task<T?> GetAsync<T>(string url, int maxAttempts = 3, Dictionary<string, string>? headers = null)
         {
-            return SendAsync<T>(HttpMethod.Get, url, null, maxAttempts);
+            return SendAsync<T>(HttpMethod.Get, url, null, maxAttempts, headers);
         }
 
+        //=====================================================================================
         // POST
-        public Task<T?> PostAsync<T>(string url, object payload, int maxAttempts = 3)
+        //=====================================================================================
+        public Task<T?> PostAsync<T>(string url, object payload, int maxAttempts = 3, Dictionary<string, string>? headers = null)
         {
-            return SendAsync<T>(HttpMethod.Post, url, payload, maxAttempts);
+            return SendAsync<T>(HttpMethod.Post, url, payload, maxAttempts, headers);
         }
 
+        //=====================================================================================
         // PUT
-        public Task<T?> PutAsync<T>(string url, object payload, int maxAttempts = 3)
+        //=====================================================================================
+        public Task<T?> PutAsync<T>(string url, object payload, int maxAttempts = 3, Dictionary<string, string>? headers = null)
         {
-            return SendAsync<T>(HttpMethod.Put, url, payload, maxAttempts);
+            return SendAsync<T>(HttpMethod.Put, url, payload, maxAttempts, headers);
         }
 
-        // DELETE 
-        public Task DeleteAsync(string url, int maxAttempts = 3)
+        //=====================================================================================
+        // DELETE без тела
+        //=====================================================================================
+        public Task DeleteAsync(string url, int maxAttempts = 3, Dictionary<string, string>? headers = null)
         {
-            return SendAsync<object>(HttpMethod.Delete, url, null, maxAttempts);
+            return SendAsync<object>(HttpMethod.Delete, url, null, maxAttempts, headers);
         }
-        public Task<T?> DeleteAsync<T>(string url, int maxAttempts = 3)
-        {
-            return SendAsync<T>(HttpMethod.Delete, url, null, maxAttempts);
-        }
-        ////-------------------------------------------------------------------------------------
 
+        // DELETE с возвращаемым типом
+        public Task<T?> DeleteAsync<T>(string url, int maxAttempts = 3, Dictionary<string, string>? headers = null)
+        {
+            return SendAsync<T>(HttpMethod.Delete, url, null, maxAttempts, headers);
+        }
+
+        //=====================================================================================
+        // SEND ASYNC с поддержкой заголовков
+        //=====================================================================================
         private async Task<T?> SendAsync<T>(
-             HttpMethod method,
-             string url,
-             object? payload = null,
-             int maxAttempts = 3)
+            HttpMethod method,
+            string url,
+            object? payload = null,
+            int maxAttempts = 3,
+            Dictionary<string, string>? headers = null)
         {
             for (int attempt = 1; attempt <= maxAttempts; attempt++)
             {
@@ -66,9 +76,15 @@ namespace Globals.Clients
 
                     using var request = new HttpRequestMessage(method, url);
 
+                    // тело запроса
                     if (payload != null)
-                    {
                         request.Content = JsonContent.Create(payload);
+
+                    // добавление кастомных заголовков
+                    if (headers != null)
+                    {
+                        foreach (var header in headers)
+                            request.Headers.Add(header.Key, header.Value);
                     }
 
                     var response = await _client.SendAsync(request);
@@ -91,6 +107,7 @@ namespace Globals.Clients
 
                         throw new HttpRequestException($"Bad status: {response.StatusCode}");
                     }
+
                     if (response.Content.Headers.ContentLength == 0)
                         return default;
 
@@ -108,4 +125,3 @@ namespace Globals.Clients
         }
     }
 }
-

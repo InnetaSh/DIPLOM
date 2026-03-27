@@ -20,7 +20,7 @@ namespace WebApiGetway.Service.Interfase
         //=============================================================================
         //      OFFERS
         //=============================================================================
-        Task<IEnumerable<OfferResponse>> GetAllOffers(string lang);
+        Task<IEnumerable<OfferResponse>> GetAllOffers(string lang,string accessToken);
         Task<IEnumerable<OfferResponse>> GetOffersBySearchCriteria(
            int? userId,
            decimal userDiscountPercent,
@@ -36,6 +36,7 @@ namespace WebApiGetway.Service.Interfase
            string? paramItemFilters = null);
 
         Task<OfferResponse?> GetFullOfferById(
+         string? accessToken,
          int userId,
          int offerId,
          string lang,
@@ -62,39 +63,46 @@ namespace WebApiGetway.Service.Interfase
         Task<int> CreateOffer(
             int userId,
             OfferRequest offer,
-            string lang);
+            string lang,
+            string accessToken);
 
         //===============================================================================================================
 
         Task<OfferResponse> UpdateOffer(
               int offerId,
               OfferRequest offer,
-              string lang);
+              string lang,
+              string accessToken);
 
         Task<int> UpdateOfferPrice(
             int offerId,
             UpdateOfferPriceRequest updateOfferPriceRequest,
-            string lang);
+            string lang,
+            string accessToken);
         Task<int> UpdateTextOffer(
             TranslationRequest request,
-            string lang);
+            string lang,
+            string accessToken);
 
         //===============================================================================================================
 
         Task<IEnumerable<string>> AddImageOffer(
           int offerId,
-          List<IFormFile> files);
+          List<IFormFile> files,
+          string accessToken);
         Task<UpdateImageOfferResponse> UpdateImageOffer(
-              int offerId,
-              int imageId,
-              IFormFile file
-        );
+            int offerId,
+            int imageId,
+            IFormFile file,
+            string accessToken);
+        
         Task<bool> DeleteImageOffer(
             int offerId,
-            int imageId
-      );
+            int imageId,
+          string accessToken);
+   
         //===============================================================================================================
-        Task<bool> SetOfferBlockStatus(int offerId, bool block);
+        Task<bool> SetOfferBlockStatus(int offerId, bool block, string accessToken);
         //===============================================================================================================
         Task<IEnumerable<OfferResponseForPupularList>> GetPopularTopOffer(
             string period,

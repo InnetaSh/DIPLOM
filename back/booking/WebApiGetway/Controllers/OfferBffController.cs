@@ -42,9 +42,9 @@ namespace WebApiGetway.Controllers
         //===============================================================================================================
         //            PARAMS WITH TRANSLATIONS
         //===============================================================================================================
-        [HttpGet("param-items/{lang}")]
+        [HttpGet("param-items")]
         public async Task<ActionResult<IEnumerable<ParamItemResponse>>> GetMainParamItem(
-            [FromRoute] string lang)
+            [FromQuery] string lang)
         {
             var result = await _offerService.GetMainParamItem(lang);
             return Ok(result);
@@ -109,13 +109,20 @@ namespace WebApiGetway.Controllers
         {
             int userId = -1;
             decimal discount = 0m;
+            string? accessToken = null;
             if (User.Identity?.IsAuthenticated == true)
             {
-                userId = User.GetUserId();
-                var user = await _userService.GetById(userId);
-                discount = user?.Discount ?? 0m;
+                accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+
+                if (!string.IsNullOrEmpty(accessToken))
+                {
+                    var user = await _userService.GetMeAsync(lang, accessToken);
+                    userId = user?.id ?? -1;
+                    discount = user?.Discount ?? 0m;
+                }
             }
             var result = await _offerService.GetFullOfferById(
+                accessToken: accessToken, 
                 userId: userId,
                 offerId: offerId,
                 lang: lang,
@@ -161,11 +168,16 @@ namespace WebApiGetway.Controllers
              [FromQuery] string lang)
 
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var userId = User.GetUserId();
             var result = await _offerService.CreateOffer(
                 userId: userId,
                 offer: Offer,
-                lang: lang
+                lang: lang,
+                accessToken: accessToken
            );
             if (result == -1)
                 return BadRequest("Offer creation failed.");
@@ -186,11 +198,15 @@ namespace WebApiGetway.Controllers
             {
                 return BadRequest(ModelState);
             }
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
 
             var result = await _offerService.UpdateOffer(
                offerId,
                offer: offer,
-               lang: lang
+               lang: lang,
+               accessToken: accessToken
           );
             return Ok(result);
         }
@@ -207,10 +223,15 @@ namespace WebApiGetway.Controllers
              [FromQuery] string lang,
              [FromBody, Required] UpdateOfferPriceRequest request)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var result = await _offerService.UpdateOfferPrice(
                offerId: offerId,
                updateOfferPriceRequest: request,
-               lang: lang
+               lang: lang,
+               accessToken: accessToken
           );
             return Ok(result);
         }
@@ -226,10 +247,15 @@ namespace WebApiGetway.Controllers
              [FromQuery] string lang,
              [FromBody, Required] TranslationRequest request)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             request.EntityId = offerId;
             var result = await _offerService.UpdateTextOffer(
                request: request,
-               lang: lang
+               lang: lang,
+               accessToken: accessToken
           );
             return Ok(result);
         }
@@ -246,9 +272,14 @@ namespace WebApiGetway.Controllers
          [FromForm] UploadImagesRequest request
             )
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var result = await _offerService.AddImageOffer(
             offerId: offerId,
-            files: request.Files
+            files: request.Files,
+            accessToken: accessToken
         );
             return Ok(result);
         }
@@ -266,10 +297,15 @@ namespace WebApiGetway.Controllers
                [FromForm] UpdateImageOfferRequest request
           )
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var result = await _offerService.UpdateImageOffer(
                offerId: offerId,
                imageId: imageId,
-               file: request.File);
+               file: request.File,
+               accessToken: accessToken);
             return Ok(result);
         }
 
@@ -283,9 +319,14 @@ namespace WebApiGetway.Controllers
             [FromRoute] int imageId
        )
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var result = await _offerService.DeleteImageOffer(
               offerId: offerId,
-              imageId: imageId);
+              imageId: imageId,
+              accessToken: accessToken);
 
             return Ok(result);
         }
@@ -300,9 +341,15 @@ namespace WebApiGetway.Controllers
             [FromRoute] int offerId,
             [FromQuery] bool block)
         {
+            var accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+            if (string.IsNullOrEmpty(accessToken))
+                return Unauthorized();
+
             var result = await _offerService.SetOfferBlockStatus(
              offerId: offerId,
-             block: block);
+             block: block,
+             accessToken: accessToken
+             );
 
             return Ok(result);
         }

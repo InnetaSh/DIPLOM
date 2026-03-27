@@ -13,7 +13,8 @@ namespace WebApiGetway.Service.Interfase
                CreateOrderRequest request,
                int userId,
                decimal userDiscountPercent,
-               string lang);
+               string lang,
+               string accessToken);
 
         //============================================================================================
         Task<bool> UpdateStateOrder(

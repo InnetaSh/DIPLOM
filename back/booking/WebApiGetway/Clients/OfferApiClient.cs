@@ -43,10 +43,15 @@ namespace WebApiGetway.Clients
         //    Получить все объявления (для админки)
         //===============================================================================================================
 
-        public async Task<IEnumerable<OfferResponse>> GetAllOffers()
+        public async Task<IEnumerable<OfferResponse>> GetAllOffers(string accessToken)
         {
             var result = await GetAsync<IEnumerable<OfferResponse>>(
-                "/api/offer/search/all");
+                "/api/offer/search/all",
+                 headers: new Dictionary<string, string>
+                {
+                    { "Authorization", accessToken }
+                }
+            );
 
             return result ?? Enumerable.Empty<OfferResponse>();
         }

@@ -41,10 +41,13 @@ namespace WebApiGetway.Controllers
         //===============================================================================================================
 
         [HttpGet("cities/{cityId}")]
-        public Task<CityResponse> GetCityByIdWithTranslations(
-            [FromRoute] int cityId, 
-            [FromQuery] string lang)
-             => _locationService.GetCityById(cityId,lang);
+        public async Task<ActionResult<CityResponse>> GetCityByIdWithTranslations(
+              [FromRoute] int cityId,
+              [FromQuery] string lang)
+        {
+             var city = await _locationService.GetCityById(cityId, lang);
+             return Ok(city); 
+        }
 
         //===============================================================================================================
         //        Populars  cities with translation from period (week / month / year)
@@ -61,7 +64,7 @@ namespace WebApiGetway.Controllers
         //         ALL REGIONS WITH TRANSLATION
         //===============================================================================================================
 
-        [HttpGet("regions}")]
+        [HttpGet("regions")]
         public Task<IEnumerable<RegionResponse>> GetAllRegionsWithTranslations(
             [FromQuery] string lang)
              => _locationService.GetAllRegions(lang);

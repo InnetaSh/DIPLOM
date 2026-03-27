@@ -114,9 +114,9 @@ namespace WebApiGetway.Helpers
         // =====проверка роли owner + получение userId ==========================
 
 
-        public async Task<(bool IsOwner, string Error)> ValidateOwnerAsync(int userId)
+        public async Task<(bool IsOwner, string Error)> ValidateOwnerAsync(int userId, string accessToken)
         {
-            var user = await _userApiClient.GetMeAsync();
+            var user = await _userApiClient.GetMeAsync(accessToken);
 
             if (user == null)
                 return (false, "Ошибка получения пользователя");
