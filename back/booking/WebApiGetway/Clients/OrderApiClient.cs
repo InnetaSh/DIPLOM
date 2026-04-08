@@ -22,11 +22,20 @@ namespace WebApiGetway.Clients
         //===============================================================================================================
         //       VALID ORDERS BY OFFER ID AND DATE-TIME
         //===============================================================================================================
-        public async Task<bool> HasDateConflict(int offerId)
+        public async Task<bool> HasDateConflict(int offerId, DateTime start, DateTime end)
         {
             var isExist = false;
-            isExist = await GetAsync<bool>(
-                $"/api/order/{offerId}/valid/date-time");
+
+            var request = new DateValidationRequest
+            {
+                OfferId = offerId,
+                Start = start,
+                End = end
+            };
+            isExist = await PostAsync<bool>(                   //true - есть конфликт, false - нет конфликта
+                $"/api/order/{offerId}/valid/date-time",
+                request
+            );
 
             return isExist;
         }
@@ -50,7 +59,7 @@ namespace WebApiGetway.Clients
         public async Task<IEnumerable<OrderResponse>> GetOrdersByUserIdAsync(int userId)
         {
             var result = await GetAsync<IEnumerable<OrderResponse>>(
-                $"/api/order/ordersByUserId/{userId}");
+                $"/api/order/get/ordersByUserId/{userId}");
 
             return result ?? Enumerable.Empty<OrderResponse>();
         }

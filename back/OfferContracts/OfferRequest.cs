@@ -5,7 +5,7 @@ namespace OfferContracts
 {
     public class OfferRequest : IBaseRequest
     {
-        public int id;
+        public int id { get; set; }
         public string? Title { get; set; }           // Заглавие объявления (переводимое поле)
 
         public string? Description { get; set; }     // Описание объявления (переводимое поле)

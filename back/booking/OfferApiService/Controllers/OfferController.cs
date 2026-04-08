@@ -356,7 +356,7 @@ namespace OfferApiService.Controllers
             //if (idOffer == -1)
             //    return StatusCode(500, new { message = "Error creating item" });
 
-            return Ok(new { idOffer });
+            return Ok(idOffer);
         }
 
         //===========================================================================================
@@ -516,7 +516,7 @@ namespace OfferApiService.Controllers
                 return StatusCode(500, new { message = "Error updating offer" });
 
 
-            return Ok(new { offerId });
+            return Ok( offerId );
         }
 
 
@@ -546,7 +546,7 @@ namespace OfferApiService.Controllers
         //===========================================================================================
 
         [HttpGet("get/offersByOwner/{ownerId}")]
-        public async Task<ActionResult<OfferResponse>> GetOfferByOwnerId(
+        public async Task<ActionResult<IEnumerable<OfferResponse>>> GetOfferByOwnerId(
         int ownerId)
         {
 

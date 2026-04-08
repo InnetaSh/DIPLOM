@@ -279,6 +279,7 @@ namespace UserApiService.Services
                 .Where(o => o.id == userId)
                 .Select(o => new OwnerResponse
                 {
+                    id = userId,
                     Username = o.Username,
                     Lastname = o.Lastname,
                     BirthDate = o.BirthDate,

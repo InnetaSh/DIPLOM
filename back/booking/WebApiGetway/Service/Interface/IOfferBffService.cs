@@ -21,7 +21,7 @@ namespace WebApiGetway.Service.Interfase
         //      OFFERS
         //=============================================================================
         Task<IEnumerable<OfferResponse>> GetAllOffers(string lang,string accessToken);
-        Task<IEnumerable<OfferResponse>> GetOffersBySearchCriteria(
+        Task<IEnumerable<OfferShortResponse>> GetOffersBySearchCriteria(
            int? userId,
            decimal userDiscountPercent,
            string lang,

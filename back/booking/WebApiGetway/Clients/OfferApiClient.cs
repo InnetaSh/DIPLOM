@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using OfferContracts;
 using OfferContracts.RentObj;
+using System.Net.Http;
 using WebApiGetway.Clients.Interface;
 
 
@@ -60,7 +61,7 @@ namespace WebApiGetway.Clients
         //================================================================================================
         // Поиск объявлений по городу
         //================================================================================================
-        public async Task<IEnumerable<OfferResponse>> GetOffersByCityAsync(
+        public async Task<IEnumerable<OfferShortResponse>> GetOffersByCityAsync(
             int cityId,
             DateTime start,
             DateTime end,
@@ -83,13 +84,13 @@ namespace WebApiGetway.Clients
             };
 
             var queryString = QueryString.Create(queryDict);
-            var result = await GetAsync<IEnumerable<OfferResponse>>($"/api/offer/search/offers{queryString}");
-            return result ?? Enumerable.Empty<OfferResponse>();
+            var result = await GetAsync<IEnumerable<OfferShortResponse>>($"/api/offer/search/offers{queryString}");
+            return result ?? Enumerable.Empty<OfferShortResponse>();
         }
         //================================================================================================
         // Поиск объявлений по региону
         //================================================================================================
-        public async Task<IEnumerable<OfferResponse>> GetOffersByRegionAsync(
+        public async Task<IEnumerable<OfferShortResponse>> GetOffersByRegionAsync(
             int regionId,
             DateTime start,
             DateTime end,
@@ -112,14 +113,14 @@ namespace WebApiGetway.Clients
             };
 
             var queryString = QueryString.Create(queryDict);
-            var result = await GetAsync<IEnumerable<OfferResponse>>($"/api/offer/search/offers/fromRegion{queryString}");
-            return result ?? Enumerable.Empty<OfferResponse>();
+            var result = await GetAsync<IEnumerable<OfferShortResponse>>($"/api/offer/search/offers/fromRegion{queryString}");
+            return result ?? Enumerable.Empty<OfferShortResponse>();
         }
 
         //================================================================================================
         // Поиск объявлений по стране
         //================================================================================================
-        public async Task<IEnumerable<OfferResponse>> GetOffersByCountryAsync(
+        public async Task<IEnumerable<OfferShortResponse>> GetOffersByCountryAsync(
             int countryId,
             DateTime start,
             DateTime end,
@@ -142,8 +143,8 @@ namespace WebApiGetway.Clients
             };
 
             var queryString = QueryString.Create(queryDict);
-            var result = await GetAsync<IEnumerable<OfferResponse>>($"/api/offer/search/offers/fromCountry{queryString}");
-            return result ?? Enumerable.Empty<OfferResponse>();
+            var result = await GetAsync<IEnumerable<OfferShortResponse>>($"/api/offer/search/offers/fromCountry{queryString}");
+            return result ?? Enumerable.Empty<OfferShortResponse>();
         }
 
 
@@ -247,7 +248,7 @@ namespace WebApiGetway.Clients
         {
 
             var result = await PutAsync<OfferResponse>(
-                $"/api/offer/update/offer-with-rentobj-with-param-values/{offerId}", offer);
+                $"/api/offer/{offerId}/offer-with-rentobj-with-param-values", offer);
             return result;
         }
 
@@ -264,15 +265,18 @@ namespace WebApiGetway.Clients
             return result;
         }
 
-       
+
 
         //============================================================================================
         //добавление изображений обьявления
         //============================================================================================
         public async Task<string> AddImageOffer(int rentObjId, IFormFile file)
         {
-            var result = await PostAsync<string>(
-                $"/api/RentObjImage/upload/{rentObjId}",file);
+            var result = await PostFileAsync<string>(
+                $"/api/RentObjImage/upload/{rentObjId}",
+                file
+            );
+
             return result ?? string.Empty;
         }
         //============================================================================================
@@ -281,9 +285,11 @@ namespace WebApiGetway.Clients
 
         public async Task<bool> UpdateImageAsync(int imageId, IFormFile file)
         {
-            var result = false;
-            result = await PutAsync<bool>(
-                $"/api/rentobjimage/update-file/{imageId}", file);
+            var result = await PutFileAsync<bool>(
+                $"/api/rentobjimage/update-file/{imageId}",
+                file
+            );
+
             return result;
         }
         //============================================================================================
@@ -293,7 +299,7 @@ namespace WebApiGetway.Clients
         {
             var result = false;
             result = await DeleteAsync<bool>(
-                $"/api/rentobjimage/update-file/{imageId}");
+                $"/api/rentobjimage/delete/{imageId}");
             return result;
         }
 

@@ -25,9 +25,10 @@ namespace WebApiGetway.Clients
         //===============================================================================================================
         //  GET METHODS BY userId
         //===============================================================================================================
-        public Task<UserResponse?> GetUserByIdAsync(int userId)
+        public async Task<UserResponse> GetUserByIdAsync(int userId)
         {
-            return GetAsync<UserResponse>($"/api/user/{userId}");
+            var result = await GetAsync<UserResponse>($"/api/user/{userId}");
+            return result ?? new UserResponse();
         }
 
         //===========================================================================================
@@ -195,10 +196,9 @@ namespace WebApiGetway.Clients
         // ==========================================================================================
         public async Task<bool> ValidOfferIdByOwner(int offerId, string accessToken)
         {
-            var result = await PostAsync<bool>(
+            var result = await GetAsync<bool>(
                 $"/api/user/valid/offers/{offerId}",
-                offerId,
-                 headers: new Dictionary<string, string>
+                headers: new Dictionary<string, string>
                 {
                     { "Authorization", accessToken }
                 }

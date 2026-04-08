@@ -75,13 +75,21 @@ namespace OrderApiService.Services
 
         public async Task<bool> HasDateConflict(DateValidationRequest request)
         {
-            _logger.LogInformation("Checking date conflict for order {OrderId} and offer {OfferId}", request.OfferId);
+            var start = DateTime.SpecifyKind(request.Start, DateTimeKind.Utc);
+            var end = DateTime.SpecifyKind(request.End, DateTimeKind.Utc);
+
+            _logger.LogInformation(
+                "Checking conflict for offer {OfferId} from {Start} to {End}",
+                request.OfferId,
+                start,
+                end
+            );
 
             var conflict = await _context.Orders
                 .AsNoTracking()
                 .Where(o => o.OfferId == request.OfferId)
-                .AnyAsync(o => (o.StartDate >= request.Start && o.StartDate < request.End) ||
-                               (o.EndDate > request.Start && o.EndDate <= request.End));
+                .AnyAsync(o => o.StartDate < end &&
+                               o.EndDate > start);
 
             //var flag = false;
             //foreach (var order in fitOrders)

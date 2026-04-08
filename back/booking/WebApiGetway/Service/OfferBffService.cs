@@ -257,7 +257,7 @@ namespace WebApiGetway.Service
         /// <returns>Список объявлений с переводами и рейтингами</returns>
 
         /// 
-        public async Task<IEnumerable<OfferResponse>> GetOffersBySearchCriteria(
+        public async Task<IEnumerable<OfferShortResponse>> GetOffersBySearchCriteria(
            int? userId,
            decimal userDiscountPercent,
            string lang,
@@ -324,7 +324,7 @@ namespace WebApiGetway.Service
             //}, entityType);
 
             if (offers == null || !offers.Any())
-                return Enumerable.Empty<OfferResponse>();
+                return Enumerable.Empty<OfferShortResponse>();
 
             var offersTranslations = translationsTask.Result ?? Enumerable.Empty<TranslationResponse>();
 

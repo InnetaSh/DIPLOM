@@ -71,11 +71,17 @@ namespace WebApiGetway.Controllers
         {
             int userId = -1;
             decimal discount = 0m;
+            string? accessToken = null;
             if (User.Identity?.IsAuthenticated == true)
             {
-                userId = User.GetUserId();
-                var user = await _userService.GetById(userId);
-                discount = user?.Discount ?? 0m;
+                accessToken = HttpContext.Request.Headers["Authorization"].ToString();
+
+                if (!string.IsNullOrEmpty(accessToken))
+                {
+                    var user = await _userService.GetMeAsync(lang, accessToken);
+                    userId = user?.id ?? -1;
+                    discount = user?.Discount ?? 0m;
+                }
             }
             var result = await _offerService.GetOffersBySearchCriteria(
                 userId: userId,
@@ -173,6 +179,7 @@ namespace WebApiGetway.Controllers
                 return Unauthorized();
 
             var userId = User.GetUserId();
+            Offer.OwnerId = userId;
             var result = await _offerService.CreateOffer(
                 userId: userId,
                 offer: Offer,

@@ -13,7 +13,7 @@ namespace WebApiGetway.Clients.Interface
         Task<IEnumerable<OfferResponse>> GetAllOffers(string accessToken);
 
         //-------------------------------------------------------------------------------------
-        Task<IEnumerable<OfferResponse>> GetOffersByCityAsync(
+        Task<IEnumerable<OfferShortResponse>> GetOffersByCityAsync(
             int cityId,
             DateTime start,
             DateTime end,
@@ -23,7 +23,7 @@ namespace WebApiGetway.Clients.Interface
             int totalGuests,
             decimal userDiscountPercent);
 
-        Task<IEnumerable<OfferResponse>> GetOffersByRegionAsync(
+        Task<IEnumerable<OfferShortResponse>> GetOffersByRegionAsync(
             int regionId,
             DateTime start,
             DateTime end,
@@ -33,7 +33,7 @@ namespace WebApiGetway.Clients.Interface
             int totalGuests,
             decimal userDiscountPercent);
 
-        Task<IEnumerable<OfferResponse>> GetOffersByCountryAsync(
+        Task<IEnumerable<OfferShortResponse>> GetOffersByCountryAsync(
             int countryId,
             DateTime start,
             DateTime end,

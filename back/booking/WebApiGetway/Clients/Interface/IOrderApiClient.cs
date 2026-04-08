@@ -8,8 +8,8 @@ namespace WebApiGetway.Clients.Interface
 {
     public interface IOrderApiClient
     {
-        Task<bool> HasDateConflict(int offerId);
-         Task<IEnumerable<int>> HasPendingOrder(int userId);
+        Task<bool> HasDateConflict(int offerId, DateTime startDate, DateTime endDate);
+        Task<IEnumerable<int>> HasPendingOrder(int userId);
         //-------------------------------------------------------------------------------------
 
         Task<OrderResponse> GetOrderByIdAsync(int orderId);

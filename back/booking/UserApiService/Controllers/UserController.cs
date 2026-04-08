@@ -33,7 +33,7 @@ namespace UserApiService.Controllers
         // =====================================================================
         [Authorize]
         [HttpPost("client/orders/add/{orderId}")]
-        public async Task<IActionResult> AddOrderToClient(int orderId)
+        public async Task<ActionResult<bool>> AddOrderToClient(int orderId)
         {
             var userId = GetUserId();
             if (userId == null)
@@ -42,9 +42,9 @@ namespace UserApiService.Controllers
             var result = await _userService.AddOrderToClient(userId.Value, orderId);
 
             if (!result)
-                return BadRequest("Не удалось добавить заказ пользователю");
+                return Ok(false);
 
-            return Ok(new { message = "Заказ добавлен" });
+            return Ok(true);
         }
 
 
@@ -54,7 +54,7 @@ namespace UserApiService.Controllers
         // =====================================================================
         [Authorize]
         [HttpPost("me/history/add/offer/{offerId}")]
-        public async Task<IActionResult> AddOfferToClientHistory(
+        public async Task<ActionResult<bool>> AddOfferToClientHistory(
             int offerId)
         {
             var userId = GetUserId();
@@ -64,9 +64,9 @@ namespace UserApiService.Controllers
             var result = await _userService.AddOfferToClientHistory(userId.Value, offerId);
 
             if (!result)
-                return BadRequest("Не удалось добавить в просмотренные пользователю");
+                return Ok(false);
 
-            return Ok(new { message = "Обьявление добавлено" });
+            return Ok(true);
         }
 
 
@@ -75,7 +75,7 @@ namespace UserApiService.Controllers
         // =====================================================================
         [Authorize]
         [HttpPost("me/isfavorite/add/offer/{offerId}")]
-        public async Task<IActionResult> AddOfferToClientFavorite(
+        public async Task<ActionResult<bool>> AddOfferToClientFavorite(
             int offerId)
         {
             var userId = GetUserId();
@@ -85,9 +85,9 @@ namespace UserApiService.Controllers
             var result = await _userService.AddOfferToClientFavorite(userId.Value, offerId);
 
             if (!result)
-                return BadRequest("Не удалось добавить в избранное пользователю");
+                return Ok(false);
 
-            return Ok(new { message = "Обьявление добавлено" });
+            return Ok(true);
         }
 
         // =====================================================================
@@ -95,7 +95,7 @@ namespace UserApiService.Controllers
         // =====================================================================
         [Authorize]
         [HttpGet("me/history/get/offers")]
-        public async Task<IActionResult> GetOffersToClientHistory()
+        public async Task<ActionResult<IEnumerable<HistoryOfferLinkResponse?>>> GetOffersToClientHistory()
         {
             var userId = GetUserId();
             if (userId == null)
@@ -115,7 +115,7 @@ namespace UserApiService.Controllers
         // =====================================================================
         [Authorize(Roles = "Owner")]
         [HttpPost("owner/offers/add/{offerId}")]
-        public async Task<IActionResult> AddOfferToOwner(int offerId)
+        public async Task<ActionResult<bool>> AddOfferToOwner(int offerId)
         {
             var userId = GetUserId();
             if (userId == null)
@@ -124,9 +124,9 @@ namespace UserApiService.Controllers
             var result = await _userService.AddOfferToOwner(userId.Value, offerId);
 
             if (!result)
-                return BadRequest("Не удалось добавить объявление пользователю");
+                Ok(false);
 
-            return Ok(new { message = "Объявление добавлено" });
+            return Ok(true);
         }
         // =====================================================================
         // ADMIN:  Получить пользователя по id если админ
@@ -134,7 +134,7 @@ namespace UserApiService.Controllers
 
         [HttpGet("admin/get/userfullinfo/{userId}")]
         [Authorize]
-        public async Task<IActionResult> GetUserFullInfoById(int userId)
+        public async Task<ActionResult<UserResponse?>> GetUserFullInfoById(int userId)
         {
             var adminId = GetUserId();
             if (adminId == null)
@@ -162,7 +162,7 @@ namespace UserApiService.Controllers
 
         [HttpGet("admin/get/userfullinfo/by-email/{email}")]
         [Authorize]
-        public async Task<IActionResult> GetUserFullInfoByEmail(string email)
+        public async Task<ActionResult<UserResponse?>> GetUserFullInfoByEmail(string email)
         {
             var adminId = GetUserId();
             if (adminId == null)
@@ -192,7 +192,7 @@ namespace UserApiService.Controllers
 
         [HttpGet("me")]
         [Authorize]
-        public async Task<IActionResult> GetMe()
+        public async Task<ActionResult<UserResponse>> GetMe()
         {
             var userId = GetUserId();
             if (userId == null)
@@ -211,11 +211,11 @@ namespace UserApiService.Controllers
         }
 
         // =====================================================================
-        // Получить имя пользователя по id
+        // Получить  пользователя по id
         // =====================================================================
 
         [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUserById(int userId)
+        public async Task<ActionResult<UserResponse>> GetUserById(int userId)
         {
             var user = await _userService.GetUserByIdAsync(userId);
             if (user == null)
@@ -231,7 +231,7 @@ namespace UserApiService.Controllers
         // =====================================================================
 
         [HttpGet("update/discount/{userId}/{discountCount}")]
-        public async Task<IActionResult> UpdateDiscount(int userId, decimal discountCount)
+        public async Task<ActionResult<bool>> UpdateDiscount(int userId, decimal discountCount)
         {
             var user = await _userService.GetUserByIdAsync(userId);
             if (user == null)
@@ -250,7 +250,7 @@ namespace UserApiService.Controllers
 
         [HttpPost("me/update")]
         [Authorize]
-        public async Task<IActionResult> UpdateMe([FromBody] UserRequest request)
+        public async Task<ActionResult<UserResponse?>> UpdateMe([FromBody] UserRequest request)
         {
             var userId = GetUserId();
             if (userId == null)
@@ -284,7 +284,7 @@ namespace UserApiService.Controllers
         // =====================================================================
         [HttpPost("me/change-password")]
         [Authorize]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        public async Task<ActionResult<bool>> ChangePassword([FromBody] ChangePasswordRequest request)
         {
             var userId = GetUserId();
             if (userId == null)
@@ -321,7 +321,7 @@ namespace UserApiService.Controllers
         // =====================================================================
         [HttpPost("me/change-email")]
         [Authorize]
-        public async Task<IActionResult> ChangeEmail([FromBody] ChangeEmailRequest request)
+        public async Task<ActionResult<bool>> ChangeEmail([FromBody] ChangeEmailRequest request)
         {
             var userId = GetUserId();
             if (userId == null)

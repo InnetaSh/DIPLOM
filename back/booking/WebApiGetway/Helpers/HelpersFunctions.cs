@@ -93,7 +93,7 @@ namespace WebApiGetway.Helpers
         //-----проверка на конфликт дат обьявления-----
         public async Task<bool> HasDateConflictAsync(int offerId, DateTime start, DateTime end)
         {
-            var isExist = await _orderApiClient.HasDateConflict(offerId); //true - есть конфликт, false - нет конфликта
+            var isExist = await _orderApiClient.HasDateConflict(offerId, start, end); //true - есть конфликт, false - нет конфликта
             return isExist;
 
         }

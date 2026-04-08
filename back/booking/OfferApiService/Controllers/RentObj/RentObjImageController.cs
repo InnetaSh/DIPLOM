@@ -24,19 +24,19 @@ namespace OfferApiService.Controllers.RentObj
 
 
         [HttpPost("upload/{rentObjId}")]
-        public async Task<IActionResult> Upload(int rentObjId, IFormFile file)
+        public async Task<ActionResult<string>> Upload(int rentObjId, IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("Файл не передан");
 
             string url = await _imageService.SaveImageAsync(file, rentObjId);
 
-            return Ok(new { url });
+            return Ok( url );
         }
 
 
         [HttpPut("update-file/{imageId}")]
-        public async Task<IActionResult> UpdateFile(int imageId, IFormFile file)
+        public async Task<ActionResult<bool>> UpdateFile(int imageId, IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("Файл не передан");
@@ -44,21 +44,21 @@ namespace OfferApiService.Controllers.RentObj
             bool result = await _imageService.UpdateImageAsync(imageId, file);
 
             if (!result)
-                return NotFound("Изображение не найдено");
+                return Ok(false);
 
-            return Ok(new { message = "Файл обновлён" });
+            return Ok(true);
         }
 
 
         [HttpDelete("delete/{imageId}")]
-        public async Task<IActionResult> DeleteImage(int imageId)
+        public async Task<ActionResult<bool>> DeleteImage(int imageId)
         {
             bool result = await _imageService.DeleteImageAsync(imageId);
 
             if (!result)
-                return NotFound("Изображение не найдено");
+                return Ok(false);
 
-            return Ok(new { message = "Удалено" });
+            return Ok(true);
         }
 
 

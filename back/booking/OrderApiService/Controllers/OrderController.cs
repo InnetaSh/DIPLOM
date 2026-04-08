@@ -97,7 +97,7 @@ namespace OrderApiService.Controllers
             if (order == null )
                 return NotFound();
 
-            return Ok(new {offerId = order.OfferId});
+            return Ok(order.OfferId);
         }
 
         //===========================================================================================
@@ -131,10 +131,13 @@ namespace OrderApiService.Controllers
         //===========================================================================================
         [HttpPost("{offerId}/valid/date-time")]
         public async Task<ActionResult<bool>> HasDateConflict(
+             [FromRoute] int offerId,
              [FromBody] DateValidationRequest request)
         {
+            request.OfferId = offerId;
+
             var isExist = await _orderService.HasDateConflict(request);
-            return isExist;
+            return Ok(isExist);
         }
 
         //===========================================================================================

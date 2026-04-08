@@ -14,6 +14,7 @@ namespace OfferApiService.Mappers
 
             return new Offer
             {
+                id = request.id,
                 PricePerDay = request.PricePerDay,
                 PricePerWeek = request.PricePerWeek,
                 PricePerMonth = request.PricePerMonth,
